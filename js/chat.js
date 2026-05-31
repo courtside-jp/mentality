@@ -112,6 +112,7 @@ function filterConf(btn, conf) {
 }
 
 async function renderTeams() {
+  console.log("renderTeams called, teamConf=", teamConf);
   const filtered = TEAMS.filter(t => teamConf === 'all' || t.conf === teamConf);
   // 全体オンライン数からチームごとの人数を比例配分
   const total = Math.min(_globalOnlineCount || 5, 20);
