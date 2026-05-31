@@ -209,7 +209,7 @@ function renderCfpMsgs(msgs) {
       <div class="cav ${avColor}">${m.n[0].toUpperCase()}</div>
       <div class="cbody">
         <div class="cname">${escapeHtml(m.n)}${m.adm ? '<span class="cadm">管理人</span>' : ''}</div>
-        <div class="cbbl">${escapeHtml(m.msg)}</div>
+        <div class="cbbl">${renderMsg(m.msg)}</div>
         <div class="ctime">${m.t}</div>
       </div>
     </div>`;
@@ -232,6 +232,37 @@ function getChatAdHTML() {
       <button style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>
     </div>
   </div>`;
+}
+
+// ============================================================
+// メッセージ描画（URL・YouTube・Twitter対応）
+// ============================================================
+function renderMsg(msg) {
+  const escaped = escapeHtml(msg);
+  // YouTube
+  const ytMatch = msg.match(/https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  if (ytMatch) {
+    return `<a href="${escapeHtml(msg)}" target="_blank" style="color:var(--or);word-break:break-all;">${escaped}</a>
+    <div style="margin-top:.4rem;border-radius:8px;overflow:hidden;">
+      <iframe width="100%" height="160" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allowfullscreen style="border-radius:8px;display:block;"></iframe>
+    </div>`;
+  }
+  // Twitter/X
+  const twMatch = msg.match(/https?:\/\/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
+  if (twMatch) {
+    return `<a href="${escapeHtml(msg)}" target="_blank" style="color:var(--or);word-break:break-all;">${escaped}</a>`;
+  }
+  // 画像URL
+  const imgMatch = msg.match(/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp)(\?\S*)?$/i);
+  if (imgMatch) {
+    return `<img src="${escapeHtml(msg)}" style="max-width:100%;border-radius:8px;margin-top:.3rem;" onerror="this.style.display='none'">`;
+  }
+  // 通常URL
+  const urlMatch = msg.match(/https?:\/\/\S+/);
+  if (urlMatch) {
+    return escaped.replace(/https?:\/\/\S+/, `<a href="${urlMatch[0]}" target="_blank" style="color:var(--or);word-break:break-all;">${urlMatch[0]}</a>`);
+  }
+  return escaped;
 }
 
 // ============================================================
@@ -398,7 +429,9 @@ function initChatUI() {
           ).join('')}
         </div>
         <div style="display:flex;align-items:center;gap:.4rem;">
-          <input id="cfpField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;font-family:'Barlow',sans-serif;" placeholder="メッセージを入力..." onkeydown="if(event.key==='Enter')cfpSend()">
+          <input id="cfpImgInput" type="file" accept="image/*" style="display:none" onchange="cfpSendImage(this)">
+          <button onclick="document.getElementById('cfpImgInput').click()" style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">📷</button>
+          <input id="cfpField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;font-family:'Barlow',sans-serif;" placeholder="メッセージまたはURLを入力..." onkeydown="if(event.key==='Enter')cfpSend()">
           <button onclick="cfpSend()" style="width:34px;height:34px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:.8rem;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,90,0,.35);flex-shrink:0;">➤</button>
         </div>
       </div>
@@ -425,3 +458,25 @@ function initChatUI() {
 initChatUI();
 renderTeams();
 // ============================================================
+
+// 画像送信
+async function cfpSendImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    const t = TEAMS.find(x => x.id === cfpTeamId);
+    if (!t) return;
+    const now = ntime();
+    const newMsg = { n: userNick, msg: dataUrl, t: now };
+    t.msgs.push(newMsg);
+    renderCfpMsgs(t.msgs);
+    fetch(`${FB_URL}/chats/${cfpTeamId}.json`, {
+      method: 'POST',
+      body: JSON.stringify({ nick: userNick, emoji: userEmoji, msg: dataUrl, t: now, ts: Date.now() })
+    }).catch(() => {});
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
