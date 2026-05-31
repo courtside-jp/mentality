@@ -26,67 +26,67 @@
 const TEAMS = [
   // ===== イースト =====
   { id:'bos', name:'ボストン・セルティックス',       abbr:'BOS', conf:'east', logo:'🍀', w:52, l:18, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🍀 CELTICSチャット！2024王者を語ろう',t:'20:30'},{n:'celtics_fan',msg:'テイタムのミッドレンジ完璧すぎた',t:'21:14'}]},
   { id:'bkn', name:'ブルックリン・ネッツ',           abbr:'BKN', conf:'east', logo:'🕸️', w:28, l:42, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🕸️ NETSチャット！未来への再建を語ろう',t:'20:00'}]},
   { id:'nyk', name:'ニューヨーク・ニックス',         abbr:'NYK', conf:'east', logo:'🗽', w:44, l:26, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🗽 KNICKSチャット！MSGの雰囲気を語ろう',t:'20:45'},{n:'knicks_nyc',msg:'ブランソンは本当にスター！',t:'21:18'}]},
   { id:'phi', name:'フィラデルフィア・76ers',        abbr:'PHI', conf:'east', logo:'🔔', w:38, l:32, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🔔 SIXERSチャット！エンビードの復活を語ろう',t:'20:00'}]},
   { id:'tor', name:'トロント・ラプターズ',           abbr:'TOR', conf:'east', logo:'🦖', w:26, l:44, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🦖 RAPTORSチャット！再建の道を語ろう',t:'19:50'}]},
   { id:'chi', name:'シカゴ・ブルズ',                abbr:'CHI', conf:'east', logo:'🐂', w:36, l:34, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🐂 BULLSチャット！シカゴの魂を語ろう',t:'20:05'},{n:'bulls_chi',msg:'デローザンのクラッチ力は本物',t:'21:40'}]},
   { id:'cle', name:'クリーブランド・キャバリアーズ', abbr:'CLE', conf:'east', logo:'⚔️', w:52, l:18, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⚔️ CAVSチャット！東1位の強さを語ろう',t:'20:00'}]},
   { id:'det', name:'デトロイト・ピストンズ',         abbr:'DET', conf:'east', logo:'🏎️', w:14, l:56, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🏎️ PESTONSチャット！再建中のチームを語ろう',t:'19:50'}]},
   { id:'ind', name:'インディアナ・ペイサーズ',       abbr:'IND', conf:'east', logo:'⚡', w:40, l:30, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⚡ PACERSチャット！ハリバートンの快進撃を語ろう',t:'20:00'}]},
   { id:'mil', name:'ミルウォーキー・バックス',       abbr:'MIL', conf:'east', logo:'🦌', w:46, l:24, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🦌 BUCKSチャット！ヤニスの怪物プレーを語ろう',t:'20:10'},{n:'bucks_fan',msg:'ヤニスは別格！',t:'20:45'}]},
   { id:'atl', name:'アトランタ・ホークス',           abbr:'ATL', conf:'east', logo:'🦅', w:32, l:38, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🦅 HAWKSチャット！トレイヤングを語ろう',t:'19:50'}]},
   { id:'cha', name:'シャーロット・ホーネッツ',       abbr:'CHA', conf:'east', logo:'🐝', w:18, l:52, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🐝 HORNETSチャット！未来のスターを語ろう',t:'19:45'}]},
   { id:'mia', name:'マイアミ・ヒート',              abbr:'MIA', conf:'east', logo:'🔥', w:38, l:32, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🔥 HEATチャット！バトラーのメンタリティを語ろう',t:'19:45'},{n:'heat_fan',msg:'バトラーがいる限りヒートは怖い',t:'21:00'}]},
   { id:'orl', name:'オーランド・マジック',           abbr:'ORL', conf:'east', logo:'✨', w:36, l:34, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'✨ MAGICチャット！バンケロの成長を語ろう',t:'19:50'}]},
   { id:'was', name:'ワシントン・ウィザーズ',         abbr:'WAS', conf:'east', logo:'🧙', w:12, l:58, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🧙 WIZARDSチャット！再建の未来を語ろう',t:'19:40'}]},
 
   // ===== ウェスト =====
   { id:'lal', name:'ロサンゼルス・レイカーズ',       abbr:'LAL', conf:'west', logo:'👑', w:44, l:26, jp:true,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'👑 LAKERSチャット！河村・八村を応援しよう🔥',t:'21:00'},{n:'kawamura_fan',msg:'河村のドライブ最高👀',t:'21:08'},{n:'lakers_jp',msg:'八村が戻ってきたら最強！',t:'21:14'}]},
   { id:'lac', name:'ロサンゼルス・クリッパーズ',     abbr:'LAC', conf:'west', logo:'⚓', w:36, l:34, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⚓ CLIPPERSチャット！カワイの復活を語ろう',t:'20:00'}]},
   { id:'gsw', name:'ゴールデンステート・ウォリアーズ',abbr:'GSW', conf:'west', logo:'🎯', w:40, l:30, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🎯 WARRIORSチャット！カリーの奇跡を語ろう',t:'20:50'},{n:'warriors_fan',msg:'カリーのスリーは毎回鳥肌',t:'21:05'}]},
   { id:'phx', name:'フェニックス・サンズ',           abbr:'PHX', conf:'west', logo:'☀️', w:36, l:34, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'☀️ SUNSチャット！ブッカーの爆発を語ろう',t:'20:00'}]},
   { id:'sac', name:'サクラメント・キングス',         abbr:'SAC', conf:'west', logo:'👑', w:38, l:32, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'👑 KINGSチャット！フォックスの快速を語ろう',t:'20:00'}]},
   { id:'den', name:'デンバー・ナゲッツ',             abbr:'DEN', conf:'west', logo:'⛰️', w:50, l:20, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⛰️ NUGGETSチャット！ヨキッチの芸術を語ろう',t:'20:25'},{n:'nuggets_fan',msg:'ヨキッチのパスは神がかってる',t:'21:25'}]},
   { id:'min', name:'ミネソタ・ティンバーウルブズ',   abbr:'MIN', conf:'west', logo:'🐺', w:46, l:24, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🐺 TWOLVESチャット！エドワーズの爆発を語ろう',t:'20:00'}]},
   { id:'okc', name:'オクラホマシティ・サンダー',     abbr:'OKC', conf:'west', logo:'⚡', w:54, l:16, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⚡ THUNDERチャット！SGA旋風を語ろう',t:'20:20'},{n:'thunder_fan',msg:'SGAのMVP受賞は確実！',t:'21:15'}]},
   { id:'por', name:'ポートランド・トレイルブレイザーズ',abbr:'POR', conf:'west', logo:'🌹', w:22, l:48, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🌹 BLAZERSチャット！再建の未来を語ろう',t:'19:50'}]},
   { id:'uta', name:'ユタ・ジャズ',                  abbr:'UTA', conf:'west', logo:'🎵', w:20, l:50, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🎵 JAZZチャット！若手の成長を語ろう',t:'19:45'}]},
   { id:'dal', name:'ダラス・マーベリックス',         abbr:'DAL', conf:'west', logo:'🤠', w:44, l:26, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🤠 MAVSチャット！ルカの芸術バスケを語ろう',t:'20:00'}]},
   { id:'hou', name:'ヒューストン・ロケッツ',         abbr:'HOU', conf:'west', logo:'🚀', w:40, l:30, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🚀 ROCKETSチャット！ジェイレン・グリーンを語ろう',t:'20:00'}]},
   { id:'mem', name:'メンフィス・グリズリーズ',       abbr:'MEM', conf:'west', logo:'🐻', w:32, l:38, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🐻 GRIZZLIESチャット！モラントの復活を語ろう',t:'19:50'}]},
   { id:'nop', name:'ニューオーリンズ・ペリカンズ',   abbr:'NOP', conf:'west', logo:'🦅', w:34, l:36, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'🦅 PELICANSチャット！ジオンの怪物プレーを語ろう',t:'19:50'}]},
   { id:'sas', name:'サンアントニオ・スパーズ',       abbr:'SAS', conf:'west', logo:'⚜️', w:18, l:52, jp:false,
-    msgs:[]},
+    msgs:[{n:'MENTALITY',adm:true,msg:'⚜️ SPURSチャット！ウェンバンヤマ時代の幕開け',t:'19:50'},{n:'spurs_fan',msg:'ウェンバンヤマのブロックとスリーの二刀流はやばい',t:'20:15'}]},
 ];
 
 // ============================================================
@@ -111,7 +111,7 @@ function filterConf(btn, conf) {
   renderTeams();
 }
 
-async function renderTeams() {
+function renderTeams() {
   const filtered = TEAMS.filter(t => teamConf === 'all' || t.conf === teamConf);
   // 全体オンライン数からチームごとの人数を比例配分
   const total = _globalOnlineCount || 12;
@@ -138,19 +138,6 @@ async function renderTeams() {
       </div>
     </div>`;
   }).join('');
-
-  // チャット広告追加
-  try {
-    const ar = await fetch(FB_URL + '/adslots.json');
-    const ad = await ar.json() || {};
-    const chatAds = ['chat_1','chat_2'].map(k => ad[k]).filter(a => a && a.url);
-    const el = document.getElementById('teamList');
-    const adHTML2 = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img src="${ad.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
-    const items = el.querySelectorAll('.tc');
-    const mid = Math.floor(items.length / 2);
-    if (chatAds[0] && items[mid]) items[mid].insertAdjacentHTML('afterend', adHTML2(chatAds[0]));
-    if (chatAds[1]) el.innerHTML += adHTML2(chatAds[1]);
-  } catch(e) {}
 }
 
 // ============================================================
@@ -345,7 +332,7 @@ function selectEmoji(el, emoji) {
   userEmoji = emoji;
 }
 
-async function saveNick(anon = false) {
+function saveNick(anon = false) {
   if (anon) {
     userNick  = '匿名ファン' + Math.floor(Math.random() * 9000 + 1000);
     userEmoji = '🏀';
@@ -353,25 +340,6 @@ async function saveNick(anon = false) {
     const v = document.getElementById('nickInp').value.trim();
     if (!v) { document.getElementById('nickInp').focus(); return; }
     userNick = v.slice(0, 16);
-    userEmoji = '🏀';
-
-    // プロフィール情報取得
-    const gender  = document.getElementById('nickGender')?.value || '';
-    const age     = document.getElementById('nickAge')?.value || '';
-    const team    = document.getElementById('nickTeam')?.value || '';
-    const player  = document.getElementById('nickPlayer')?.value.trim() || '';
-    const history = document.getElementById('nickHistory')?.value || '';
-
-    // Firebaseに保存
-    try {
-      const uid = lsGet('courtside_uid') || ('u' + Date.now() + Math.random().toString(36).slice(2,6));
-      lsSet('courtside_uid', uid);
-      await fetch(FB_URL + '/users/' + uid + '.json', {
-        method: 'PUT',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ nick: userNick, gender, age, team, player, history, ts: Date.now() })
-      });
-    } catch(e) {}
   }
   lsSet('mentality_nick',  userNick);
   lsSet('mentality_emoji', userEmoji);
@@ -438,60 +406,13 @@ function initChatUI() {
 
     <!-- ニックネーム設定モーダル -->
     <div id="nickModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(17,17,30,.75);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:1rem;">
-      <div style="background:var(--card);border-radius:12px;padding:1.5rem 1.25rem;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">COURTSIDE</div>
-        <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;line-height:1.6;">プロフィールを設定してチャットに参加しましょう！</div>
-        <input id="nickInp" style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;outline:none;font-family:'Barlow',sans-serif;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネームを入力（必須）" maxlength="16">
-        <select id="nickGender" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
-          <option value="">性別を選択</option>
-          <option value="male">男性</option>
-          <option value="female">女性</option>
-          <option value="other">その他</option>
-        </select>
-        <input id="nickAge" type="number" min="1" max="100" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="年齢">
-        <select id="nickTeam" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
-          <option value="">推しチームを選択</option>
-          <option value="ATL">ATL ホークス</option>
-          <option value="BOS">BOS セルティックス</option>
-          <option value="BKN">BKN ネッツ</option>
-          <option value="CHA">CHA ホーネッツ</option>
-          <option value="CHI">CHI ブルズ</option>
-          <option value="CLE">CLE キャバリアーズ</option>
-          <option value="DAL">DAL マーベリックス</option>
-          <option value="DEN">DEN ナゲッツ</option>
-          <option value="DET">DET ピストンズ</option>
-          <option value="GSW">GSW ウォリアーズ</option>
-          <option value="HOU">HOU ロケッツ</option>
-          <option value="IND">IND ペイサーズ</option>
-          <option value="LAC">LAC クリッパーズ</option>
-          <option value="LAL">LAL レイカーズ</option>
-          <option value="MEM">MEM グリズリーズ</option>
-          <option value="MIA">MIA ヒート</option>
-          <option value="MIL">MIL バックス</option>
-          <option value="MIN">MIN ティンバーウルブズ</option>
-          <option value="NOP">NOP ペリカンズ</option>
-          <option value="NYK">NYK ニックス</option>
-          <option value="OKC">OKC サンダー</option>
-          <option value="ORL">ORL マジック</option>
-          <option value="PHI">PHI シクサーズ</option>
-          <option value="PHX">PHX サンズ</option>
-          <option value="POR">POR トレイルブレイザーズ</option>
-          <option value="SAC">SAC キングス</option>
-          <option value="SAS">SAS スパーズ</option>
-          <option value="TOR">TOR ラプターズ</option>
-          <option value="UTA">UTA ジャズ</option>
-          <option value="WAS">WAS ウィザーズ</option>
-        </select>
-        <input id="nickPlayer" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="推し選手（例：レブロン）" maxlength="30">
-        <select id="nickHistory" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.8rem;">
-          <option value="">バスケ好き歴</option>
-          <option value="1年未満">1年未満</option>
-          <option value="1〜3年">1〜3年</option>
-          <option value="3〜5年">3〜5年</option>
-          <option value="5〜10年">5〜10年</option>
-          <option value="10年以上">10年以上</option>
-        </select>
+      <div style="background:var(--card);border-radius:12px;padding:1.5rem 1.25rem;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.5);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">MENTALITY</div>
+        <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;line-height:1.6;">チャットに参加するニックネームを設定してください。</div>
+        <div id="nickEmojis" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem;"></div>
+        <input id="nickInp" style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;outline:none;font-family:'Barlow',sans-serif;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネームを入力" maxlength="16">
         <button onclick="saveNick()" style="width:100%;padding:.55rem;border-radius:8px;background:var(--or);color:#fff;border:none;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 12px rgba(255,90,0,.3);">チャットに参加する 🏀</button>
+        <button onclick="saveNick(true)" style="width:100%;padding:.42rem;border-radius:8px;background:transparent;color:var(--tx3);border:1px solid var(--bd);font-family:'Barlow Condensed',sans-serif;font-size:.78rem;cursor:pointer;margin-top:.4rem;">匿名で参加する</button>
       </div>
     </div>
     `);
@@ -504,68 +425,3 @@ function initChatUI() {
 initChatUI();
 renderTeams();
 // ============================================================
-
-// ============================================================
-// ユーザー管理
-// ============================================================
-function openUserModal() {
-  const modal = document.getElementById('userModal');
-  if (modal) { modal.style.display = 'block'; loadUsers(); }
-}
-
-function closeUserModal() {
-  const modal = document.getElementById('userModal');
-  if (modal) modal.style.display = 'none';
-}
-
-async function loadUsers() {
-  const list  = document.getElementById('userList');
-  const stats = document.getElementById('userStats');
-  if (!list) return;
-  list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">読み込み中...</div>';
-
-  try {
-    const res  = await fetch(FB_URL + '/users.json');
-    const data = await res.json() || {};
-    const users = Object.entries(data).map(([id,u]) => ({id,...u})).sort((a,b) => b.ts - a.ts);
-
-    // 集計
-    const total  = users.length;
-    const male   = users.filter(u => u.gender === 'male').length;
-    const female = users.filter(u => u.gender === 'female').length;
-    const avgAge = users.filter(u => u.age).reduce((s,u) => s + Number(u.age), 0) / (users.filter(u => u.age).length || 1);
-
-    stats.innerHTML = `
-      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
-        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${total}</div>
-        <div style="font-size:.65rem;color:var(--tx3);">総ユーザー数</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
-        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${Math.round(avgAge)||'-'}</div>
-        <div style="font-size:.65rem;color:var(--tx3);">平均年齢</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
-        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${male}</div>
-        <div style="font-size:.65rem;color:var(--tx3);">男性</div>
-      </div>
-      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
-        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${female}</div>
-        <div style="font-size:.65rem;color:var(--tx3);">女性</div>
-      </div>
-    `;
-
-    list.innerHTML = users.map(u => `
-      <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-size:.78rem;font-weight:700;color:var(--tx);">${u.nick||'匿名'}</div>
-          <div style="font-size:.6rem;color:var(--tx3);">${new Date(u.ts).toLocaleDateString('ja-JP')}</div>
-        </div>
-        <div style="font-size:.65rem;color:var(--tx3);margin-top:.2rem;">
-          ${u.gender==='male'?'男性':u.gender==='female'?'女性':''}${u.age?' · '+u.age+'歳':''}${u.team?' · '+u.team:''}${u.player?' · '+u.player:''}${u.history?' · '+u.history:''}
-        </div>
-      </div>
-    `).join('');
-  } catch(e) {
-    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
-  }
-}
