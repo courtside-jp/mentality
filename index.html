@@ -167,9 +167,9 @@
   <div class="pg" id="pg-teams">
     <div class="pg-title">チームチャット <span class="pg-badge badge-season">30チーム</span></div>
     <div class="conf-row">
-      <button class="conf-btn on" onclick="filterConf(this,'east')">イースト</button>
-      <button class="conf-btn"    onclick="filterConf(this,'west')">ウェスト</button>
-      <button class="conf-btn"    onclick="filterConf(this,'all')">全30</button>
+      <button class="conf-btn on" onclick="if(typeof filterConf==='function')filterConf(this,'east')">イースト</button>
+      <button class="conf-btn"    onclick="if(typeof filterConf==='function')filterConf(this,'west')">ウェスト</button>
+      <button class="conf-btn"    onclick="if(typeof filterConf==='function')filterConf(this,'all')">全30</button>
     </div>
     <div id="teamList"></div>
   </div>
