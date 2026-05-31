@@ -112,7 +112,6 @@ function filterConf(btn, conf) {
 }
 
 async function renderTeams() {
-  console.log("renderTeams called, teamConf=", teamConf);
   const filtered = TEAMS.filter(t => teamConf === 'all' || t.conf === teamConf);
   // 全体オンライン数からチームごとの人数を比例配分
   const total = Math.min(_globalOnlineCount || 5, 20);
@@ -140,7 +139,7 @@ async function renderTeams() {
     const ad = await ar.json() || {};
     const chatAds = ['chat_1','chat_2'].map(k => ad[k]).filter(a => a && a.url);
     const el = document.getElementById('teamList');
-    const adHTML2 = (ad) => { const img2 = ad.img ? '<img src="'+ad.img+'" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display=\'none\'">' : ''; return `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${img2}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`; };
+    const adHTML2 = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img src="${ad.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
     const items = el.querySelectorAll('.tc');
     const mid = Math.floor(items.length / 2);
     if (chatAds[0] && items[mid]) items[mid].insertAdjacentHTML('afterend', adHTML2(chatAds[0]));
@@ -205,11 +204,11 @@ function _launchChat(teamId) {
 // ============================================================
 // チャットメッセージを描画
 // ============================================================
-async function renderCfpMsgs(msgs) {
+function renderCfpMsgs(msgs) {
   const container = document.getElementById('cfpMsgs');
   const sysHtml   = `<div class="sys-msg">🔒 このチャットは公開されています。礼儀正しく投稿しましょう。</div>`;
   container.innerHTML = sysHtml + msgs.map((m, i) => {
-    const adInsert = (i === 3 && msgs.length > 4) ? await getChatAdHTML() : '';
+    const adInsert = (i === 3 && msgs.length > 4) ? getChatAdHTML() : '';
     const isMine   = m.n === userNick;
     const colors   = ['cao','cat','cap','cag','can'];
     const avColor  = m.adm ? 'cam' : colors[Math.abs(hashStr(m.n)) % 5];
@@ -226,15 +225,8 @@ async function renderCfpMsgs(msgs) {
 }
 
 // チャット内インライン広告HTML
-async function getChatAdHTML() {
-  try {
-    const res = await fetch(FB_URL + '/adslots/chat_1.json');
-    const ad = await res.json();
-    if (!ad || !ad.url) return '';
-    const imgHtml = ad.img ? '<img src="'+ad.img+'" style="width:40px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;">' : '';
-    return `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;margin:.3rem 0;"><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span>${imgHtml}<div style="flex:1;min-width:0;font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
-  } catch(e) { return ''; }
-  const ad = null;
+function getChatAdHTML() {
+  const ad = TEAM_ADS[cfpTeamId] || TEAM_ADS.default;
   return `<div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:.3rem 0;position:relative;cursor:pointer;" onclick="window.open('${ad.url}','_blank')">
     <span style="position:absolute;top:4px;right:6px;font-size:.48rem;color:var(--tx3);opacity:.6;text-transform:uppercase;letter-spacing:.06em;">PR</span>
     <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;">
@@ -425,13 +417,116 @@ function hashStr(s) {
 // チャットページに必要なHTMLを動的に挿入
 // （index.html に書いてない要素をここで追加）
 // ============================================================
-function initChatUI() {}
+function initChatUI() {
+  // フルスクリーンチャット画面
+  if (!document.getElementById('chatFullPage')) {
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="chatFullPage" style="display:none;position:fixed;inset:0;z-index:300;background:var(--bg);max-width:480px;margin:0 auto;flex-direction:column;">
+      <div style="flex-shrink:0;background:#fff;border-bottom:1px solid var(--bd);padding:.7rem 1rem;display:flex;align-items:center;gap:.6rem;">
+        <button onclick="closeChatFull()" style="width:32px;height:32px;border-radius:6px;background:var(--bg3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;color:var(--tx2);">←</button>
+        <img id="cfpLogo" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;display:none;" onerror="this.style.display='none'">
+        <span id="cfpLogoEmoji" style="font-size:1.4rem;flex-shrink:0;"></span>
+        <div id="cfpName" style="flex:1;font-size:.9rem;font-weight:700;color:var(--tx);"></div>
+        <div style="display:flex;align-items:center;gap:.22rem;background:rgba(0,168,85,.1);border:1px solid rgba(0,168,85,.2);padding:.18rem .45rem;border-radius:4px;">
+          <span style="width:5px;height:5px;border-radius:50%;background:#00A855;animation:pulse 1.5s infinite;display:block;"></span>
+          <span id="cfpOnline" style="font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;color:#00A855;letter-spacing:.04em;">0人</span>
+        </div>
+      </div>
+      <div id="cfpMsgs" style="flex:1;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:.5rem;-webkit-overflow-scrolling:touch;"></div>
+      <div id="cfpAd" style="padding:.4rem .75rem;display:none;">
+        <div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;position:relative;cursor:pointer;" onclick="">
+          <span style="position:absolute;top:4px;right:6px;font-size:.48rem;color:var(--tx3);opacity:.6;text-transform:uppercase;letter-spacing:.06em;">PR</span>
+          <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;">
+            <div id="cfpAdImg" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#0d0d18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div id="cfpAdTag"   style="font-size:.55rem;font-weight:700;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.1rem;"></div>
+              <div id="cfpAdTitle" style="font-size:.72rem;font-weight:600;color:var(--tx);margin-bottom:.15rem;"></div>
+              <div style="font-size:.65rem;color:var(--tx2);"><s id="cfpAdOld" style="color:var(--tx3);font-size:.6rem;"></s> <span id="cfpAdPrice"></span></div>
+            </div>
+            <button id="cfpAdBtn" style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>
+          </div>
+        </div>
+      </div>
+      <div style="flex-shrink:0;background:#fff;border-top:1px solid var(--bd);padding:.5rem .75rem;">
+        <div style="display:flex;gap:.35rem;padding:.3rem 0 .45rem;overflow-x:auto;scrollbar-width:none;">
+          ${['🔥','👀','💪','🏀','😤','🎯','👑','😭','🤯'].map(e =>
+            `<button onclick="cfpReact('${e}')" style="flex-shrink:0;font-size:1.1rem;padding:.15rem .35rem;border-radius:6px;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;">${e}</button>`
+          ).join('')}
+        </div>
+        <div style="display:flex;align-items:center;gap:.4rem;">
+          <input id="cfpField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;font-family:'Barlow',sans-serif;" placeholder="メッセージを入力..." onkeydown="if(event.key==='Enter')cfpSend()">
+          <button onclick="cfpSend()" style="width:34px;height:34px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:.8rem;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,90,0,.35);flex-shrink:0;">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ニックネーム設定モーダル -->
+    <div id="nickModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(17,17,30,.75);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:1rem;">
+      <div style="background:var(--card);border-radius:12px;padding:1.5rem 1.25rem;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">COURTSIDE</div>
+        <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;line-height:1.6;">プロフィールを設定してチャットに参加しましょう！</div>
+        <input id="nickInp" style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;outline:none;font-family:'Barlow',sans-serif;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネームを入力（必須）" maxlength="16">
+        <select id="nickGender" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
+          <option value="">性別を選択</option>
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+          <option value="other">その他</option>
+        </select>
+        <input id="nickAge" type="number" min="1" max="100" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="年齢">
+        <select id="nickTeam" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
+          <option value="">推しチームを選択</option>
+          <option value="ATL">ATL ホークス</option>
+          <option value="BOS">BOS セルティックス</option>
+          <option value="BKN">BKN ネッツ</option>
+          <option value="CHA">CHA ホーネッツ</option>
+          <option value="CHI">CHI ブルズ</option>
+          <option value="CLE">CLE キャバリアーズ</option>
+          <option value="DAL">DAL マーベリックス</option>
+          <option value="DEN">DEN ナゲッツ</option>
+          <option value="DET">DET ピストンズ</option>
+          <option value="GSW">GSW ウォリアーズ</option>
+          <option value="HOU">HOU ロケッツ</option>
+          <option value="IND">IND ペイサーズ</option>
+          <option value="LAC">LAC クリッパーズ</option>
+          <option value="LAL">LAL レイカーズ</option>
+          <option value="MEM">MEM グリズリーズ</option>
+          <option value="MIA">MIA ヒート</option>
+          <option value="MIL">MIL バックス</option>
+          <option value="MIN">MIN ティンバーウルブズ</option>
+          <option value="NOP">NOP ペリカンズ</option>
+          <option value="NYK">NYK ニックス</option>
+          <option value="OKC">OKC サンダー</option>
+          <option value="ORL">ORL マジック</option>
+          <option value="PHI">PHI シクサーズ</option>
+          <option value="PHX">PHX サンズ</option>
+          <option value="POR">POR トレイルブレイザーズ</option>
+          <option value="SAC">SAC キングス</option>
+          <option value="SAS">SAS スパーズ</option>
+          <option value="TOR">TOR ラプターズ</option>
+          <option value="UTA">UTA ジャズ</option>
+          <option value="WAS">WAS ウィザーズ</option>
+        </select>
+        <input id="nickPlayer" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="推し選手（例：レブロン）" maxlength="30">
+        <select id="nickHistory" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.8rem;">
+          <option value="">バスケ好き歴</option>
+          <option value="1年未満">1年未満</option>
+          <option value="1〜3年">1〜3年</option>
+          <option value="3〜5年">3〜5年</option>
+          <option value="5〜10年">5〜10年</option>
+          <option value="10年以上">10年以上</option>
+        </select>
+        <button onclick="saveNick()" style="width:100%;padding:.55rem;border-radius:8px;background:var(--or);color:#fff;border:none;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 12px rgba(255,90,0,.3);">チャットに参加する 🏀</button>
+      </div>
+    </div>
+    `);
+  }
+}
 
 // ============================================================
 // 起動処理
 // ============================================================
 initChatUI();
-setTimeout(renderTeams, 500);
+renderTeams();
 // ============================================================
 
 // ============================================================
@@ -522,5 +617,3 @@ async function deleteUser(id) {
 window._chatLoaded = true;
 // async fix 2026年 5月29日 金曜日 19時28分31秒 JST
 // async fix 2026年 5月29日 金曜日 19時29分06秒 JST
-initChatUI();
-setTimeout(renderTeams, 500);
