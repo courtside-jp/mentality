@@ -239,7 +239,7 @@ function getChatAdHTML() {
     + '<div style="font-size:.72rem;font-weight:600;color:var(--tx);margin-bottom:.15rem;">'+ad.title+'</div>'
     + '<div style="font-size:.65rem;color:var(--tx2);"><s style="color:var(--tx3);font-size:.6rem;">'+ad.old+'</s> '+ad.price+'</div>'
     + '</div>'
-    + '<button style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>'
+    + '<button style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:Barlow Condensed,sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>'
     + '</div></div>';
 }
 
