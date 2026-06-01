@@ -174,7 +174,7 @@ function _launchChat(teamId) {
     logoEmoji.textContent = t.logo;
   }
   document.getElementById('cfpName').textContent    = t.name;
-  document.getElementById('cfpOnline').textContent  = t.online + '人オンライン';
+  document.getElementById('cfpOnline').textContent  = (t.online || _globalOnlineCount || 1) + '人オンライン';
   document.getElementById('cfpField').placeholder   = t.abbr + 'について投稿...';
 
   // 広告設定
