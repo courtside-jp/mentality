@@ -56,8 +56,8 @@
   <div class="sn-divider"></div>
   <button class="sn" id="sn-stats"    onclick="goPage('stats',this)">スタッツ</button>
   <div class="sn-divider"></div>
-  <div class="sn-divider"></div>
   <button class="sn" id="sn-chat" onclick="goPage('chat',this)">チャット</button>
+  <div class="sn-divider"></div>
   <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
   <div class="sn-divider"></div>
   <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
@@ -193,10 +193,10 @@
   </div>
 
   <!-- バッシュページ -->
-  <div class="pg" id="pg-chat">
+  <div class="pg" id="pg-chat" style="display:flex;flex-direction:column;height:100%;">
     <div class="pg-title">フリーチャット</div>
-    <div id="chatMsgs" style="overflow-y:auto;padding:.5rem;min-height:200px;"></div>
-    <div style="padding:.5rem;border-top:1px solid var(--bd);display:flex;gap:.4rem;align-items:center;">
+    <div id="chatMsgs" style="flex:1;overflow-y:auto;padding:.5rem;"></div>
+    <div style="padding:.5rem;border-top:1px solid var(--bd);display:flex;gap:.4rem;align-items:center;flex-shrink:0;">
       <button onclick="document.getElementById('chatImgInput').click()" style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;font-size:.9rem;flex-shrink:0;">📷</button>
       <input id="chatImgInput" type="file" accept="image/*" style="display:none" onchange="chatSendImage(this)">
       <input id="chatField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;" placeholder="メッセージまたはURLを入力..." onkeydown="if(event.key==='Enter')chatSend()">
