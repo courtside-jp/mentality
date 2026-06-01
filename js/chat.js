@@ -272,6 +272,11 @@ function cfpSend() {
   const inp = document.getElementById('cfpField');
   const txt = inp.value.trim();
   if (!txt) return;
+  const NG_WORDS = ['セックス','エロ','死ね','殺す','バカ','アホ','fuck','shit','sex','porn','nude'];
+  if (NG_WORDS.some(w => txt.toLowerCase().includes(w.toLowerCase()))) {
+    alert('不適切なワードが含まれています');
+    return;
+  }
   inp.value = '';
 
   const t = TEAMS.find(x => x.id === cfpTeamId);
