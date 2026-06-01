@@ -297,7 +297,7 @@ async function openPlayerModalByName(name, team) {
   const modal = document.getElementById('playerModal');
   const inner = document.getElementById('playerModalInner');
   if (!modal || !inner) return;
-  modal.style.display = 'block';
+  modal.style.display = 'flex';
 
   inner.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--tx3);">📊 選手データ取得中...</div>`;
 
