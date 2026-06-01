@@ -48,10 +48,7 @@ function goPage(id, btn) {
     loadSneakers();
   }
   if (id === 'chat' && typeof goChat === 'function') {
-    document.getElementById('mainScroll').style.overflow = 'hidden';
     goChat();
-  } else {
-    document.getElementById('mainScroll').style.overflow = '';
   }
 }
 
