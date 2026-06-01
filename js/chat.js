@@ -35,6 +35,7 @@ async function saveChatReg() {
   const gen = document.getElementById('regGender').value;
   const team = document.getElementById('regTeam').value;
   const player = document.getElementById('regPlayer').value.trim();
+  const email = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
   if (!nick) { alert('ニックネームを入力してください'); return; }
   chatNick = nick;
   chatEmoji = '🏀';
@@ -43,7 +44,7 @@ async function saveChatReg() {
   await fetch(FB_CHAT + '/chatusers.json', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ nick, age, gender: gen, team, player, emoji: chatEmoji, ts: Date.now() })
+    body: JSON.stringify({ nick, age, gender: gen, team, player, email, emoji: chatEmoji, ts: Date.now() })
   }).catch(function() {});
   closeChatReg();
   loadChatMsgs();
