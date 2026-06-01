@@ -230,14 +230,14 @@
 }
 
 #pg-chat.show {
-  height: calc(100vh - 130px);
+  height: 100%;
   overflow: hidden;
   position: relative;
 }
 #pg-chat.show .chat-msgs {
   position: absolute;
   top: 40px;
-  bottom: 54px;
+  bottom: 55px;
   left: 0;
   right: 0;
   overflow-y: auto;
@@ -248,4 +248,5 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
 }
