@@ -154,6 +154,7 @@
 /* ===== ページ共通 ===== */
 .pg { display: none; padding: .9rem; animation: fadeUp .2s ease; }
 .pg.show { display: block; }
+.pg#pg-chat.show { display: flex; }
 
 /* ===== 日付バー ===== */
 .date-bar {
