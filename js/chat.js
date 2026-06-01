@@ -111,20 +111,19 @@ function filterConf(btn, conf) {
   renderTeams();
 }
 
-function renderTeams() {
+async function renderTeams() {
   const filtered = TEAMS.filter(t => teamConf === 'all' || t.conf === teamConf);
   // 全体オンライン数からチームごとの人数を比例配分
-  const total = _globalOnlineCount || 12;
+  const total = Math.min(_globalOnlineCount || 5, 20);
   document.getElementById('teamList').innerHTML = filtered.map((t, i) => {
     const cdnId   = TEAM_CDN_IDS[t.abbr] || '';
     const logoHtml = cdnId
-      ? '<img src="' + NBA_CDN_LOGO(cdnId) + '" style="width:34px;height:34px;object-fit:contain;">'
+      ? `<img src="${NBA_CDN_LOGO(cdnId)}" style="width:34px;height:34px;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:1.3rem;\\'>${t.logo}</span>'">`
       : `<span style="font-size:1.3rem;">${t.logo}</span>`;
     const lastMsg = t.msgs[t.msgs.length - 1];
     const preview = lastMsg ? lastMsg.msg.slice(0, 28) + '…' : 'まだ投稿がありません';
     // チームごとのオンライン数 = 全体の5〜15%をランダムに分配（合計が全体を超えない）
     const teamOnline = Math.max(1, Math.floor(total * (0.05 + Math.random() * 0.1)));
-    const unread  = i < 3 ? Math.floor(Math.random() * 8) + 1 : 0;
     return `<div class="team-card${t.jp ? ' jp' : ''}" onclick="openChatFull('${t.id}')">
       <div class="tc-logo">${logoHtml}</div>
       <div class="tc-info">
@@ -134,10 +133,22 @@ function renderTeams() {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0;">
         <div class="tc-wl">${t.w}-${t.l}</div>
-        ${unread ? `<div class="tc-unreads">${unread}</div>` : ''}
       </div>
     </div>`;
   }).join('');
+
+  // チャット広告追加
+  try {
+    const ar = await fetch(FB_URL + '/adslots.json');
+    const ad = await ar.json() || {};
+    const chatAds = ['chat_1','chat_2'].map(k => ad[k]).filter(a => a && a.url);
+    const el = document.getElementById('teamList');
+    const adHTML2 = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img src="${ad.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
+    const items = el.querySelectorAll('.tc');
+    const mid = Math.floor(items.length / 2);
+    if (chatAds[0] && items[mid]) items[mid].insertAdjacentHTML('afterend', adHTML2(chatAds[0]));
+    if (chatAds[1]) el.innerHTML += adHTML2(chatAds[1]);
+  } catch(e) {}
 }
 
 // ============================================================
@@ -209,7 +220,7 @@ function renderCfpMsgs(msgs) {
       <div class="cav ${avColor}">${m.n[0].toUpperCase()}</div>
       <div class="cbody">
         <div class="cname">${escapeHtml(m.n)}${m.adm ? '<span class="cadm">管理人</span>' : ''}</div>
-        <div class="cbbl">${renderMsg(m.msg)}</div>
+        <div class="cbbl">${escapeHtml(m.msg)}</div>
         <div class="ctime">${m.t}</div>
       </div>
     </div>`;
@@ -235,52 +246,32 @@ function getChatAdHTML() {
 }
 
 // ============================================================
-// メッセージ描画（URL・YouTube・Twitter対応）
-// ============================================================
-function renderMsg(msg) {
-  const escaped = escapeHtml(msg);
-  // YouTube
-  const ytMatch = msg.match(/https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
-  if (ytMatch) {
-    return `<a href="${escapeHtml(msg)}" target="_blank" style="color:var(--or);word-break:break-all;">${escaped}</a>
-    <div style="margin-top:.4rem;border-radius:8px;overflow:hidden;">
-      <iframe width="100%" height="160" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allowfullscreen style="border-radius:8px;display:block;"></iframe>
-    </div>`;
-  }
-  // Twitter/X
-  const twMatch = msg.match(/https?:\/\/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
-  if (twMatch) {
-    return `<a href="${escapeHtml(msg)}" target="_blank" style="color:var(--or);word-break:break-all;">${escaped}</a>`;
-  }
-  // 画像URL
-  const imgMatch = msg.match(/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp)(\?\S*)?$/i);
-  if (imgMatch) {
-    return `<img src="${escapeHtml(msg)}" style="max-width:100%;border-radius:8px;margin-top:.3rem;" onerror="this.style.display='none'">`;
-  }
-  // 通常URL
-  const urlMatch = msg.match(/https?:\/\/\S+/);
-  if (urlMatch) {
-    return escaped.replace(/https?:\/\/\S+/, `<a href="${urlMatch[0]}" target="_blank" style="color:var(--or);word-break:break-all;">${urlMatch[0]}</a>`);
-  }
-  return escaped;
-}
-
-// ============================================================
 // メッセージ送信
 // ============================================================
 function cfpSend() {
   const inp = document.getElementById('cfpField');
   const txt = inp.value.trim();
   if (!txt) return;
-  const NG_WORDS = ['セックス','エロ','死ね','殺す','バカ','アホ','fuck','shit','sex','porn','nude'];
-  if (NG_WORDS.some(w => txt.toLowerCase().includes(w.toLowerCase()))) {
-    alert('不適切なワードが含まれています');
-    return;
-  }
   inp.value = '';
 
   const t = TEAMS.find(x => x.id === cfpTeamId);
   if (!t) return;
+
+  const CHAT_NG = ['死ね','殺す','氏ね','消えろ','基地外','レイプ','強姦','チンポ','まんこ','セックス','変態','エロ','ヤリマン','援交','売春'];
+  if (CHAT_NG.some(w => txt.includes(w))) {
+    alert('その言葉は使用できません');
+    return;
+  }
+
+  // BANチェック
+  try {
+    const uid = lsGet('courtside_uid');
+    if (uid) {
+      const res = await fetch(FB_URL + '/users/' + uid + '.json');
+      const user = await res.json();
+      if (user && user.banned) { alert('あなたはBANされています'); return; }
+    }
+  } catch(e) {}
 
   const now    = ntime(); // utils.js
   const newMsg = { n: userNick, msg: txt, t: now };
@@ -368,14 +359,47 @@ function selectEmoji(el, emoji) {
   userEmoji = emoji;
 }
 
-function saveNick(anon = false) {
+async function saveNick(anon = false) {
   if (anon) {
     userNick  = '匿名ファン' + Math.floor(Math.random() * 9000 + 1000);
     userEmoji = '🏀';
   } else {
     const v = document.getElementById('nickInp').value.trim();
     if (!v) { document.getElementById('nickInp').focus(); return; }
+
+    const NG_WORDS = ['死ね','殺す','氏ね','消えろ','基地外','レイプ','強姦','チンポ','まんこ','セックス','変態','エロ','ヤリマン','援交','売春'];
+    if (NG_WORDS.some(w => v.includes(w))) {
+      alert('そのニックネームは使用できません');
+      return;
+    }
+
+    try {
+      const res = await fetch(FB_URL + '/users.json');
+      const data = await res.json() || {};
+      const exists = Object.values(data).some(u => u.nick === v.slice(0,16));
+      if (exists) { alert('このニックネームはすでに使われています'); return; }
+    } catch(e) {}
+
     userNick = v.slice(0, 16);
+    userEmoji = '🏀';
+
+    // プロフィール情報取得
+    const gender  = document.getElementById('nickGender')?.value || '';
+    const age     = document.getElementById('nickAge')?.value || '';
+    const team    = document.getElementById('nickTeam')?.value || '';
+    const player  = document.getElementById('nickPlayer')?.value.trim() || '';
+    const history = document.getElementById('nickHistory')?.value || '';
+
+    // Firebaseに保存
+    try {
+      const uid = lsGet('courtside_uid') || ('u' + Date.now() + Math.random().toString(36).slice(2,6));
+      lsSet('courtside_uid', uid);
+      await fetch(FB_URL + '/users/' + uid + '.json', {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ nick: userNick, gender, age, team, player, history, ts: Date.now() })
+      });
+    } catch(e) {}
   }
   lsSet('mentality_nick',  userNick);
   lsSet('mentality_emoji', userEmoji);
@@ -434,9 +458,7 @@ function initChatUI() {
           ).join('')}
         </div>
         <div style="display:flex;align-items:center;gap:.4rem;">
-          <input id="cfpImgInput" type="file" accept="image/*" style="display:none" onchange="cfpSendImage(this)">
-          <button onclick="document.getElementById('cfpImgInput').click()" style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">📷</button>
-          <input id="cfpField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;font-family:'Barlow',sans-serif;" placeholder="メッセージまたはURLを入力..." onkeydown="if(event.key==='Enter')cfpSend()">
+          <input id="cfpField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;font-family:'Barlow',sans-serif;" placeholder="メッセージを入力..." onkeydown="if(event.key==='Enter')cfpSend()">
           <button onclick="cfpSend()" style="width:34px;height:34px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:.8rem;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,90,0,.35);flex-shrink:0;">➤</button>
         </div>
       </div>
@@ -444,13 +466,60 @@ function initChatUI() {
 
     <!-- ニックネーム設定モーダル -->
     <div id="nickModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(17,17,30,.75);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:1rem;">
-      <div style="background:var(--card);border-radius:12px;padding:1.5rem 1.25rem;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.5);">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">MENTALITY</div>
-        <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;line-height:1.6;">チャットに参加するニックネームを設定してください。</div>
-        <div id="nickEmojis" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem;"></div>
-        <input id="nickInp" style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;outline:none;font-family:'Barlow',sans-serif;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネームを入力" maxlength="16">
+      <div style="background:var(--card);border-radius:12px;padding:1.5rem 1.25rem;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">COURTSIDE</div>
+        <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;line-height:1.6;">プロフィールを設定してチャットに参加しましょう！</div>
+        <input id="nickInp" style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;outline:none;font-family:'Barlow',sans-serif;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネームを入力（必須）" maxlength="16">
+        <select id="nickGender" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
+          <option value="">性別を選択</option>
+          <option value="male">男性</option>
+          <option value="female">女性</option>
+          <option value="other">その他</option>
+        </select>
+        <input id="nickAge" type="number" min="1" max="100" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="年齢">
+        <select id="nickTeam" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
+          <option value="">推しチームを選択</option>
+          <option value="ATL">ATL ホークス</option>
+          <option value="BOS">BOS セルティックス</option>
+          <option value="BKN">BKN ネッツ</option>
+          <option value="CHA">CHA ホーネッツ</option>
+          <option value="CHI">CHI ブルズ</option>
+          <option value="CLE">CLE キャバリアーズ</option>
+          <option value="DAL">DAL マーベリックス</option>
+          <option value="DEN">DEN ナゲッツ</option>
+          <option value="DET">DET ピストンズ</option>
+          <option value="GSW">GSW ウォリアーズ</option>
+          <option value="HOU">HOU ロケッツ</option>
+          <option value="IND">IND ペイサーズ</option>
+          <option value="LAC">LAC クリッパーズ</option>
+          <option value="LAL">LAL レイカーズ</option>
+          <option value="MEM">MEM グリズリーズ</option>
+          <option value="MIA">MIA ヒート</option>
+          <option value="MIL">MIL バックス</option>
+          <option value="MIN">MIN ティンバーウルブズ</option>
+          <option value="NOP">NOP ペリカンズ</option>
+          <option value="NYK">NYK ニックス</option>
+          <option value="OKC">OKC サンダー</option>
+          <option value="ORL">ORL マジック</option>
+          <option value="PHI">PHI シクサーズ</option>
+          <option value="PHX">PHX サンズ</option>
+          <option value="POR">POR トレイルブレイザーズ</option>
+          <option value="SAC">SAC キングス</option>
+          <option value="SAS">SAS スパーズ</option>
+          <option value="TOR">TOR ラプターズ</option>
+          <option value="UTA">UTA ジャズ</option>
+          <option value="WAS">WAS ウィザーズ</option>
+        </select>
+        <input id="nickPlayer" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="推し選手（例：レブロン）" maxlength="30">
+        <select id="nickHistory" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.8rem;">
+          <option value="">バスケ好き歴</option>
+          <option value="1年未満">1年未満</option>
+          <option value="1〜3年">1〜3年</option>
+          <option value="3〜5年">3〜5年</option>
+          <option value="5〜10年">5〜10年</option>
+          <option value="10年以上">10年以上</option>
+        </select>
         <button onclick="saveNick()" style="width:100%;padding:.55rem;border-radius:8px;background:var(--or);color:#fff;border:none;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 12px rgba(255,90,0,.3);">チャットに参加する 🏀</button>
-        <button onclick="saveNick(true)" style="width:100%;padding:.42rem;border-radius:8px;background:transparent;color:var(--tx3);border:1px solid var(--bd);font-family:'Barlow Condensed',sans-serif;font-size:.78rem;cursor:pointer;margin-top:.4rem;">匿名で参加する</button>
       </div>
     </div>
     `);
@@ -464,24 +533,86 @@ initChatUI();
 renderTeams();
 // ============================================================
 
-// 画像送信
-async function cfpSendImage(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const dataUrl = e.target.result;
-    const t = TEAMS.find(x => x.id === cfpTeamId);
-    if (!t) return;
-    const now = ntime();
-    const newMsg = { n: userNick, msg: dataUrl, t: now };
-    t.msgs.push(newMsg);
-    renderCfpMsgs(t.msgs);
-    fetch(`${FB_URL}/chats/${cfpTeamId}.json`, {
-      method: 'POST',
-      body: JSON.stringify({ nick: userNick, emoji: userEmoji, msg: dataUrl, t: now, ts: Date.now() })
-    }).catch(() => {});
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
+// ============================================================
+// ユーザー管理
+// ============================================================
+function openUserModal() {
+  const modal = document.getElementById('userModal');
+  if (modal) { modal.style.display = 'block'; loadUsers(); }
+}
+
+function closeUserModal() {
+  const modal = document.getElementById('userModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function loadUsers() {
+  const list  = document.getElementById('userList');
+  const stats = document.getElementById('userStats');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">読み込み中...</div>';
+
+  try {
+    const res  = await fetch(FB_URL + '/users.json');
+    const data = await res.json() || {};
+    const users = Object.entries(data).map(([id,u]) => ({id,...u})).sort((a,b) => b.ts - a.ts);
+
+    // 集計
+    const total  = users.length;
+    const male   = users.filter(u => u.gender === 'male').length;
+    const female = users.filter(u => u.gender === 'female').length;
+    const avgAge = users.filter(u => u.age).reduce((s,u) => s + Number(u.age), 0) / (users.filter(u => u.age).length || 1);
+
+    stats.innerHTML = `
+      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${total}</div>
+        <div style="font-size:.65rem;color:var(--tx3);">総ユーザー数</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${Math.round(avgAge)||'-'}</div>
+        <div style="font-size:.65rem;color:var(--tx3);">平均年齢</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${male}</div>
+        <div style="font-size:.65rem;color:var(--tx3);">男性</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:.7rem;text-align:center;">
+        <div style="font-size:1.2rem;font-weight:700;color:var(--or);">${female}</div>
+        <div style="font-size:.65rem;color:var(--tx3);">女性</div>
+      </div>
+    `;
+
+    list.innerHTML = users.map(u => `
+      <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--tx);">${u.nick||'匿名'}${u.banned?'<span style="color:#ff5555;font-size:.6rem;"> BAN</span>':''}</div>
+          <div style="display:flex;gap:.3rem;align-items:center;">
+            <div style="font-size:.6rem;color:var(--tx3);">${new Date(u.ts).toLocaleDateString('ja-JP')}</div>
+            <button onclick="banUser('${u.id}',${!u.banned})" style="background:${u.banned?'rgba(50,200,50,.15)':'rgba(255,50,50,.15)'};border:none;color:${u.banned?'#33cc33':'#ff5555'};padding:.2rem .4rem;border-radius:4px;font-size:.6rem;cursor:pointer;">${u.banned?'解除':'BAN'}</button>
+            <button onclick="deleteUser('${u.id}')" style="background:rgba(100,100,100,.15);border:none;color:var(--tx3);padding:.2rem .4rem;border-radius:4px;font-size:.6rem;cursor:pointer;">削除</button>
+          </div>
+        </div>
+        <div style="font-size:.65rem;color:var(--tx3);margin-top:.2rem;">
+          ${u.gender==='male'?'男性':u.gender==='female'?'女性':''}${u.age?' · '+u.age+'歳':''}${u.team?' · '+u.team:''}${u.player?' · '+u.player:''}${u.history?' · '+u.history:''}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
+
+async function banUser(id, banned) {
+  await fetch(FB_URL + '/users/' + id + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ banned })
+  });
+  loadUsers();
+}
+
+async function deleteUser(id) {
+  if (!confirm('このユーザーを削除しますか？')) return;
+  await fetch(FB_URL + '/users/' + id + '.json', { method: 'DELETE' });
+  loadUsers();
 }
