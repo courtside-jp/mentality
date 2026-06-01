@@ -118,8 +118,8 @@ async function renderTeams() {
   document.getElementById('teamList').innerHTML = filtered.map((t, i) => {
     const cdnId   = TEAM_CDN_IDS[t.abbr] || '';
     const logoHtml = cdnId
-      ? `<img src="${NBA_CDN_LOGO(cdnId)}" style="width:34px;height:34px;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:1.3rem;\\'>${t.logo}</span>'">`
-      : `<span style="font-size:1.3rem;">${t.logo}</span>`;
+      ? '<img src="' + NBA_CDN_LOGO(cdnId) + '" style="width:34px;height:34px;object-fit:contain;">'
+      : '<span style="font-size:1.3rem;">' + t.logo + '</span>';
     const lastMsg = t.msgs[t.msgs.length - 1];
     const preview = lastMsg ? lastMsg.msg.slice(0, 28) + '…' : 'まだ投稿がありません';
     // チームごとのオンライン数 = 全体の5〜15%をランダムに分配（合計が全体を超えない）
