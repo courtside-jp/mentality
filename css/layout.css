@@ -258,3 +258,9 @@
   background: var(--bg2);
   z-index: 11;
 }
+
+#pg-chat:not(.show) .chat-msgs,
+#pg-chat:not(.show) .chat-input-bar {
+  display: none !important;
+  position: static !important;
+}
