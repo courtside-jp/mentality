@@ -259,8 +259,6 @@
   z-index: 11;
 }
 
-#pg-chat:not(.show) .chat-msgs,
-#pg-chat:not(.show) .chat-input-bar {
-  display: none !important;
-  position: static !important;
-}
+.chat-msgs, .chat-input-bar { display: none !important; }
+#pg-chat.show .chat-msgs { display: block !important; }
+#pg-chat.show .chat-input-bar { display: flex !important; }
