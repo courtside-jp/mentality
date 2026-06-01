@@ -232,7 +232,7 @@ function renderCfpMsgs(msgs) {
 function getChatAdHTML() {
   const ad = TEAM_ADS[cfpTeamId] || TEAM_ADS.default;
   return '<div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:.3rem 0;position:relative;cursor:pointer;" onclick="window.open(''+ad.url+'','_blank')">'
-    + '<span style="position:absolute;top:4px;right:6px;font-size:.48rem;color:var(--tx3);opacity:.6;text-transform:uppercase;letter-spacing:.06em;">PR</span>'
+  return '<div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:.3rem 0;position:relative;cursor:pointer;" onclick="window.open(\''+ad.url+'\',\'_blank\')">'
     + '<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;">'
     + '<div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#0d0d18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">'+ad.img+'</div>'
     + '<div style="flex:1;min-width:0;">'
