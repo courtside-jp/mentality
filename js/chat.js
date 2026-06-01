@@ -145,3 +145,38 @@ async function chatDelete(msgId) {
   }).catch(function(){});
   loadChatMsgs();
 }
+
+// ユーザー管理
+function openUserModal() {
+  const modal = document.getElementById('userModal');
+  if (modal) { modal.style.display = 'block'; loadChatUsers(); }
+}
+
+function closeUserModal() {
+  const modal = document.getElementById('userModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function loadChatUsers() {
+  const wrap = document.getElementById('userList');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">読み込み中...</div>';
+  try {
+    const res = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/chatusers.json');
+    const data = await res.json();
+    if (!data) { wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">ユーザーなし</div>'; return; }
+    const users = Object.values(data).sort(function(a,b){ return b.ts - a.ts; });
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);margin-bottom:.5rem;">登録ユーザー数: ' + users.length + '人</div>' +
+      users.map(function(u) {
+        return '<div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.5rem;">' +
+          '<div style="font-size:.78rem;font-weight:700;color:var(--tx);">' + (u.nick || '匿名') + '</div>' +
+          '<div style="font-size:.65rem;color:var(--tx3);margin-top:.2rem;">' +
+          (u.age || '') + (u.gender === 'male' ? ' · 男性' : u.gender === 'female' ? ' · 女性' : '') +
+          (u.team ? ' · ' + u.team : '') +
+          (u.player ? ' · ' + u.player : '') +
+          '</div></div>';
+      }).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
