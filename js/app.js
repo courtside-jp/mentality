@@ -47,9 +47,6 @@ function goPage(id, btn) {
   if (id === 'sneakers' && typeof loadSneakers === 'function') {
     loadSneakers();
   }
-  if (id === 'teams' && typeof renderTeams === 'function') {
-    renderTeams();
-  }
 }
 
 // ============================================================
