@@ -234,6 +234,8 @@
   display: flex !important;
   flex-direction: column !important;
   padding: 0 !important;
+  max-height: 100%;
+  overflow: hidden;
 }
 #pg-chat.show .chat-msgs {
   flex: 1;
