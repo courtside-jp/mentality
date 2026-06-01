@@ -55,6 +55,7 @@ const LEGAL_PAGES = {
         <li>サービスの提供・改善</li>
         <li>アクセス解析</li>
         <li>広告配信の最適化</li>
+        <li>メールアドレス（任意）：サービスに関するお知らせの配信。第三者への提供は行いません。</li>
       </ul>
 
       <h3 style="font-size:.85rem;font-weight:700;color:var(--tx);margin:1.2rem 0 .4rem;">3. Google Analytics・広告について</h3>
