@@ -67,7 +67,8 @@ async function loadChatMsgs() {
       wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.8rem;">まだメッセージがありません</div>';
       return;
     }
-    var msgs = Object.values(data).sort(function(a,b){ return a.ts - b.ts; });
+    var entries = Object.entries(data).sort(function(a,b){ return a[1].ts - b[1].ts; });
+    var msgs = entries.map(function(e){ return Object.assign({_id: e[0]}, e[1]); });
     var colors = ['cao','cat','cap','cag','can'];
     wrap.innerHTML = msgs.map(function(m) {
       var isMine = m.nick === chatNick;
@@ -80,7 +81,7 @@ async function loadChatMsgs() {
         '<div class="cbody">' +
         '<div class="cname">' + (m.nick || '匿名') + '</div>' +
         '<div class="cbbl">' + chatRenderMsg(m.msg || '') + '</div>' +
-        '<div class="ctime">' + (m.time || '') + '</div>' +
+        '<div class="ctime">' + (m.time || '') + (isMine ? ' <button onclick="chatDelete(\'' + m._id + '\'')" style="background:none;border:none;color:var(--tx3);font-size:.6rem;cursor:pointer;padding:0 .2rem;">🗑</button>' : '') + '</div>' +
         '</div></div>';
     }).join('');
     wrap.scrollTop = wrap.scrollHeight;
@@ -125,4 +126,12 @@ function chatSendImage(input) {
   };
   reader.readAsDataURL(file);
   input.value = '';
+}
+
+async function chatDelete(msgId) {
+  if (!confirm('このメッセージを削除しますか？')) return;
+  await fetch(FB_CHAT + '/freechat/' + msgId + '.json', {
+    method: 'DELETE'
+  }).catch(function(){});
+  loadChatMsgs();
 }
