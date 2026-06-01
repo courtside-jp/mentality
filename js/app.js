@@ -48,7 +48,14 @@ function goPage(id, btn) {
     loadSneakers();
   }
   if (id === 'chat' && typeof goChat === 'function') {
+    var m=document.getElementById('chatMsgs'),b=document.querySelector('.chat-input-bar');
+    if(m)m.style.display='';
+    if(b)b.style.display='';
     goChat();
+  } else {
+    var m=document.getElementById('chatMsgs'),b=document.querySelector('.chat-input-bar');
+    if(m)m.style.display='none';
+    if(b)b.style.display='none';
   }
 }
 
