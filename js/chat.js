@@ -37,7 +37,7 @@ async function saveChatReg() {
   const player = document.getElementById('regPlayer').value.trim();
   if (!nick) { alert('ニックネームを入力してください'); return; }
   chatNick = nick;
-  chatEmoji = document.getElementById('regEmoji').value || '🏀';
+  chatEmoji = '🏀';
   localStorage.setItem('chat_nick', chatNick);
   localStorage.setItem('chat_emoji', chatEmoji);
   await fetch(FB_CHAT + '/chatusers.json', {
