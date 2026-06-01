@@ -143,7 +143,7 @@ async function renderTeams() {
     const ad = await ar.json() || {};
     const chatAds = ['chat_1','chat_2'].map(k => ad[k]).filter(a => a && a.url);
     const el = document.getElementById('teamList');
-    const adHTML2 = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img src="${ad.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
+    const adHTML2 = (ad) => { const img2 = ad.img ? '<img src="'+ad.img+'" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display=\'none\'">' : ''; return '<a href="'+ad.url+'" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">'+img2+'<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+ad.title+'</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>'; };
     const items = el.querySelectorAll('.tc');
     const mid = Math.floor(items.length / 2);
     if (chatAds[0] && items[mid]) items[mid].insertAdjacentHTML('afterend', adHTML2(chatAds[0]));
@@ -231,18 +231,17 @@ function renderCfpMsgs(msgs) {
 // チャット内インライン広告HTML
 function getChatAdHTML() {
   const ad = TEAM_ADS[cfpTeamId] || TEAM_ADS.default;
-  return `<div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:.3rem 0;position:relative;cursor:pointer;" onclick="window.open('${ad.url}','_blank')">
-    <span style="position:absolute;top:4px;right:6px;font-size:.48rem;color:var(--tx3);opacity:.6;text-transform:uppercase;letter-spacing:.06em;">PR</span>
-    <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;">
-      <div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#0d0d18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">${ad.img}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:.55rem;font-weight:700;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.1rem;">${ad.tag}</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--tx);margin-bottom:.15rem;">${ad.title}</div>
-        <div style="font-size:.65rem;color:var(--tx2);"><s style="color:var(--tx3);font-size:.6rem;">${ad.old}</s> ${ad.price}</div>
-      </div>
-      <button style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>
-    </div>
-  </div>`;
+  return '<div style="background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:.3rem 0;position:relative;cursor:pointer;" onclick="window.open(''+ad.url+'','_blank')">'
+    + '<span style="position:absolute;top:4px;right:6px;font-size:.48rem;color:var(--tx3);opacity:.6;text-transform:uppercase;letter-spacing:.06em;">PR</span>'
+    + '<div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;">'
+    + '<div style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#1a1a2e,#0d0d18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">'+ad.img+'</div>'
+    + '<div style="flex:1;min-width:0;">'
+    + '<div style="font-size:.55rem;font-weight:700;color:var(--or);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.1rem;">'+ad.tag+'</div>'
+    + '<div style="font-size:.72rem;font-weight:600;color:var(--tx);margin-bottom:.15rem;">'+ad.title+'</div>'
+    + '<div style="font-size:.65rem;color:var(--tx2);"><s style="color:var(--tx3);font-size:.6rem;">'+ad.old+'</s> '+ad.price+'</div>'
+    + '</div>'
+    + '<button style="flex-shrink:0;padding:.32rem .65rem;border-radius:6px;background:var(--or);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;border:none;cursor:pointer;">Amazon</button>'
+    + '</div></div>';
 }
 
 // ============================================================
