@@ -228,3 +228,12 @@
   align-items: center;
   background: var(--bg2);
 }
+
+#pg-chat.show {
+  height: 100%;
+  overflow: hidden;
+}
+#pg-chat.show .chat-msgs {
+  height: calc(100% - 54px);
+  overflow-y: auto;
+}
