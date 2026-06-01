@@ -119,6 +119,7 @@
 /* ===== メインスクロール ===== */
 .main {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -230,23 +231,22 @@
 }
 
 #pg-chat.show {
-  height: calc(100vh - 85px);
-  overflow: hidden;
-  position: relative;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
 }
 #pg-chat.show .chat-msgs {
-  position: absolute;
-  top: 40px;
-  bottom: 55px;
-  left: 0;
-  right: 0;
+  flex: 1;
   overflow-y: auto;
   padding: .8rem;
+  min-height: 0;
 }
 #pg-chat.show .chat-input-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+  flex-shrink: 0;
+  padding: .5rem .7rem;
+  border-top: 1px solid var(--bd);
+  display: flex;
+  gap: .4rem;
+  align-items: center;
+  background: var(--bg2);
 }
