@@ -9,6 +9,16 @@ function goChat() {
   if (!chatNick) { openChatReg(); return; }
   loadChatMsgs();
   if (!chatPollId) chatPollId = setInterval(loadChatMsgs, 5000);
+  setTimeout(function() {
+    var pg = document.getElementById('pg-chat');
+    var msgs = document.getElementById('chatMsgs');
+    var bar = pg ? pg.querySelector('.chat-input-bar') : null;
+    if (pg && msgs && bar) {
+      var pgH = pg.offsetHeight;
+      var barH = bar.offsetHeight;
+      msgs.style.height = (pgH - barH - 40) + 'px';
+    }
+  }, 100);
 }
 
 function openChatReg() {
