@@ -322,7 +322,7 @@ async function renderPlayerModal(inner, name, team, photoUrl, espnId) {
 
   inner.innerHTML = `
     <div style="background:linear-gradient(135deg,#0a1628,#1d428a);padding:1rem;position:relative;">
-      <button onclick="closePlayerModal()" style="position:fixed;top:80px;right:12px;z-index:400;background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.8rem;cursor:pointer;">✕</button>
+      <button onclick="closePlayerModal()" style="position:fixed;top:80px;right:12px;z-index:400;background:var(--or);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);">✕</button>
       <div style="display:flex;gap:.8rem;align-items:flex-end;">
         <div style="width:80px;height:64px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.1);flex-shrink:0;">
           ${photoUrl ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
