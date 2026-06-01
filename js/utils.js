@@ -21,9 +21,9 @@ function getJPDate() {
 
 /** NBA基準日を返す（日本時間14時前は前日扱い） */
 function getNBABaseDate() {
-  // NBA基準日：日本時間から1日戻す（ETとの時差対応）
+  // NBA基準日：日本時間から1日進める（ETとの時差対応）
   const jp = new Date(new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }));
-  jp.setDate(jp.getDate() - 1);
+  jp.setDate(jp.getDate() + 1);
   return jp;
 }
 
