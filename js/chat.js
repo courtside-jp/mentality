@@ -81,7 +81,7 @@ async function loadChatMsgs() {
         '<div class="cbody">' +
         '<div class="cname">' + (m.nick || '匿名') + '</div>' +
         '<div class="cbbl">' + chatRenderMsg(m.msg || '') + '</div>' +
-        '<div class="ctime">' + (m.time || '') + (isMine ? ' <button onclick="chatDelete(\'' + m._id + '\'')" style="background:none;border:none;color:var(--tx3);font-size:.6rem;cursor:pointer;padding:0 .2rem;">🗑</button>' : '') + '</div>' +
+        '<div class="ctime">' + (m.time || '') + (isMine ? ' <button onclick="chatDelete(&#39;' + m._id + '&#39;)" style="background:none;border:none;color:var(--tx3);font-size:.6rem;cursor:pointer;">🗑</button>' : '') + '</div>' +
         '</div></div>';
     }).join('');
     wrap.scrollTop = wrap.scrollHeight;
