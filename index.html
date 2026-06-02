@@ -400,7 +400,8 @@
       <div style="margin-bottom:.8rem;">
         <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">サムネイル画像URL（任意）</div>
         <div style="display:flex;gap:6px;align-items:center;">
-  <input id="adminImg" type="text" placeholder="https://..." style="flex:1;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
+  <input type="hidden" id="adminEditId" value="">
+        <input id="adminImg" type="text" placeholder="https://..." style="flex:1;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
   <button type="button" id="adminImgUploadBtn" onclick="window.uploadThumbImage()" style="padding:.5rem .8rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.75rem;cursor:pointer;white-space:nowrap;">画像を選ぶ</button>
   <input type="file" id="adminImgFile" accept="image/*" style="display:none;">
 </div>
