@@ -50,6 +50,10 @@ async function loadArticles() {
     }
 
     const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).sort((a,b) => b.ts - a.ts);
+    if (window._directArticleId) {
+      const target = articles.find(a => a.id === window._directArticleId);
+      if (target) { openArticle(target.id); window._directArticleId = null; return; }
+    }
 
     wrap.innerHTML = articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
       (a.img ? '<img src="' + a.img + '" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:.6rem;" onerror="this.style.display=\'none\'">' : '') +
@@ -477,13 +481,5 @@ function resetArticleForm() {
   const params = new URLSearchParams(window.location.search);
   const articleId = params.get('article');
   if (!articleId) return;
-  window.addEventListener('load', async () => {
-    await new Promise(r => setTimeout(r, 1500));
-    const nav = document.querySelector('[data-page="articles"], [onclick*="articles"]');
-    if (nav) nav.click();
-    await new Promise(r => setTimeout(r, 800));
-    const res = await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/articles/${articleId}.json`);
-    const a = await res.json();
-    if (a) openArticle({id: articleId, ...a});
-  });
+  window._directArticleId = articleId;
 })();
