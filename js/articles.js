@@ -134,13 +134,24 @@ async function submitArticle() {
   btn.textContent = '投稿中...';
   btn.disabled = true;
 
+  const editId = document.getElementById('adminEditId')?.value;
   try {
-    await fetch(FB_ARTICLES + '.json', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ title, body, img, category, ts: Date.now() })
-    });
-    alert('投稿しました！');
+    if (editId) {
+      await fetch(`${FB_ARTICLES}/${editId}.json`, {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, body, img, category })
+      });
+      alert('更新しました！');
+      document.getElementById('adminEditId').value = '';
+    } else {
+      await fetch(FB_ARTICLES + '.json', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, body, img, category, ts: Date.now() })
+      });
+      alert('投稿しました！');
+    }
     document.getElementById('adminTitle').value = '';
     document.getElementById('adminBody').value = '';
     document.getElementById('adminImg').value = '';
@@ -338,7 +349,7 @@ async function loadAdminArticles() {
           <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}</div>
           <div style="font-size:.58rem;color:var(--tx3);">${a.category||'NBA'} · ${new Date(a.ts).toLocaleDateString('ja-JP')}</div>
         </div>
-        <button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
+        <button onclick="editArticle('${a.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;margin-right:.3rem;">編集</button><button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
       </div>
     `).join('');
   } catch(e) {
@@ -497,3 +508,19 @@ function resetArticleForm() {
     }, 800);
   });
 })();
+
+async function editArticle(id) {
+  const res = await fetch(`${FB_ARTICLES}/${id}.json`);
+  const a = await res.json();
+  if (!a) return;
+  document.getElementById('adminTitle').value = a.title || '';
+  document.getElementById('adminBody').value = a.body || '';
+  document.getElementById('adminImg').value = a.img || '';
+  const cat = document.getElementById('adminCategory');
+  if (cat) cat.value = a.category || 'NBA';
+  const editId = document.getElementById('adminEditId');
+  if (editId) editId.value = id;
+  updatePreview();
+  document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
+  alert('編集モードです。修正後に「投稿する」を押すと上書き保存されます。');
+}
