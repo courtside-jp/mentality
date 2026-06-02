@@ -152,12 +152,47 @@ async function submitArticle() {
 function insertToBody(type) {
   const textarea = document.getElementById('adminBody');
   const prompts = {
-    image: '画像URLを入力してください',
+    image: null,
     youtube: 'YouTubeのURLを入力してください',
     tiktok: 'TikTokのURLを入力してください',
     instagram: 'InstagramのURLを入力してください',
     twitter: 'X(Twitter)のURLを入力してください',
   };
+  if (type === 'image') {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('key', '6b317240ded356635338f7ce9c45ec05');
+      try {
+        const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
+        if (btn) btn.textContent = 'アップロード中...';
+        const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          const imgUrl = data.data.url;
+          const pos = textarea.selectionStart;
+          const before = textarea.value.substring(0, pos);
+          const after = textarea.value.substring(pos);
+          textarea.value = before + '\n' + imgUrl + '\n' + after;
+          updatePreview();
+        } else {
+          alert('アップロードに失敗しました');
+        }
+      } catch(e) {
+        alert('エラーが発生しました');
+      } finally {
+        const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
+        if (btn) btn.textContent = '画像';
+      }
+    };
+    input.click();
+    return;
+  }
   const url = prompt(prompts[type]);
   if (!url) return;
   const pos = textarea.selectionStart;
