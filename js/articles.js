@@ -52,7 +52,11 @@ async function loadArticles() {
     const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).sort((a,b) => b.ts - a.ts);
     if (window._directArticleId) {
       const target = articles.find(a => a.id === window._directArticleId);
-      if (target) { openArticle(target.id); window._directArticleId = null; return; }
+      if (target) {
+        window._directArticleId = null;
+        setTimeout(() => openArticle(target.id), 300);
+        return;
+      }
     }
 
     wrap.innerHTML = articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
@@ -482,4 +486,14 @@ function resetArticleForm() {
   const articleId = params.get('article');
   if (!articleId) return;
   window._directArticleId = articleId;
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const tabs = document.querySelectorAll('[onclick]');
+      tabs.forEach(t => {
+        if (t.getAttribute('onclick') && t.getAttribute('onclick').includes('articles')) {
+          t.click();
+        }
+      });
+    }, 500);
+  });
 })();
