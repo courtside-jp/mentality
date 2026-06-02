@@ -144,6 +144,8 @@ async function submitArticle() {
       });
       alert('更新しました！');
       document.getElementById('adminEditId').value = '';
+      const btn = document.getElementById('adminSubmitBtn');
+      if (btn) btn.textContent = '投稿する';
     } else {
       await fetch(FB_ARTICLES + '.json', {
         method: 'POST',
@@ -522,5 +524,9 @@ async function editArticle(id) {
   if (editId) editId.value = id;
   updatePreview();
   document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
-  alert('編集モードです。修正後に「投稿する」を押すと上書き保存されます。');
+  const submitBtn = document.getElementById('adminSubmitBtn');
+  if (submitBtn) submitBtn.textContent = '上書き保存';
+  const preview = document.getElementById('articlePreview');
+  if (preview) preview.innerHTML = '';
+  updatePreview();
 }
