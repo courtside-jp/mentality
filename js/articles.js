@@ -432,3 +432,30 @@ async function toggleSlot(slotId, currentlyOff) {
   });
   renderAdManager();
 }
+
+async function uploadThumbImage() {
+  const input = document.getElementById('adminImgFile');
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const btn = document.getElementById('adminImgUploadBtn');
+    btn.textContent = 'アップロード中...';
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('key', '6b317240ded356635338f7ce9c45ec05');
+    try {
+      const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('adminImg').value = data.data.url;
+      } else {
+        alert('アップロードに失敗しました');
+      }
+    } catch(e) {
+      alert('エラーが発生しました');
+    } finally {
+      btn.textContent = '画像を選ぶ';
+    }
+  };
+  input.click();
+}
