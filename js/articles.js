@@ -488,12 +488,8 @@ function resetArticleForm() {
   window._directArticleId = articleId;
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const tabs = document.querySelectorAll('[onclick]');
-      tabs.forEach(t => {
-        if (t.getAttribute('onclick') && t.getAttribute('onclick').includes('articles')) {
-          t.click();
-        }
-      });
+      const btn = document.getElementById('sn-articles');
+      if (btn) btn.click();
     }, 500);
   });
 })();
