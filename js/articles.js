@@ -489,7 +489,11 @@ function resetArticleForm() {
   window.addEventListener('load', () => {
     setTimeout(() => {
       const btn = document.getElementById('sn-articles');
-      if (btn) btn.click();
-    }, 500);
+      if (btn && typeof goPage === 'function') {
+        goPage('articles', btn);
+      } else if (btn) {
+        btn.click();
+      }
+    }, 800);
   });
 })();
