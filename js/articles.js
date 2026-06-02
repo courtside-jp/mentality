@@ -179,7 +179,18 @@ function insertToBody(type) {
     tiktok: 'TikTokのURLを入力してください',
     instagram: 'InstagramのURLを入力してください',
     twitter: 'X(Twitter)のURLを入力してください',
+    code: null,
   };
+  if (type === 'code') {
+    const code = prompt('HTMLコードを入力してください（例：<blockquote...>）');
+    if (!code) return;
+    const pos = textarea.selectionStart;
+    const before = textarea.value.substring(0, pos);
+    const after = textarea.value.substring(pos);
+    textarea.value = before + '\n' + code + '\n' + after;
+    updatePreview();
+    return;
+  }
   if (type === 'image') {
     const input = document.createElement('input');
     input.type = 'file';
