@@ -459,3 +459,15 @@ async function uploadThumbImage() {
   };
   input.click();
 }
+
+function resetArticleForm() {
+  document.getElementById('adminTitle').value = '';
+  document.getElementById('adminBody').value = '';
+  document.getElementById('adminImg').value = '';
+  const cat = document.getElementById('adminCategory');
+  if (cat) cat.value = 'NBA';
+  const preview = document.getElementById('articlePreview');
+  if (preview) preview.innerHTML = '';
+  const editId = document.getElementById('adminEditId');
+  if (editId) editId.value = '';
+}
