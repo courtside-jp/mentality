@@ -87,7 +87,7 @@ async function openArticle(id) {
   try {
     const res = await fetch(FB_ARTICLES + '/' + id + '.json');
     const a = await res.json();
-    body.innerHTML = '<div style="padding:1rem;padding-top:6rem;">' +
+    body.innerHTML = '<div style="padding:1rem;padding-top:8rem;">' +
       '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>' +
       (a.img ? '<img src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
       '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;">' +
