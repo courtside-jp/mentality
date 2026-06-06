@@ -135,9 +135,9 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div class="nav-tab sn" onclick="goPage('players',this)">選手</div>
 </div>
 
-<div class="content-wrap">
+<div class="content-wrap" id="mainScroll">
 
-<div id="pg-schedule" class="page active">
+<div id="pg-schedule" class="pg show">
   <div class="section-hd"><div class="section-ttl">本日の試合</div><div class="section-more">6月6日（土）</div></div>
   <div class="game-item" onclick="goPage('stats')">
     <div class="game-status"><div class="gs-text gs-live">LIVE</div></div>
@@ -165,7 +165,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-articles" class="page">
+<div id="pg-articles" class="pg">
   <div class="section-hd"><div class="section-ttl">最新記事</div></div>
   <div style="background:#fff;">
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
@@ -183,7 +183,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-chat" class="page">
+<div id="pg-chat" class="pg">
   <div style="display:flex;flex-direction:column;height:calc(100vh - 200px);background:#fff;">
     <div style="padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">ライブチャット 🏀</div>
@@ -203,7 +203,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-sneakers" class="page">
+<div id="pg-sneakers" class="pg">
   <div class="section-hd"><div class="section-ttl">最新バッシュ情報</div></div>
   <div style="background:#fff;">
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
@@ -221,12 +221,12 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-players" class="page">
+<div id="pg-players" class="pg">
   <div class="team-selector" id="team-selector"></div>
   <div id="player-list"></div>
 </div>
 
-<div id="pg-ranking" class="page">
+<div id="pg-ranking" class="pg">
   <div class="conf-tabs">
     <div class="conf-tab active" onclick="showConf('east',this)">イースタン</div>
     <div class="conf-tab" onclick="showConf('west',this)">ウェスタン</div>
@@ -239,7 +239,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div id="stat-rank-content"></div>
 </div>
 
-<div id="pg-stats" class="page">
+<div id="pg-stats" class="pg">
   <div style="background:var(--black);padding:16px;">
     <div style="font-size:10px;color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-bottom:8px;">NBAファイナル 第1戦 · LIVE</div>
     <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -257,7 +257,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div id="box-content"></div>
 </div>
 
-<div id="pg-admin" class="page" style="overflow-y:auto;">
+<div id="pg-admin" class="pg" style="overflow-y:auto;">
   <div style="background:#fff;padding-bottom:80px;">
     <div id="admin-menu">
       <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
