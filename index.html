@@ -138,6 +138,16 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 <div class="content-wrap" id="mainScroll">
 
 <div id="pg-schedule" class="pg show">
+    <div class="pg-title">本日の試合情報 <span class="pg-badge badge-live" id="schedulePhaseLabel">TODAY</span></div>
+    <div class="date-bar">
+      <button class="db-btn" onclick="moveDate(-1)">‹</button>
+      <div class="db-center">
+        <div class="db-date" id="dbDate"></div>
+        <div class="db-sub" id="dbSub"></div>
+      </div>
+      <button class="db-btn" onclick="moveDate(1)">›</button>
+    </div>
+    <div id="gameWrap"></div>
   <div class="section-hd"><div class="section-ttl">本日の試合</div><div class="section-more">6月6日（土）</div></div>
   <div class="game-item" onclick="goPage('stats')">
     <div class="game-status"><div class="gs-text gs-live">LIVE</div></div>
