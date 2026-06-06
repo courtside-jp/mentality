@@ -1,3 +1,22 @@
+
+const KATAKANA_MAP = {
+  'Victor Wembanyama': 'ビクター・ウェンバンヤマ',
+  'Jalen Brunson': 'ジェイレン・ブランソン',
+  'Karl-Anthony Towns': 'カール・アンソニー・タウンズ',
+  'Mikal Bridges': 'ミケル・ブリッジズ',
+  'OG Anunoby': 'OG・アヌノビー',
+  'Josh Hart': 'ジョシュ・ハート',
+  'Stephon Castle': 'ステフォン・キャッスル',
+  'De'Aaron Fox': 'ディアロン・フォックス',
+  'Devin Vassell': 'デビン・バセル',
+  'Julian Champagnie': 'ジュリアン・シャンペニー',
+  'Dylan Harper': 'ディラン・ハーパー',
+  'Keldon Johnson': 'ケルドン・ジョンソン',
+  'Landry Shamet': 'ランドリー・シャメット',
+  'Mitchell Robinson': 'ミッチェル・ロビンソン',
+  'Luke Kornet': 'ルーク・コーネット',
+};
+function toKatakana(name) { return KATAKANA_MAP[name] || name; }
 function restoreNotifyBtns() {}
 // loadLiveChat stub
 function loadLiveChat(id) { console.log("chat:", id); }
@@ -486,7 +505,7 @@ async function loadESPNPlayerStats(g, espnId, panel) {
             return parseInt(p[0]||0)*60 + parseInt(p[1]||0);
           })();
           result.push({
-            name: ath.displayName || '?',
+            name: toKatakana(ath.displayName || '?'),
             lastName: (ath.shortName || ath.displayName || '?').split(' ').slice(-1)[0],
             jerseyNum: ath.jersey || '',
             pos: (ath.position?.abbreviation || '').toUpperCase(),
