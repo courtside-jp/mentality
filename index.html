@@ -1,556 +1,536 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-J1X9EM56WW');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>COURTSIDE - NBA速報・まとめ・チャット</title>
-<meta name="description" content="NBAの試合速報・スタッツ・バッシュ・記事をスキマ時間で楽しめる日本語NBAファンサイト。河村勇輝・八村塁など日本人選手情報も充実。">
-<meta name="keywords" content="NBA,NBA日本語,NBAまとめ,NBAハイライト,NBA速報,河村勇輝,八村塁,NBAプレーオフ,NBA順位表,NBAスタッツ,カリー,レブロン,バッシュ,NBAファイナル,NBA年俸,1分NBA">
-<meta name="author" content="COURTSIDE">
+<meta name="description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
+<meta name="keywords" content="NBA,NBA日本語,NBAまとめ,NBAハイライト,NBA速報,河村勇輝,八村塁,NBAスタッツ,カリー,レブロン,バッシュ,NBAファイナル,NBA年俸,1分NBA">
 <meta property="og:title" content="COURTSIDE - NBA速報・まとめ・チャット">
-<meta property="og:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
-<meta name="twitter:title" content="COURTSIDE - NBA速報・まとめ・チャット">
-<meta name="twitter:description" content="NBAの試合速報・スタッツ・バッシュ・記事をスキマ時間で楽しめる日本語NBAファンサイト。河村勇輝・八村塁など日本人選手情報も充実。">
-<meta property="og:description" content="NBAの試合速報・スタッツ・バッシュ・記事をスキマ時間で楽しめる日本語NBAファンサイト。河村勇輝・八村塁など日本人選手情報も充実。">
+<meta property="og:description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://courtside-jp.github.io/mentality/">
-<meta property="og:site_name" content="COURTSIDE">
+<meta property="og:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="COURTSIDE - NBA速報・まとめ・チャット">
-<meta name="twitter:description" content="NBAの試合速報・スタッツ・バッシュ・記事をスキマ時間で楽しめる日本語NBAファンサイト。河村勇輝・八村塁など日本人選手情報も充実。">
-
-<!-- ===== CSS (読み込み順: base → layout → 各機能) ===== -->
-<link rel="stylesheet" href="css/base.css?v=2">
-<link rel="stylesheet" href="css/layout.css?v=4">
-<link rel="stylesheet" href="css/schedule.css">
-<link rel="stylesheet" href="css/players.css">
-<link rel="stylesheet" href="css/stats.css">
-<link rel="stylesheet" href="css/chat.css">
-<link rel="stylesheet" href="css/news.css">
-<link rel="stylesheet" href="css/responsive.css">
+<meta name="twitter:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C9082A;--black:#0a0a0a;--dark:#111;--dark2:#1a1a1a;--gray:#888;--light:#f5f5f5;--white:#fff;--border:rgba(255,255,255,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;}
+.header{background:var(--black);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.logo span{color:var(--red);}
+.online-pill{display:flex;align-items:center;gap:5px;background:rgba(201,8,42,0.15);border:1px solid rgba(201,8,42,0.3);padding:4px 10px;border-radius:20px;}
+.online-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.online-text{font-size:10px;color:var(--red);font-weight:700;font-family:'Barlow Condensed',sans-serif;}
+.hero{background:var(--black);padding:0 16px 16px;}
+.hero-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--red);font-weight:700;letter-spacing:2px;padding:8px 0 6px;}
+.game-hero{background:var(--dark);border-radius:14px;overflow:hidden;}
+.game-hero-top{background:var(--red);padding:6px 14px;display:flex;align-items:center;justify-content:space-between;}
+.live-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--white);letter-spacing:1px;display:flex;align-items:center;gap:5px;}
+.quarter-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,0.8);}
+.game-score-area{padding:16px;display:flex;align-items:center;justify-content:space-between;}
+.game-team{text-align:center;flex:1;}
+.team-city{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gray);letter-spacing:1px;}
+.team-abbr{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--white);letter-spacing:2px;line-height:1;}
+.team-score{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--white);line-height:1;}
+.team-score.win{color:var(--red);}
+.game-divider{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--gray);padding:0 12px;}
+.hero-actions{border-top:1px solid var(--border);padding:10px 14px;display:flex;gap:8px;}
+.hero-btn{flex:1;padding:8px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;text-align:center;}
+.hero-btn-primary{background:var(--red);color:var(--white);}
+.hero-btn-secondary{background:var(--dark2);color:var(--white);border:1px solid var(--border);}
+.nav-tabs{background:var(--white);display:flex;border-bottom:1px solid #eee;position:sticky;top:52px;z-index:99;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{flex-shrink:0;text-align:center;padding:11px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;letter-spacing:0.3px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.nav-tab.active{color:var(--black);border-bottom-color:var(--red);}
+.page{display:none;}
+.page.active{display:block;}
+.content-wrap{padding-bottom:80px;}
+.section-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;background:var(--white);border-bottom:1px solid #f0f0f0;margin-top:8px;}
+.section-ttl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--black);letter-spacing:1px;}
+.section-more{font-size:11px;color:var(--red);}
+.game-item{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f5f5f5;background:var(--white);cursor:pointer;}
+.game-status{width:44px;flex-shrink:0;}
+.gs-text{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;}
+.gs-live{color:var(--red);}
+.gs-final{color:var(--gray);}
+.gs-time{color:#333;}
+.game-teams{flex:1;padding:0 10px;}
+.gt-row{display:flex;align-items:center;gap:8px;padding:3px 0;}
+.tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tname{font-size:12px;color:var(--black);flex:1;font-weight:500;}
+.tscore{font-size:13px;font-weight:700;color:var(--black);min-width:28px;text-align:right;}
+.tscore.win{color:var(--red);}
+.team-selector{display:flex;overflow-x:auto;padding:12px 16px;gap:8px;background:var(--white);border-bottom:1px solid #eee;scrollbar-width:none;}
+.team-selector::-webkit-scrollbar{display:none;}
+.team-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;cursor:pointer;border:1px solid #ddd;background:var(--white);color:#666;white-space:nowrap;}
+.team-btn.active{background:var(--red);color:var(--white);border-color:var(--red);}
+.player-card{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f5f5f5;background:var(--white);}
+.player-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--white);flex-shrink:0;margin-right:12px;}
+.player-info{flex:1;min-width:0;}
+.player-name-full{font-size:12px;font-weight:700;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.player-detail{font-size:10px;color:var(--gray);}
+.conf-tabs{display:flex;background:var(--white);border-bottom:1px solid #eee;}
+.conf-tab{flex:1;text-align:center;padding:11px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;letter-spacing:0.5px;}
+.conf-tab.active{color:var(--black);border-bottom-color:var(--red);}
+.stat-rank-tabs{overflow-x:auto;display:flex;background:var(--white);border-bottom:1px solid #eee;scrollbar-width:none;}
+.stat-rank-tabs::-webkit-scrollbar{display:none;}
+.srt{flex-shrink:0;padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.srt.active{color:var(--black);border-bottom-color:var(--red);}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--white);border-top:1px solid #eee;display:flex;padding:8px 0 20px;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;}
+.bnav-icon{font-size:22px;color:#bbb;}
+.bnav-label{font-size:9px;color:#bbb;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.3px;}
+.bnav-item.active .bnav-icon,.bnav-item.active .bnav-label{color:var(--red);}
+.bnav-badge{background:var(--red);color:var(--white);font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;}
+</style>
 </head>
 <body>
 
-</head>
-<body>
-
-
-<nav class="top-nav">
-  <div class="logo" onclick="goPage('schedule',document.getElementById('sn-schedule'))" style="cursor:pointer;">COURT<span>SIDE</span></div>
-  <div class="nav-online">
-    <span class="nav-online-dot"></span>
-    <span id="siteOnlineCount">-- 人が閲覧中</span>
-  </div>
-  <div class="nav-sp"></div>
-  
-</nav>
-
-
-<div id="topBanner" style="display:none;padding:.4rem .8rem;background:var(--bg);border-bottom:1px solid var(--bd);"></div>
-<nav class="second-nav">
-  <button class="sn on" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
-  <div class="sn-divider"></div>
-  <button class="sn" id="sn-stats"    onclick="goPage('stats',this)">スタッツ</button>
-  <div class="sn-divider"></div>
-  <button class="sn" id="sn-chat" onclick="goPage('chat',this)">チャット</button>
-  <div class="sn-divider"></div>
-  <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
-  <div class="sn-divider"></div>
-  <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
-  <div class="sn-divider"></div>
-  <button class="sn" id="sn-players"  onclick="goPage('players',this)">選手</button>
-</nav>
-
-
-<div class="srch-overlay" id="srchOverlay" onclick="if(event.target===this)closeSearch()">
-  <div class="srch-box">
-    <div class="si-row">
-      <span class="si-ico">🔍</span>
-      <input class="si-inp" id="srchInp"
-        placeholder="選手・チーム・ニュースを検索..."
-        oninput="doSearch(this.value)"
-        autocomplete="off">
-      <button class="si-close" onclick="closeSearch()">✕</button>
-    </div>
-    <div class="srch-tags">
-      <button class="stag" onclick="qs('河村勇輝')">河村勇輝</button>
-      <button class="stag" onclick="qs('八村塁')">八村塁</button>
-      <button class="stag" onclick="qs('LAL')">LAL</button>
-      <button class="stag" onclick="qs('GSW')">GSW</button>
-      <button class="stag" onclick="qs('トレード')">トレード</button>
-    </div>
-    <div class="srch-results" id="srchResults">
-      <div class="srch-empty">
-        <div style="font-size:2rem;margin-bottom:.4rem;">🏀</div>
-        <div style="font-size:.78rem;color:var(--tx3);">選手・チーム名で検索</div>
-      </div>
+<div class="header">
+  <div class="logo">COURT<span>SIDE</span></div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="online-pill"><div class="online-dot"></div><div class="online-text">17人が閲覧中</div></div>
+    <div onclick="openSearch()" style="cursor:pointer;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     </div>
   </div>
 </div>
 
+<div class="hero">
+  <div class="hero-label">🏆 NBAファイナル2026</div>
+  <div class="game-hero">
+    <div class="game-hero-top">
+      <div class="live-tag"><div style="width:6px;height:6px;border-radius:50%;background:#fff;"></div>LIVE配信中</div>
+      <div class="quarter-tag">第3Q 残り8:42</div>
+    </div>
+    <div class="game-score-area">
+      <div class="game-team"><div class="team-city">SAN ANTONIO</div><div class="team-abbr">SA</div><div class="team-score">78</div></div>
+      <div class="game-divider">–</div>
+      <div class="game-team"><div class="team-city">NEW YORK</div><div class="team-abbr">NY</div><div class="team-score win">82</div></div>
+    </div>
+    <div class="hero-actions">
+      <button class="hero-btn hero-btn-primary" onclick="goPage('stats')">選手スタッツ</button>
+      <button class="hero-btn hero-btn-secondary" onclick="goPage('chat')">チャットで話す</button>
+    </div>
+  </div>
+</div>
 
-<div class="main" id="mainScroll">
+<div class="nav-tabs">
+  <div class="sn on" id="sn-schedule" onclick="goPage('schedule',this)">試合</div>
+  <div class="sn" onclick="goPage('ranking',this)">順位/スタッツ</div>
+  <div class="sn" onclick="goPage('chat',this)">チャット</div>
+  <div class="sn" onclick="goPage('articles',this)">記事</div>
+  <div class="sn" onclick="goPage('sneakers',this)">バッシュ</div>
+  <div class="sn" onclick="goPage('players',this)">選手</div>
+</div>
 
-  
-  <div class="pg show" id="pg-schedule">
-    <div class="pg-title">本日の試合情報 <span class="pg-badge badge-live">TODAY</span></div>
-    <div class="date-bar">
-      <button class="db-btn" onclick="moveDate(-1)">‹</button>
-      <div class="db-center">
-        <div class="db-date" id="dbDate"></div>
-        <div class="db-sub"  id="dbSub"></div>
+<div class="content-wrap">
+
+<div id="pg-schedule" class="pg show">
+  <div class="section-hd"><div class="section-ttl">本日の試合</div><div class="section-more">6月6日（土）</div></div>
+  <div class="game-item" onclick="goPage('stats')">
+    <div class="game-status"><div class="gs-text gs-live">LIVE</div></div>
+    <div class="game-teams">
+      <div class="gt-row"><div class="tdot" style="background:#000;"></div><div class="tname">スパーズ</div><div class="tscore">78</div></div>
+      <div class="gt-row"><div class="tdot" style="background:#006BB6;"></div><div class="tname">ニックス</div><div class="tscore win">82</div></div>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+  </div>
+  <div class="game-item">
+    <div class="game-status"><div class="gs-text gs-final">終了</div></div>
+    <div class="game-teams">
+      <div class="gt-row"><div class="tdot" style="background:#C9082A;"></div><div class="tname">セルティックス</div><div class="tscore win">112</div></div>
+      <div class="gt-row"><div class="tdot" style="background:#1D428A;"></div><div class="tname">ウォリアーズ</div><div class="tscore">98</div></div>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+  </div>
+  <div class="game-item">
+    <div class="game-status"><div class="gs-text gs-time">9:30</div></div>
+    <div class="game-teams">
+      <div class="gt-row"><div class="tdot" style="background:#552583;"></div><div class="tname">レイカーズ</div><div class="tscore">–</div></div>
+      <div class="gt-row"><div class="tdot" style="background:#CE1141;"></div><div class="tname">ロケッツ</div><div class="tscore">–</div></div>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+  </div>
+</div>
+
+<div id="pg-articles" class="pg">
+  <div class="section-hd"><div class="section-ttl">最新記事</div></div>
+  <div style="background:#fff;">
+    <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;">🏀</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:3px;">NBAファイナル</div><div style="font-size:12px;font-weight:500;line-height:1.5;">NBAファイナル2026開幕——スパーズvsニックス、27年越しの因縁対決</div><div style="font-size:10px;color:var(--gray);margin-top:4px;">8時間前</div></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;">👟</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:3px;">バッシュ契約</div><div style="font-size:12px;font-weight:500;line-height:1.5;">【1分NBA】Nikeに名前を間違えられた男が年間100億超の契約を勝ち取った話</div><div style="font-size:10px;color:var(--gray);margin-top:4px;">1日前</div></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:12px 16px;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;">🏆</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:3px;">考察・議論</div><div style="font-size:12px;font-weight:500;line-height:1.5;">【1分NBA】リーニンの正体——カリーが選んだ中国ブランドとは何者か</div><div style="font-size:10px;color:var(--gray);margin-top:4px;">2日前</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-chat" class="pg">
+  <div style="display:flex;flex-direction:column;height:calc(100vh - 200px);background:#fff;">
+    <div style="padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">ライブチャット 🏀</div>
+      <div style="font-size:11px;color:var(--red);display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--red);"></div>17人が閲覧中</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:12px 16px;background:#f9f9f9;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;gap:8px;"><div style="width:30px;height:30px;border-radius:50%;background:#C9082A;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">や</div><div><div style="font-size:10px;font-weight:700;margin-bottom:3px;">やす</div><div style="font-size:12px;background:#fff;padding:7px 10px;border-radius:4px 12px 12px 12px;border:1px solid #eee;">ウェンバ怪物すぎる🔥</div></div></div>
+      <div style="display:flex;gap:8px;"><div style="width:30px;height:30px;border-radius:50%;background:#1D428A;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">こ</div><div><div style="font-size:10px;font-weight:700;margin-bottom:3px;">こうた</div><div style="font-size:12px;background:#fff;padding:7px 10px;border-radius:4px 12px 12px 12px;border:1px solid #eee;">ニックス頑張れ！！</div></div></div>
+      <div style="display:flex;gap:8px;flex-direction:row-reverse;"><div style="width:30px;height:30px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">自</div><div><div style="font-size:10px;font-weight:700;margin-bottom:3px;text-align:right;">自分</div><div style="font-size:12px;background:var(--red);color:#fff;padding:7px 10px;border-radius:12px 4px 12px 12px;">スパーズ優勝する気がする</div></div></div>
+    </div>
+    <div style="padding:10px 16px;border-top:1px solid #eee;display:flex;gap:8px;">
+      <input style="flex:1;background:#f5f5f5;border:1px solid #eee;border-radius:22px;padding:9px 16px;font-size:13px;outline:none;" placeholder="コメントする..." readonly>
+      <button style="width:36px;height:36px;border-radius:50%;background:var(--red);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="2"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="pg-sneakers" class="pg">
+  <div class="section-hd"><div class="section-ttl">最新バッシュ情報</div></div>
+  <div style="background:#fff;">
+    <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;">👟</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px;">LI-NING</div><div style="font-size:12px;font-weight:500;">カリー × リーニン 新作シグネチャー</div><div style="font-size:10px;color:#999;margin-top:2px;">ステフィン・カリー着用</div><div style="font-size:12px;font-weight:700;color:#333;margin-top:3px;">¥22,000〜</div></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;">👟</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px;">NIKE</div><div style="font-size:12px;font-weight:500;">Kobe 9 Elite 2026 復刻版</div><div style="font-size:10px;color:#999;margin-top:2px;">コービー・ブライアント モデル</div><div style="font-size:12px;font-weight:700;color:#333;margin-top:3px;">¥28,000〜</div></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:12px 16px;cursor:pointer;align-items:center;">
+      <div style="width:72px;height:54px;border-radius:8px;background:#f0f0f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;">👟</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px;">ADIDAS</div><div style="font-size:12px;font-weight:500;">Harden Vol.8 ブラックアウト</div><div style="font-size:10px;color:#999;margin-top:2px;">ジェームス・ハーデン着用</div><div style="font-size:12px;font-weight:700;color:#333;margin-top:3px;">¥19,800〜</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-players" class="pg">
+  <div class="team-selector" id="team-selector"></div>
+  <div id="player-list"></div>
+</div>
+
+<div id="pg-ranking" class="pg">
+  <div class="conf-tabs">
+    <div class="conf-tab active" onclick="showConf('east',this)">イースタン</div>
+    <div class="conf-tab" onclick="showConf('west',this)">ウェスタン</div>
+  </div>
+  <div id="standings-content"></div>
+  <div style="padding:14px 16px 8px;border-top:8px solid #f0f0f0;background:#fff;border-bottom:1px solid #eee;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;">スタッツランキング</div>
+  </div>
+  <div class="stat-rank-tabs" id="stat-rank-tabs"></div>
+  <div id="stat-rank-content"></div>
+</div>
+
+<div id="pg-stats" class="pg">
+  <div style="background:var(--black);padding:16px;">
+    <div style="font-size:10px;color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-bottom:8px;">NBAファイナル 第1戦 · LIVE</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;">SA</div><div style="font-size:10px;color:var(--gray);">スパーズ</div></div>
+      <div style="display:flex;gap:8px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;">78</div><div style="color:var(--gray);font-size:20px;">–</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--red);">82</div></div>
+      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;">NY</div><div style="font-size:10px;color:var(--gray);">ニックス</div></div>
+    </div>
+    <div style="text-align:center;font-size:10px;color:var(--gray);margin-top:6px;font-family:'Barlow Condensed',sans-serif;">第3Q 残り8分42秒</div>
+  </div>
+  <div style="display:flex;background:var(--dark);">
+    <div id="box-sa" onclick="showBox('sa',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#fff;border-bottom:2px solid var(--red);cursor:pointer;">スパーズ</div>
+    <div id="box-ny" onclick="showBox('ny',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gray);border-bottom:2px solid transparent;cursor:pointer;">ニックス</div>
+    <div id="box-team" onclick="showBox('team',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gray);border-bottom:2px solid transparent;cursor:pointer;">チーム</div>
+  </div>
+  <div id="box-content"></div>
+</div>
+
+<div id="pg-admin" class="pg" style="overflow-y:auto;">
+  <div style="background:#fff;padding-bottom:80px;">
+    <div id="admin-menu">
+      <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:2px;">管理画面</div>
+        <div style="font-size:10px;color:#888;">COURTSIDE ADMIN</div>
       </div>
-      <button class="db-btn" onclick="moveDate(1)">›</button>
-    </div>
-    <div id="gameWrap"></div>
-  </div>
-
-  
-  <div class="pg" id="pg-news">
-    <div class="pg-title">NBA速報 <span class="pg-badge badge-live">日本語</span></div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem;">
-      <button onclick="rssLoaded=false;loadRSSNews()" style="background:var(--bg3);border:1px solid var(--bd);border-radius:6px;padding:.3rem .7rem;font-size:.7rem;color:var(--tx3);cursor:pointer;">🔄 更新</button>
-    </div>
-    <div id="rssFeed" class="rss-feed-wrap">
-      <div class="rss-loading">最新ニュースを取得中...</div>
-    </div>
-  </div>
-
-  
-  <div class="pg" id="pg-chat" style="flex-direction:column;height:calc(100vh - 90px);">
-    <div class="pg-title">フリーチャット</div>
-    <div id="chatMsgs" class="chat-msgs"></div>
-    <div class="chat-input-bar">
-      <button onclick="document.getElementById('chatImgInput').click()" style="width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;font-size:.9rem;flex-shrink:0;">📷</button>
-      <input id="chatImgInput" type="file" accept="image/*" style="display:none" onchange="chatSendImage(this)">
-      <input id="chatField" style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:.42rem .75rem;font-size:.78rem;color:var(--tx);outline:none;" placeholder="メッセージまたはURLを入力..." onkeydown="if(event.key==='Enter')chatSend()">
-      <button onclick="chatSend()" style="width:34px;height:34px;border-radius:50%;background:var(--or);border:none;cursor:pointer;font-size:.8rem;color:#fff;">➤</button>
-    </div>
-  </div>
-  <div class="pg" id="pg-stats">
-    <div class="pg-title">スタッツ/順位 <span class="pg-badge badge-season">2025-26</span></div>
-
-    
-    <div class="conf-row" style="margin-bottom:.65rem;">
-      
-      
-    </div>
-
-    <div class="pg-title" style="font-size:.95rem;margin-bottom:.45rem;">スタッツ</div>
-
-    
-    <div style="display:flex;gap:.4rem;margin-bottom:.5rem;">
-      
-    </div>
-
-    <div class="stat-cats" id="statCats"></div>
-    <div id="statsLoading" style="display:none;">📊 データ取得中...</div>
-    <div class="leader-list" id="leaderList"></div>
-
-    
-    <div style="margin-top:1.2rem;">
-      <div class="pg-title" style="font-size:.95rem;">順位表</div>
-      <div class="conf-row">
-        <button class="conf-btn on" onclick="showConf(this,'east')">イースト</button>
-        <button class="conf-btn"    onclick="showConf(this,'west')">ウェスト</button>
-      </div>
-      <div id="standingsWrap"></div>
-    </div>
-  </div>
-
-  
-  <div id="playerModal"
-    style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;"
-    onclick="if(event.target===this)closePlayerModal()">
-    <div style="width:100%;height:100%;display:flex;flex-direction:column;">
-      <div id="playerModalInner"
-        style="background:var(--bg);width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;">
-      </div>
-    </div>
-  </div>
-
-  
-
-  
-  <div class="pg" id="pg-players">
-    <div class="pg-title">チーム/選手一覧</div>
-
-    <div style="position:relative;margin-bottom:.6rem;">
-      <span style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);color:var(--tx3);">🔍</span>
-      <input id="playerSearchInput" type="text"
-        placeholder="選手名を検索（例：LeBron, カリー）"
-        class="player-search-input"
-        oninput="filterPlayers(this.value)">
-    </div>
-
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:.65rem;">
-      <div id="playerFilter" style="display:inline-flex;gap:.35rem;padding:.1rem .05rem;"></div>
-    </div>
-
-    <div id="playerGrid" style="display:flex;flex-direction:column;gap:.45rem;"></div>
-
-    
-    <div id="playerDetailModal"
-      style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);overflow-y:auto;overflow-x:hidden;">
-      <div style="max-width:480px;margin:0 auto;overflow-x:hidden;">
-        <div id="playerDetailContent"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- バッシュページ -->
-  <div class="pg" id="pg-sneakers">
-    <div class="pg-title">バッシュ</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.8rem;">
-      <select id="snkFilterBrand" onchange="filterSneakersDropdown()" style="padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;">
-        <option value="all">ブランド：すべて</option>
-        <option value="nike">Nike</option>
-        <option value="jordan">Jordan</option>
-        <option value="adidas">Adidas</option>
-        <option value="underarmour">Under Armour</option>
-        <option value="puma">Puma</option>
-        <option value="newbalance">New Balance</option>
-        <option value="anta">Anta</option>
-        <option value="lining">Li-Ning</option>
-        <option value="other">その他</option>
-      </select>
-      <select id="snkFilterPlayer" onchange="filterSneakersDropdown()" style="padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;">
-        <option value="all">選手：すべて</option>
-        <option value="河村勇輝">河村勇輝</option>
-        <option value="八村塁">八村塁</option>
-        <option value="レブロン">レブロン</option>
-        <option value="カリー">カリー</option>
-        <option value="コービー">コービー</option>
-        <option value="ジョーダン">ジョーダン</option>
-        <option value="デュラント">デュラント</option>
-        <option value="ヤニス">ヤニス</option>
-        <option value="other">その他</option>
-      </select>
-    </div>
-    <div id="sneakersWrap"></div>
-  </div>
-
-  <!-- 記事ページ -->
-  <div class="pg" id="pg-articles">
-    <div class="pg-title">記事</div>
-    <div style="font-size:.72rem;color:var(--tx3);margin-bottom:.8rem;padding-bottom:.6rem;border-bottom:1px solid var(--bd);">1分でわかるNBA知識 / スキマ時間にサクッと読める</div>
-    <div id="articlesWrap"></div>
-  </div>
-
-  <!-- バッシュ投稿モーダル -->
-  <div id="snkModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:var(--bg);overflow-y:auto;">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;position:sticky;top:0;background:var(--bg);z-index:1;">
-      <button onclick="closeSnkModal();document.getElementById('adminSelectModal').style.display='block';" style="background:var(--bg3);border:none;color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.75rem;cursor:pointer;">← 戻る</button>
-      <span style="font-size:.85rem;font-weight:700;color:var(--tx);">バッシュ管理</span>
-    </div>
-    <div style="padding:1rem;">
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">投稿済みバッシュ</div>
-        <div id="adminSneakerList" style="max-height:250px;overflow-y:auto;"></div>
-      </div>
-      <div style="border-top:1px solid var(--bd);padding-top:1rem;margin-bottom:.5rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;"><div style="font-size:.75rem;font-weight:700;color:var(--tx2);">新規投稿</div><button onclick="resetArticleForm()" style="font-size:.7rem;padding:.2rem .6rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);cursor:pointer;">新規作成</button></div>
-      </div>
-      <div style="margin-bottom:.6rem;"><input id="snkName" type="text" placeholder="商品名（必須）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.6rem;">
-        <select id="snkBrand" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;">
-          <option value="nike">Nike</option>
-          <option value="jordan">Jordan</option>
-          <option value="adidas">Adidas</option>
-          <option value="underarmour">Under Armour</option>
-          <option value="puma">Puma</option>
-          <option value="newbalance">New Balance</option>
-          <option value="anta">Anta</option>
-          <option value="lining">Li-Ning</option>
-        </select>
-      </div>
-      <div style="margin-bottom:.6rem;"><input id="snkPlayer" type="text" placeholder="選手名（任意）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.6rem;"><input id="snkImg" type="text" placeholder="画像URL" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.6rem;"><input id="snkPrice" type="text" placeholder="価格（例：¥22,000）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.6rem;"><input id="snkUrl" type="text" placeholder="購入リンクURL" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.4rem;display:flex;gap:.4rem;">
-        <button type="button" onclick="insertProductLink('snkDesc')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.72rem;cursor:pointer;">🛒 商品リンク追加</button>
-      </div>
-      <div style="margin-bottom:.6rem;"><textarea id="snkDesc" placeholder="説明・コメント" rows="4" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;resize:vertical;"></textarea></div>
-      <div style="margin-bottom:.6rem;"><input id="snkScore" type="number" min="1" max="100" placeholder="評価スコア（1〜100）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-      <div style="margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;"><input type="checkbox" id="snkIsNew"><label for="snkIsNew" style="font-size:.8rem;color:var(--tx);">新作フラグを付ける</label></div>
-      <button id="snkSubmitBtn" onclick="submitSneaker()" style="width:100%;padding:.7rem;background:var(--or);border:none;color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">投稿する</button>
-    </div>
-  </div>
-
-  <!-- 記事詳細モーダル -->
-  <div id="articleModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:var(--bg);overflow-y:auto;">
-
-    <div id="articleModalBody"></div>
-  </div>
-
-  <!-- ユーザー管理モーダル -->
-  <div id="userModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:var(--bg);overflow-y:auto;">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;position:sticky;top:0;background:var(--bg);z-index:1;">
-      <button onclick="closeUserModal();document.getElementById('adminSelectModal').style.display='block';" style="background:var(--bg3);border:none;color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.75rem;cursor:pointer;">← 戻る</button>
-      <span style="font-size:.85rem;font-weight:700;color:var(--tx);">ユーザー管理</span>
-    </div>
-    <div style="padding:1rem;">
-      <div id="userStats" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;"></div>
-      <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">ユーザー一覧</div>
-      <div id="userList" style="max-height:500px;overflow-y:auto;"></div>
-    </div>
-  </div>
-
-  <!-- 管理者選択モーダル -->
-  <div id="adminSelectModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:600;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;">
-    <div style="background:var(--bg);border-radius:14px;padding:1.5rem;width:80%;max-width:300px;margin:auto;margin-top:30%;">
-      <div style="font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:1rem;text-align:center;">管理メニュー</div>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';document.getElementById('adminModal').style.display='block';loadAdminArticles();loadDrafts();" style="width:100%;padding:.8rem;background:var(--or);border:none;color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;">📝 記事管理</button>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';openAdManager(true);" style="width:100%;padding:.8rem;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;">📢 広告管理</button>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';openSnsManager();" style="width:100%;padding:.8rem;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;">📱 SNS管理</button>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';openSnkModal();loadAdminSneakers();" style="width:100%;padding:.8rem;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;">👟 バッシュ投稿</button>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';openUserModal();" style="width:100%;padding:.8rem;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.6rem;">👥 ユーザー管理</button>
-      <button onclick="document.getElementById('adminSelectModal').style.display='none';" style="width:100%;padding:.6rem;background:none;border:none;color:var(--tx3);font-size:.8rem;cursor:pointer;">キャンセル</button>
-    </div>
-  </div>
-
-  <!-- SNS管理モーダル -->
-  <div id="snsManagerModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:var(--bg);overflow-y:auto;">
-    <div style="padding:1rem;max-width:480px;margin:0 auto;">
-      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;">
-        <button onclick="closeSnsManager();document.getElementById('adminSelectModal').style.display='block';" style="background:var(--bg3);border:none;color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.75rem;cursor:pointer;">← 戻る</button>
-        <span style="font-size:.85rem;font-weight:700;color:var(--tx);">SNS管理</span>
-      </div>
-      <div id="snsManagerList"></div>
-    </div>
-  </div>
-
-  <!-- 広告管理モーダル -->
-  <div id="adManagerModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:var(--bg);overflow-y:auto;">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;position:sticky;top:0;background:var(--bg);z-index:1;">
-      <button onclick="closeAdManager();document.getElementById('adminSelectModal').style.display='block';" style="background:var(--bg3);border:none;color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.75rem;cursor:pointer;">← 戻る</button>
-      <span style="font-size:.85rem;font-weight:700;color:var(--tx);">広告管理</span>
-    </div>
-    <div style="padding:1rem;">
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">登録済み広告</div>
-        <div id="adManagerList"></div>
-      </div>
-      <div style="border-top:1px solid var(--bd);padding-top:1rem;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">新規追加</div>
-        <div style="margin-bottom:.6rem;"><input id="adTitle" type="text" placeholder="タイトル（必須）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-        <div style="margin-bottom:.6rem;"><input id="adDesc" type="text" placeholder="説明文" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;">
-          <input id="adTag" type="text" placeholder="タグ（例：バッシュ）" style="padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
-          <input id="adPrice" type="text" placeholder="価格（例：¥22,000）" style="padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div onclick="showAdminPage('admin-article')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#C9082A;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">記事管理</div><div style="font-size:11px;color:#999;margin-top:2px;">記事の投稿・編集・削除</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;">
-          <input id="adIcon" type="text" placeholder="アイコン絵文字（例：👟）" style="padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
-          <input id="adColor" type="color" value="#FF5A00" style="padding:.3rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);height:36px;box-sizing:border-box;">
+        <div onclick="showAdminPage('admin-sneaker')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">バッシュ管理</div><div style="font-size:11px;color:#999;margin-top:2px;">バッシュ情報の投稿・編集・削除</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
-        <div style="margin-bottom:.8rem;"><input id="adUrl" type="text" placeholder="リンクURL（必須）" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;"></div>
-        <div style="margin-bottom:.8rem;">
-          <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">表示場所</div>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-            <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--tx);"><input type="checkbox" id="adPlaceSchedule" checked> 試合情報</label>
-            <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--tx);"><input type="checkbox" id="adPlaceNews"> 速報</label>
-            <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--tx);"><input type="checkbox" id="adPlaceArticles"> 記事</label>
-            <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--tx);"><input type="checkbox" id="adPlacePlayers"> 選手一覧</label>
+        <div onclick="showAdminPage('admin-ad')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#333;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">広告管理</div><div style="font-size:11px;color:#999;margin-top:2px;">広告の設定・ON/OFF切り替え</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div onclick="showAdminPage('admin-user')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#555;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">ユーザー管理</div><div style="font-size:11px;color:#999;margin-top:2px;">チャットユーザーの管理・BAN</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-article" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事管理</div>
+      </div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
+          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.5px;">新規投稿</div>
+          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">カテゴリ</div>
+            <select style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;"><option>NBAファイナル</option><option>考察・議論</option><option>ニュース・速報</option><option>バッシュ</option><option>体験・自己紹介</option></select></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">タイトル</div><input type="text" placeholder="記事タイトルを入力" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サムネイル画像</div>
+            <div style="display:flex;gap:6px;"><input type="text" placeholder="画像URL" style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;min-width:0;"><button style="padding:9px 12px;background:#f0f0f0;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">選ぶ</button></div></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:6px;font-weight:700;">本文エディタ</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">🖼 画像</button>
+              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">▶ YouTube</button>
+              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">🐦 X</button>
+              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">💬 引用</button>
+            </div>
+            <textarea placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;height:100px;resize:none;box-sizing:border-box;"></textarea></div>
+            <div style="display:flex;gap:8px;">
+              <button style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">下書き</button>
+              <button style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+            </div>
           </div>
         </div>
-        <button id="adSubmitBtn" onclick="submitAd()" style="width:100%;padding:.7rem;background:var(--or);border:none;color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">追加する</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 管理者モーダル -->
-  <div id="adminModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:var(--bg);overflow-y:auto;">
-    <div style="padding:.6rem 1rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:.5rem;position:sticky;top:0;background:var(--bg);z-index:1;">
-      <button onclick="closeAdminModal();document.getElementById('adminSelectModal').style.display='block';" style="background:var(--bg3);border:none;color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.75rem;cursor:pointer;">← 戻る</button>
-      <span style="font-size:.85rem;font-weight:700;color:var(--tx);">記事管理</span>
-    </div>
-    <div style="padding:1rem;">
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">投稿済み記事</div>
-        <div id="adminArticleList" style="max-height:250px;overflow-y:auto;"></div>
-      </div>
-      <div style="border-top:1px solid var(--bd);padding-top:1rem;margin-bottom:.5rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;"><div style="font-size:.75rem;font-weight:700;color:var(--tx2);">新規投稿</div><button onclick="resetArticleForm()" style="font-size:.7rem;padding:.2rem .6rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);cursor:pointer;">新規作成</button></div>
-      </div>
-      <div style="margin-bottom:.8rem;">
-        <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">カテゴリ</div>
-        <select id="adminCategory" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;">
-          <option>NBA</option><option>Bリーグ</option><option>河村勇輝</option><option>八村塁</option><option>スキルコーチ</option><option>面白動画</option><option>考察・議論</option><option>まとめ</option><option>ニュース・速報</option><option>体験・自己紹介</option>
-        </select>
-      </div>
-      <div style="margin-bottom:.8rem;">
-        <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">タイトル</div>
-        <input id="adminTitle" type="text" placeholder="記事タイトル" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
-      </div>
-      <div style="margin-bottom:.8rem;">
-        <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">サムネイル画像URL（任意）</div>
-        <div style="display:flex;gap:6px;align-items:center;">
-  <input type="hidden" id="adminEditId" value="">
-        <input id="adminImg" type="text" placeholder="https://..." style="flex:1;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;">
-  <button type="button" id="adminImgUploadBtn" onclick="window.uploadThumbImage()" style="padding:.5rem .8rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.75rem;cursor:pointer;white-space:nowrap;">画像を選ぶ</button>
-  <input type="file" id="adminImgFile" accept="image/*" style="display:none;">
-</div>
-      </div>
-      <div style="margin-bottom:.5rem;">
-        <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">本文エディタ</div>
-        <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.4rem;">
-          <button onclick="insertToBody('image')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">🖼 画像</button>
-          <button onclick="insertToBody('youtube')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">▶️ YouTube</button>
-          <button onclick="insertToBody('tiktok')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">🎵 TikTok</button>
-          <button onclick="insertToBody('instagram')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">📸 Insta</button>
-          <button onclick="insertToBody('twitter')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">🐦 X</button>
-          <button onclick="insertToBody('quote')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .6rem;border-radius:6px;font-size:.7rem;cursor:pointer;">💬 引用</button>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
+          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.5px;">投稿済み記事</div>
+          <div style="padding:10px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
+              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">NBAファイナル2026開幕——スパーズvsニックス</div>
+              <div style="font-size:10px;color:#999;margin-bottom:8px;">NBAファイナル · 2026/6/4 08:00</div>
+              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
+            </div>
+            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
+              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">Nikeに名前を間違えられた男が年間100億超の契約</div>
+              <div style="font-size:10px;color:#999;margin-bottom:8px;">考察・議論 · 2026/6/3 12:30</div>
+              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
+            </div>
+            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
+              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">リーニンの正体——カリーが選んだ中国ブランドとは</div>
+              <div style="font-size:10px;color:#999;margin-bottom:8px;">考察・議論 · 2026/6/3 09:00</div>
+              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
+            </div>
+          </div>
         </div>
-        <div style="margin-bottom:.4rem;display:flex;gap:.4rem;">
-          <button type="button" onclick="insertProductLink('adminBody')" style="background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.3rem .7rem;border-radius:8px;font-size:.72rem;cursor:pointer;">🛒 商品リンク追加</button>
+      </div>
+    </div>
+
+    <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+      </div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
+          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;">新規投稿</div>
+          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div><select style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;"><option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>Under Armour</option><option>Puma</option><option>New Balance</option></select></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div><input type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div><input type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div><input type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div><div style="display:flex;gap:6px;"><input type="text" placeholder="https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;min-width:0;"><button style="padding:9px 12px;background:#f0f0f0;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">選ぶ</button></div></div>
+            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div><input type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
+            <button style="width:100%;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
         </div>
-        <textarea id="adminBody" placeholder="本文を入力...URLを直接貼り付けもOK" rows="12" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.8rem;box-sizing:border-box;resize:vertical;" oninput="updatePreview()"></textarea>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
+          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;">投稿済みバッシュ</div>
+          <div style="padding:10px 14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:48px;height:36px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👟</div>
+                <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;">カリー × リーニン 新作シグネチャー</div><div style="font-size:10px;color:#C9082A;font-weight:700;margin-top:1px;">LI-NING</div></div>
+              </div>
+              <div style="font-size:10px;color:#999;margin-bottom:8px;">¥22,000〜 · 2026/6/3 10:00</div>
+              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
+            </div>
+            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:48px;height:36px;border-radius:6px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👟</div>
+                <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;">Kobe 9 Elite 2026 復刻版</div><div style="font-size:10px;color:#C9082A;font-weight:700;margin-top:1px;">NIKE</div></div>
+              </div>
+              <div style="font-size:10px;color:#999;margin-bottom:8px;">¥28,000〜 · 2026/6/2 15:30</div>
+              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div style="margin-bottom:1rem;">
-        <div style="font-size:.7rem;color:var(--tx3);margin-bottom:.3rem;">プレビュー</div>
-        <div id="adminPreview" style="background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:.8rem;min-height:60px;font-size:.78rem;color:var(--tx2);line-height:1.8;"></div>
+    </div>
+
+    <div id="admin-ad" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">広告管理</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
-        <button onclick="saveDraft()" style="padding:.7rem;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">📝 下書き保存</button>
-        <button id="adminSubmitBtn" onclick="submitArticle()" style="padding:.7rem;background:var(--or);border:none;color:#fff;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;">投稿する</button>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div><div style="font-size:13px;font-weight:700;">試合ページ広告</div><div style="font-size:10px;color:#999;margin-top:2px;">現在ON</div></div>
+          <div onclick="toggleAd(this)" data-on="true" style="width:44px;height:24px;border-radius:12px;background:#C9082A;cursor:pointer;position:relative;"><div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;"></div></div>
+        </div>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div><div style="font-size:13px;font-weight:700;">記事ページ広告</div><div style="font-size:10px;color:#999;margin-top:2px;">現在OFF</div></div>
+          <div onclick="toggleAd(this)" data-on="false" style="width:44px;height:24px;border-radius:12px;background:#ddd;cursor:pointer;position:relative;"><div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;"></div></div>
+        </div>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between;">
+          <div><div style="font-size:13px;font-weight:700;">バッシュページ広告</div><div style="font-size:10px;color:#999;margin-top:2px;">現在OFF</div></div>
+          <div onclick="toggleAd(this)" data-on="false" style="width:44px;height:24px;border-radius:12px;background:#ddd;cursor:pointer;position:relative;"><div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;"></div></div>
+        </div>
       </div>
-      <div style="margin-top:.5rem;">
-        <div style="font-size:.75rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">下書き一覧</div>
-        <div id="draftList" style="max-height:200px;overflow-y:auto;"></div>
+    </div>
+
+    <div id="admin-user" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">ユーザー管理</div>
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:#C9082A;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">や</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">やす</div><div style="font-size:10px;color:#C9082A;margin-top:2px;">アクティブ</div></div><button style="padding:5px 12px;background:rgba(201,8,42,0.1);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:10px;font-weight:700;color:#C9082A;cursor:pointer;">BAN</button></div>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:#1D428A;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">こ</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">こうた</div><div style="font-size:10px;color:#1D428A;margin-top:2px;">アクティブ</div></div><button style="padding:5px 12px;background:rgba(201,8,42,0.1);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:10px;font-weight:700;color:#C9082A;cursor:pointer;">BAN</button></div>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:#FF8C00;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">た</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">たけし</div><div style="font-size:10px;color:#FF8C00;margin-top:2px;">警告中</div></div><button style="padding:5px 12px;background:rgba(201,8,42,0.1);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:10px;font-weight:700;color:#C9082A;cursor:pointer;">BAN</button></div>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:#999;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">ス</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">スパム太郎</div><div style="font-size:10px;color:#999;margin-top:2px;">BAN済み</div></div><button style="padding:5px 12px;background:rgba(0,0,0,0.05);border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;color:#666;cursor:pointer;">解除</button></div>
       </div>
     </div>
   </div>
+</div>
 
 </div>
 
-
-<div id="snsBar" style="display:none;position:fixed;bottom:48px;left:0;right:0;z-index:90;background:var(--bg2);border-top:1px solid var(--bd);padding:.5rem 1rem;justify-content:center;gap:1.5rem;">
-</div>
-<footer class="footer">
-  <div class="foot-links">
-    <span class="foot-link" onclick="openLegal('tokusho')">特定商取引法</span>
-    <span class="foot-link" onclick="openLegal('privacy')">プライバシー</span>
-    <span class="foot-link" onclick="openLegal('terms')">利用規約</span>
-    <span class="foot-link" onclick="openLegal('contact')">お問い合わせ</span>
+<div class="bottom-nav">
+  <div class="bnav-item active" onclick="showPage('home',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <div class="bnav-label">試合</div>
   </div>
-  <span class="foot-copy">© 2026 COURTSIDE</span>
-</footer>
+  <div class="bnav-item" onclick="showPage('ranking',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <div class="bnav-label">順位</div>
+  </div>
+  <div class="bnav-item" onclick="showPage('chat',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <div class="bnav-label">チャット</div>
+  </div>
+  <div class="bnav-item" onclick="showPage('articles',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    <div class="bnav-label">記事</div>
+  </div>
+  <div class="bnav-item" onclick="showPage('sneakers',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
+    <div class="bnav-label">バッシュ</div>
+  </div>
+  <div class="bnav-item" onclick="showPage('players',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="bnav-label">選手</div>
+  </div>
+</div>
 
-
-<div id="legalModal" style="display:none;position:fixed;inset:0;z-index:500;background:var(--bg);overflow-y:auto;">
-  <div style="max-width:480px;margin:0 auto;padding:1rem;">
-    
-    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;padding-bottom:.75rem;border-bottom:1px solid var(--bd);">
-      <button onclick="closeLegal()" style="width:32px;height:32px;border-radius:6px;background:var(--bg3);border:1px solid var(--bd);cursor:pointer;font-size:.85rem;color:var(--tx2);">←</button>
-      <div id="legalTitle" style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;color:var(--tx);"></div>
+<!-- 検索モーダル -->
+<div id="search-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;">
+  <div style="padding:16px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="flex:1;display:flex;align-items:center;background:#1a1a1a;border-radius:10px;padding:10px 14px;gap:8px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search-input" type="text" placeholder="選手名・チーム・記事を検索..." style="flex:1;background:transparent;border:none;color:#fff;font-size:14px;outline:none;" oninput="handleSearch(this.value)">
+      </div>
+      <div onclick="closeSearch()" style="color:#fff;font-size:14px;cursor:pointer;padding:4px 8px;">キャンセル</div>
     </div>
-    <div id="legalContent" style="font-size:.8rem;color:var(--tx2);line-height:1.9;"></div>
+    <div id="search-results">
+      <div style="font-size:11px;color:#555;margin-bottom:12px;letter-spacing:0.5px;">最近の検索</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ウェンバンヤマ</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">スパーズ</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ブランソン</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">NBAファイナル</div>
+      </div>
+    </div>
   </div>
 </div>
 
+<script>
+const FB_URL = 'https://mentality-nba-default-rtdb.firebaseio.com';
 
+// ページ切り替え（旧サイトのgoPage互換）
+function goPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('pg-' + id) || document.getElementById(id);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+}
 
+// URLパラメータ処理
+const _urlParams = new URLSearchParams(window.location.search);
+const _articleId = _urlParams.get('article');
+if(_articleId) window._directArticleId = _articleId;
 
-<!-- ===== JS (読み込み順: data → utils → app → 各機能) ===== -->
-<!-- data.js  : 定数・API設定・固定データ。他の全ファイルが参照する -->
-<script src="js/data.js"></script>
-<!-- utils.js : 共通ユーティリティ関数。data.jsの後に読む -->
+// 検索
+function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
+function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
+function handleSearch(val){
+  if(val==='3579'){closeSearch();showAdminModal();return;}
+}
+function showAdminModal(){
+  // 管理画面表示
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const admin = document.getElementById('pg-admin');
+  if(admin) admin.classList.add('active');
+}
+function showAdminPage(id){
+  ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{
+    const el=document.getElementById(p);if(el)el.style.display='none';
+  });
+  const t=document.getElementById(id);if(t)t.style.display='block';
+}
+function showConf(conf,el){
+  document.querySelectorAll('.conf-tab').forEach(t=>{t.classList.remove('active');});
+  el.classList.add('active');
+  if(typeof loadRankingStandings==='function') loadRankingStandings(conf);
+}
+function toggleAd(el){
+  const isOn=el.dataset.on==='true';
+  el.dataset.on=String(!isOn);
+  el.style.background=!isOn?'#C9082A':'#ddd';
+  const dot=el.querySelector('div');
+  if(!isOn){dot.style.right='2px';dot.style.left='';}else{dot.style.left='2px';dot.style.right='';}
+}
+</script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
+
 <script src="js/utils.js"></script>
-<!-- app.js   : ページ切り替え・オンライン人数・初期化 -->
 <script src="js/app.js"></script>
-<!-- 各機能JS : app.jsの後に読む -->
 <script src="js/schedule.js"></script>
-<script src="js/stats.js?v=3"></script>
-<script src="js/news.js"></script>
 <script src="js/articles.js"></script>
 <script src="js/sneakers.js"></script>
 <script src="js/players.js"></script>
+<script src="js/stats.js"></script>
 <script src="js/search.js"></script>
-<script>
-// タブ復元
-(function(){
-  const hash = location.hash.replace('#','');
-  const validTabs = ['schedule','stats','teams','sneakers','articles','players'];
-  if (hash && validTabs.includes(hash)) {
-    const btn = document.getElementById('sn-' + hash);
-    if (btn) goPage(hash, btn);
-  }
-})();
-</script>
-
-<!-- チャット登録モーダル -->
-<div id="chatRegModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(17,17,30,.85);align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--card);border-radius:14px;padding:1.5rem 1.25rem;width:100%;max-width:340px;max-height:90vh;overflow-y:auto;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--tx);margin-bottom:.25rem;">COURTSIDE</div>
-    <div style="font-size:.74rem;color:var(--tx2);margin-bottom:1rem;">プロフィールを設定してチャットに参加！</div>
-    <input id="regNick" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.88rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="ニックネーム（必須）" maxlength="16">
-    <select id="regAge" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
-      <option value="">年齢を選択</option>
-      <option value="10代">10代</option>
-      <option value="20代">20代</option>
-      <option value="30代">30代</option>
-      <option value="40代">40代</option>
-      <option value="50代以上">50代以上</option>
-    </select>
-    <select id="regGender" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
-      <option value="">性別を選択</option>
-      <option value="male">男性</option>
-      <option value="female">女性</option>
-      <option value="other">その他</option>
-    </select>
-    <select id="regTeam" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;">
-      <option value="">推しチームを選択</option>
-      <option value="ATL">ATL ホークス</option>
-      <option value="BOS">BOS セルティックス</option>
-      <option value="BKN">BKN ネッツ</option>
-      <option value="CHA">CHA ホーネッツ</option>
-      <option value="CHI">CHI ブルズ</option>
-      <option value="CLE">CLE キャバリアーズ</option>
-      <option value="DAL">DAL マーベリックス</option>
-      <option value="DEN">DEN ナゲッツ</option>
-      <option value="DET">DET ピストンズ</option>
-      <option value="GSW">GSW ウォリアーズ</option>
-      <option value="HOU">HOU ロケッツ</option>
-      <option value="IND">IND ペイサーズ</option>
-      <option value="LAC">LAC クリッパーズ</option>
-      <option value="LAL">LAL レイカーズ</option>
-      <option value="MEM">MEM グリズリーズ</option>
-      <option value="MIA">MIA ヒート</option>
-      <option value="MIL">MIL バックス</option>
-      <option value="MIN">MIN ティンバーウルブズ</option>
-      <option value="NOP">NOP ペリカンズ</option>
-      <option value="NYK">NYK ニックス</option>
-      <option value="OKC">OKC サンダー</option>
-      <option value="ORL">ORL マジック</option>
-      <option value="PHI">PHI シクサーズ</option>
-      <option value="PHX">PHX サンズ</option>
-      <option value="POR">POR トレイルブレイザーズ</option>
-      <option value="SAC">SAC キングス</option>
-      <option value="SAS">SAS スパーズ</option>
-      <option value="TOR">TOR ラプターズ</option>
-      <option value="UTA">UTA ジャズ</option>
-      <option value="WAS">WAS ウィザーズ</option>
-    </select>
-    <input id="regPlayer" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.5rem;box-sizing:border-box;" placeholder="推し選手名（任意）">
-    <input id="regEmail" type="email" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:var(--bg3);color:var(--tx);font-size:.82rem;margin-bottom:.3rem;box-sizing:border-box;" placeholder="メールアドレス（任意・お知らせ受け取り用）">
-    <div style="font-size:.65rem;color:var(--tx3);margin-bottom:.8rem;">※第三者への提供はしません</div>
-    <button onclick="saveChatReg()" style="width:100%;padding:.6rem;background:var(--or);border:none;color:#fff;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:.4rem;">チャットに参加する 🏀</button>
-    <button onclick="closeChatReg()" style="width:100%;padding:.45rem;background:transparent;color:var(--tx3);border:1px solid var(--bd);border-radius:10px;font-size:.78rem;cursor:pointer;">キャンセル</button>
-  </div>
-</div>
 <script src="js/chat.js"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
