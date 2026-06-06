@@ -474,11 +474,11 @@ const FB_URL = 'https://mentality-nba-default-rtdb.firebaseio.com';
 
 // ページ切り替え（旧サイトのgoPage互換）
 function goPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pg,.page').forEach(p => {p.classList.remove('show');p.classList.remove('active');});
   const target = document.getElementById('pg-' + id) || document.getElementById(id);
-  if(target) target.classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  if(target){target.classList.add('show');target.classList.add('active');}
+  document.querySelectorAll('.sn,.nav-tab').forEach(t => {t.classList.remove('on');t.classList.remove('active');});
+  if(btn){btn.classList.add('on');btn.classList.add('active');}
   window.scrollTo(0,0);
 }
 
