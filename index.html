@@ -5,14 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>COURTSIDE - NBA速報・まとめ・チャット</title>
 <meta name="description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
-<meta name="keywords" content="NBA,NBA日本語,NBAまとめ,NBAハイライト,NBA速報,河村勇輝,八村塁,NBAスタッツ,カリー,レブロン,バッシュ,NBAファイナル,NBA年俸,1分NBA">
+<meta name="keywords" content="NBA,NBA日本語,NBAまとめ,NBAハイライト,NBA速報,河村勇輝,八村塁,NBAプレーオフ,NBA順位表,NBAスタッツ,カリー,レブロン,バッシュ,NBAファイナル,NBA年俸,1分NBA">
+<meta name="author" content="COURTSIDE">
 <meta property="og:title" content="COURTSIDE - NBA速報・まとめ・チャット">
 <meta property="og:description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://courtside-jp.github.io/mentality/">
+<meta property="og:site_name" content="COURTSIDE">
 <meta property="og:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="COURTSIDE - NBA速報・まとめ・チャット">
+<meta name="twitter:description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
 <meta name="twitter:image" content="https://courtside-jp.github.io/mentality/assets/ogp.svg">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#C9082A;--black:#0a0a0a;--dark:#111;--dark2:#1a1a1a;--gray:#888;--light:#f5f5f5;--white:#fff;--border:rgba(255,255,255,0.08);}
@@ -46,8 +53,8 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 .nav-tabs::-webkit-scrollbar{display:none;}
 .nav-tab{flex-shrink:0;text-align:center;padding:11px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;letter-spacing:0.3px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .nav-tab.active{color:var(--black);border-bottom-color:var(--red);}
-.page{display:none;}
-.page.active{display:block;}
+.page{display:none;} .pg{display:none;}
+.page.active{display:block;} .pg.active{display:block;}
 .content-wrap{padding-bottom:80px;}
 .section-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;background:var(--white);border-bottom:1px solid #f0f0f0;margin-top:8px;}
 .section-ttl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--black);letter-spacing:1px;}
@@ -120,17 +127,17 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div class="nav-tabs">
-  <div class="sn on" id="sn-schedule" onclick="goPage('schedule',this)">試合</div>
-  <div class="sn" onclick="goPage('ranking',this)">順位/スタッツ</div>
-  <div class="sn" onclick="goPage('chat',this)">チャット</div>
-  <div class="sn" onclick="goPage('articles',this)">記事</div>
-  <div class="sn" onclick="goPage('sneakers',this)">バッシュ</div>
-  <div class="sn" onclick="goPage('players',this)">選手</div>
+  <div class="nav-tab sn active" onclick="goPage('schedule',this)">試合</div>
+  <div class="nav-tab sn" onclick="goPage('ranking',this)">順位/スタッツ</div>
+  <div class="nav-tab sn" onclick="goPage('chat',this)">チャット</div>
+  <div class="nav-tab sn" onclick="goPage('articles',this)">記事</div>
+  <div class="nav-tab sn" onclick="goPage('sneakers',this)">バッシュ</div>
+  <div class="nav-tab sn" onclick="goPage('players',this)">選手</div>
 </div>
 
 <div class="content-wrap">
 
-<div id="pg-schedule" class="pg show">
+<div id="pg-schedule" class="page active">
   <div class="section-hd"><div class="section-ttl">本日の試合</div><div class="section-more">6月6日（土）</div></div>
   <div class="game-item" onclick="goPage('stats')">
     <div class="game-status"><div class="gs-text gs-live">LIVE</div></div>
@@ -158,7 +165,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-articles" class="pg">
+<div id="pg-articles" class="page">
   <div class="section-hd"><div class="section-ttl">最新記事</div></div>
   <div style="background:#fff;">
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
@@ -176,7 +183,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-chat" class="pg">
+<div id="pg-chat" class="page">
   <div style="display:flex;flex-direction:column;height:calc(100vh - 200px);background:#fff;">
     <div style="padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">ライブチャット 🏀</div>
@@ -196,7 +203,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-sneakers" class="pg">
+<div id="pg-sneakers" class="page">
   <div class="section-hd"><div class="section-ttl">最新バッシュ情報</div></div>
   <div style="background:#fff;">
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;align-items:center;">
@@ -214,12 +221,12 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div id="pg-players" class="pg">
+<div id="pg-players" class="page">
   <div class="team-selector" id="team-selector"></div>
   <div id="player-list"></div>
 </div>
 
-<div id="pg-ranking" class="pg">
+<div id="pg-ranking" class="page">
   <div class="conf-tabs">
     <div class="conf-tab active" onclick="showConf('east',this)">イースタン</div>
     <div class="conf-tab" onclick="showConf('west',this)">ウェスタン</div>
@@ -232,7 +239,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div id="stat-rank-content"></div>
 </div>
 
-<div id="pg-stats" class="pg">
+<div id="pg-stats" class="page">
   <div style="background:var(--black);padding:16px;">
     <div style="font-size:10px;color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-bottom:8px;">NBAファイナル 第1戦 · LIVE</div>
     <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -250,7 +257,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div id="box-content"></div>
 </div>
 
-<div id="pg-admin" class="pg" style="overflow-y:auto;">
+<div id="pg-admin" class="page" style="overflow-y:auto;">
   <div style="background:#fff;padding-bottom:80px;">
     <div id="admin-menu">
       <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
@@ -421,27 +428,27 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div class="bottom-nav">
-  <div class="bnav-item active" onclick="showPage('home',null,this)">
+  <div class="bnav-item active" onclick="goPage('schedule',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     <div class="bnav-label">試合</div>
   </div>
-  <div class="bnav-item" onclick="showPage('ranking',null,this)">
+  <div class="bnav-item" onclick="goPage('ranking',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <div class="bnav-label">順位</div>
   </div>
-  <div class="bnav-item" onclick="showPage('chat',null,this)">
+  <div class="bnav-item" onclick="goPage('chat',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <div class="bnav-label">チャット</div>
   </div>
-  <div class="bnav-item" onclick="showPage('articles',null,this)">
+  <div class="bnav-item" onclick="goPage('articles',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
     <div class="bnav-label">記事</div>
   </div>
-  <div class="bnav-item" onclick="showPage('sneakers',null,this)">
+  <div class="bnav-item" onclick="goPage('sneakers',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
     <div class="bnav-label">バッシュ</div>
   </div>
-  <div class="bnav-item" onclick="showPage('players',null,this)">
+  <div class="bnav-item" onclick="goPage('players',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <div class="bnav-label">選手</div>
   </div>
@@ -470,45 +477,166 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <script>
-const FB_URL = 'https://mentality-nba-default-rtdb.firebaseio.com';
-
-// ページ切り替え（旧サイトのgoPage互換）
-function goPage(id, btn) {
+const teams=[{id:'spurs',name:'スパーズ',color:'#000',players:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',num:'1',pts:27.3,reb:10.9,ast:3.1,blk:2.7,stl:1.4,fg:54.2,tp:40.0,min:34.2},{name:'ステフォン・キャッスル',pos:'PG',num:'5',pts:18.4,reb:4.2,ast:7.1,blk:0.3,stl:1.5,fg:46.8,tp:42.8,min:33.6},{name:'ディアロン・フォックス',pos:'SG',num:'4',pts:22.1,reb:4.8,ast:6.4,blk:0.4,stl:1.2,fg:48.2,tp:36.4,min:32.8},{name:'デビン・バセル',pos:'SF',num:'5',pts:17.2,reb:3.8,ast:2.4,blk:1.1,stl:0.9,fg:46.4,tp:37.6,min:30.4},{name:'ジュリアン・シャンペニー',pos:'PF',num:'7',pts:12.4,reb:5.2,ast:1.8,blk:0.8,stl:0.6,fg:52.1,tp:38.2,min:28.6},{name:'ディラン・ハーパー',pos:'SG',num:'9',pts:14.6,reb:3.4,ast:4.2,blk:0.2,stl:0.8,fg:44.6,tp:35.8,min:24.4},{name:'ケルドン・ジョンソン',pos:'SF',num:'3',pts:10.8,reb:4.6,ast:1.4,blk:0.4,stl:0.6,fg:48.2,tp:34.2,min:20.8},{name:'ルーク・コーネット',pos:'C',num:'2',pts:6.2,reb:5.8,ast:1.2,blk:1.1,stl:0.3,fg:58.4,tp:0,min:16.4}]},{id:'knicks',name:'ニックス',color:'#006BB6',players:[{name:'ジェイレン・ブランソン',pos:'PG',num:'11',pts:26.9,reb:2.8,ast:6.6,blk:0.2,stl:1.2,fg:48.2,tp:41.2,min:36.8},{name:'カール・アンソニー・タウンズ',pos:'C',num:'32',pts:24.1,reb:13.2,ast:3.8,blk:1.4,stl:1.1,fg:51.8,tp:38.4,min:32.4},{name:'ミケル・ブリッジズ',pos:'SF',num:'13',pts:16.8,reb:4.4,ast:3.2,blk:0.6,stl:1.4,fg:46.2,tp:38.2,min:34.1},{name:'OG・アヌノビー',pos:'SF',num:'8',pts:15.2,reb:5.6,ast:2.1,blk:0.8,stl:1.6,fg:52.4,tp:36.8,min:32.8},{name:'ジョシュ・ハート',pos:'SF',num:'3',pts:12.4,reb:8.1,ast:4.2,blk:0.2,stl:1.3,fg:54.6,tp:32.4,min:31.4},{name:'ランドリー・シャメット',pos:'SG',num:'14',pts:11.8,reb:2.4,ast:2.8,blk:0.1,stl:0.4,fg:44.8,tp:43.5,min:22.6},{name:'ミッチェル・ロビンソン',pos:'C',num:'23',pts:8.4,reb:9.2,ast:0.8,blk:1.8,stl:0.3,fg:62.4,tp:0,min:18.2}]},{id:'celtics',name:'セルティックス',color:'#007A33',players:[{name:'ジェイソン・テイタム',pos:'SF',num:'0',pts:26.9,reb:8.2,ast:4.8,blk:0.6,stl:1.1,fg:46.6,tp:37.2,min:36.2},{name:'ジェイレン・ブラウン',pos:'SG',num:'7',pts:23.4,reb:5.6,ast:3.4,blk:0.4,stl:1.2,fg:49.2,tp:35.8,min:34.8},{name:'クリスタプス・ポルジンギス',pos:'C',num:'8',pts:18.6,reb:7.4,ast:2.2,blk:1.9,stl:0.6,fg:52.4,tp:36.4,min:28.6},{name:'デリック・ホワイト',pos:'PG',num:'9',pts:15.2,reb:4.2,ast:5.6,blk:0.8,stl:1.4,fg:44.8,tp:38.6,min:32.4},{name:'ジュルー・ホリデー',pos:'PG',num:'4',pts:12.8,reb:5.4,ast:6.2,blk:0.4,stl:1.8,fg:48.2,tp:36.2,min:30.8}]},{id:'lakers',name:'レイカーズ',color:'#552583',players:[{name:'アンソニー・デイビス',pos:'C',num:'3',pts:24.8,reb:12.4,ast:3.6,blk:2.4,stl:1.2,fg:56.8,tp:28.4,min:34.6},{name:'レブロン・ジェームズ',pos:'SF',num:'23',pts:22.4,reb:7.8,ast:8.2,blk:0.6,stl:1.4,fg:52.4,tp:36.8,min:35.2},{name:'オースティン・リーブス',pos:'SG',num:'15',pts:16.4,reb:4.2,ast:5.8,blk:0.2,stl:1.1,fg:46.2,tp:40.4,min:32.8},{name:'ラス',pos:'PG',num:'0',pts:11.2,reb:5.6,ast:7.4,blk:0.2,stl:1.4,fg:44.8,tp:32.6,min:28.4}]}];
+const statRankings={'得点':{unit:'',data:[['ビクター・ウェンバンヤマ','スパーズ',27.3],['ジェイレン・ブランソン','ニックス',26.9],['SGA','サンダー',26.2],['ルカ・ドンチッチ','マーベリックス',25.8],['ジャレン・グリーン','ロケッツ',24.6],['カール・アンソニー・タウンズ','ニックス',24.1],['ジェイソン・テイタム','セルティックス',26.9],['アンソニー・デイビス','レイカーズ',24.8]]},'RB':{unit:'',data:[['カール・アンソニー・タウンズ','ニックス',13.2],['ビクター・ウェンバンヤマ','スパーズ',10.9],['アンソニー・デイビス','レイカーズ',12.4],['ニコラ・ヨキッチ','ナゲッツ',12.1],['ミッチェル・ロビンソン','ニックス',9.2],['ジョシュ・ハート','ニックス',8.1],['ジェイソン・テイタム','セルティックス',8.2],['OG・アヌノビー','ニックス',5.6]]},'AS':{unit:'',data:[['ニコラ・ヨキッチ','ナゲッツ',9.2],['ラメロ・ボール','ホーネッツ',8.8],['ルカ・ドンチッチ','マーベリックス',8.5],['レブロン・ジェームズ','レイカーズ',8.2],['ステフォン・キャッスル','スパーズ',7.1],['ジェイレン・ブランソン','ニックス',6.6],['ディアロン・フォックス','スパーズ',6.4],['SGA','サンダー',5.8]]},'BK':{unit:'',data:[['ビクター・ウェンバンヤマ','スパーズ',2.7],['アンソニー・デイビス','レイカーズ',2.4],['ミッチェル・ロビンソン','ニックス',1.8],['カール・アンソニー・タウンズ','ニックス',1.4],['バム・アデバヨ','ヒート',1.3],['ルーク・コーネット','スパーズ',1.1],['クリスタプス・ポルジンギス','セルティックス',1.9],['ニコラ・ヨキッチ','ナゲッツ',0.9]]},'ST':{unit:'',data:[['OG・アヌノビー','ニックス',1.6],['SGA','サンダー',1.8],['ステフォン・キャッスル','スパーズ',1.5],['ビクター・ウェンバンヤマ','スパーズ',1.4],['ミケル・ブリッジズ','ニックス',1.4],['ジョシュ・ハート','ニックス',1.3],['ジェイレン・ブランソン','ニックス',1.2],['ルカ・ドンチッチ','マーベリックス',1.1]]},'FG%':{unit:'%',data:[['ニコラ・ヨキッチ','ナゲッツ',58.1],['アンソニー・デイビス','レイカーズ',56.8],['ビクター・ウェンバンヤマ','スパーズ',54.2],['バム・アデバヨ','ヒート',52.4],['カール・アンソニー・タウンズ','ニックス',51.8],['SGA','サンダー',50.4],['ジェイレン・ブランソン','ニックス',48.2],['ジャレン・グリーン','ロケッツ',46.8]]},'3P%':{unit:'%',data:[['ランドリー・シャメット','ニックス',43.5],['ステフォン・キャッスル','スパーズ',42.8],['ジェイレン・ブランソン','ニックス',41.2],['ビクター・ウェンバンヤマ','スパーズ',40.0],['SGA','サンダー',38.8],['ミケル・ブリッジズ','ニックス',38.2],['デビン・バセル','スパーズ',37.6],['ジャレン・グリーン','ロケッツ',36.9]]},'FT%':{unit:'%',data:[['ランドリー・シャメット','ニックス',92.1],['ジェイレン・ブランソン','ニックス',91.2],['ビクター・ウェンバンヤマ','スパーズ',89.5],['SGA','サンダー',88.4],['デビン・バセル','スパーズ',87.2],['ルカ・ドンチッチ','マーベリックス',84.6],['ステフォン・キャッスル','スパーズ',83.8],['カール・アンソニー・タウンズ','ニックス',82.4]]},'3P数':{unit:'',data:[['ルカ・ドンチッチ','マーベリックス',4.4],['ランドリー・シャメット','ニックス',4.1],['ジャレン・グリーン','ロケッツ',3.4],['ジェイレン・ブランソン','ニックス',3.8],['ビクター・ウェンバンヤマ','スパーズ',3.2],['ミケル・ブリッジズ','ニックス',2.9],['SGA','サンダー',2.8],['ステフォン・キャッスル','スパーズ',2.6]]},'出場時間':{unit:'分',data:[['ジェイレン・ブランソン','ニックス',36.8],['ルカ・ドンチッチ','マーベリックス',35.8],['SGA','サンダー',35.4],['ビクター・ウェンバンヤマ','スパーズ',34.2],['ミケル・ブリッジズ','ニックス',34.1],['ステフォン・キャッスル','スパーズ',33.6],['OG・アヌノビー','ニックス',32.8],['ジョシュ・ハート','ニックス',31.4]]}};
+const standings={east:[['ニューヨーク・ニックス','#006BB6',64,18,'.780'],['ボストン・セルティックス','#007A33',58,24,'.707'],['クリーブランド・キャバリアーズ','#860038',54,28,'.659'],['マイアミ・ヒート','#98002E',48,34,'.585'],['フィラデルフィア・76ers','#006BB6',44,38,'.537'],['シカゴ・ブルズ','#CE1141',40,42,'.488'],['アトランタ・ホークス','#C1D32F',36,46,'.439'],['トロント・ラプターズ','#CE1141',30,52,'.366']],west:[['サンアントニオ・スパーズ','#000',62,20,'.756'],['オクラホマシティ・サンダー','#007AC1',58,24,'.707'],['デンバー・ナゲッツ','#0E2240',52,30,'.634'],['フェニックス・サンズ','#1D1160',48,34,'.585'],['ゴールデンステート・ウォリアーズ','#1D428A',44,38,'.537'],['ロサンゼルス・レイカーズ','#552583',40,42,'.488'],['ダラス・マーベリックス','#00538C',36,46,'.439'],['メンフィス・グリズリーズ','#5D76A9',30,52,'.366']]};
+const boxScores={sa:{starters:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',min:32,pts:28,reb:12,ast:4,stl:3,blk:2,color:'#C9082A'},{name:'ステフォン・キャッスル',pos:'PG',min:28,pts:15,reb:4,ast:8,stl:1,blk:0,color:'#555'},{name:'ディアロン・フォックス',pos:'SG',min:26,pts:12,reb:5,ast:6,stl:2,blk:0,color:'#444'},{name:'デビン・バセル',pos:'SF',min:24,pts:10,reb:4,ast:2,stl:1,blk:1,color:'#666'},{name:'ジュリアン・シャンペニー',pos:'PF',min:22,pts:8,reb:4,ast:1,stl:0,blk:1,color:'#777'}],bench:[{name:'ディラン・ハーパー',pos:'SG',min:18,pts:8,reb:3,ast:2,stl:1,blk:0,color:'#888'},{name:'ケルドン・ジョンソン',pos:'SF',min:15,pts:5,reb:3,ast:1,stl:0,blk:0,color:'#999'},{name:'ルーク・コーネット',pos:'C',min:10,pts:2,reb:4,ast:0,stl:0,blk:1,color:'#aaa'}]},ny:{starters:[{name:'ジェイレン・ブランソン',pos:'PG',min:34,pts:27,reb:5,ast:8,stl:2,blk:0,color:'#006BB6'},{name:'カール・アンソニー・タウンズ',pos:'C',min:30,pts:18,reb:10,ast:4,stl:1,blk:2,color:'#1D428A'},{name:'ミケル・ブリッジズ',pos:'SF',min:28,pts:14,reb:6,ast:3,stl:2,blk:1,color:'#333'},{name:'OG・アヌノビー',pos:'SF',min:26,pts:10,reb:5,ast:2,stl:3,blk:1,color:'#444'},{name:'ジョシュ・ハート',pos:'SF',min:24,pts:8,reb:7,ast:3,stl:1,blk:0,color:'#555'}],bench:[{name:'ランドリー・シャメット',pos:'SG',min:20,pts:6,reb:2,ast:2,stl:0,blk:0,color:'#666'},{name:'ミッチェル・ロビンソン',pos:'C',min:14,pts:4,reb:5,ast:0,stl:0,blk:1,color:'#777'}]}};
+const pages=['home','articles','chat','sneakers','players','stats','ranking','match','admin'];
+let currentTeam='spurs',currentConf='east',currentStat='得点';
+function goPage(id, tabEl) {
+  const pageId = 'pg-' + (id==='schedule'?'schedule':id==='home'?'schedule':id);
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById('pg-' + id) || document.getElementById(id);
+  const target = document.getElementById(pageId);
   if(target) target.classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  if(tabEl) tabEl.classList.add('active');
+  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
   window.scrollTo(0,0);
+  if(id==='ranking'&&typeof initRankingPage==='function') initRankingPage();
+  if(id==='articles'&&typeof loadArticles==='function') loadArticles();
+  if(id==='sneakers'&&typeof loadSneakers==='function') loadSneakers();
+  if(id==='players'&&typeof loadPlayers==='function') loadPlayers();
 }
-
-// URLパラメータ処理
-const _urlParams = new URLSearchParams(window.location.search);
-const _articleId = _urlParams.get('article');
-if(_articleId) window._directArticleId = _articleId;
-
-// 検索
+function showPage(id,tabEl,navEl){
+  pages.forEach(p=>{const el=document.getElementById(p);if(el){el.classList.remove('active');}});
+  const t=document.getElementById(id);if(t)t.classList.add('active');
+  if(tabEl){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));tabEl.classList.add('active');}
+  if(navEl){document.querySelectorAll('.bnav-item').forEach(n=>n.classList.remove('active'));navEl.classList.add('active');}
+  window.scrollTo(0,0);
+  if(id==='players')initPlayers();
+  if(id==='ranking')initRanking();
+  if(id==='match')initBox('sa');
+}
+function initPlayers(){
+  const sel=document.getElementById('team-selector');
+  sel.innerHTML=teams.map(t=>`<div class="team-btn ${t.id===currentTeam?'active':''}" onclick="selectTeam('${t.id}',this)">${t.name}</div>`).join('');
+  renderPlayers(currentTeam);
+}
+function selectTeam(id,el){
+  currentTeam=id;
+  document.querySelectorAll('.team-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderPlayers(id);
+}
+function renderPlayers(id){
+  const team=teams.find(t=>t.id===id);
+  const list=document.getElementById('player-list');
+  const statCols=[{key:'pts',label:'得点'},{key:'reb',label:'RB'},{key:'ast',label:'AS'},{key:'blk',label:'BK'},{key:'stl',label:'ST'},{key:'fg',label:'FG%'},{key:'tp',label:'3P%'},{key:'min',label:'分'}];
+  list.innerHTML=`
+    <div style="display:flex;background:#f9f9f9;border-bottom:1px solid #eee;">
+      <div style="width:160px;flex-shrink:0;font-size:10px;color:#999;font-weight:700;padding:8px 16px;">選手</div>
+      <div style="display:flex;overflow-x:auto;scrollbar-width:none;">${statCols.map(c=>`<div style="width:48px;flex-shrink:0;text-align:center;font-size:10px;color:#999;font-weight:700;padding:8px 0;">${c.label}</div>`).join('')}</div>
+    </div>
+    ${team.players.map(p=>`
+      <div style="display:flex;border-bottom:1px solid #f5f5f5;background:#fff;align-items:center;">
+        <div style="width:160px;flex-shrink:0;display:flex;align-items:center;padding:10px 12px;gap:8px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:${team.color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${p.name[0]}</div>
+          <div style="min-width:0;"><div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div><div style="font-size:10px;color:#999;">#${p.num}·${p.pos}</div></div>
+        </div>
+        <div style="display:flex;overflow-x:auto;scrollbar-width:none;">${statCols.map((c,i)=>`<div style="width:48px;flex-shrink:0;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:${i===0?'#C9082A':'#000'};padding:10px 0;">${p[c.key]||'-'}</div>`).join('')}</div>
+      </div>
+    `).join('')}
+  `;
+}
+function initRanking(){
+  renderStandings(currentConf);
+  const tabs=document.getElementById('stat-rank-tabs');
+  tabs.innerHTML=Object.keys(statRankings).map(s=>`<div class="srt ${s===currentStat?'active':''}" onclick="selectStat('${s}',this)">${s}</div>`).join('');
+  renderStatRanking(currentStat);
+}
+function showConf(conf,el){
+  currentConf=conf;
+  document.querySelectorAll('.conf-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderStandings(conf);
+}
+function renderStandings(conf){
+  const data=standings[conf];
+  document.getElementById('standings-content').innerHTML=`
+    <div style="display:flex;padding:8px 16px;background:#f9f9f9;border-bottom:1px solid #eee;">
+      <div style="width:24px;"></div><div style="flex:1;font-size:10px;color:#999;font-weight:700;margin-left:16px;">チーム</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">勝</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">負</div>
+      <div style="width:40px;text-align:center;font-size:10px;color:#999;font-weight:700;">勝率</div>
+    </div>
+    ${data.map((t,i)=>`
+      <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
+        <div style="width:24px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:${i<3?'#C9082A':'#ddd'};">${i+1}</div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${t[1]};margin:0 8px;flex-shrink:0;"></div>
+        <div style="flex:1;font-size:12px;font-weight:500;">${t[0]}</div>
+        <div style="width:32px;text-align:center;font-size:12px;font-weight:700;">${t[2]}</div>
+        <div style="width:32px;text-align:center;font-size:12px;color:#999;">${t[3]}</div>
+        <div style="width:40px;text-align:center;font-size:12px;font-weight:700;color:${i<6?'#C9082A':'#999'};">${t[4]}</div>
+      </div>
+    `).join('')}
+  `;
+}
+function selectStat(stat,el){
+  currentStat=stat;
+  document.querySelectorAll('.srt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderStatRanking(stat);
+}
+function renderStatRanking(stat){
+  const{unit,data}=statRankings[stat];
+  document.getElementById('stat-rank-content').innerHTML=data.map((p,i)=>`
+    <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
+      <div style="width:24px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:${i<3?'#C9082A':'#ddd'};">${i+1}</div>
+      <div style="flex:1;margin-left:8px;"><div style="font-size:12px;font-weight:700;">${p[0]}</div><div style="font-size:10px;color:#999;">${p[1]}</div></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${i===0?'#C9082A':'#000'};">${p[2]}${unit}</div>
+    </div>
+  `).join('');
+}
+function initBox(team){showBox(team,document.getElementById('box-'+team));}
+function showBox(team,el){
+  ['sa','ny','team'].forEach(t=>{const b=document.getElementById('box-'+t);if(b){b.style.color='#888';b.style.borderBottom='2px solid transparent';}});
+  if(el){el.style.color='#fff';el.style.borderBottom='2px solid #C9082A';}
+  const content=document.getElementById('box-content');
+  if(team==='team'){
+    content.innerHTML=`<div style="background:#fff;padding:16px;">${[['FG%','48.2%','51.4%'],['3P%','38.5%','42.1%'],['FT%','84.2%','88.6%'],['リバウンド','34','38'],['アシスト','22','28'],['スティール','4','6'],['ブロック','4','3'],['ターンオーバー','8','6']].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;"><div style="font-size:12px;font-weight:700;color:#C9082A;text-align:center;flex:1;">${r[1]}</div><div style="font-size:11px;font-weight:700;color:#999;width:80px;text-align:center;">${r[0]}</div><div style="font-size:12px;font-weight:700;color:#006BB6;text-align:center;flex:1;">${r[2]}</div></div>`).join('')}</div>`;
+    return;
+  }
+  const box=boxScores[team];if(!box)return;
+  const renderRows=players=>players.map(p=>`
+    <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
+      <div style="width:30px;height:30px;border-radius:50%;background:${p.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-right:8px;">${p.name[0]}</div>
+      <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div><div style="font-size:10px;color:#999;">${p.pos}·${p.min}分</div></div>
+      <div style="display:flex;gap:0;">
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;color:#C9082A;">${p.pts}</div>
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;">${p.reb}</div>
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;">${p.ast}</div>
+        <div style="width:28px;text-align:center;font-size:13px;color:#666;">${p.stl}</div>
+        <div style="width:28px;text-align:center;font-size:13px;color:#666;">${p.blk}</div>
+      </div>
+    </div>
+  `).join('');
+  content.innerHTML=`
+    <div style="display:flex;padding:8px 16px;background:#f9f9f9;border-bottom:1px solid #eee;">
+      <div style="flex:1;font-size:10px;color:#999;font-weight:700;">選手</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">得点</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">RB</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">AS</div>
+      <div style="width:28px;text-align:center;font-size:10px;color:#999;font-weight:700;">ST</div>
+      <div style="width:28px;text-align:center;font-size:10px;color:#999;font-weight:700;">BK</div>
+    </div>
+    <div style="padding:8px 16px;font-size:10px;font-weight:700;color:#C9082A;background:#fff8f8;border-bottom:1px solid #fee;font-family:'Barlow Condensed',sans-serif;">スターター</div>
+    ${renderRows(box.starters)}
+    <div style="padding:8px 16px;font-size:10px;font-weight:700;color:#999;background:#f9f9f9;border-bottom:1px solid #eee;font-family:'Barlow Condensed',sans-serif;">ベンチ</div>
+    ${renderRows(box.bench)}
+  `;
+}
 function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
 function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
 function handleSearch(val){
-  if(val==='3579'){closeSearch();showAdminModal();return;}
-}
-function showAdminModal(){
-  // 管理画面表示
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const admin = document.getElementById('pg-admin');
-  if(admin) admin.classList.add('active');
+  if(val==='3579'){closeSearch();showPage('admin');showAdminPage('admin-menu');return;}
+  const results=document.getElementById('search-results');
+  if(val.length===0){results.innerHTML=`<div style="font-size:11px;color:#555;margin-bottom:12px;">最近の検索</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ウェンバンヤマ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">スパーズ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ブランソン</div></div>`;return;}
+  const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
+  results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
 }
 function showAdminPage(id){
-  ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{
-    const el=document.getElementById(p);if(el)el.style.display='none';
-  });
+  ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
   const t=document.getElementById(id);if(t)t.style.display='block';
-}
-function showConf(conf,el){
-  document.querySelectorAll('.conf-tab').forEach(t=>{t.classList.remove('active');});
-  el.classList.add('active');
-  if(typeof loadRankingStandings==='function') loadRankingStandings(conf);
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
@@ -516,13 +644,23 @@ function toggleAd(el){
   el.style.background=!isOn?'#C9082A':'#ddd';
   const dot=el.querySelector('div');
   if(!isOn){dot.style.right='2px';dot.style.left='';}else{dot.style.left='2px';dot.style.right='';}
+  const label=el.parentNode.querySelector('div:first-child div:last-child');
+  if(label)label.textContent=!isOn?'現在ON':'現在OFF';
 }
+// URLパラメータ処理
+const _urlParams = new URLSearchParams(window.location.search);
+const _articleId = _urlParams.get('article');
+if(_articleId) window._directArticleId = _articleId;
 </script>
+
+<!-- Firebase URL -->
+<script>const FB_URL = 'https://mentality-nba-default-rtdb.firebaseio.com';</script>
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
 
+<!-- JS読み込み -->
 <script src="js/utils.js"></script>
 <script src="js/app.js"></script>
 <script src="js/schedule.js"></script>
