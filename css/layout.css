@@ -9,8 +9,9 @@
 .top-nav {
   flex-shrink: 0;
   height: 52px;
-  background: #0a0a0a;
-  border-bottom: none;
+  background: rgba(255,255,255,.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--bd);
   display: flex;
   align-items: center;
   padding: 0 1rem;
@@ -21,10 +22,11 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.65rem;
   letter-spacing: .2em;
-  color: #ffffff;
+  color: var(--or);
+  text-shadow: 0 0 20px rgba(255,90,0,.4);
   flex-shrink: 0;
 }
-.logo span { color: var(--or); opacity: 1; }
+.logo span { color: var(--tx); opacity: .7; }
 
 .nav-sp { flex: 1; }
 
@@ -77,15 +79,12 @@
   overflow-x: auto;
   scrollbar-width: none;
   width: 100%;
-  position: sticky;
-  top: 52px;
-  z-index: 99;
 }
 .second-nav::-webkit-scrollbar { display: none; }
 
 .sn {
-  flex-shrink: 0;
-  padding: 0 1rem;
+  flex: 1;
+  padding: 0 .2rem;
   height: 40px;
   display: flex;
   align-items: center;
@@ -103,7 +102,7 @@
   white-space: nowrap;
   transition: all .15s;
 }
-.sn.on, .sn.active {
+.sn.on {
   color: var(--or);
   border-bottom-color: var(--or);
 }
