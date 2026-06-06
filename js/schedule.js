@@ -7,7 +7,7 @@ const KATAKANA_MAP = {
   'OG Anunoby': 'OG・アヌノビー',
   'Josh Hart': 'ジョシュ・ハート',
   'Stephon Castle': 'ステフォン・キャッスル',
-  'De'Aaron Fox': 'ディアロン・フォックス',
+  "De'Aaron Fox": 'ディアロン・フォックス',
   'Devin Vassell': 'デビン・バセル',
   'Julian Champagnie': 'ジュリアン・シャンペニー',
   'Dylan Harper': 'ディラン・ハーパー',
