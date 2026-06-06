@@ -31,6 +31,9 @@ function goPage(id, btn) {
 
   // ページごとに必要な初期化を呼ぶ
   // ※ 各jsファイルが読み込まれていれば自動で動く
+  if (id === 'ranking' && typeof initRankingPage === 'function') {
+    initRankingPage();
+  }
   if (id === 'stats' && typeof loadESPNLeaders === 'function') {
     loadESPNLeaders(curStatKey || 'pts', curMode || 'season');
   }
