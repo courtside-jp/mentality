@@ -121,7 +121,8 @@ function initStats() {
     ['stl','STL'], ['blk','BLK'], ['fg3','3P%'], ['fg3m','3PM'], ['fg','FG%'], ['ft','FT%'],
     ['to','TO'], ['min','MIN'],
   ];
-  document.getElementById('statCats').innerHTML = cats.map((c, i) =>
+  const statCatsEl = document.getElementById('statCats'); if(!statCatsEl) return;
+  statCatsEl.innerHTML = cats.map((c, i) =>
     `<button class="scat${i === 0 ? ' on' : ''}" onclick="showStat(this,'${c[0]}')">${c[1]}</button>`
   ).join('');
   loadESPNLeaders('pts', 'season');
