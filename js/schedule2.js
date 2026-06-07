@@ -274,14 +274,14 @@ function gcHTML(g) {
     <div class="gc-body">
       <div class="gc-team">
         ${hLogo}
-        <div class="gc-nickname">${g.home.name||''}</div>
+        <div class="gc-name-row"><span class="gc-abbr-inline">${g.home.abbr}</span><span class="gc-nickname-inline">${g.home.name||''}</span></div>
         <div class="gc-score${hl && !isP ? ' gc-win' : ''}" id="hs-${g.id}">${isP ? '—' : g.home.score}</div>
         ${poSeriesHome}
       </div>
       <div class="gc-mid">${midHtml}</div>
       <div class="gc-team r">
         ${aLogo}
-        <div class="gc-nickname">${g.away.name||''}</div>
+        <div class="gc-name-row"><span class="gc-abbr-inline">${g.away.abbr}</span><span class="gc-nickname-inline">${g.away.name||''}</span></div>
         <div class="gc-score${!hl && !isP ? ' gc-win' : ''}" id="as-${g.id}">${isP ? '—' : g.away.score}</div>
         ${poSeriesAway}
       </div>
