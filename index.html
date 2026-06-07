@@ -240,16 +240,9 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div id="pg-ranking" class="pg">
-  <div class="conf-tabs">
-    <div class="conf-tab active" onclick="showConf(this,'east')">イースタン</div>
-    <div class="conf-tab" onclick="showConf(this,'west')">ウェスタン</div>
-  </div>
-  <div id="standings-content"></div>
-  <div style="padding:14px 16px 8px;border-top:8px solid #f0f0f0;background:#fff;border-bottom:1px solid #eee;">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;">スタッツランキング</div>
-  </div>
-  <div class="stat-rank-tabs" id="stat-rank-tabs"></div>
-  <div id="stat-rank-content"></div>
+  <div id="standingsWrap"></div>
+  <div id="statCats"></div>
+  <div id="statWrap"></div>
 </div>
 
 <div id="pg-admin" class="pg" style="overflow-y:auto;">
@@ -473,9 +466,8 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 
 <script>
 const teams=[{id:'spurs',name:'スパーズ',color:'#000',players:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',num:'1',pts:27.3,reb:10.9,ast:3.1,blk:2.7,stl:1.4,fg:54.2,tp:40.0,min:34.2},{name:'ステフォン・キャッスル',pos:'PG',num:'5',pts:18.4,reb:4.2,ast:7.1,blk:0.3,stl:1.5,fg:46.8,tp:42.8,min:33.6},{name:'ディアロン・フォックス',pos:'SG',num:'4',pts:22.1,reb:4.8,ast:6.4,blk:0.4,stl:1.2,fg:48.2,tp:36.4,min:32.8},{name:'デビン・バセル',pos:'SF',num:'5',pts:17.2,reb:3.8,ast:2.4,blk:1.1,stl:0.9,fg:46.4,tp:37.6,min:30.4},{name:'ジュリアン・シャンペニー',pos:'PF',num:'7',pts:12.4,reb:5.2,ast:1.8,blk:0.8,stl:0.6,fg:52.1,tp:38.2,min:28.6},{name:'ディラン・ハーパー',pos:'SG',num:'9',pts:14.6,reb:3.4,ast:4.2,blk:0.2,stl:0.8,fg:44.6,tp:35.8,min:24.4},{name:'ケルドン・ジョンソン',pos:'SF',num:'3',pts:10.8,reb:4.6,ast:1.4,blk:0.4,stl:0.6,fg:48.2,tp:34.2,min:20.8},{name:'ルーク・コーネット',pos:'C',num:'2',pts:6.2,reb:5.8,ast:1.2,blk:1.1,stl:0.3,fg:58.4,tp:0,min:16.4}]},{id:'knicks',name:'ニックス',color:'#006BB6',players:[{name:'ジェイレン・ブランソン',pos:'PG',num:'11',pts:26.9,reb:2.8,ast:6.6,blk:0.2,stl:1.2,fg:48.2,tp:41.2,min:36.8},{name:'カール・アンソニー・タウンズ',pos:'C',num:'32',pts:24.1,reb:13.2,ast:3.8,blk:1.4,stl:1.1,fg:51.8,tp:38.4,min:32.4},{name:'ミケル・ブリッジズ',pos:'SF',num:'13',pts:16.8,reb:4.4,ast:3.2,blk:0.6,stl:1.4,fg:46.2,tp:38.2,min:34.1},{name:'OG・アヌノビー',pos:'SF',num:'8',pts:15.2,reb:5.6,ast:2.1,blk:0.8,stl:1.6,fg:52.4,tp:36.8,min:32.8},{name:'ジョシュ・ハート',pos:'SF',num:'3',pts:12.4,reb:8.1,ast:4.2,blk:0.2,stl:1.3,fg:54.6,tp:32.4,min:31.4},{name:'ランドリー・シャメット',pos:'SG',num:'14',pts:11.8,reb:2.4,ast:2.8,blk:0.1,stl:0.4,fg:44.8,tp:43.5,min:22.6},{name:'ミッチェル・ロビンソン',pos:'C',num:'23',pts:8.4,reb:9.2,ast:0.8,blk:1.8,stl:0.3,fg:62.4,tp:0,min:18.2}]},{id:'celtics',name:'セルティックス',color:'#007A33',players:[{name:'ジェイソン・テイタム',pos:'SF',num:'0',pts:26.9,reb:8.2,ast:4.8,blk:0.6,stl:1.1,fg:46.6,tp:37.2,min:36.2},{name:'ジェイレン・ブラウン',pos:'SG',num:'7',pts:23.4,reb:5.6,ast:3.4,blk:0.4,stl:1.2,fg:49.2,tp:35.8,min:34.8},{name:'クリスタプス・ポルジンギス',pos:'C',num:'8',pts:18.6,reb:7.4,ast:2.2,blk:1.9,stl:0.6,fg:52.4,tp:36.4,min:28.6},{name:'デリック・ホワイト',pos:'PG',num:'9',pts:15.2,reb:4.2,ast:5.6,blk:0.8,stl:1.4,fg:44.8,tp:38.6,min:32.4},{name:'ジュルー・ホリデー',pos:'PG',num:'4',pts:12.8,reb:5.4,ast:6.2,blk:0.4,stl:1.8,fg:48.2,tp:36.2,min:30.8}]},{id:'lakers',name:'レイカーズ',color:'#552583',players:[{name:'アンソニー・デイビス',pos:'C',num:'3',pts:24.8,reb:12.4,ast:3.6,blk:2.4,stl:1.2,fg:56.8,tp:28.4,min:34.6},{name:'レブロン・ジェームズ',pos:'SF',num:'23',pts:22.4,reb:7.8,ast:8.2,blk:0.6,stl:1.4,fg:52.4,tp:36.8,min:35.2},{name:'オースティン・リーブス',pos:'SG',num:'15',pts:16.4,reb:4.2,ast:5.8,blk:0.2,stl:1.1,fg:46.2,tp:40.4,min:32.8},{name:'ラス',pos:'PG',num:'0',pts:11.2,reb:5.6,ast:7.4,blk:0.2,stl:1.4,fg:44.8,tp:32.6,min:28.4}]}];
-const statRankings={'得点':{unit:'',data:[['ビクター・ウェンバンヤマ','スパーズ',27.3],['ジェイレン・ブランソン','ニックス',26.9],['SGA','サンダー',26.2],['ルカ・ドンチッチ','マーベリックス',25.8],['ジャレン・グリーン','ロケッツ',24.6],['カール・アンソニー・タウンズ','ニックス',24.1],['ジェイソン・テイタム','セルティックス',26.9],['アンソニー・デイビス','レイカーズ',24.8]]},'RB':{unit:'',data:[['カール・アンソニー・タウンズ','ニックス',13.2],['ビクター・ウェンバンヤマ','スパーズ',10.9],['アンソニー・デイビス','レイカーズ',12.4],['ニコラ・ヨキッチ','ナゲッツ',12.1],['ミッチェル・ロビンソン','ニックス',9.2],['ジョシュ・ハート','ニックス',8.1],['ジェイソン・テイタム','セルティックス',8.2],['OG・アヌノビー','ニックス',5.6]]},'AS':{unit:'',data:[['ニコラ・ヨキッチ','ナゲッツ',9.2],['ラメロ・ボール','ホーネッツ',8.8],['ルカ・ドンチッチ','マーベリックス',8.5],['レブロン・ジェームズ','レイカーズ',8.2],['ステフォン・キャッスル','スパーズ',7.1],['ジェイレン・ブランソン','ニックス',6.6],['ディアロン・フォックス','スパーズ',6.4],['SGA','サンダー',5.8]]},'BK':{unit:'',data:[['ビクター・ウェンバンヤマ','スパーズ',2.7],['アンソニー・デイビス','レイカーズ',2.4],['ミッチェル・ロビンソン','ニックス',1.8],['カール・アンソニー・タウンズ','ニックス',1.4],['バム・アデバヨ','ヒート',1.3],['ルーク・コーネット','スパーズ',1.1],['クリスタプス・ポルジンギス','セルティックス',1.9],['ニコラ・ヨキッチ','ナゲッツ',0.9]]},'ST':{unit:'',data:[['OG・アヌノビー','ニックス',1.6],['SGA','サンダー',1.8],['ステフォン・キャッスル','スパーズ',1.5],['ビクター・ウェンバンヤマ','スパーズ',1.4],['ミケル・ブリッジズ','ニックス',1.4],['ジョシュ・ハート','ニックス',1.3],['ジェイレン・ブランソン','ニックス',1.2],['ルカ・ドンチッチ','マーベリックス',1.1]]},'FG%':{unit:'%',data:[['ニコラ・ヨキッチ','ナゲッツ',58.1],['アンソニー・デイビス','レイカーズ',56.8],['ビクター・ウェンバンヤマ','スパーズ',54.2],['バム・アデバヨ','ヒート',52.4],['カール・アンソニー・タウンズ','ニックス',51.8],['SGA','サンダー',50.4],['ジェイレン・ブランソン','ニックス',48.2],['ジャレン・グリーン','ロケッツ',46.8]]},'3P%':{unit:'%',data:[['ランドリー・シャメット','ニックス',43.5],['ステフォン・キャッスル','スパーズ',42.8],['ジェイレン・ブランソン','ニックス',41.2],['ビクター・ウェンバンヤマ','スパーズ',40.0],['SGA','サンダー',38.8],['ミケル・ブリッジズ','ニックス',38.2],['デビン・バセル','スパーズ',37.6],['ジャレン・グリーン','ロケッツ',36.9]]},'FT%':{unit:'%',data:[['ランドリー・シャメット','ニックス',92.1],['ジェイレン・ブランソン','ニックス',91.2],['ビクター・ウェンバンヤマ','スパーズ',89.5],['SGA','サンダー',88.4],['デビン・バセル','スパーズ',87.2],['ルカ・ドンチッチ','マーベリックス',84.6],['ステフォン・キャッスル','スパーズ',83.8],['カール・アンソニー・タウンズ','ニックス',82.4]]},'3P数':{unit:'',data:[['ルカ・ドンチッチ','マーベリックス',4.4],['ランドリー・シャメット','ニックス',4.1],['ジャレン・グリーン','ロケッツ',3.4],['ジェイレン・ブランソン','ニックス',3.8],['ビクター・ウェンバンヤマ','スパーズ',3.2],['ミケル・ブリッジズ','ニックス',2.9],['SGA','サンダー',2.8],['ステフォン・キャッスル','スパーズ',2.6]]},'出場時間':{unit:'分',data:[['ジェイレン・ブランソン','ニックス',36.8],['ルカ・ドンチッチ','マーベリックス',35.8],['SGA','サンダー',35.4],['ビクター・ウェンバンヤマ','スパーズ',34.2],['ミケル・ブリッジズ','ニックス',34.1],['ステフォン・キャッスル','スパーズ',33.6],['OG・アヌノビー','ニックス',32.8],['ジョシュ・ハート','ニックス',31.4]]}};
-const standings={east:[['ニューヨーク・ニックス','#006BB6',64,18,'.780'],['ボストン・セルティックス','#007A33',58,24,'.707'],['クリーブランド・キャバリアーズ','#860038',54,28,'.659'],['マイアミ・ヒート','#98002E',48,34,'.585'],['フィラデルフィア・76ers','#006BB6',44,38,'.537'],['シカゴ・ブルズ','#CE1141',40,42,'.488'],['アトランタ・ホークス','#C1D32F',36,46,'.439'],['トロント・ラプターズ','#CE1141',30,52,'.366']],west:[['サンアントニオ・スパーズ','#000',62,20,'.756'],['オクラホマシティ・サンダー','#007AC1',58,24,'.707'],['デンバー・ナゲッツ','#0E2240',52,30,'.634'],['フェニックス・サンズ','#1D1160',48,34,'.585'],['ゴールデンステート・ウォリアーズ','#1D428A',44,38,'.537'],['ロサンゼルス・レイカーズ','#552583',40,42,'.488'],['ダラス・マーベリックス','#00538C',36,46,'.439'],['メンフィス・グリズリーズ','#5D76A9',30,52,'.366']]};
-const boxScores={sa:{starters:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',min:32,pts:28,reb:12,ast:4,stl:3,blk:2,color:'#C9082A'},{name:'ステフォン・キャッスル',pos:'PG',min:28,pts:15,reb:4,ast:8,stl:1,blk:0,color:'#555'},{name:'ディアロン・フォックス',pos:'SG',min:26,pts:12,reb:5,ast:6,stl:2,blk:0,color:'#444'},{name:'デビン・バセル',pos:'SF',min:24,pts:10,reb:4,ast:2,stl:1,blk:1,color:'#666'},{name:'ジュリアン・シャンペニー',pos:'PF',min:22,pts:8,reb:4,ast:1,stl:0,blk:1,color:'#777'}],bench:[{name:'ディラン・ハーパー',pos:'SG',min:18,pts:8,reb:3,ast:2,stl:1,blk:0,color:'#888'},{name:'ケルドン・ジョンソン',pos:'SF',min:15,pts:5,reb:3,ast:1,stl:0,blk:0,color:'#999'},{name:'ルーク・コーネット',pos:'C',min:10,pts:2,reb:4,ast:0,stl:0,blk:1,color:'#aaa'}]},ny:{starters:[{name:'ジェイレン・ブランソン',pos:'PG',min:34,pts:27,reb:5,ast:8,stl:2,blk:0,color:'#006BB6'},{name:'カール・アンソニー・タウンズ',pos:'C',min:30,pts:18,reb:10,ast:4,stl:1,blk:2,color:'#1D428A'},{name:'ミケル・ブリッジズ',pos:'SF',min:28,pts:14,reb:6,ast:3,stl:2,blk:1,color:'#333'},{name:'OG・アヌノビー',pos:'SF',min:26,pts:10,reb:5,ast:2,stl:3,blk:1,color:'#444'},{name:'ジョシュ・ハート',pos:'SF',min:24,pts:8,reb:7,ast:3,stl:1,blk:0,color:'#555'}],bench:[{name:'ランドリー・シャメット',pos:'SG',min:20,pts:6,reb:2,ast:2,stl:0,blk:0,color:'#666'},{name:'ミッチェル・ロビンソン',pos:'C',min:14,pts:4,reb:5,ast:0,stl:0,blk:1,color:'#777'}]}};
+
+
 const pages=['home','articles','chat','sneakers','players','stats','ranking','match','admin'];
 let currentTeam='spurs',currentConf='east',currentStat='得点';
 function goPage(id, tabEl, navEl) {
@@ -538,50 +530,11 @@ function renderPlayers(id){
     `).join('')}
   `;
 }
-function initRanking(){
-  renderStandings(currentConf);
-  const tabs=document.getElementById('stat-rank-tabs');
-  tabs.innerHTML=Object.keys(statRankings).map(s=>`<div class="srt ${s===currentStat?'active':''}" onclick="selectStat('${s}',this)">${s}</div>`).join('');
-  renderStatRanking(currentStat);
-}
 
-function renderStandings(conf){
-  const data=standings[conf];
-  document.getElementById('standings-content').innerHTML=`
-    <div style="display:flex;padding:8px 16px;background:#f9f9f9;border-bottom:1px solid #eee;">
-      <div style="width:24px;"></div><div style="flex:1;font-size:10px;color:#999;font-weight:700;margin-left:16px;">チーム</div>
-      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">勝</div>
-      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">負</div>
-      <div style="width:40px;text-align:center;font-size:10px;color:#999;font-weight:700;">勝率</div>
-    </div>
-    ${data.map((t,i)=>`
-      <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
-        <div style="width:24px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:${i<3?'#C9082A':'#ddd'};">${i+1}</div>
-        <div style="width:8px;height:8px;border-radius:50%;background:${t[1]};margin:0 8px;flex-shrink:0;"></div>
-        <div style="flex:1;font-size:12px;font-weight:500;">${t[0]}</div>
-        <div style="width:32px;text-align:center;font-size:12px;font-weight:700;">${t[2]}</div>
-        <div style="width:32px;text-align:center;font-size:12px;color:#999;">${t[3]}</div>
-        <div style="width:40px;text-align:center;font-size:12px;font-weight:700;color:${i<6?'#C9082A':'#999'};">${t[4]}</div>
-      </div>
-    `).join('')}
-  `;
-}
-function selectStat(stat,el){
-  currentStat=stat;
-  document.querySelectorAll('.srt').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderStatRanking(stat);
-}
-function renderStatRanking(stat){
-  const{unit,data}=statRankings[stat];
-  document.getElementById('stat-rank-content').innerHTML=data.map((p,i)=>`
-    <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
-      <div style="width:24px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:${i<3?'#C9082A':'#ddd'};">${i+1}</div>
-      <div style="flex:1;margin-left:8px;"><div style="font-size:12px;font-weight:700;">${p[0]}</div><div style="font-size:10px;color:#999;">${p[1]}</div></div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${i===0?'#C9082A':'#000'};">${p[2]}${unit}</div>
-    </div>
-  `).join('');
-}
+
+
+
+
 function initBox(team){showBox(team,document.getElementById('box-'+team));}
 function showBox(team,el){
   ['sa','ny','team'].forEach(t=>{const b=document.getElementById('box-'+t);if(b){b.style.color='#888';b.style.borderBottom='2px solid transparent';}});
