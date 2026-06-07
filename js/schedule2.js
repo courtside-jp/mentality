@@ -421,39 +421,10 @@ function buildDetail(g) {
   const notifyHTML = "";
 
   // Lv5 リアルタイム実況チャット（試合前・試合中のみ）
-  const chatHTML = (isP || isL) ? `
-  <div class="live-chat-panel" id="lc-panel-${g.id}">
-    <div class="live-chat-header">
-      <div class="live-chat-dot"></div>
-      実況チャット — ${g.home.abbr} vs ${g.away.abbr}
-    </div>
-    <div class="live-chat-msgs" id="lc-msgs-${g.id}"></div>
-    <div class="live-chat-input-row">
-      <input class="live-chat-input" id="lc-input-${g.id}" placeholder="今の試合について..." maxlength="60">
-      <button class="live-chat-send" onclick="sendLiveChat('${g.id}',this)">送信</button>
-    </div>
-  </div>` : '';
+  const chatHTML = '';
 
   // Lv2 試合前勝敗投票UI
-  const voteHTML = isP ? `
-  <div class="vote-panel" id="vote-${g.id}">
-    <div class="vote-title">🗳️ 今日の試合、どっちが勝つ？</div>
-    <div class="vote-row">
-      <button class="vote-btn vote-home" onclick="castVote('${g.id}','home','${g.home.abbr}','${g.away.abbr}',this)">${g.home.abbr}</button>
-      <div class="vote-vs">VS</div>
-      <button class="vote-btn vote-away" onclick="castVote('${g.id}','away','${g.home.abbr}','${g.away.abbr}',this)">${g.away.abbr}</button>
-    </div>
-    <div class="vote-result" id="vr-${g.id}" style="display:none">
-      <div class="vote-bar-wrap">
-        <div class="vote-bar-home" id="vbh-${g.id}"></div>
-        <div class="vote-bar-away" id="vba-${g.id}"></div>
-      </div>
-      <div class="vote-pct-row">
-        <span id="vpc-home-${g.id}">0%</span>
-        <span id="vpc-away-${g.id}">0%</span>
-      </div>
-    </div>
-  </div>` : '';
+  const voteHTML = '';
 
   return `<div class="ls-wrap">
       <div class="ls-row ls-head-row">
