@@ -50,6 +50,7 @@ async function loadArticles() {
     }
 
     const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts);
+    console.log('記事数:', articles.length, articles.map(a=>a.title));
     if (window._directArticleId) {
       const target = articles.find(a => a.id === window._directArticleId);
       if (target) {
