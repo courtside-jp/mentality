@@ -124,6 +124,18 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 .live-chat-area{padding:12px 14px;border-top:1px solid #f0f0f0;background:#f9f9f9;}
 .live-chat-input{width:100%;padding:8px 12px;border:1px solid #eee;border-radius:20px;font-size:12px;outline:none;background:#fff;margin-bottom:6px;}
 .live-chat-send{width:100%;padding:8px;background:#C9082A;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
+.ls-wrap{margin:12px 14px;border-radius:10px;overflow:hidden;border:1px solid #eee;}
+.ls-row{display:flex;align-items:center;}
+.ls-head-row{background:#000;}
+.ls-name-cell{width:44px;flex-shrink:0;padding:8px 10px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;}
+.ls-head-row .ls-name-cell{color:#666;}
+.ls-q-cell{flex:1;text-align:center;padding:8px 4px;font-family:'Bebas Neue',sans-serif;font-size:15px;}
+.ls-head-row .ls-q-cell{color:#555;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;}
+.ls-tot-cell{font-size:18px;font-weight:700;border-left:1px solid #eee;}
+.ls-head-row .ls-tot-cell{border-left:1px solid #222;}
+.ls-cur{color:#C9082A!important;}
+.ls-row:not(.ls-head-row){background:#fff;border-top:1px solid #f0f0f0;}
+.ls-row:not(.ls-head-row) .ls-name-cell{color:#000;font-size:14px;}
 </style>
 </head>
 <body>

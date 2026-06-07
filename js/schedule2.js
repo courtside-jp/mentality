@@ -393,12 +393,7 @@ function buildDetail(g) {
     ? `<div class="no-stats">試合開始後にスタッツが表示されます</div>`
     : `<div class="no-stats">📊 スタッツ取得中...</div>`;
 
-  // Lv4 推しチーム通知バー
-  const notifyHTML = `
-  <div class="notify-bar" id="notify-bar-${g.id}">
-    <span class="notify-bar-text">🔔 <strong>${g.home.abbr}</strong> or <strong>${g.away.abbr}</strong> の試合開始を通知で受け取る</span>
-    <button class="notify-toggle-btn" id="notify-btn-${g.id}" onclick="toggleNotify('${g.home.abbr}','${g.away.abbr}',this)">通知ON</button>
-  </div>`;
+  const notifyHTML = "";
 
   // Lv5 リアルタイム実況チャット（試合前・試合中のみ）
   const chatHTML = (isP || isL) ? `
@@ -454,7 +449,28 @@ function buildDetail(g) {
         <div class="sbt-score${!hl && !isP ? ' ld' : ''}" id="sd-as-${g.id}">${isP ? '—' : g.away.score}</div>
       </div>
     </div>
-    <div class="q-row">${qH}</div>
+    <div class="ls-wrap">
+      <div class="ls-row ls-head-row">
+        <div class="ls-name-cell"></div>
+        <div class="ls-q-cell">Q1</div>
+        <div class="ls-q-cell">Q2</div>
+        <div class="ls-q-cell">Q3</div>
+        <div class="ls-q-cell">Q4</div>
+        <div class="ls-q-cell ls-tot-cell">TOT</div>
+      </div>
+      <div class="ls-row">
+        <div class="ls-name-cell">${g.home.abbr}</div>
+        ${g.qh.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qh.length-1?' ls-cur':''}">${v}</div>`).join('')}
+        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qh.length))}
+        <div class="ls-q-cell ls-tot-cell" style="color:${hl?'#C9082A':'#000'}">${isP?'—':g.home.score}</div>
+      </div>
+      <div class="ls-row">
+        <div class="ls-name-cell">${g.away.abbr}</div>
+        ${g.qa.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qa.length-1?' ls-cur':''}">${v}</div>`).join('')}
+        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qa.length))}
+        <div class="ls-q-cell ls-tot-cell" style="color:${!hl&&!isP?'#C9082A':'#000'}">${isP?'—':g.away.score}</div>
+      </div>
+    </div>
   </div>
   ${notifyHTML}
   ${voteHTML}
