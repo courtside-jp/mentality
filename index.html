@@ -242,8 +242,8 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 
 <div id="pg-ranking" class="pg">
   <div class="conf-tabs">
-    <div class="conf-tab active" onclick="showConf('east',this)">イースタン</div>
-    <div class="conf-tab" onclick="showConf('west',this)">ウェスタン</div>
+    <div class="conf-tab active" onclick="showConf(this,'east')">イースタン</div>
+    <div class="conf-tab" onclick="showConf(this,'west')">ウェスタン</div>
   </div>
   <div id="standings-content"></div>
   <div style="padding:14px 16px 8px;border-top:8px solid #f0f0f0;background:#fff;border-bottom:1px solid #eee;">
@@ -563,12 +563,7 @@ function initRanking(){
   tabs.innerHTML=Object.keys(statRankings).map(s=>`<div class="srt ${s===currentStat?'active':''}" onclick="selectStat('${s}',this)">${s}</div>`).join('');
   renderStatRanking(currentStat);
 }
-function showConf(conf,el){
-  currentConf=conf;
-  document.querySelectorAll('.conf-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderStandings(conf);
-}
+
 function renderStandings(conf){
   const data=standings[conf];
   document.getElementById('standings-content').innerHTML=`
