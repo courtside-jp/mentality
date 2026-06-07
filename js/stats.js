@@ -447,16 +447,14 @@ async function renderStandings() {
   wrap.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--tx3);font-size:.75rem;">📊 順位表取得中...</div>';
 
   try {
-    // シーズンタイプをモードに合わせる
-    const seasontype = curMode === 'playoff' ? 3 : 2;
     const res = await fetchWithTimeout(
-      `https://courtside-jp.github.io/mentality/data.json`,
+      'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
       {}, 8000
     );
     if (!res.ok) throw new Error('ESPN standings ' + res.status);
     const data = await res.json();
 
-    const groups = (data.standings && data.standings.children) || [];
+    const groups = data.children || [];
     const confName = curConf === 'east' ? 'Eastern' : 'Western';
     const group   = groups.find(g => (g.name || '').includes(confName)) || groups[curConf === 'east' ? 0 : 1];
     if (!group) throw new Error('グループなし');
