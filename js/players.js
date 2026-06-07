@@ -183,9 +183,9 @@ async function renderPlayerCards(players) {
     const name    = p.playerName || '';
     const jaName  = JA_NAME_MAP[name] || name;
     const team    = p.team || '';
-    const pts     = p.pts != null && p.pts !== '' ? Number(p.pts).toFixed(1) : '-';
-    const reb     = p.reb != null && p.reb !== '' ? Number(p.reb).toFixed(1) : '-';
-    const ast     = p.ast != null && p.ast !== '' ? Number(p.ast).toFixed(1) : '-';
+    const pts = p.pts ? Number(p.pts).toFixed(1) : '-';
+    const reb = p.reb ? Number(p.reb).toFixed(1) : '-';
+    const ast = p.ast ? Number(p.ast).toFixed(1) : '-';
     const isJP    = name === 'Yuki Kawamura' || name === 'Rui Hachimura';
 
     // ESPN IDから顔写真取得・ポジション取得
@@ -193,7 +193,7 @@ async function renderPlayerCards(players) {
     const espnId   = p.espnId || '';
     const pos      = (window._espnIdMap || {})[`_pos_${normName}`] || '';
     const photoUrl = espnId
-      ? `https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/${espnId}.png&w=96&h=70`
+      ? ''
       : '';
 
     return `<div onclick="openPlayerDetail('${name.replace(/'/g,"\\'")}','${team}','${espnId}')"
