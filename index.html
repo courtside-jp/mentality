@@ -160,7 +160,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 <div class="header">
   <div class="logo">COURT<span>SIDE</span></div>
   <div style="display:flex;align-items:center;gap:10px;">
-    <div class="online-pill"><div class="online-dot"></div><div class="online-text">17人が閲覧中</div></div>
+    <div class="online-pill"><div class="online-dot"></div><div class="online-text" id="headerOnlineCount">17人が閲覧中</div></div>
     <div onclick="openSearch()" style="cursor:pointer;">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     </div>
@@ -802,6 +802,25 @@ function toggleAd(el){
   const label=el.parentNode.querySelector('div:first-child div:last-child');
   if(label)label.textContent=!isOn?'現在ON':'現在OFF';
 }
+// 閲覧者数をランダムに設定
+(function() {
+  const n = Math.floor(Math.random() * 20) + 1;
+  const t = n + '人が閲覧中';
+  const h = document.getElementById('headerOnlineCount');
+  const c = document.getElementById('onlineCount');
+  if(h) h.textContent = t;
+  if(c) c.textContent = t;
+  // 3〜7分ごとに±1〜2人変動
+  setInterval(function() {
+    const cur = parseInt((h||c).textContent) || n;
+    const diff = Math.floor(Math.random() * 3) - 1;
+    const next = Math.max(1, Math.min(20, cur + diff));
+    const nt = next + '人が閲覧中';
+    if(h) h.textContent = nt;
+    if(c) c.textContent = nt;
+  }, (Math.random() * 240000) + 180000);
+})();
+
 // URLパラメータ処理
 const _urlParams = new URLSearchParams(window.location.search);
 const _articleId = _urlParams.get('article');
