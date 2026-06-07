@@ -303,6 +303,29 @@ async function selectGame(id) {
   panel.innerHTML = buildDetail(g);
   panel.classList.add('open');
 
+  // ヒーローエリアを更新
+  const hw = document.getElementById('hero-wrap');
+  if (hw) {
+    hw.style.display = 'block';
+    const isL = g.status === 'live';
+    const isF = g.status === 'final';
+    const hl = g.home.score > g.away.score;
+    document.getElementById('hero-label').textContent = isL ? '🔴 LIVE' : isF ? '✓ 試合終了' : '📅 試合予定';
+    document.getElementById('hero-status').innerHTML = isL
+      ? '<div style="width:6px;height:6px;border-radius:50%;background:#fff;"></div>LIVE配信中'
+      : isF ? '✓ FINAL' : '▸ まもなく開始';
+    document.getElementById('hero-clock').textContent = isL ? (g.q + ' ' + g.clock) : '';
+    document.getElementById('hero-home-city').textContent = g.home.city;
+    document.getElementById('hero-home-abbr').textContent = g.home.abbr;
+    document.getElementById('hero-home-score').textContent = g.home.score || '–';
+    document.getElementById('hero-home-score').className = 'team-score' + (hl && isF ? ' win' : '');
+    document.getElementById('hero-away-city').textContent = g.away.city;
+    document.getElementById('hero-away-abbr').textContent = g.away.abbr;
+    document.getElementById('hero-away-score').textContent = g.away.score || '–';
+    document.getElementById('hero-away-score').className = 'team-score' + (!hl && isF ? ' win' : '');
+    hw.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+
   // Lv5: 実況チャットを読み込む
   setTimeout(() => {
     if (document.getElementById(`lc-msgs-${id}`)) {

@@ -151,20 +151,30 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div class="hero">
-  <div class="hero-label">🏆 NBAファイナル2026</div>
-  <div class="game-hero">
-    <div class="game-hero-top">
-      <div class="live-tag"><div style="width:6px;height:6px;border-radius:50%;background:#fff;"></div>LIVE配信中</div>
-      <div class="quarter-tag">第3Q 残り8:42</div>
-    </div>
-    <div class="game-score-area">
-      <div class="game-team"><div class="team-city">SAN ANTONIO</div><div class="team-abbr">SA</div><div class="team-score">78</div></div>
-      <div class="game-divider">–</div>
-      <div class="game-team"><div class="team-city">NEW YORK</div><div class="team-abbr">NY</div><div class="team-score win">82</div></div>
-    </div>
-    <div class="hero-actions">
-      <button class="hero-btn hero-btn-primary" onclick="goPage('stats')">選手スタッツ</button>
-      <button class="hero-btn hero-btn-secondary" onclick="goPage('chat')">チャットで話す</button>
+  <div id="hero-wrap" style="display:none;">
+    <div class="hero-label" id="hero-label">🏆 試合情報</div>
+    <div class="game-hero">
+      <div class="game-hero-top">
+        <div class="live-tag" id="hero-status"></div>
+        <div class="quarter-tag" id="hero-clock"></div>
+      </div>
+      <div class="game-score-area">
+        <div class="game-team">
+          <div class="team-city" id="hero-home-city"></div>
+          <div class="team-abbr" id="hero-home-abbr"></div>
+          <div class="team-score" id="hero-home-score"></div>
+        </div>
+        <div class="game-divider">–</div>
+        <div class="game-team" style="text-align:right;">
+          <div class="team-city" id="hero-away-city"></div>
+          <div class="team-abbr" id="hero-away-abbr"></div>
+          <div class="team-score" id="hero-away-score"></div>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <button class="hero-btn hero-btn-primary" onclick="goPage('stats')">選手スタッツ</button>
+        <button class="hero-btn hero-btn-secondary" onclick="goPage('chat')">チャットで話す</button>
+      </div>
     </div>
   </div>
 </div>
