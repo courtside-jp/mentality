@@ -273,18 +273,14 @@ function gcHTML(g) {
     ${poSeriesBadge ? `<div style="padding:.2rem .75rem;background:rgba(212,144,10,.08);border-bottom:1px solid rgba(212,144,10,.15);">${poSeriesBadge}</div>` : ''}
     <div class="gc-body">
       <div class="gc-team">
-        <div class="gc-city">${g.home.city}</div>
         ${hLogo}
-        <div class="gc-abbr">${g.home.abbr}</div>
         <div class="gc-nickname">${g.home.name||''}</div>
         <div class="gc-score${hl && !isP ? ' gc-win' : ''}" id="hs-${g.id}">${isP ? '—' : g.home.score}</div>
         ${poSeriesHome}
       </div>
       <div class="gc-mid">${midHtml}</div>
       <div class="gc-team r">
-        <div class="gc-city">${g.away.city}</div>
         ${aLogo}
-        <div class="gc-abbr">${g.away.abbr}</div>
         <div class="gc-nickname">${g.away.name||''}</div>
         <div class="gc-score${!hl && !isP ? ' gc-win' : ''}" id="as-${g.id}">${isP ? '—' : g.away.score}</div>
         ${poSeriesAway}
