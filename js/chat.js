@@ -88,7 +88,7 @@ async function loadChatMsgs() {
       for (var i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
       var avColor = colors[Math.abs(h) % 5];
       return '<div class="cm' + (isMine ? ' me' : '') + '">' +
-        '<div class="cav ' + avColor + '">' + (m.emoji || s[0].toUpperCase()) + '</div>' +
+        '<div class="cav ' + avColor + '">' + s[0].toUpperCase() + '</div>' +
         '<div class="cbody">' +
         '<div class="cname">' + (m.nick || '匿名') + '</div>' +
         '<div class="cbbl">' + chatRenderMsg(m.msg || '') + '</div>' +
