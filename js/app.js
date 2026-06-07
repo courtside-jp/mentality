@@ -328,3 +328,13 @@ async function saveSns(key) {
   alert('保存しました！');
   loadSnsBar();
 }
+
+// 初期ページ表示
+document.addEventListener('DOMContentLoaded', function() {
+  const hash = location.hash.replace('#','') || 'schedule';
+  const validPages = ['schedule','ranking','chat','articles','sneakers','players'];
+  const page = validPages.includes(hash) ? hash : 'schedule';
+  goPage(page);
+  const btn = document.getElementById('sn-' + page);
+  if(btn) btn.classList.add('on');
+});
