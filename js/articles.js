@@ -49,7 +49,7 @@ async function loadArticles() {
       return;
     }
 
-    const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).sort((a,b) => b.ts - a.ts);
+    const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts);
     if (window._directArticleId) {
       const target = articles.find(a => a.id === window._directArticleId);
       if (target) {
@@ -374,6 +374,15 @@ async function loadAdminArticles() {
   }
 }
 
+async function archiveArticle(id, archive) {
+  await fetch(FB_ARTICLES + '/' + id + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ archived: archive })
+  });
+  loadAdminArticles();
+}
+
 async function deleteArticle(id) {
   if (!confirm('この記事を削除しますか？')) return;
   await fetch(`${FB_ARTICLES}/${id}.json`, { method: 'DELETE' });
@@ -565,6 +574,7 @@ async function loadAdminArticles() {
         <div style="font-size:13px;font-weight:700;color:#000;line-height:1.4;margin-bottom:8px;">${a.title||'無題'}</div>
         <div style="display:flex;gap:6px;">
           <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+          <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? '公開に戻す' : 'アーカイブ'}</button>
           <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
         </div>
       </div>
@@ -585,6 +595,15 @@ function openNewArticle() {
 
 function cancelArticleEdit() {
   document.getElementById('articleForm').style.display = 'none';
+}
+
+async function archiveArticle(id, archive) {
+  await fetch(FB_ARTICLES + '/' + id + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ archived: archive })
+  });
+  loadAdminArticles();
 }
 
 async function deleteArticle(id) {
