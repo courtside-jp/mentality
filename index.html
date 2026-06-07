@@ -150,35 +150,6 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
-<div class="hero">
-  <div id="hero-wrap" style="display:none;">
-    <div class="hero-label" id="hero-label">🏆 試合情報</div>
-    <div class="game-hero">
-      <div class="game-hero-top">
-        <div class="live-tag" id="hero-status"></div>
-        <div class="quarter-tag" id="hero-clock"></div>
-      </div>
-      <div class="game-score-area">
-        <div class="game-team">
-          <div class="team-city" id="hero-home-city"></div>
-          <div class="team-abbr" id="hero-home-abbr"></div>
-          <div class="team-score" id="hero-home-score"></div>
-        </div>
-        <div class="game-divider">–</div>
-        <div class="game-team" style="text-align:right;">
-          <div class="team-city" id="hero-away-city"></div>
-          <div class="team-abbr" id="hero-away-abbr"></div>
-          <div class="team-score" id="hero-away-score"></div>
-        </div>
-      </div>
-      <div class="hero-actions">
-        <button class="hero-btn hero-btn-primary" onclick="goPage('schedule',null,document.querySelector('.bnav-item'))">選手スタッツ</button>
-        <button class="hero-btn hero-btn-secondary" onclick="goPage('chat')">チャットで話す</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <nav class="second-nav">
   <button class="sn on" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
   <button class="sn" id="sn-ranking" onclick="goPage('ranking',this)">順位/スタッツ</button>
