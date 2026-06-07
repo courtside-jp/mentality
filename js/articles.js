@@ -543,3 +543,62 @@ async function editArticle(id) {
   if (preview) preview.innerHTML = '';
   updatePreview();
 }
+
+// 管理画面：記事一覧読み込み
+async function loadAdminArticles() {
+  const list = document.getElementById('adminArticleList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">読み込み中...</div>';
+  try {
+    const res = await fetch(FB_ARTICLES + '.json?orderBy="$key"&limitToLast=200');
+    const data = await res.json();
+    if (!data) { list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">記事なし</div>'; return; }
+    const articles = Object.entries(data).reverse();
+    list.innerHTML = articles.map(([id, a]) => `
+      <div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${a.category||'未分類'}</div>
+          <div style="font-size:9px;color:#999;">${a.date||''}</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:#000;line-height:1.4;margin-bottom:8px;">${a.title||'無題'}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+          <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">取得失敗</div>';
+  }
+}
+
+function openNewArticle() {
+  document.getElementById('articleForm').style.display = 'block';
+  document.getElementById('adminEditId').value = '';
+  document.getElementById('adminTitle').value = '';
+  document.getElementById('adminBody').value = '';
+  document.getElementById('adminImg').value = '';
+  document.getElementById('adminSubmitBtn').textContent = '投稿する';
+}
+
+function cancelArticleEdit() {
+  document.getElementById('articleForm').style.display = 'none';
+}
+
+async function deleteArticle(id) {
+  if (!confirm('削除しますか？')) return;
+  await fetch(FB_ARTICLES + '/' + id + '.json', {method: 'DELETE'});
+  loadAdminArticles();
+}
+
+async function editArticle(id) {
+  const res = await fetch(FB_ARTICLES + '/' + id + '.json');
+  const d = await res.json();
+  document.getElementById('articleForm').style.display = 'block';
+  document.getElementById('adminEditId').value = id;
+  document.getElementById('adminTitle').value = d.title || '';
+  document.getElementById('adminBody').value = d.body || '';
+  document.getElementById('adminImg').value = d.img || '';
+  document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
+  document.getElementById('adminSubmitBtn').textContent = '上書き保存';
+}

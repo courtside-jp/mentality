@@ -327,55 +327,43 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       </div>
     </div>
 
-    <div id="admin-article" style="display:none;">
+        <div id="admin-article" style="display:none;">
       <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:10;">
         <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事管理</div>
+        <button onclick="openNewArticle()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
       </div>
-      <div style="padding:12px;display:flex;flex-direction:column;gap:12px;">
-        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
-          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.5px;">新規投稿</div>
-          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
-            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">カテゴリ</div>
-            <select style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;"><option>NBAファイナル</option><option>考察・議論</option><option>ニュース・速報</option><option>バッシュ</option><option>体験・自己紹介</option></select></div>
-            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">タイトル</div><input type="text" placeholder="記事タイトルを入力" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"></div>
-            <div><div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サムネイル画像</div>
-            <div style="display:flex;gap:6px;"><input type="text" placeholder="画像URL" style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;min-width:0;"><button style="padding:9px 12px;background:#f0f0f0;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">選ぶ</button></div></div>
-            <div><div style="font-size:10px;color:#999;margin-bottom:6px;font-weight:700;">本文エディタ</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
-              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">🖼 画像</button>
-              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">▶ YouTube</button>
-              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">🐦 X</button>
-              <button style="padding:5px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">💬 引用</button>
-            </div>
-            <textarea placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;height:100px;resize:none;box-sizing:border-box;"></textarea></div>
-            <div style="display:flex;gap:8px;">
-              <button style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">下書き</button>
-              <button style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
-            </div>
+      <!-- 新規/編集フォーム -->
+      <div id="articleForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="adminEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">カテゴリ</div>
+            <select id="adminCategory" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>NBAファイナル</option><option>考察・議論</option><option>ニュース・速報</option><option>バッシュ</option><option>体験・自己紹介</option>
+            </select>
           </div>
-        </div>
-        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;overflow:hidden;">
-          <div style="background:#000;padding:10px 14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.5px;">投稿済み記事</div>
-          <div style="padding:10px 14px;display:flex;flex-direction:column;gap:8px;">
-            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
-              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">NBAファイナル2026開幕——スパーズvsニックス</div>
-              <div style="font-size:10px;color:#999;margin-bottom:8px;">NBAファイナル · 2026/6/4 08:00</div>
-              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
-            </div>
-            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
-              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">Nikeに名前を間違えられた男が年間100億超の契約</div>
-              <div style="font-size:10px;color:#999;margin-bottom:8px;">考察・議論 · 2026/6/3 12:30</div>
-              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
-            </div>
-            <div style="background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;">
-              <div style="font-size:12px;font-weight:700;color:#000;line-height:1.4;margin-bottom:5px;">リーニンの正体——カリーが選んだ中国ブランドとは</div>
-              <div style="font-size:10px;color:#999;margin-bottom:8px;">考察・議論 · 2026/6/3 09:00</div>
-              <div style="display:flex;gap:6px;"><button style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button><button style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button></div>
-            </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">タイトル</div>
+            <input id="adminTitle" type="text" placeholder="記事タイトル" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サムネイル画像URL</div>
+            <input id="adminImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">本文</div>
+            <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;height:120px;resize:none;box-sizing:border-box;"></textarea>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelArticleEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="adminSubmitBtn" onclick="submitArticle()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
           </div>
         </div>
       </div>
+      <!-- 投稿済み記事一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済み記事</div>
+      <div id="adminArticleList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
     </div>
 
     <div id="admin-sneaker" style="display:none;">
@@ -797,6 +785,7 @@ function loadTitleData() {
 function showAdminPage(id){
   ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
   const t=document.getElementById(id);if(t)t.style.display='block';
+  if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
