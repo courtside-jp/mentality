@@ -241,13 +241,24 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div id="pg-ranking" class="pg">
-  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;">
-    <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
-    <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
+  <!-- 順位/スタッツ切り替えタブ -->
+  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;">
+    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">順位</div>
+    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
   </div>
-  <div id="standingsWrap"></div>
-  <div id="statCats"></div>
-  <div id="statWrap"></div>
+  <!-- 順位エリア -->
+  <div id="sub-ranking">
+    <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:132px;z-index:98;">
+      <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
+      <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
+    </div>
+    <div id="standingsWrap"></div>
+  </div>
+  <!-- スタッツエリア -->
+  <div id="sub-stats" style="display:none;">
+    <div id="statCats"></div>
+    <div id="statWrap"></div>
+  </div>
 </div>
 
 <div id="pg-admin" class="pg" style="overflow-y:auto;">
@@ -586,6 +597,16 @@ function handleSearch(val){
   if(val.length===0){results.innerHTML=`<div style="font-size:11px;color:#555;margin-bottom:12px;">最近の検索</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ウェンバンヤマ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">スパーズ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ブランソン</div></div>`;return;}
   const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
   results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
+}
+function showSubTab(tab) {
+  const isRanking = tab === 'ranking';
+  document.getElementById('sub-ranking').style.display = isRanking ? 'block' : 'none';
+  document.getElementById('sub-stats').style.display = isRanking ? 'none' : 'block';
+  document.getElementById('subtab-ranking').style.color = isRanking ? '#C9082A' : '#999';
+  document.getElementById('subtab-ranking').style.borderBottom = isRanking ? '2px solid #C9082A' : '2px solid transparent';
+  document.getElementById('subtab-stats').style.color = isRanking ? '#999' : '#C9082A';
+  document.getElementById('subtab-stats').style.borderBottom = isRanking ? '2px solid transparent' : '2px solid #C9082A';
+  if(!isRanking && typeof initStats === 'function') initStats();
 }
 function showAdminPage(id){
   ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
