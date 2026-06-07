@@ -264,6 +264,7 @@ function gcHTML(g) {
         <div class="gc-city">${g.home.city}</div>
         ${hLogo}
         <div class="gc-abbr">${g.home.abbr}</div>
+        <div class="gc-nickname">${g.home.name||''}</div>
         <div class="gc-score${hl && !isP ? ' gc-win' : ''}" id="hs-${g.id}">${isP ? '—' : g.home.score}</div>
         ${poSeriesHome}
       </div>
@@ -272,6 +273,7 @@ function gcHTML(g) {
         <div class="gc-city">${g.away.city}</div>
         ${aLogo}
         <div class="gc-abbr">${g.away.abbr}</div>
+        <div class="gc-nickname">${g.away.name||''}</div>
         <div class="gc-score${!hl && !isP ? ' gc-win' : ''}" id="as-${g.id}">${isP ? '—' : g.away.score}</div>
         ${poSeriesAway}
       </div>
