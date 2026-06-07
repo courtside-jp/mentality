@@ -739,7 +739,7 @@ function parseESPNGames(events) {
     try {
       // 日本時間で開始時刻を表示
       startTime = new Date(ev.date).toLocaleTimeString('ja-JP', {
-        hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo'
+        hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York'
       });
     } catch(e) {}
     const qh   = (home.linescores || []).map(q => parseInt(q.value) || 0);
