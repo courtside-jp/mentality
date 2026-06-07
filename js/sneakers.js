@@ -61,32 +61,38 @@ function filterSneakers(btn, brand) {
 
 // 管理画面から投稿
 async function submitSneaker() {
-  const name   = document.getElementById('snkName').value.trim();
-  const brand  = document.getElementById('snkBrand').value;
-  const player = document.getElementById('snkPlayer').value.trim();
-  const img    = document.getElementById('snkImg').value.trim();
-  const price  = document.getElementById('snkPrice').value.trim();
-  const url    = document.getElementById('snkUrl').value.trim();
-  const desc   = document.getElementById('snkDesc').value.trim();
-  const isNew  = document.getElementById('snkIsNew').checked;
-  const score  = parseInt(document.getElementById('snkScore').value) || 0;
+  const name   = document.getElementById('sneakerModel').value.trim();
+  const brand  = document.getElementById('sneakerBrand').value;
+  const player = document.getElementById('sneakerPlayer').value.trim();
+  const img    = document.getElementById('sneakerImg').value.trim();
+  const price  = document.getElementById('sneakerPrice').value.trim();
+  const url    = document.getElementById('sneakerLink').value.trim();
+  const editId = document.getElementById('sneakerEditId')?.value;
 
-  if (!name) { alert('商品名は必須です'); return; }
+  if (!name) { alert('モデル名は必須です'); return; }
 
-  const btn = document.getElementById('snkSubmitBtn');
+  const btn = document.getElementById('sneakerSubmitBtn');
   btn.textContent = '投稿中...'; btn.disabled = true;
 
-  await fetch(FB_SNEAKERS + '.json', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ name, brand, player, img, price, url, desc, isNew, score, ts: Date.now() })
-  });
+  const payload = { brand, model: name, player, img, price, link: url, ts: Date.now() };
+  const now = new Date();
+  payload.date = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
 
-  alert('投稿しました！');
-  ['snkName','snkPlayer','snkImg','snkPrice','snkUrl','snkDesc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('snkIsNew').checked = false;
+  if (editId) {
+    await fetch(`${FB_SNEAKERS}/${editId}.json`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+  } else {
+    await fetch(FB_SNEAKERS + '.json', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+  }
+
   btn.textContent = '投稿する'; btn.disabled = false;
-  closeSnkModal();
+  document.getElementById('sneakerForm').style.display = 'none';
+  loadAdminSneakers();
   loadSneakers();
 }
 
@@ -114,23 +120,28 @@ function filterSneakersDropdown() {
 async function loadAdminSneakers() {
   const wrap = document.getElementById('adminSneakerList');
   if (!wrap) return;
-  wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">読み込み中...</div>';
+  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">読み込み中...</div>';
   try {
-    const res = await fetch(FB_SNEAKERS + '.json');
+    const res = await fetch(`${FB_SNEAKERS}.json?orderBy="$key"&limitToLast=200`);
     const data = await res.json();
-    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">バッシュがありません</div>'; return; }
-    const list = Object.entries(data).map(([id,s]) => ({id,...s})).sort((a,b) => b.ts - a.ts);
-    wrap.innerHTML = list.map(s => `
-      <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</div>
-          <div style="font-size:.58rem;color:var(--tx3);">${BRANDS[s.brand]||s.brand||''} ${s.player ? '· ' + s.player : ''}</div>
+    if (!data) { wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">バッシュなし</div>'; return; }
+    const items = Object.entries(data).reverse();
+    wrap.innerHTML = items.map(([id, s]) => `
+      <div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${s.brand||''}</div>
+          <div style="font-size:9px;color:#999;">${s.date||''}</div>
         </div>
-        <button onclick="deleteSneaker('${s.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
+        <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:4px;">${s.model||s.name||'無題'}</div>
+        <div style="font-size:11px;color:#666;margin-bottom:8px;">${s.player||''} ${s.price ? '· ' + s.price : ''}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="editSneaker('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+          <button onclick="deleteSneaker('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
+        </div>
       </div>
     `).join('');
   } catch(e) {
-    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">取得失敗</div>';
+    wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">取得失敗</div>';
   }
 }
 
@@ -139,4 +150,33 @@ async function deleteSneaker(id) {
   await fetch(`${FB_SNEAKERS}/${id}.json`, { method: 'DELETE' });
   loadAdminSneakers();
   loadSneakers();
+}
+
+function openNewSneaker() {
+  document.getElementById('sneakerForm').style.display = 'block';
+  document.getElementById('sneakerEditId').value = '';
+  document.getElementById('sneakerModel').value = '';
+  document.getElementById('sneakerPlayer').value = '';
+  document.getElementById('sneakerPrice').value = '';
+  document.getElementById('sneakerImg').value = '';
+  document.getElementById('sneakerLink').value = '';
+  document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
+}
+
+function cancelSneakerEdit() {
+  document.getElementById('sneakerForm').style.display = 'none';
+}
+
+async function editSneaker(id) {
+  const res = await fetch(`${FB_SNEAKERS}/${id}.json`);
+  const d = await res.json();
+  document.getElementById('sneakerForm').style.display = 'block';
+  document.getElementById('sneakerEditId').value = id;
+  document.getElementById('sneakerBrand').value = d.brand || 'Nike';
+  document.getElementById('sneakerModel').value = d.model || '';
+  document.getElementById('sneakerPlayer').value = d.player || '';
+  document.getElementById('sneakerPrice').value = d.price || '';
+  document.getElementById('sneakerImg').value = d.img || '';
+  document.getElementById('sneakerLink').value = d.link || '';
+  document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
