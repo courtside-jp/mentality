@@ -777,12 +777,12 @@ function loadTitleData() {
   wrap.innerHTML = awards.map(sec =>
     '<div style="padding:10px 16px;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:#fff;background:#111;letter-spacing:1px;">' + sec.section + '</div>' +
     sec.items.map(it =>
-      '<div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fff;">' +
+      '<div style="display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0;background:#fff;border-left:3px solid #C9082A;">' +
       '<div style="flex:1;min-width:0;">' +
-      '<div style="font-size:10px;color:#C9082A;font-family:Barlow Condensed,sans-serif;font-weight:700;letter-spacing:0.5px;">' + it.label + '</div>' +
-      '<div style="font-size:13px;font-weight:700;color:#000;margin-top:2px;">' + it.player + '</div>' +
+      '<div style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:700;color:#C9082A;letter-spacing:1px;text-transform:uppercase;">' + it.label + '</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#000;margin-top:3px;font-family:Noto Sans JP,sans-serif;">' + it.player + '</div>' +
       '</div>' +
-      (it.team ? '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:#999;margin-left:8px;flex-shrink:0;">' + it.team + '</div>' : '') +
+      (it.team ? '<div style="font-family:Bebas Neue,sans-serif;font-size:18px;font-weight:700;color:#000;margin-left:8px;flex-shrink:0;background:#f0f0f0;padding:4px 8px;border-radius:4px;">' + it.team + '</div>' : '') +
       '</div>'
     ).join('')
   ).join('');
