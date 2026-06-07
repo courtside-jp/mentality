@@ -485,20 +485,11 @@ function goPage(id, tabEl, navEl) {
   const snEl = document.getElementById('sn-' + (id==='home'?'schedule':id));
   if(snEl) snEl.classList.add('on');
   // ボトムナビのアクティブ状態を更新
-  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
-  if(navEl) {
-    navEl.classList.add('active');
-  } else {
-    // タブから呼ばれた場合もボトムナビを更新
-    const navMap = {
-      'schedule':0,'ranking':1,'chat':2,'articles':3,'sneakers':4,'players':5
-    };
-    const idx = navMap[id];
-    if(idx !== undefined) {
-      const navItems = document.querySelectorAll('.bnav-item');
-      if(navItems[idx]) navItems[idx].classList.add('active');
-    }
-  }
+  const navMap = {'schedule':0,'ranking':1,'chat':2,'articles':3,'sneakers':4,'players':5};
+  const navItems = document.querySelectorAll('.bnav-item');
+  navItems.forEach(n => n.classList.remove('active'));
+  const navIdx = navMap[id];
+  if(navIdx !== undefined && navItems[navIdx]) navItems[navIdx].classList.add('active');
   window.scrollTo(0,0);
   if(id==='ranking'&&typeof initRanking==='function') initRanking();
   if(id==='articles'&&typeof loadArticles==='function') loadArticles();
