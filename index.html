@@ -497,19 +497,24 @@ const standings={east:[['ニューヨーク・ニックス','#006BB6',64,18,'.78
 const boxScores={sa:{starters:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',min:32,pts:28,reb:12,ast:4,stl:3,blk:2,color:'#C9082A'},{name:'ステフォン・キャッスル',pos:'PG',min:28,pts:15,reb:4,ast:8,stl:1,blk:0,color:'#555'},{name:'ディアロン・フォックス',pos:'SG',min:26,pts:12,reb:5,ast:6,stl:2,blk:0,color:'#444'},{name:'デビン・バセル',pos:'SF',min:24,pts:10,reb:4,ast:2,stl:1,blk:1,color:'#666'},{name:'ジュリアン・シャンペニー',pos:'PF',min:22,pts:8,reb:4,ast:1,stl:0,blk:1,color:'#777'}],bench:[{name:'ディラン・ハーパー',pos:'SG',min:18,pts:8,reb:3,ast:2,stl:1,blk:0,color:'#888'},{name:'ケルドン・ジョンソン',pos:'SF',min:15,pts:5,reb:3,ast:1,stl:0,blk:0,color:'#999'},{name:'ルーク・コーネット',pos:'C',min:10,pts:2,reb:4,ast:0,stl:0,blk:1,color:'#aaa'}]},ny:{starters:[{name:'ジェイレン・ブランソン',pos:'PG',min:34,pts:27,reb:5,ast:8,stl:2,blk:0,color:'#006BB6'},{name:'カール・アンソニー・タウンズ',pos:'C',min:30,pts:18,reb:10,ast:4,stl:1,blk:2,color:'#1D428A'},{name:'ミケル・ブリッジズ',pos:'SF',min:28,pts:14,reb:6,ast:3,stl:2,blk:1,color:'#333'},{name:'OG・アヌノビー',pos:'SF',min:26,pts:10,reb:5,ast:2,stl:3,blk:1,color:'#444'},{name:'ジョシュ・ハート',pos:'SF',min:24,pts:8,reb:7,ast:3,stl:1,blk:0,color:'#555'}],bench:[{name:'ランドリー・シャメット',pos:'SG',min:20,pts:6,reb:2,ast:2,stl:0,blk:0,color:'#666'},{name:'ミッチェル・ロビンソン',pos:'C',min:14,pts:4,reb:5,ast:0,stl:0,blk:1,color:'#777'}]}};
 const pages=['home','articles','chat','sneakers','players','stats','ranking','match','admin'];
 let currentTeam='spurs',currentConf='east',currentStat='得点';
-function goPage(id, tabEl) {
-  const pageId = 'pg-' + (id==='schedule'?'schedule':id==='home'?'schedule':id);
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+function goPage(id, tabEl, navEl) {
+  const pageId = 'pg-' + (id==='home'?'schedule':id);
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('show'));
   const target = document.getElementById(pageId);
-  if(target) target.classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  if(tabEl) tabEl.classList.add('active');
-  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+  if(target) target.classList.add('show');
+  document.querySelectorAll('.sn').forEach(t => t.classList.remove('on'));
+  const snEl = document.getElementById('sn-' + (id==='home'?'schedule':id));
+  if(snEl) snEl.classList.add('on');
+  if(navEl) {
+    document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
   window.scrollTo(0,0);
-  if(id==='ranking'&&typeof initRankingPage==='function') initRankingPage();
+  if(id==='ranking'&&typeof initRanking==='function') initRanking();
   if(id==='articles'&&typeof loadArticles==='function') loadArticles();
   if(id==='sneakers'&&typeof loadSneakers==='function') loadSneakers();
-  if(id==='players'&&typeof loadPlayers==='function') loadPlayers();
+  if(id==='players'&&typeof initPlayers==='function') initPlayers();
+  if(id==='stats'&&typeof initBox==='function') initBox('sa');
 }
 function showPage(id,tabEl,navEl){
   pages.forEach(p=>{const el=document.getElementById(p);if(el){el.classList.remove('active');}});
