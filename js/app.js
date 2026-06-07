@@ -22,7 +22,16 @@ function goPage(id, btn) {
   // 全ページを非表示
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('show'));
   // 指定ページを表示
-  document.getElementById('pg-' + id).classList.add('show');
+  const pgEl = document.getElementById('pg-' + id);
+  if(pgEl) pgEl.classList.add('show');
+  // ボトムナビのアクティブ状態を更新
+  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+  const activeNav = document.querySelector('.bnav-item[data-page="'+id+'"]');
+  if(activeNav) activeNav.classList.add('active');
+  // 上タブのアクティブ状態を更新
+  document.querySelectorAll('.sn').forEach(t => t.classList.remove('on'));
+  const snEl = document.getElementById('sn-' + id);
+  if(snEl) snEl.classList.add('on');
   // タブのハイライト切り替え
   document.querySelectorAll('.sn').forEach(b => b.classList.remove('on'));
   if (btn) btn.classList.add('on');
