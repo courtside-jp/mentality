@@ -628,7 +628,7 @@ async function loadESPNScoreboard() {
     }
 
     // それでも取得できない場合はプレーオフエンドポイントを試す
-    if (!events.length) {
+    if (false && !events.length) {
       const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?seasontype=3&limit=20`);
       if (res.ok) {
         const data = await res.json();
