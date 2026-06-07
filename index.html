@@ -142,41 +142,15 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 <div class="content-wrap" id="mainScroll">
 
 <div id="pg-schedule" class="pg show">
-    <div class="pg-title">本日の試合情報 <span class="pg-badge badge-live" id="schedulePhaseLabel">TODAY</span></div>
-    <div class="date-bar">
-      <button class="db-btn" onclick="moveDate(-1)">‹</button>
-      <div class="db-center">
-        <div class="db-date" id="dbDate"></div>
-        <div class="db-sub" id="dbSub"></div>
-      </div>
-      <button class="db-btn" onclick="moveDate(1)">›</button>
+  <div class="date-bar">
+    <button class="db-btn" onclick="moveDate(-1)">‹</button>
+    <div class="db-center">
+      <div class="db-date" id="dbDate"></div>
+      <div class="db-sub" id="dbSub"></div>
     </div>
-    <div id="gameWrap"></div>
-  <div class="section-hd"><div class="section-ttl">本日の試合</div><div class="section-more">6月6日（土）</div></div>
-  <div class="game-item" onclick="goPage('stats')">
-    <div class="game-status"><div class="gs-text gs-live">LIVE</div></div>
-    <div class="game-teams">
-      <div class="gt-row"><div class="tdot" style="background:#000;"></div><div class="tname">スパーズ</div><div class="tscore">78</div></div>
-      <div class="gt-row"><div class="tdot" style="background:#006BB6;"></div><div class="tname">ニックス</div><div class="tscore win">82</div></div>
-    </div>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+    <button class="db-btn" onclick="moveDate(1)">›</button>
   </div>
-  <div class="game-item">
-    <div class="game-status"><div class="gs-text gs-final">終了</div></div>
-    <div class="game-teams">
-      <div class="gt-row"><div class="tdot" style="background:#C9082A;"></div><div class="tname">セルティックス</div><div class="tscore win">112</div></div>
-      <div class="gt-row"><div class="tdot" style="background:#1D428A;"></div><div class="tname">ウォリアーズ</div><div class="tscore">98</div></div>
-    </div>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-  </div>
-  <div class="game-item">
-    <div class="game-status"><div class="gs-text gs-time">9:30</div></div>
-    <div class="game-teams">
-      <div class="gt-row"><div class="tdot" style="background:#552583;"></div><div class="tname">レイカーズ</div><div class="tscore">–</div></div>
-      <div class="gt-row"><div class="tdot" style="background:#CE1141;"></div><div class="tname">ロケッツ</div><div class="tscore">–</div></div>
-    </div>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-  </div>
+  <div id="gameWrap"></div>
 </div>
 
 <div id="pg-articles" class="pg">
