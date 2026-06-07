@@ -453,26 +453,7 @@ function buildDetail(g) {
     </div>
   </div>` : '';
 
-  return `<div class="sbd">
-    <div class="sbd-glow"></div>
-    <div class="sbd-head">${sBadge}<div class="sbd-upd">※${upd}時点</div></div>
-    <div class="sbd-scores">
-      <div class="sbt">
-        <div class="sbt-city">${g.home.city}</div>
-        <div class="sbt-abbr">${g.home.abbr}</div>
-        <div class="sbt-score${hl && !isP ? ' ld' : ''}" id="sd-hs-${g.id}">${isP ? '—' : g.home.score}</div>
-      </div>
-      <div class="sbd-mid">
-        <div class="sbd-sep">—</div>
-        ${isL ? `<div class="sbd-clk" id="sd-t-${g.id}">${m}:${s}</div>` : ''}
-      </div>
-      <div class="sbt" style="text-align:right;">
-        <div class="sbt-city">${g.away.city}</div>
-        <div class="sbt-abbr">${g.away.abbr}</div>
-        <div class="sbt-score${!hl && !isP ? ' ld' : ''}" id="sd-as-${g.id}">${isP ? '—' : g.away.score}</div>
-      </div>
-    </div>
-    <div class="ls-wrap">
+  return `<div class="ls-wrap">
       <div class="ls-row ls-head-row">
         <div class="ls-name-cell"></div>
         <div class="ls-q-cell">Q1</div>
