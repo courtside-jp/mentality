@@ -615,17 +615,121 @@ function handleSearch(val){
   results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
 }
 function showSubTab(tab) {
-  const isRanking = tab === 'ranking';
-  document.getElementById('sub-ranking').style.display = isRanking ? 'block' : 'none';
-  document.getElementById('sub-stats').style.display = isRanking ? 'none' : 'block';
-  document.getElementById('subtab-ranking').style.color = isRanking ? '#C9082A' : '#999';
-  document.getElementById('subtab-ranking').style.borderBottom = isRanking ? '2px solid #C9082A' : '2px solid transparent';
-  document.getElementById('subtab-stats').style.color = isRanking ? '#999' : '#C9082A';
-  document.getElementById('subtab-stats').style.borderBottom = isRanking ? '2px solid transparent' : '2px solid #C9082A';
-  if(!isRanking) {
+  ['ranking','stats','playin','playoff','title'].forEach(t => {
+    const el = document.getElementById('sub-' + t);
+    if(el) el.style.display = t === tab ? 'block' : 'none';
+    const bt = document.getElementById('subtab-' + t);
+    if(bt) {
+      bt.style.color = t === tab ? '#C9082A' : '#999';
+      bt.style.borderBottom = t === tab ? '2px solid #C9082A' : '2px solid transparent';
+    }
+  });
+  if(tab === 'stats') {
     if(typeof initStats === 'function') initStats();
     if(typeof loadESPNLeaders === 'function') loadESPNLeaders('pts', 'season');
   }
+  if(tab === 'playin') loadPlayinData();
+  if(tab === 'playoff') loadPlayoffData();
+  if(tab === 'title') loadTitleData();
+}
+function loadPlayinData() {
+  const wrap = document.getElementById('playinWrap');
+  if(!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;font-size:12px;">取得中...</div>';
+  fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?seasontype=5&limit=20')
+    .then(r => r.json())
+    .then(data => {
+      const events = data.events || [];
+      if(!events.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">データがありません</div>'; return; }
+      wrap.innerHTML = events.map(ev => {
+        const comp = ev.competitions[0];
+        const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
+        const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+        const status = ev.status.type.shortDetail || '';
+        const hl = parseInt(home.score||0) > parseInt(away.score||0);
+        return '<div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">' +
+          '<div><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (hl?'#C9082A':'#000') + '">' + home.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + home.team.location + '</div></div>' +
+          '<div style="text-align:center;"><div style="font-family:Bebas Neue,sans-serif;font-size:20px;">' + (home.score||'-') + ' - ' + (away.score||'-') + '</div><div style="font-size:10px;color:#999;">' + status + '</div></div>' +
+          '<div style="text-align:right;"><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (!hl?'#C9082A':'#000') + '">' + away.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + away.team.location + '</div></div></div>';
+      }).join('');
+    }).catch(() => { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">取得失敗</div>'; });
+}
+function loadPlayoffData() {
+  const wrap = document.getElementById('playoffWrap');
+  if(!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;font-size:12px;">取得中...</div>';
+  fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?seasontype=3&limit=50')
+    .then(r => r.json())
+    .then(data => {
+      const events = data.events || [];
+      if(!events.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">データがありません</div>'; return; }
+      wrap.innerHTML = events.map(ev => {
+        const comp = ev.competitions[0];
+        const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
+        const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+        const status = ev.status.type.shortDetail || '';
+        const hl = parseInt(home.score||0) > parseInt(away.score||0);
+        return '<div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">' +
+          '<div><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (hl?'#C9082A':'#000') + '">' + home.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + home.team.location + '</div></div>' +
+          '<div style="text-align:center;"><div style="font-family:Bebas Neue,sans-serif;font-size:20px;">' + (home.score||'-') + ' - ' + (away.score||'-') + '</div><div style="font-size:10px;color:#999;">' + status + '</div></div>' +
+          '<div style="text-align:right;"><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (!hl?'#C9082A':'#000') + '">' + away.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + away.team.location + '</div></div></div>';
+      }).join('');
+    }).catch(() => { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">取得失敗</div>'; });
+}
+function loadTitleData() {
+  const wrap = document.getElementById('titleWrap');
+  if(!wrap) return;
+  const awards = [
+    { section:'🏆 個人賞', items:[
+      {label:'MVP', player:'シャイ・ギルジャス=アレクサンダー', team:'OKC'},
+      {label:'DPOY（最優秀守備選手）', player:'ビクター・ウェンバンヤマ', team:'SAS'},
+      {label:'ROY（新人王）', player:'クーパー・フラッグ', team:'DAL'},
+      {label:'MIP（最成長選手）', player:'ニケイル・アレクサンダー=ウォーカー', team:'ATL'},
+      {label:'6MOY（シックスマン賞）', player:'ケルドン・ジョンソン', team:'SAS'},
+      {label:'Clutch Player of the Year', player:'シャイ・ギルジャス=アレクサンダー', team:'OKC'},
+      {label:'Coach of the Year', player:'J.B. ビッカースタッフ', team:'DET'},
+      {label:'Sportsmanship Award', player:'デリック・ホワイト', team:'BOS'},
+    ]},
+    { section:'⭐ オールNBA', items:[
+      {label:'1st Team', player:'SGA / ヨキッチ / ウェンバンヤマ / ドンチッチ / カニンガム', team:''},
+      {label:'2nd Team', player:'J.ブラウン / ブランソン / K.デュラント / D.ミッチェル / K.レナード', team:''},
+      {label:'3rd Team', player:'T.マクシー / J.マレー / J.ジョンソン / J.デューレン / チェット', team:''},
+    ]},
+    { section:'🛡️ オールディフェンシブ', items:[
+      {label:'1st Team', player:'ウェンバンヤマ / チェット / オーザー / ゴベア / D.ホワイト', team:''},
+      {label:'2nd Team', player:'バム / OG / S.バーンズ / D.ダニエルズ / C.ウォレス', team:''},
+    ]},
+    { section:'🌱 オールルーキー', items:[
+      {label:'1st Team', player:'C.フラッグ / K.クネッペル / VJ.エジコーム / D.ハーパー / C.コワード', team:''},
+      {label:'2nd Team', player:'A.ベイリー / J.フィアーズ / C.マレー=ボイルズ / M.レイノー / D.クイーン', team:''},
+    ]},
+    { section:'📊 スタッツタイトル', items:[
+      {label:'得点王', player:'ルカ・ドンチッチ（33.5 PPG）', team:'LAL'},
+      {label:'アシスト王', player:'ニコラ・ヨキッチ', team:'DEN'},
+      {label:'リバウンド王', player:'ニコラ・ヨキッチ', team:'DEN'},
+      {label:'スティール王', player:'オーザー・トンプソン', team:'DET'},
+      {label:'ブロック王', player:'ビクター・ウェンバンヤマ（3.1 BPG）', team:'SAS'},
+      {label:'FG%王', player:'ニコラ・ヨキッチ', team:'DEN'},
+    ]},
+    { section:'🏆 プレーオフ', items:[
+      {label:'NBA Champion', player:'TBD（ニックス vs スパーズ）', team:'—'},
+      {label:'Finals MVP', player:'TBD', team:'—'},
+      {label:'Larry Bird Trophy（東カンファ）', player:'ジェイレン・ブランソン', team:'NYK'},
+      {label:'Magic Johnson Trophy（西カンファ）', player:'ビクター・ウェンバンヤマ', team:'SAS'},
+    ]},
+  ];
+  wrap.innerHTML = awards.map(sec =>
+    '<div style="padding:10px 16px;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:#fff;background:#111;letter-spacing:1px;">' + sec.section + '</div>' +
+    sec.items.map(it =>
+      '<div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f0f0f0;background:#fff;">' +
+      '<div style="flex:1;min-width:0;">' +
+      '<div style="font-size:10px;color:#C9082A;font-family:Barlow Condensed,sans-serif;font-weight:700;letter-spacing:0.5px;">' + it.label + '</div>' +
+      '<div style="font-size:13px;font-weight:700;color:#000;margin-top:2px;">' + it.player + '</div>' +
+      '</div>' +
+      (it.team ? '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:#999;margin-left:8px;flex-shrink:0;">' + it.team + '</div>' : '') +
+      '</div>'
+    ).join('')
+  ).join('');
 }
 function showAdminPage(id){
   ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
