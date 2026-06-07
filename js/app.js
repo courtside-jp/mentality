@@ -28,6 +28,7 @@ function goPage(id, btn) {
     if(typeof renderStandings === 'function') renderStandings();
     if(typeof initStats === 'function') initStats();
   }
+  if(id === 'players' && typeof initPlayers === 'function') initPlayers();
   // ボトムナビのアクティブ状態を更新
   document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
   const activeNav = document.querySelector('.bnav-item[data-page="'+id+'"]');
