@@ -24,7 +24,10 @@ function goPage(id, btn) {
   // 指定ページを表示
   const pgEl = document.getElementById('pg-' + id);
   if(pgEl) pgEl.classList.add('show');
-  if(id === 'ranking' && typeof initStats === 'function') initStats();
+  if(id === 'ranking') {
+    if(typeof renderStandings === 'function') renderStandings();
+    if(typeof initStats === 'function') initStats();
+  }
   // ボトムナビのアクティブ状態を更新
   document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
   const activeNav = document.querySelector('.bnav-item[data-page="'+id+'"]');
