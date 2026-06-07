@@ -71,7 +71,6 @@ for tid in range(1, 31):
                     'height': a.get('displayHeight',''),
                     'weight': a.get('displayWeight',''),
                     'dob': a.get('dateOfBirth','')[:10] if a.get('dateOfBirth') else '',
-                    'debutYear': a.get('debutYear',''),
                     'pos': a.get('position',{}).get('abbreviation',''),
                     'experience': a.get('experience',{}).get('years',0),
                 }
@@ -83,26 +82,18 @@ for tid in range(1, 31):
 data['espnid_map'] = espnid_map
 data['roster'] = roster
 
-# 全選手スタッツ（leagueleadersから合成）
+# 全選手スタッツ（600人）
 try:
+    url = 'https://api.server.nbaapi.com/api/playertotals?page=1&pageSize=600&sortBy=games&ascending=false&season=2026&isPlayoff=false'
+    sd = fetch(url)
     stats600 = {}
-    for stat_key, stat_name in [('pts','PTS'),('reb','REB'),('ast','AST')]:
-        rs = data.get(stat_key, {}).get('resultSet', {})
-        headers_list = rs.get('headers', [])
-        rows = rs.get('rowSet', [])
-        if not headers_list or not rows:
-            continue
-        idx = {h: i for i, h in enumerate(headers_list)}
-        player_idx = idx.get('PLAYER', 2)
-        stat_idx = idx.get(stat_name)
-        if stat_idx is None:
-            continue
-        for row in rows:
-            name = row[player_idx]
-            k = norm(name)
-            if k not in stats600:
-                stats600[k] = {'pts': 0, 'reb': 0, 'ast': 0}
-            stats600[k][stat_key] = row[stat_idx] or 0
+    for p in sd.get('data', []):
+        g = p.get('games') or 1
+        stats600[norm(p.get('playerName',''))] = {
+            'pts': round(p['points']/g, 1),
+            'reb': round(p['totalRb']/g, 1),
+            'ast': round(p['assists']/g, 1),
+        }
     print(f"OK: all_stats ({len(stats600)}人)")
 except Exception as e:
     print(f"NG: all_stats - {e}")
@@ -120,7 +111,6 @@ for name, info in roster.items():
         'weight': info['weight'],
         'dob': info['dob'],
         'experience': info['experience'],
-        'debutYear': info.get('debutYear',''),
         'id': info['id'],
         'pts': s.get('pts', 0),
         'reb': s.get('reb', 0),
@@ -135,19 +125,3 @@ with open('data.json', 'w') as f:
 
 has_pts = sum(1 for p in all_players if p['pts'] > 0)
 print(f"done: all_players={len(all_players)}人 (pts有り:{has_pts}人)")
-
-# 順位表データを取得
-try:
-    url = 'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings?season=2026'
-    req = urllib.request.Request(url)
-    req.add_header('User-Agent', 'Mozilla/5.0')
-    with urllib.request.urlopen(req, timeout=15) as r:
-        standings_data = json.loads(r.read())
-    with open('data.json', 'r') as f:
-        existing = json.load(f)
-    existing['standings'] = standings_data
-    with open('data.json', 'w') as f:
-        json.dump(existing, f)
-    print('OK: standings')
-except Exception as e:
-    print(f'NG: standings - {e}')
