@@ -181,3 +181,43 @@ async function loadChatUsers() {
     wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
   }
 }
+
+async function submitChatReg() {
+  const nick = document.getElementById('reg-nick').value.trim();
+  const age = document.getElementById('reg-age').value;
+  const gen = document.getElementById('reg-gender').value;
+  const team = document.getElementById('reg-team').value;
+  const player = document.getElementById('reg-player').value.trim();
+
+  if (!nick) { alert('ニックネームを入力してください'); return; }
+  if (nick.length < 2) { alert('ニックネームは2文字以上にしてください'); return; }
+
+  // 禁止ワードチェック
+  const ngWords = ['死','殺','クソ','バカ','アホ','差別','ゴミ'];
+  if (ngWords.some(w => nick.includes(w))) { alert('使用できないニックネームです'); return; }
+
+  // 重複チェック
+  try {
+    const res = await fetch(FB_CHAT + '/chatusers.json');
+    const data = await res.json();
+    if (data) {
+      const existing = Object.values(data).map(u => u.nick);
+      if (existing.includes(nick)) { alert('このニックネームはすでに使われています'); return; }
+    }
+  } catch(e) {}
+
+  chatNick = nick;
+  chatEmoji = '🏀';
+  localStorage.setItem('chat_nick', chatNick);
+  localStorage.setItem('chat_emoji', chatEmoji);
+
+  await fetch(FB_CHAT + '/chatusers.json', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ nick, age, gender: gen, team, player, emoji: chatEmoji, ts: Date.now() })
+  }).catch(function() {});
+
+  closeChatReg();
+  loadChatMsgs();
+  if (!chatPollId) chatPollId = setInterval(loadChatMsgs, 5000);
+}

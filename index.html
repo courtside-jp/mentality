@@ -472,6 +472,54 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
+<!-- チャット登録モーダル -->
+<div id="chatRegModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;width:90%;max-width:380px;overflow:hidden;">
+    <div style="background:#000;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:2px;">ユーザー登録</div>
+      <div onclick="closeChatReg()" style="color:#888;cursor:pointer;font-size:20px;">×</div>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#999;margin-bottom:4px;">ニックネーム（必須・重複不可）</div>
+        <input id="reg-nick" type="text" placeholder="例：やす" maxlength="12" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#999;margin-bottom:4px;">年齢</div>
+          <select id="reg-age" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:13px;outline:none;background:#fff;">
+            <option value="">選択</option>
+            <option>10代</option><option>20代</option><option>30代</option><option>40代</option><option>50代以上</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#999;margin-bottom:4px;">性別</div>
+          <select id="reg-gender" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:13px;outline:none;background:#fff;">
+            <option value="">選択</option>
+            <option>男性</option><option>女性</option><option>その他</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#999;margin-bottom:4px;">好きなチーム</div>
+        <select id="reg-team" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:13px;outline:none;background:#fff;">
+          <option value="">選択してください</option>
+          <option>スパーズ</option><option>ニックス</option><option>セルティックス</option><option>レイカーズ</option>
+          <option>ウォリアーズ</option><option>サンダー</option><option>ナゲッツ</option><option>ピストンズ</option>
+          <option>キャバリアーズ</option><option>ロケッツ</option><option>マーベリックス</option><option>バックス</option>
+          <option>76ers</option><option>ヒート</option><option>ホークス</option><option>その他</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#999;margin-bottom:4px;">好きな選手</div>
+        <input id="reg-player" type="text" placeholder="例：ウェンバンヤマ" maxlength="20" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+      </div>
+      <div style="font-size:10px;color:#999;">※差別的な発言・荒らし行為は即BANします</div>
+      <button onclick="submitChatReg()" style="width:100%;padding:12px;background:#C9082A;border:none;border-radius:8px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">登録してチャットに参加する</button>
+    </div>
+  </div>
+</div>
+
 <!-- 検索モーダル -->
 <div id="search-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;">
   <div style="padding:16px;">
