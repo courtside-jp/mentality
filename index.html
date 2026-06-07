@@ -242,9 +242,11 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 
 <div id="pg-ranking" class="pg">
   <!-- 順位/スタッツ切り替えタブ -->
-  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;">
-    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">順位</div>
-    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
+  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;overflow-x:auto;scrollbar-width:none;">
+    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex-shrink:0;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">順位</div>
+    <div id="subtab-playin" onclick="showSubTab('playin')" style="flex-shrink:0;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">プレーイン</div>
+    <div id="subtab-playoff" onclick="showSubTab('playoff')" style="flex-shrink:0;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">プレーオフ</div>
+    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex-shrink:0;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
   </div>
   <!-- 順位エリア -->
   <div id="sub-ranking">
@@ -253,6 +255,14 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
     </div>
     <div id="standingsWrap"></div>
+  </div>
+  <!-- プレーインエリア -->
+  <div id="sub-playin" style="display:none;">
+    <div id="playinWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+  <!-- プレーオフエリア -->
+  <div id="sub-playoff" style="display:none;">
+    <div id="playoffWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
   </div>
   <!-- スタッツエリア -->
   <div id="sub-stats" style="display:none;">
