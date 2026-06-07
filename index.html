@@ -606,7 +606,10 @@ function showSubTab(tab) {
   document.getElementById('subtab-ranking').style.borderBottom = isRanking ? '2px solid #C9082A' : '2px solid transparent';
   document.getElementById('subtab-stats').style.color = isRanking ? '#999' : '#C9082A';
   document.getElementById('subtab-stats').style.borderBottom = isRanking ? '2px solid transparent' : '2px solid #C9082A';
-  if(!isRanking && typeof initStats === 'function') initStats();
+  if(!isRanking) {
+    if(typeof initStats === 'function') initStats();
+    if(typeof loadESPNLeaders === 'function') loadESPNLeaders('pts', 'season');
+  }
 }
 function showAdminPage(id){
   ['admin-menu','admin-article','admin-sneaker','admin-ad','admin-user'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
