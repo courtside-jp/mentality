@@ -1,3 +1,15 @@
+// チームカタカナ名マップ
+const TEAM_JP = {
+  'ATL':'ホークス','BOS':'セルティックス','BKN':'ネッツ','CHA':'ホーネッツ',
+  'CHI':'ブルズ','CLE':'キャバリアーズ','DAL':'マーベリックス','DEN':'ナゲッツ',
+  'DET':'ピストンズ','GSW':'ウォリアーズ','HOU':'ロケッツ','IND':'ペイサーズ',
+  'LAC':'クリッパーズ','LAL':'レイカーズ','MEM':'グリズリーズ','MIA':'ヒート',
+  'MIL':'バックス','MIN':'ティンバーウルブズ','NOP':'ペリカンズ','NYK':'ニックス',
+  'OKC':'サンダー','ORL':'マジック','PHI':'76ers','PHX':'サンズ',
+  'POR':'トレイルブレイザーズ','SAC':'キングス','SAS':'スパーズ','TOR':'ラプターズ',
+  'UTA':'ジャズ','WAS':'ウィザーズ','NY':'ニックス','SA':'スパーズ'
+};
+
 
 const KATAKANA_MAP = {
   'Victor Wembanyama': 'ビクター・ウェンバンヤマ',
@@ -721,8 +733,8 @@ function parseESPNGames(events) {
     return {
       id: 'espn-' + ev.id, status, q: period > 0 ? 'Q' + period : '',
       timeLeft: 0, clock,
-      home: { abbr:(home.team.abbreviation||'HOME').toUpperCase(), city:(home.team.location||'').toUpperCase(), score:parseInt(home.score)||0 },
-      away: { abbr:(away.team.abbreviation||'AWAY').toUpperCase(), city:(away.team.location||'').toUpperCase(), score:parseInt(away.score)||0 },
+      home: { abbr:(home.team.abbreviation||'HOME').toUpperCase(), city:(home.team.location||'').toUpperCase(), score:parseInt(home.score)||0, name:TEAM_JP[(home.team.abbreviation||'').toUpperCase()]||'' },
+      away: { abbr:(away.team.abbreviation||'AWAY').toUpperCase(), city:(away.team.location||'').toUpperCase(), score:parseInt(away.score)||0, name:TEAM_JP[(away.team.abbreviation||'').toUpperCase()]||'' },
       // プレーオフシリーズ勝利数
       poWinsHome: home.wins !== undefined ? home.wins : undefined,
       poWinsAway: away.wins !== undefined ? away.wins : undefined,
