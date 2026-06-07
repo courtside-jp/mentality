@@ -241,6 +241,10 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div id="pg-ranking" class="pg">
+  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;">
+    <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
+    <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
+  </div>
   <div id="standingsWrap"></div>
   <div id="statCats"></div>
   <div id="statWrap"></div>

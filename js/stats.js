@@ -425,9 +425,19 @@ function closePlayerModal() {
 // 順位表 — ESPN APIから取得
 // ============================================================
 function showConf(btn, conf) {
-  document.querySelectorAll('#pg-stats .conf-row:last-of-type .conf-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
   curConf = conf;
+  // タブのスタイル更新
+  ['east','west'].forEach(id => {
+    const el = document.getElementById('conf-' + id);
+    if(!el) return;
+    if(id === conf) {
+      el.style.color = '#C9082A';
+      el.style.borderBottom = '2px solid #C9082A';
+    } else {
+      el.style.color = '#999';
+      el.style.borderBottom = '2px solid transparent';
+    }
+  });
   renderStandings();
 }
 
