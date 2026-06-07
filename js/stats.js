@@ -204,7 +204,7 @@ async function loadESPNLeaders(stat, mode) {
     const valIdx  = headers.indexOf(statInfo.nbaStatKey || 'PTS');
 
     if (loading) loading.style.display = 'none';
-    const medals = ['🥇','🥈','🥉'];
+    const medals = [1,2,3];
 
     // adslots取得
     let statsAds = [];
@@ -218,7 +218,7 @@ async function loadESPNLeaders(stat, mode) {
     const midIdx = Math.floor(rows.length / 2);
     list.innerHTML = rows.map((row, i) => {
       const rank    = i + 1;
-      const medal   = rank <= 3 ? medals[i] : rank;
+      const medal = rank;
       const name    = row[nameIdx] || '';
       const normN   = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const jaName  = JA_NAME_MAP[name] || JA_NAME_MAP[normN] || '';
@@ -275,7 +275,7 @@ function showStatFallback(stat) {
     const rank   = i + 1;
     const isTop3 = rank <= 3;
     return `<div class="lc${isTop3 ? ' t' + rank : ''}">
-      <div class="lc-rank r${rank <= 3 ? rank : ''}">${rank <= 3 ? medals[i] : rank}</div>
+      <div class="lc-rank r${rank <= 3 ? rank : ''}">${rank}</div>
       <div style="width:42px;height:32px;flex-shrink:0;border-radius:5px;background:var(--bg3);display:flex;align-items:center;justify-content:center;">
         <span style="font-size:.65rem;font-weight:700;color:var(--tx3);">${p.name.slice(0,2)}</span>
       </div>
