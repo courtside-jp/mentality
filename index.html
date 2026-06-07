@@ -172,7 +172,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
         </div>
       </div>
       <div class="hero-actions">
-        <button class="hero-btn hero-btn-primary" onclick="goPage('stats')">選手スタッツ</button>
+        <button class="hero-btn hero-btn-primary" onclick="goPage('schedule',null,document.querySelector('.bnav-item'))">選手スタッツ</button>
         <button class="hero-btn hero-btn-secondary" onclick="goPage('chat')">チャットで話す</button>
       </div>
     </div>
@@ -274,24 +274,6 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
   <div class="stat-rank-tabs" id="stat-rank-tabs"></div>
   <div id="stat-rank-content"></div>
-</div>
-
-<div id="pg-stats" class="pg">
-  <div style="background:var(--black);padding:16px;">
-    <div style="font-size:10px;color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-bottom:8px;">NBAファイナル 第1戦 · LIVE</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;">SA</div><div style="font-size:10px;color:var(--gray);">スパーズ</div></div>
-      <div style="display:flex;gap:8px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;">78</div><div style="color:var(--gray);font-size:20px;">–</div><div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--red);">82</div></div>
-      <div style="text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;">NY</div><div style="font-size:10px;color:var(--gray);">ニックス</div></div>
-    </div>
-    <div style="text-align:center;font-size:10px;color:var(--gray);margin-top:6px;font-family:'Barlow Condensed',sans-serif;">第3Q 残り8分42秒</div>
-  </div>
-  <div style="display:flex;background:var(--dark);">
-    <div id="box-sa" onclick="showBox('sa',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#fff;border-bottom:2px solid var(--red);cursor:pointer;">スパーズ</div>
-    <div id="box-ny" onclick="showBox('ny',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gray);border-bottom:2px solid transparent;cursor:pointer;">ニックス</div>
-    <div id="box-team" onclick="showBox('team',this)" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gray);border-bottom:2px solid transparent;cursor:pointer;">チーム</div>
-  </div>
-  <div id="box-content"></div>
 </div>
 
 <div id="pg-admin" class="pg" style="overflow-y:auto;">
