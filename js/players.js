@@ -272,86 +272,47 @@ async function openPlayerDetail(name, team) {
     </div>`;
 
   try {
-    const seasons = ['2026','2025','2024'];
-    const results = await Promise.all(seasons.map(async yr => {
-      const r = await fetchWithTimeout(
-        `https://api.server.nbaapi.com/api/playertotals?page=1&pageSize=500&sortBy=points&ascending=false&season=${yr}&isPlayoff=false`,
-        {}, 6000
-      );
-      if (!r.ok) return null;
-      const d = await r.json();
-      const normName = name.normalize("NFD").replace(/[\u0300-\u036f]/g,""); return (d.data || []).find(p => p.playerName.normalize("NFD").replace(/[\u0300-\u036f]/g,"") === normName) || null;
-    }));
+    // data.jsonのキャッシュからスタッツを取得
+    const p = (window._cachedPlayers||[]).find(p => p.playerName === name) || {};
+    const pts = p.pts ? Number(p.pts).toFixed(1) : '-';
+    const reb = p.reb ? Number(p.reb).toFixed(1) : '-';
+    const ast = p.ast ? Number(p.ast).toFixed(1) : '-';
+    const stl = p.stl ? Number(p.stl).toFixed(1) : '-';
+    const blk = p.blk ? Number(p.blk).toFixed(1) : '-';
+    const fg  = p.fg  ? Number(p.fg).toFixed(1) + '%' : '-';
+    const fg3 = p.fg3 ? Number(p.fg3).toFixed(1) + '%' : '-';
+    const gp  = p.gp  ? p.gp : '-';
+    const min = p.min ? Number(p.min).toFixed(1) : '-';
 
-    const cur = results[0];
-    if (!cur) throw new Error('データなし');
-    const g   = cur.games || 1;
-    const fmt = (v) => v !== undefined ? (v / g).toFixed(1) : '-';
-    const pct = (v) => v !== undefined ? (v * 100).toFixed(1) + '%' : '-';
-
-    const statsItems = [
-      {k:'GP',  v:cur.games},           {k:'MIN', v:cur.minutesPg&&cur.games?(cur.minutesPg/cur.games).toFixed(1):'-'},
-      {k:'PTS', v:fmt(cur.points)},     {k:'REB', v:fmt(cur.totalRb)},
-      {k:'AST', v:fmt(cur.assists)},    {k:'STL', v:fmt(cur.steals)},
-      {k:'BLK', v:fmt(cur.blocks)},     {k:'TO',  v:fmt(cur.turnovers)},
-      {k:'FG%', v:pct(cur.fieldPercent)},{k:'3P%', v:pct(cur.threePercent)},
-      {k:'FT%', v:pct(cur.ftPercent)},  {k:'PF',  v:fmt(cur.personalFouls)},
+    const statsRows = [
+      {k:'得点', v:pts}, {k:'リバウンド', v:reb}, {k:'アシスト', v:ast},
+      {k:'スティール', v:stl}, {k:'ブロック', v:blk},
+      {k:'FG%', v:fg}, {k:'3P%', v:fg3},
+      {k:'出場試合', v:gp}, {k:'出場時間', v:min}
     ];
 
-    const histRows = results.map((r, i) => {
-      if (!r) return '';
-      const yr = ['25-26','24-25','23-24'][i];
-      const gg = r.games || 1;
-      const isNow = i === 0;
-      const stats = [
-        {k:'PTS', v:(r.points/gg).toFixed(1)},
-        {k:'REB', v:(r.totalRb/gg).toFixed(1)},
-        {k:'AST', v:(r.assists/gg).toFixed(1)},
-        {k:'STL', v:r.steals?(r.steals/gg).toFixed(1):'-'},
-        {k:'BLK', v:r.blocks?(r.blocks/gg).toFixed(1):'-'},
-        {k:'FG%', v:r.fieldPercent?(r.fieldPercent*100).toFixed(1)+'%':'-'},
-        {k:'3P%', v:r.threePercent?(r.threePercent*100).toFixed(1)+'%':'-'},
-        {k:'FT%', v:r.ftPercent?(r.ftPercent*100).toFixed(1)+'%':'-'},
-      ];
-      return `<div style="border-bottom:1px solid var(--bd);padding:.5rem .4rem;${isNow?'background:rgba(255,90,0,.04);':''}">
-        <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem;">
-          <span style="font-size:.65rem;font-weight:700;color:${isNow?'var(--or)':'var(--tx)'};">${yr}</span>
-          <span style="font-size:.58rem;color:var(--tx3);">${r.team||''}</span>
-          <span style="font-size:.62rem;font-weight:600;color:var(--tx2);">${r.games}G</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.25rem;">
-          ${stats.map(s=>`<div style="text-align:center;padding:.2rem 0;">
-            <div style="font-size:.48rem;color:var(--tx3);margin-bottom:.1rem;">${s.k}</div>
-            <div style="font-size:.7rem;font-weight:700;color:var(--tx);">${s.v}</div>
-          </div>`).join('')}
-        </div>
-      </div>`;
-    }).join('');
-
-    const awardsData = AWARDS_MAP[name] || [];
-    const awardsHTML = awardsData.length
-      ? `<div style="margin-top:.8rem;border-top:1px solid var(--bd);padding-top:.6rem;">
-          <div style="font-size:.7rem;font-weight:700;color:var(--tx2);margin-bottom:.4rem;">🏆 受賞歴・タイトル</div>
-          ${awardsData.map(a => `<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem .4rem;background:var(--bg3);border-radius:6px;margin-bottom:.25rem;">
-            <span style="font-size:.85rem;">🏅</span>
-            <div style="font-size:.68rem;color:var(--tx);">${a}</div>
-          </div>`).join('')}
-        </div>` : '';
-
     document.getElementById('playerDetailBody').innerHTML = `
-      <div style="font-size:.7rem;font-weight:700;color:var(--tx2);margin-bottom:.5rem;">スタッツ（2025-26）</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-bottom:.8rem;">
-        ${statsItems.map(s => `<div style="background:var(--bg3);border-radius:6px;padding:.45rem .3rem;text-align:center;">
-          <div style="font-size:.55rem;color:var(--tx3);margin-bottom:.15rem;">${s.k}</div>
-          <div style="font-size:.9rem;font-weight:700;color:var(--tx);">${s.v||'-'}</div>
-        </div>`).join('')}
+      <div style="padding:.8rem 0;">
+        <div style="font-size:11px;font-weight:700;color:#C9082A;font-family:Barlow Condensed,sans-serif;letter-spacing:1px;margin-bottom:8px;">2025-26 レギュラーシーズン</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          ${statsRows.map(s => `
+            <div style="background:#f9f9f9;border-radius:8px;padding:10px 8px;text-align:center;">
+              <div style="font-size:18px;font-weight:700;color:#C9082A;">${s.v}</div>
+              <div style="font-size:10px;color:#999;margin-top:2px;">${s.k}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:16px;">
+          <div style="font-size:11px;font-weight:700;color:#C9082A;font-family:Barlow Condensed,sans-serif;letter-spacing:1px;margin-bottom:8px;">プロフィール</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${rosterInfo.pos ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">ポジション</span><span style="font-size:12px;font-weight:700;">${rosterInfo.pos}</span></div>` : ''}
+            ${dob ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">生年月日</span><span style="font-size:12px;font-weight:700;">${dob}</span></div>` : ''}
+            ${height ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">身長</span><span style="font-size:12px;font-weight:700;">${height}</span></div>` : ''}
+            ${weight ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">体重</span><span style="font-size:12px;font-weight:700;">${weight}</span></div>` : ''}
+            ${debutYear ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">ドラフト年</span><span style="font-size:12px;font-weight:700;">${debutYear}年</span></div>` : ''}
+          </div>
+        </div>
       </div>
-      <div style="font-size:.7rem;font-weight:700;color:var(--tx2);margin-bottom:.4rem;">過去シーズン</div>
-      <div style="border-radius:6px;border:1px solid var(--bd);margin-bottom:.6rem;overflow:hidden;">
-        ${histRows}
-      </div>
-      ${awardsHTML}`;
-
   } catch(e) {
     document.getElementById('playerDetailBody').innerHTML =
       `<div style="color:var(--tx3);font-size:.72rem;text-align:center;padding:2rem;">データ取得に失敗しました</div>`;
