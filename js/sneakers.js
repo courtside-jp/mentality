@@ -31,7 +31,7 @@ function renderSneakers(list) {
   if (!list.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">該当するバッシュがありません</div>'; return; }
 
   wrap.innerHTML = list.map(s => `
-    <div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:.8rem;overflow:hidden;">
+    <div onclick="openSnkModal('${s.id}')" style="background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:.8rem;overflow:hidden;cursor:pointer;">
       ${s.img ? `<img src="${s.img}" style="width:100%;height:200px;object-fit:cover;" onerror="this.style.display='none'">` : '<div style="width:100%;height:160px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;">👟</div>'}
       <div style="padding:.8rem;">
         <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;">
@@ -96,9 +96,23 @@ async function submitSneaker() {
   loadSneakers();
 }
 
-function openSnkModal() {
+function openSnkModal(id) {
   const modal = document.getElementById('snkModal');
-  if (modal) modal.style.display = 'block';
+  const body = document.getElementById('snkModalBody');
+  if (!modal || !body) return;
+  
+  const s = (_allSneakers || []).find(s => s.id === id);
+  if (!s) return;
+  
+  body.innerHTML = 
+    (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
+    '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (s.brand||'') + '</div>' +
+    '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.model||s.name||'') + '</div>' +
+    (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">着用選手: ' + s.player + '</div>' : '') +
+    (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
+    (s.link ? '<a href="' + s.link + '" target="_blank" style="display:block;text-align:center;padding:12px;background:#C9082A;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;">Amazonで見る</a>' : '');
+  
+  modal.style.display = 'block';
 }
 
 function closeSnkModal() {
