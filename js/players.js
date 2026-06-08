@@ -221,7 +221,7 @@ async function renderPlayerCards(players) {
 // ============================================================
 async function openPlayerDetail(name, team) {
   const modal   = document.getElementById('playerDetailModal');
-  const content = document.getElementById('playerDetailContent');
+  const content = document.getElementById('playerDetailBody');
   if (!modal || !content) return;
   modal.style.display = 'block';
 

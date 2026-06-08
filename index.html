@@ -449,6 +449,17 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   </div>
 </div>
 
+<!-- 選手詳細モーダル -->
+<div id="playerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;max-width:480px;margin:0 auto;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('playerDetailModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">選手詳細</div>
+    </div>
+    <div id="playerDetailBody" style="padding:1rem;"></div>
+  </div>
+</div>
+
 <!-- バッシュ詳細モーダル -->
 <div id="snkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
   <div style="background:#fff;min-height:100vh;max-width:480px;margin:0 auto;">
@@ -468,6 +479,17 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事</div>
     </div>
     <div id="articleModalBody" style="padding:0;"></div>
+  </div>
+</div>
+
+<!-- 選手詳細モーダル -->
+<div id="playerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;max-width:480px;margin:0 auto;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('playerDetailModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">選手詳細</div>
+    </div>
+    <div id="playerDetailBody" style="padding:1rem;"></div>
   </div>
 </div>
 
