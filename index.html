@@ -624,11 +624,7 @@ function showPage(id,tabEl,navEl){
   if(id==='ranking')initRanking();
   if(id==='match')initBox('sa');
 }
-function initPlayers(){
-  const sel=document.getElementById('team-selector');
-  sel.innerHTML=teams.map(t=>`<div class="team-btn ${t.id===currentTeam?'active':''}" onclick="selectTeam('${t.id}',this)">${t.name}</div>`).join('');
-  renderPlayers(currentTeam);
-}
+
 function selectTeam(id,el){
   currentTeam=id;
   document.querySelectorAll('.team-btn').forEach(b=>b.classList.remove('active'));
