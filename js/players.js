@@ -315,7 +315,7 @@ async function openPlayerDetail(name, team) {
             ${debutYear ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">ドラフト年</span><span style="font-size:12px;font-weight:700;">${debutYear}年</span></div>` : ''}
           </div>
         </div>
-      </div>
+      </div>\`;
   } catch(e) {
     document.getElementById('playerDetailBody').innerHTML =
       `<div style="color:var(--tx3);font-size:.72rem;text-align:center;padding:2rem;">データ取得に失敗しました</div>`;
