@@ -812,6 +812,19 @@ const _articleId = _urlParams.get('article');
 if(_articleId) window._directArticleId = _articleId;
 </script>
 
+<script>
+window.addEventListener('load', function() {
+  var hash = location.hash.replace('#','') || 'schedule';
+  var valid = ['schedule','ranking','chat','articles','sneakers','players'];
+  var page = valid.indexOf(hash) >= 0 ? hash : 'schedule';
+  if(typeof goPage === 'function') {
+    goPage(page);
+    var btn = document.getElementById('sn-' + page);
+    if(btn) btn.classList.add('on');
+  }
+});
+</script>
+
 <!-- Firebase URL -->
 
 <!-- Google Analytics -->
