@@ -624,17 +624,7 @@ function showPage(id,tabEl,navEl){
   if(id==='ranking')initRanking();
   if(id==='match')initBox('sa');
 }
-
-function selectTeam(id,el){
-  currentTeam=id;
-  document.querySelectorAll('.team-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderPlayers(id);
-}
-function renderPlayers(id){
-  const team=teams.find(t=>t.id===id);
-  const list=document.getElementById('player-list');
-  const statCols=[{key:'pts',label:'得点'},{key:'reb',label:'RB'},{key:'ast',label:'AS'},{key:'blk',label:'BK'},{key:'stl',label:'ST'},{key:'fg',label:'FG%'},{key:'tp',label:'3P%'},{key:'min',label:'分'}];
+,{key:'reb',label:'RB'},{key:'ast',label:'AS'},{key:'blk',label:'BK'},{key:'stl',label:'ST'},{key:'fg',label:'FG%'},{key:'tp',label:'3P%'},{key:'min',label:'分'}];
   list.innerHTML=`
     <div style="display:flex;background:#f9f9f9;border-bottom:1px solid #eee;">
       <div style="width:160px;flex-shrink:0;font-size:10px;color:#999;font-weight:700;padding:8px 16px;">選手</div>
@@ -656,7 +646,6 @@ function renderPlayers(id){
 
 
 
-function initBox(team){showBox(team,document.getElementById('box-'+team));}
 function showBox(team,el){
   ['sa','ny','team'].forEach(t=>{const b=document.getElementById('box-'+t);if(b){b.style.color='#888';b.style.borderBottom='2px solid transparent';}});
   if(el){el.style.color='#fff';el.style.borderBottom='2px solid #C9082A';}
