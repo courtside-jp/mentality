@@ -624,27 +624,6 @@ function showPage(id,tabEl,navEl){
   if(id==='ranking')initRanking();
   if(id==='match')initBox('sa');
 }
-,{key:'reb',label:'RB'},{key:'ast',label:'AS'},{key:'blk',label:'BK'},{key:'stl',label:'ST'},{key:'fg',label:'FG%'},{key:'tp',label:'3P%'},{key:'min',label:'分'}];
-  list.innerHTML=`
-    <div style="display:flex;background:#f9f9f9;border-bottom:1px solid #eee;">
-      <div style="width:160px;flex-shrink:0;font-size:10px;color:#999;font-weight:700;padding:8px 16px;">選手</div>
-      <div style="display:flex;overflow-x:auto;scrollbar-width:none;">${statCols.map(c=>`<div style="width:48px;flex-shrink:0;text-align:center;font-size:10px;color:#999;font-weight:700;padding:8px 0;">${c.label}</div>`).join('')}</div>
-    </div>
-    ${team.players.map(p=>`
-      <div style="display:flex;border-bottom:1px solid #f5f5f5;background:#fff;align-items:center;">
-        <div style="width:160px;flex-shrink:0;display:flex;align-items:center;padding:10px 12px;gap:8px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:${team.color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">${p.name[0]}</div>
-          <div style="min-width:0;"><div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div><div style="font-size:10px;color:#999;">#${p.num}·${p.pos}</div></div>
-        </div>
-        <div style="display:flex;overflow-x:auto;scrollbar-width:none;">${statCols.map((c,i)=>`<div style="width:48px;flex-shrink:0;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:${i===0?'#C9082A':'#000'};padding:10px 0;">${p[c.key]||'-'}</div>`).join('')}</div>
-      </div>
-    `).join('')}
-  `;
-}
-
-
-
-
 
 function showBox(team,el){
   ['sa','ny','team'].forEach(t=>{const b=document.getElementById('box-'+t);if(b){b.style.color='#888';b.style.borderBottom='2px solid transparent';}});
