@@ -337,8 +337,10 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
                   📷 画像挿入
                   <input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">
                 </label>
+                <button type="button" onclick="insertArticleLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🔗 記事リンク</button>
+                <button type="button" onclick="insertTextLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🌐 URLリンク</button>
               </div>
-              <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:none;font-size:12px;outline:none;height:160px;resize:none;box-sizing:border-box;"></textarea>
+              <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:none;font-size:12px;outline:none;height:300px;resize:vertical;box-sizing:border-box;"></textarea>
             </div>
           </div>
           <div style="display:flex;gap:8px;">

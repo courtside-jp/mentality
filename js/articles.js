@@ -28,6 +28,63 @@ function renderBody(body) {
 // ============================================================
 // 画像アップロード（ImgBB）
 // ============================================================
+// 記事リンク挿入
+async function insertArticleLink() {
+  // Firebaseから記事一覧を取得して選択モーダルを表示
+  const res = await fetch(FB_ARTICLES + '.json');
+  const data = await res.json();
+  if (!data) return;
+  
+  const articles = Object.entries(data)
+    .map(([id, a]) => ({id, ...a}))
+    .filter(a => a.status !== 'archived')
+    .sort((a, b) => (b.ts||0) - (a.ts||0))
+    .slice(0, 20);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;overflow-y:auto;padding:16px;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+      </div>
+      <div style="padding:8px;">
+        ${articles.map(a => `
+          <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
+            style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
+            ${a.img ? `<img src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function doInsertArticleLink(id, title, img) {
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const card = `\n<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+    (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>\n`;
+  ta.value = ta.value.substring(0, start) + card + ta.value.substring(start);
+  ta.focus();
+}
+
+// URLリンク挿入
+function insertTextLink() {
+  const url = prompt('URLを入力:');
+  if (!url) return;
+  const text = prompt('リンクテキストを入力:', url);
+  if (!text) return;
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const link = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+  ta.focus();
+}
+
 async function insertBodyImage(input) {
   const file = input.files[0];
   if (!file) return;
@@ -61,6 +118,63 @@ async function insertBodyImage(input) {
     label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
   reader.readAsDataURL(file);
+}
+
+// 記事リンク挿入
+async function insertArticleLink() {
+  // Firebaseから記事一覧を取得して選択モーダルを表示
+  const res = await fetch(FB_ARTICLES + '.json');
+  const data = await res.json();
+  if (!data) return;
+  
+  const articles = Object.entries(data)
+    .map(([id, a]) => ({id, ...a}))
+    .filter(a => a.status !== 'archived')
+    .sort((a, b) => (b.ts||0) - (a.ts||0))
+    .slice(0, 20);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;overflow-y:auto;padding:16px;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+      </div>
+      <div style="padding:8px;">
+        ${articles.map(a => `
+          <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
+            style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
+            ${a.img ? `<img src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function doInsertArticleLink(id, title, img) {
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const card = `\n<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+    (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>\n`;
+  ta.value = ta.value.substring(0, start) + card + ta.value.substring(start);
+  ta.focus();
+}
+
+// URLリンク挿入
+function insertTextLink() {
+  const url = prompt('URLを入力:');
+  if (!url) return;
+  const text = prompt('リンクテキストを入力:', url);
+  if (!text) return;
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const link = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+  ta.focus();
 }
 
 async function insertBodyImage(input) {
