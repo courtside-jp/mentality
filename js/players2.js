@@ -193,7 +193,7 @@ async function renderPlayerCards(players) {
     const espnId   = p.espnId || '';
     const pos      = (window._espnIdMap || {})[`_pos_${normName}`] || '';
     const photoUrl = espnId
-      ? ''
+      ? `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`
       : '';
 
     return `<div onclick="openPlayerDetail('${name.replace(/'/g,"\\'")}','${team}','${espnId}')"
