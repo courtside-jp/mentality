@@ -117,7 +117,7 @@ async function loadPlayersFromAPI() {
 
   try {
     // ESPN スタッツリーダーAPIから得点順で選手を取得
-    const url = `https://courtside-jp.github.io/mentality/data.json?v=1779410136`;
+    const url = `https://courtside-jp.github.io/mentality/data.json?v=1781000713752292000`;
     const res = await fetchWithTimeout(url, {}, 8000);
     if (!res.ok) throw new Error('ESPN Error ' + res.status);
     const data = await res.json();
