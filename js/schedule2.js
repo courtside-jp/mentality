@@ -243,7 +243,7 @@ function gcHTML(g) {
     : `<span class="gc-upd">${g.startTime}〜</span>`;
 
   const midHtml = isL
-    ? `<div class="gc-q">${g.q} <span id="gt-${g.id}">${clockDisp}</span></div>`
+    ? `<div class="gc-q">${g.q}${clockDisp && clockDisp !== '0:00' ? ' ' + clockDisp : ''}</div>`
     : isF
     ? `<div class="gc-end">FINAL</div>`
     : `<div class="gc-vs">VS</div><div class="gc-st">${g.startTime}</div>`;
