@@ -721,7 +721,7 @@ function parseESPNGames(events) {
     } catch(e) {}
     const qh   = (home.linescores || []).map(q => parseInt(q.value) || 0);
     const qa   = (away.linescores || []).map(q => parseInt(q.value) || 0);
-    const clockLabel = clock === '0:00' ? 'Q' + period + ' 終了' : 'Q' + period + ' ' + clock;
+    const clockLabel = (clock === '0:00' || !clock) ? '' : 'Q' + period + ' ' + clock;
     const note = status === 'live'  ? clockLabel
                : status === 'final' ? 'FINAL'
                : '🇯🇵 日本時間 ' + startTime + '〜';
