@@ -237,6 +237,7 @@ async function openPlayerDetail(name, team) {
   const content = document.getElementById('playerDetailBody');
   if (!modal || !content) return;
   modal.style.display = 'block';
+  modal._openedForName = name;
 
   const jaName = JA_NAME_MAP[name] || name;
   const rosterInfo = (window._cachedPlayers||[]).find(p=>p.playerName===name)||{};
