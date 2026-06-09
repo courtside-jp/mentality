@@ -26,6 +26,59 @@ function renderBody(body) {
 }
 
 // ============================================================
+// 画像アップロード（ImgBB）
+// ============================================================
+async function uploadArticleImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const btn = input.parentElement;
+  btn.textContent = '⏳ アップロード中...';
+  
+  try {
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    
+    const form = new FormData();
+    form.append('image', base64);
+    
+    const resp = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+      method: 'POST', body: form
+    });
+    const data = await resp.json();
+    
+    if (data.success) {
+      const url = data.data.url;
+      document.getElementById('adminImg').value = url;
+      const preview = document.getElementById('adminImgPreview');
+      const img = document.getElementById('adminImgPreviewImg');
+      img.src = url;
+      preview.style.display = 'block';
+      btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+    } else {
+      throw new Error('アップロード失敗');
+    }
+  } catch(e) {
+    // ImgBBが失敗したらbase64をそのまま使う
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target.result;
+      document.getElementById('adminImg').value = url;
+      const preview = document.getElementById('adminImgPreview');
+      const img = document.getElementById('adminImgPreviewImg');
+      img.src = url;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+  }
+}
+
+// ============================================================
 // 記事一覧を表示
 // ============================================================
 async function loadArticles() {
