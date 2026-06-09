@@ -151,6 +151,13 @@ async function loadPlayersFromAPI() {
 
     renderPlayerCards(filtered);
     console.log('✅ ESPN選手データ取得成功:', window._cachedPlayers.length, '人');
+    // モーダルが開いていたら再レンダリング
+    const modal = document.getElementById('playerDetailModal');
+    const body = document.getElementById('playerDetailBody');
+    if (modal && modal.style.display !== 'none' && body) {
+      const name = modal._openedForName;
+      if (name) openPlayerDetail(name, '');
+    }
 
   } catch(e) {
     console.warn('選手APIエラー:', e.message, '→ ダミーデータ継続');
