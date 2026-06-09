@@ -277,9 +277,15 @@ async function openPlayerDetail(name, team) {
       <div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">📊 データ取得中...</div>
     </div>`;
 
-  // DOMが更新されるのを待つ
-  await new Promise(r => setTimeout(r, 50));
-  
+  // data.jsonが読み込まれるまで最大5秒待つ
+  let attempts = 0;
+  while (attempts < 10) {
+    const check = (window._cachedPlayers||[]).find(p => p.playerName === name);
+    if (check && check.stl != null) break;
+    await new Promise(r => setTimeout(r, 500));
+    attempts++;
+  }
+
   try {
     // data.jsonのキャッシュからスタッツを取得
     const p = (window._cachedPlayers||[]).find(p => p.playerName === name) || {};
