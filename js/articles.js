@@ -75,13 +75,20 @@ function doInsertArticleLink(id, title, img) {
 function insertTextLink() {
   const url = prompt('URLを入力:');
   if (!url) return;
-  const text = prompt('リンクテキストを入力:', url);
-  if (!text) return;
+  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
   const ta = document.getElementById('adminBody');
   const start = ta.selectionStart;
   const end = ta.selectionEnd;
-  const link = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
-  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+  let insert;
+  if (isImage) {
+    insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+  } else {
+    const text = prompt('リンクテキストを入力:', url);
+    if (!text) return;
+    insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+  }
+  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
   ta.focus();
 }
 
@@ -167,13 +174,20 @@ function doInsertArticleLink(id, title, img) {
 function insertTextLink() {
   const url = prompt('URLを入力:');
   if (!url) return;
-  const text = prompt('リンクテキストを入力:', url);
-  if (!text) return;
+  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
   const ta = document.getElementById('adminBody');
   const start = ta.selectionStart;
   const end = ta.selectionEnd;
-  const link = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
-  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+  let insert;
+  if (isImage) {
+    insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+  } else {
+    const text = prompt('リンクテキストを入力:', url);
+    if (!text) return;
+    insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+  }
+  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
   ta.focus();
 }
 
