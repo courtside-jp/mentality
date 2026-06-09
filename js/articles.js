@@ -63,6 +63,41 @@ async function insertBodyImage(input) {
   reader.readAsDataURL(file);
 }
 
+async function insertBodyImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = input.parentElement;
+  label.textContent = '⏳ アップロード中...';
+  
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const base64 = ev.target.result.split(',')[1];
+    let url = ev.target.result; // fallback: base64
+    
+    try {
+      const form = new FormData();
+      form.append('image', base64);
+      const resp = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+        method: 'POST', body: form
+      });
+      const data = await resp.json();
+      if (data.success) url = data.data.url;
+    } catch(e) {}
+    
+    // 本文の現在のカーソル位置に画像タグを挿入
+    const ta = document.getElementById('adminBody');
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const imgTag = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+    ta.value = ta.value.substring(0, start) + imgTag + ta.value.substring(end);
+    ta.selectionStart = ta.selectionEnd = start + imgTag.length;
+    ta.focus();
+    
+    label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
+  };
+  reader.readAsDataURL(file);
+}
+
 async function uploadArticleImage(input) {
   const file = input.files[0];
   if (!file) return;
