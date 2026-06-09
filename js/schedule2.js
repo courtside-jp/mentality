@@ -226,7 +226,8 @@ function gcHTML(g) {
   const m   = g.timeLeft ? Math.floor(g.timeLeft / 60) : 0;
   const s   = g.timeLeft ? String(g.timeLeft % 60).padStart(2, '0') : '00';
   const sel = selId === g.id;
-  const clockDisp = g.clock || (m + ':' + s);
+  const clockRaw = g.clock || (m + ':' + s);
+  const clockDisp = (clockRaw === '0:00') ? '' : clockRaw;
 
   const stHtml = isL
     ? `<span class="gc-status live">● LIVE</span>`
@@ -371,7 +372,8 @@ function buildDetail(g) {
   const m   = g.timeLeft ? Math.floor(g.timeLeft / 60) : 0;
   const s   = g.timeLeft ? String(g.timeLeft % 60).padStart(2, '0') : '00';
   const upd = ntime(); // utils.js
-  const clockDisp = g.clock || (m + ':' + s);
+  const clockRaw = g.clock || (m + ':' + s);
+  const clockDisp = (clockRaw === '0:00') ? '' : clockRaw;
 
   // クォータースコア行
   const ql = ['Q1','Q2','Q3','Q4'];
