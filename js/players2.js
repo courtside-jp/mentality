@@ -312,7 +312,7 @@ async function openPlayerDetail(name, team) {
             ${dob ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">生年月日</span><span style="font-size:12px;font-weight:700;">${dob}</span></div>` : ''}
             ${height ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">身長</span><span style="font-size:12px;font-weight:700;">${height}</span></div>` : ''}
             ${weight ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">体重</span><span style="font-size:12px;font-weight:700;">${weight}</span></div>` : ''}
-            ${rosterInfo.draftYear ? `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">ドラフト</span><span style="font-size:12px;font-weight:700;">${rosterInfo.draftYear}年 ${rosterInfo.draftPick ? rosterInfo.draftPick + '位' : ''}</span></div>` : `<div style="display:flex;justify-content:space-between;padding:8px;background:#f9f9f9;border-radius:6px;"><span style="font-size:12px;color:#999;">ドラフト</span><span style="font-size:12px;font-weight:700;">ドラフト外</span></div>`}
+
           </div>
         </div>
       </div>`;
