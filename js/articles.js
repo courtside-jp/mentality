@@ -828,7 +828,7 @@ async function loadAdminArticles() {
           <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
           <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? '公開に戻す' : 'アーカイブ'}</button>
           <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
-          <button onclick="downloadOgpImage('${id}','${(a.title||'').replace(/'/g,\"\'\")}',' ${a.img||''}')" style="flex:1;padding:6px;background:rgba(0,0,0,0.05);border:1px solid #ddd;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🐦 X用画像</button>
+          <button onclick="downloadOgpImage(this)" data-id="${id}" data-img="${a.img||''}" data-title="${(a.title||'').replace(/"/g,'&quot;')}" style="flex:1;padding:6px;background:rgba(0,0,0,0.05);border:1px solid #ddd;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🐦 X用画像</button>
         </div>
       </div>
     `).join('');
@@ -880,72 +880,60 @@ async function editArticle(id) {
 // ============================================================
 // X投稿用OGP画像生成・ダウンロード
 // ============================================================
-async function downloadOgpImage(id, title, imgUrl) {
+async function downloadOgpImage(btn) {
+  const id = btn.dataset.id;
+  const imgUrl = btn.dataset.img;
+  const title = btn.dataset.title.replace(/&quot;/g, '"');
+
   const canvas = document.createElement('canvas');
   canvas.width = 1200;
   canvas.height = 630;
   const ctx = canvas.getContext('2d');
 
-  // 背景
   ctx.fillStyle = '#0a1628';
   ctx.fillRect(0, 0, 1200, 630);
 
-  // サムネ画像があれば描画
   if (imgUrl && imgUrl.trim()) {
     try {
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      await new Promise((res, rej) => {
-        img.onload = res;
-        img.onerror = rej;
-        img.src = imgUrl.trim();
-      });
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = imgUrl.trim(); });
       ctx.globalAlpha = 0.5;
       ctx.drawImage(img, 0, 0, 1200, 630);
       ctx.globalAlpha = 1.0;
     } catch(e) {}
   }
 
-  // 下部グラデーション
   const grad = ctx.createLinearGradient(0, 200, 0, 630);
   grad.addColorStop(0, 'rgba(10,22,40,0)');
   grad.addColorStop(1, 'rgba(10,22,40,0.95)');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 1200, 630);
 
-  // 赤いアクセントライン
   ctx.fillStyle = '#C9082A';
   ctx.fillRect(0, 0, 10, 630);
 
-  // COURTSIDEロゴ
   ctx.fillStyle = '#C9082A';
-  ctx.font = 'bold 36px Barlow Condensed, Arial';
-  ctx.fillText('COURTSIDE', 40, 80);
+  ctx.font = 'bold 36px Arial';
+  ctx.fillText('COURTSIDE', 40, 70);
 
-  // タイトル
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 56px sans-serif';
-  const maxWidth = 1100;
-  const words = title;
-  // 長いタイトルは折り返し
-  if (ctx.measureText(words).width > maxWidth) {
-    const mid = Math.floor(words.length / 2);
-    const line1 = words.slice(0, mid);
-    const line2 = words.slice(mid);
-    ctx.fillText(line1, 40, 480);
-    ctx.fillText(line2, 40, 560);
+  ctx.font = 'bold 52px sans-serif';
+  const maxW = 1100;
+  if (ctx.measureText(title).width > maxW) {
+    const mid = Math.floor(title.length / 2);
+    ctx.fillText(title.slice(0, mid), 40, 460);
+    ctx.fillText(title.slice(mid), 40, 540);
   } else {
-    ctx.fillText(words, 40, 530);
+    ctx.fillText(title, 40, 510);
   }
 
-  // URL
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '28px Arial';
-  ctx.fillText('courtside-jp.github.io/mentality', 40, 600);
+  ctx.font = '26px Arial';
+  ctx.fillText('courtside-jp.github.io/mentality', 40, 595);
 
-  // ダウンロード
   const link = document.createElement('a');
-  link.download = `courtside_${id}.png`;
+  link.download = 'courtside_' + id + '.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
