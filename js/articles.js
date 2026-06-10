@@ -313,7 +313,7 @@ async function loadArticles() {
 
     wrap.innerHTML = articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
       '<div style="width:100%;height:160px;border-radius:8px;margin-bottom:.6rem;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;">' +
-      (a.img ? '<img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;font-family:Bebas Neue,sans-serif;font-size:28px;color:#C9082A;letter-spacing:2px;">COURTSIDE</div>') +
+      (a.img ? '<img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;font-family:Bebas Neue,sans-serif;font-size:28px;color:#C9082A;letter-spacing:2px;">COURTSIDE</div>') +
       '</div>' +
       '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.35rem;">' +
       '<span style="font-size:.55rem;background:var(--or);color:#fff;padding:.1rem .4rem;border-radius:6px;">' + (a.category||'NBA') + '</span>' +
