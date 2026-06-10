@@ -236,7 +236,6 @@ async function openPlayerDetail(name, team) {
   const modal   = document.getElementById('playerDetailModal');
   const content = document.getElementById('playerDetailBody');
   if (!modal || !content) return;
-  modal.style.display = 'block';
   modal._openedForName = name;
 
   const jaName = JA_NAME_MAP[name] || name;
@@ -284,6 +283,7 @@ async function openPlayerDetail(name, team) {
     <div id="playerDetailBody" style="padding:.85rem;overflow-y:auto;flex:1;">
 
     </div>`;
+  modal.style.display = 'block';
 
   // data.jsonが読み込まれるまで最大5秒待つ
   let attempts = 0;
