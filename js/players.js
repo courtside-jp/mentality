@@ -268,7 +268,7 @@ async function openPlayerDetail(name, team) {
       </div>
     </div>
     <div id="playerDetailBody" style="padding:.85rem;overflow-y:auto;flex:1;">
-      <div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">📊 データ取得中...</div>
+
     </div>`;
 
   // DOMが更新されるのを待つ
