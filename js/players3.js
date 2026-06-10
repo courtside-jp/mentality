@@ -290,12 +290,12 @@ async function openPlayerDetail(name, team) {
     const pts = p.pts ? Number(p.pts).toFixed(1) : '-';
     const reb = p.reb ? Number(p.reb).toFixed(1) : '-';
     const ast = p.ast ? Number(p.ast).toFixed(1) : '-';
-    const stl = p.stl ? Number(p.stl).toFixed(1) : '-';
-    const blk = p.blk ? Number(p.blk).toFixed(1) : '-';
-    const fg  = p.fg  ? Number(p.fg).toFixed(1) + '%' : '-';
-    const fg3 = p.fg3 ? Number(p.fg3).toFixed(1) + '%' : '-';
-    const gp  = p.gp  ? p.gp : '-';
-    const min = p.min ? Number(p.min).toFixed(1) : '-';
+    const stl = p.stl != null ? Number(p.stl).toFixed(1) : '-';
+    const blk = p.blk != null ? Number(p.blk).toFixed(1) : '-';
+    const fg  = p.fg  != null ? Number(p.fg).toFixed(1) + '%' : '-';
+    const fg3 = p.fg3 != null ? Number(p.fg3).toFixed(1) + '%' : '-';
+    const gp  = p.gp  != null ? p.gp : '-';
+    const min = p.min != null ? Number(p.min).toFixed(1) : '-';
 
     const statsRows = [
       {k:'得点', v:pts}, {k:'リバウンド', v:reb}, {k:'アシスト', v:ast},
