@@ -166,19 +166,53 @@ async function loadChatUsers() {
     const res = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/chatusers.json');
     const data = await res.json();
     if (!data) { wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">ユーザーなし</div>'; return; }
-    const users = Object.values(data).sort(function(a,b){ return b.ts - a.ts; });
-    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);margin-bottom:.5rem;">登録ユーザー数: ' + users.length + '人</div>' +
-      users.map(function(u) {
-        return '<div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.5rem;">' +
-          '<div style="font-size:.78rem;font-weight:700;color:var(--tx);">' + (u.nick || '匿名') + '</div>' +
-          '<div style="font-size:.65rem;color:var(--tx3);margin-top:.2rem;">' +
-          (u.age || '') + (u.gender === 'male' ? ' · 男性' : u.gender === 'female' ? ' · 女性' : '') +
-          (u.team ? ' · ' + u.team : '') +
-          (u.player ? ' · ' + u.player : '') +
-          '</div></div>';
+    const entries = Object.entries(data).sort((a,b) => b[1].ts - a[1].ts);
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);margin-bottom:.5rem;">登録ユーザー数: ' + entries.length + '人</div>' +
+      entries.map(([id, u]) => {
+        const date = u.ts ? new Date(u.ts).toLocaleDateString('ja-JP') : '-';
+        const gender = u.gender === 'male' ? '男性' : u.gender === 'female' ? '女性' : '-';
+        return '<div style="background:var(--bg3);border-radius:8px;padding:.7rem;margin-bottom:.5rem;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<div style="font-size:.78rem;font-weight:700;color:var(--tx);">🏀 ' + (u.nick || '匿名') + '</div>' +
+          '<button onclick="deleteChatUser('' + id + '', '' + (u.nick||'') + '')" style="background:rgba(201,8,42,.1);border:none;color:#C9082A;font-size:.6rem;padding:.2rem .5rem;border-radius:6px;cursor:pointer;">退出</button>' +
+          '</div>' +
+          '<div style="font-size:.63rem;color:var(--tx3);margin-top:.3rem;display:grid;grid-template-columns:1fr 1fr;gap:.2rem;">' +
+          '<span>年齢: ' + (u.age || '-') + '</span>' +
+          '<span>性別: ' + gender + '</span>' +
+          '<span>推しチーム: ' + (u.team || '-') + '</span>' +
+          '<span>推し選手: ' + (u.player || '-') + '</span>' +
+          '<span>登録日: ' + date + '</span>' +
+          '</div>' +
+          '</div>';
       }).join('');
   } catch(e) {
     wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
+
+async function deleteChatUser(id, nick) {
+  if (!confirm(nick + ' を退出させますか？')) return;
+  try {
+    await fetch('https://mentality-nba-default-rtdb.firebaseio.com/chatusers/' + id + '.json', {
+      method: 'DELETE'
+    });
+    alert(nick + ' を退出させました');
+    loadChatUsers();
+  } catch(e) {
+    alert('失敗しました');
+  }
+}
+
+async function deleteChatUser(id, nick) {
+  if (!confirm(nick + ' を退出させますか？')) return;
+  try {
+    await fetch('https://mentality-nba-default-rtdb.firebaseio.com/chatusers/' + id + '.json', {
+      method: 'DELETE'
+    });
+    alert(nick + ' を退出させました');
+    loadChatUsers();
+  } catch(e) {
+    alert('失敗しました');
   }
 }
 
