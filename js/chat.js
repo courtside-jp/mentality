@@ -174,7 +174,7 @@ async function loadChatUsers() {
         return '<div style="background:var(--bg3);border-radius:8px;padding:.7rem;margin-bottom:.5rem;">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;">' +
           '<div style="font-size:.78rem;font-weight:700;color:var(--tx);">🏀 ' + (u.nick || '匿名') + '</div>' +
-          '<button onclick="deleteChatUser('' + id + '', '' + (u.nick||'') + '')" style="background:rgba(201,8,42,.1);border:none;color:#C9082A;font-size:.6rem;padding:.2rem .5rem;border-radius:6px;cursor:pointer;">退出</button>' +
+          '<button onclick="deleteChatUser(\'' + id + '\', \'' + (u.nick||"").replace(/"/g,"") + '\')" style="background:rgba(201,8,42,.1);border:none;color:#C9082A;font-size:.6rem;padding:.2rem .5rem;border-radius:6px;cursor:pointer;">退出</button>' +
           '</div>' +
           '<div style="font-size:.63rem;color:var(--tx3);margin-top:.3rem;display:grid;grid-template-columns:1fr 1fr;gap:.2rem;">' +
           '<span>年齢: ' + (u.age || '-') + '</span>' +
@@ -203,18 +203,7 @@ async function deleteChatUser(id, nick) {
   }
 }
 
-async function deleteChatUser(id, nick) {
-  if (!confirm(nick + ' を退出させますか？')) return;
-  try {
-    await fetch('https://mentality-nba-default-rtdb.firebaseio.com/chatusers/' + id + '.json', {
-      method: 'DELETE'
-    });
-    alert(nick + ' を退出させました');
-    loadChatUsers();
-  } catch(e) {
-    alert('失敗しました');
-  }
-}
+
 
 async function submitChatReg() {
   const nick = document.getElementById('reg-nick').value.trim();
