@@ -329,3 +329,25 @@ async function saveSns(key) {
   loadSnsBar();
 }
 
+
+function showLegalPage(type) {
+  const modal = document.getElementById('legalModal');
+  const title = document.getElementById('legalTitle');
+  const body  = document.getElementById('legalBody');
+  const pages = {
+    privacy: { title: 'プライバシーポリシー', body: '<h3>プライバシーポリシー</h3><p>COURTSIDEは、ユーザーのプライバシーを尊重し、個人情報の保護に努めます。</p><h4>収集する情報</h4><p>Google Analyticsを使用してアクセス情報を収集しています。</p><h4>Cookieの使用</h4><p>当サイトはCookieを使用しています。</p><h4>Amazonアソシエイト</h4><p>当サイトはAmazonアソシエイト・プログラムの参加者です。</p><h4>お問い合わせ</h4><p>XのDM(@mentalitybrand8)よりお願いします。</p>' },
+    terms: { title: '利用規約', body: '<h3>利用規約</h3><p>当サイトをご利用の際は以下の利用規約に同意したものとみなします。</p><h4>禁止事項</h4><p>・コンテンツの無断転載・複製<br>・他のユーザーへの迷惑行為<br>・法令に違反する行為<br>・誹謗中傷・差別的発言</p><h4>変更</h4><p>利用規約は予告なく変更する場合があります。</p>' },
+    tokusho: { title: '特定商取引法に基づく表記', body: '<h3>特定商取引法に基づく表記</h3><p>当サイトはアフィリエイト広告を掲載していますが、商品の販売は行っておりません。</p><h4>運営者</h4><p>COURTSIDE運営者</p><h4>所在地</h4><p>お問い合わせいただいた場合に開示します</p><h4>お問い合わせ</h4><p>X: @mentalitybrand8</p><h4>アフィリエイト</h4><p>当サイトはAmazonアソシエイト・プログラムに参加しています。</p>' },
+    disclaimer: { title: '免責事項', body: '<h3>免責事項</h3><p>当サイトの情報は可能な限り正確を期していますが、正確性・完全性を保証するものではありません。</p><h4>情報の正確性</h4><p>選手情報・スタッツ・試合結果などは公式情報をもとにしていますが、誤りが含まれる場合があります。</p><h4>損害について</h4><p>当サイトの利用により生じた損害について、一切の責任を負いません。</p>' },
+    contact: { title: 'お問い合わせ', body: '<h3>お問い合わせ</h3><p>X（旧Twitter）のDMよりお願いします。</p><p><a href="https://twitter.com/mentalitybrand8" target="_blank" style="color:#C9082A;">@mentalitybrand8</a></p><p>※返信までにお時間をいただく場合があります。</p>' }
+  };
+  const page = pages[type];
+  if (!page) return;
+  title.textContent = page.title;
+  body.innerHTML = page.body;
+  modal.style.display = 'block';
+}
+
+function closeLegalPage() {
+  document.getElementById('legalModal').style.display = 'none';
+}

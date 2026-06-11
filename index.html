@@ -876,5 +876,34 @@ window.addEventListener('load', function() {
 <script src="js/search.js"></script>
 <script src="js/chat.js"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<!-- フッター -->
+<div id="siteFooter" style="background:#0a1628;border-top:1px solid rgba(255,255,255,.1);padding:2rem 1rem;margin-top:2rem;">
+  <div style="max-width:600px;margin:0 auto;text-align:center;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;color:#C9082A;letter-spacing:2px;margin-bottom:.5rem;">COURTSIDE</div>
+    <div style="font-size:.65rem;color:rgba(255,255,255,.4);margin-bottom:1.5rem;">スキマ時間で読めるNBA専門メディア</div>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
+      <span onclick="showLegalPage('privacy')" style="font-size:.65rem;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;">プライバシーポリシー</span>
+      <span onclick="showLegalPage('terms')" style="font-size:.65rem;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;">利用規約</span>
+      <span onclick="showLegalPage('tokusho')" style="font-size:.65rem;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;">特定商取引法に基づく表記</span>
+      <span onclick="showLegalPage('disclaimer')" style="font-size:.65rem;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;">免責事項</span>
+      <span onclick="showLegalPage('contact')" style="font-size:.65rem;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;">お問い合わせ</span>
+    </div>
+    <div style="font-size:.6rem;color:rgba(255,255,255,.3);">© 2026 COURTSIDE All Rights Reserved.</div>
+    <div style="font-size:.55rem;color:rgba(255,255,255,.25);margin-top:.3rem;">当サイトはAmazonアソシエイト・プログラムの参加者です。</div>
+  </div>
+</div>
+
+<!-- 法的ページモーダル -->
+<div id="legalModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;overflow-y:auto;">
+  <div style="background:#fff;max-width:600px;margin:2rem auto;border-radius:12px;overflow:hidden;">
+    <div style="background:#0a1628;padding:1rem;display:flex;align-items:center;justify-content:space-between;">
+      <span id="legalTitle" style="color:#fff;font-weight:700;font-size:.9rem;"></span>
+      <span onclick="closeLegalPage()" style="color:#fff;cursor:pointer;font-size:1.2rem;">×</span>
+    </div>
+    <div id="legalBody" style="padding:1.5rem;font-size:.75rem;line-height:1.8;color:#333;"></div>
+  </div>
+</div>
+
 </body>
 </html>
