@@ -17,6 +17,7 @@
 // 使い方：goPage('schedule', btn) でそのページに移動
 // ============================================================
 function goPage(id, btn) {
+  localStorage.setItem('lastPage', id);
   // URLハッシュにタブを保存
   history.replaceState(null, '', '#' + id);
   // 全ページを非表示

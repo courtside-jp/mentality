@@ -905,5 +905,16 @@ window.addEventListener('load', function() {
   </div>
 </div>
 
+<script>
+(function() {
+  var last = localStorage.getItem('lastPage');
+  if (last && last !== 'schedule') {
+    setTimeout(function() {
+      var btn = document.getElementById('sn-' + last);
+      goPage(last, btn);
+    }, 100);
+  }
+})();
+</script>
 </body>
 </html>
