@@ -85,9 +85,8 @@ function insertTextLink() {
   } else if (url.includes('twitter.com') || url.includes('x.com')) {
     insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
-    const text = prompt('リンクテキストを入力:', url);
-    if (!text) return;
-    insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+    showLinkModal(url, ta, start, end);
+    return;
   }
   ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
   ta.selectionStart = ta.selectionEnd = start + insert.length;
@@ -186,9 +185,8 @@ function insertTextLink() {
   } else if (url.includes('twitter.com') || url.includes('x.com')) {
     insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
-    const text = prompt('リンクテキストを入力:', url);
-    if (!text) return;
-    insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text}</a>`;
+    showLinkModal(url, ta, start, end);
+    return;
   }
   ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
   ta.selectionStart = ta.selectionEnd = start + insert.length;
@@ -1040,4 +1038,35 @@ function updateBodyPreview() {
   const preview = document.getElementById('adminBodyPreview');
   if (!preview) return;
   preview.innerHTML = ta.value || '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+}
+
+// ============================================================
+// リンク挿入モーダル
+// ============================================================
+let _linkModalTA = null, _linkModalStart = 0, _linkModalEnd = 0;
+
+function showLinkModal(url, ta, start, end) {
+  _linkModalTA = ta;
+  _linkModalStart = start;
+  _linkModalEnd = end;
+  const modal = document.getElementById('linkInsertModal');
+  document.getElementById('linkModalUrl').value = url || '';
+  document.getElementById('linkModalText').value = '';
+  modal.style.display = 'flex';
+}
+
+function closeLinkModal() {
+  document.getElementById('linkInsertModal').style.display = 'none';
+}
+
+function confirmLinkInsert() {
+  const url = document.getElementById('linkModalUrl').value.trim();
+  const text = document.getElementById('linkModalText').value.trim();
+  if (!url) return;
+  const insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text || url}</a>`;
+  const ta = _linkModalTA;
+  ta.value = ta.value.substring(0, _linkModalStart) + insert + ta.value.substring(_linkModalEnd);
+  ta.selectionStart = ta.selectionEnd = _linkModalStart + insert.length;
+  ta.focus();
+  closeLinkModal();
 }
