@@ -937,3 +937,69 @@ async function downloadOgpImage(btn) {
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
+
+// ============================================================
+// ツールバー挿入関数
+// ============================================================
+function insertBodyTag(type) {
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  let insert = '';
+
+  switch(type) {
+    case 'bold':
+      insert = `<strong>${selected || 'テキスト'}</strong>`;
+      break;
+    case 'h2':
+      insert = `\n<h2 style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</h2>\n`;
+      break;
+    case 'h3':
+      insert = `\n<h3 style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</h3>\n`;
+      break;
+    case 'hr':
+      insert = `\n<hr style="border:none;border-top:1px solid #eee;margin:1rem 0;">\n`;
+      break;
+    case 'quote':
+      insert = `\n<blockquote style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</blockquote>\n`;
+      break;
+  }
+
+  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+}
+
+// ============================================================
+// ツールバー挿入関数
+// ============================================================
+function insertBodyTag(type) {
+  const ta = document.getElementById('adminBody');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  let insert = '';
+
+  switch(type) {
+    case 'bold':
+      insert = `<strong>${selected || 'テキスト'}</strong>`;
+      break;
+    case 'h2':
+      insert = `\n<h2 style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</h2>\n`;
+      break;
+    case 'h3':
+      insert = `\n<h3 style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</h3>\n`;
+      break;
+    case 'hr':
+      insert = `\n<hr style="border:none;border-top:1px solid #eee;margin:1rem 0;">\n`;
+      break;
+    case 'quote':
+      insert = `\n<blockquote style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</blockquote>\n`;
+      break;
+  }
+
+  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+}
