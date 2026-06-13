@@ -840,7 +840,6 @@ async function loadAdminArticles() {
           <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
           <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? '公開に戻す' : 'アーカイブ'}</button>
           <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
-          <button onclick="downloadOgpImage(this)" data-id="${id}" data-img="${a.img||''}" data-title="${(a.title||'').replace(/"/g,'&quot;')}" style="flex:1;padding:6px;background:rgba(0,0,0,0.05);border:1px solid #ddd;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">🐦 X用画像</button>
         </div>
       </div>
     `).join('');
