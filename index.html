@@ -345,7 +345,12 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
                 <button type="button" onclick="insertBodyTag('hr')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">― 仕切り</button>
                 <button type="button" onclick="insertBodyTag('quote')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">" 引用</button>
               </div>
-              <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:none;font-size:12px;outline:none;height:300px;resize:vertical;box-sizing:border-box;"></textarea>
+              <div style="display:flex;border-bottom:1px solid #eee;background:#f9f9f9;">
+                <button onclick="switchBodyTab('edit')" id="bodyTabEdit" style="padding:6px 16px;border:none;background:#C9082A;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+                <button onclick="switchBodyTab('preview')" id="bodyTabPreview" style="padding:6px 16px;border:none;background:transparent;color:#999;font-size:11px;font-weight:700;cursor:pointer;">プレビュー</button>
+              </div>
+              <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:none;font-size:12px;outline:none;height:300px;resize:vertical;box-sizing:border-box;" oninput="updateBodyPreview()"></textarea>
+              <div id="adminBodyPreview" style="display:none;padding:10px 12px;min-height:300px;font-size:13px;line-height:1.8;color:#333;"></div>
             </div>
           </div>
           <div style="display:flex;gap:8px;">

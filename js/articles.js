@@ -1003,3 +1003,37 @@ function insertBodyTag(type) {
   ta.selectionStart = ta.selectionEnd = start + insert.length;
   ta.focus();
 }
+
+// ============================================================
+// 本文タブ切り替え
+// ============================================================
+function switchBodyTab(tab) {
+  const ta = document.getElementById('adminBody');
+  const preview = document.getElementById('adminBodyPreview');
+  const editBtn = document.getElementById('bodyTabEdit');
+  const previewBtn = document.getElementById('bodyTabPreview');
+
+  if (tab === 'edit') {
+    ta.style.display = '';
+    preview.style.display = 'none';
+    editBtn.style.background = '#C9082A';
+    editBtn.style.color = '#fff';
+    previewBtn.style.background = 'transparent';
+    previewBtn.style.color = '#999';
+  } else {
+    updateBodyPreview();
+    ta.style.display = 'none';
+    preview.style.display = '';
+    previewBtn.style.background = '#C9082A';
+    previewBtn.style.color = '#fff';
+    editBtn.style.background = 'transparent';
+    editBtn.style.color = '#999';
+  }
+}
+
+function updateBodyPreview() {
+  const ta = document.getElementById('adminBody');
+  const preview = document.getElementById('adminBodyPreview');
+  if (!preview) return;
+  preview.innerHTML = ta.value || '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+}
