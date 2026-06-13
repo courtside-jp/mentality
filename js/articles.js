@@ -351,13 +351,19 @@ async function openArticle(id) {
       '<span style="font-size:.58rem;color:var(--tx3);">' + new Date(a.ts).toLocaleDateString('ja-JP') + '</span>' +
       '</div>' +
       '<div style="font-size:1rem;font-weight:700;color:var(--tx);line-height:1.5;margin-bottom:.8rem;">' + a.title + '</div>' +
-      '<div style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + renderBody(a.body) + '</div>' +
+      '<div id="articleBodyDiv" style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + renderBody(a.body) + '</div>' +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
       '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/?article=' + id) + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
       '</div>';
   } catch(e) {
     body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
   }
+  // X埋め込みを再レンダリング
+  setTimeout(function() {
+    if (typeof twttr !== 'undefined' && twttr.widgets) {
+      twttr.widgets.load(document.getElementById('articleBodyDiv'));
+    }
+  }, 500);
 }
 
 function closeArticleModal() {
@@ -496,6 +502,10 @@ function updatePreview() {
   const body = document.getElementById('adminBody').value;
   const preview = document.getElementById('adminPreview');
   if (preview) preview.innerHTML = renderBody(body);
+  // X埋め込みを再レンダリング
+  if (typeof twttr !== 'undefined' && twttr.widgets) {
+    twttr.widgets.load();
+  }
 }
 
 // ============================================================
