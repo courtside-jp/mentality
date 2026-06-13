@@ -82,6 +82,8 @@ function insertTextLink() {
   let insert;
   if (isImage) {
     insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+  } else if (url.includes('twitter.com') || url.includes('x.com')) {
+    insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
     const text = prompt('リンクテキストを入力:', url);
     if (!text) return;
@@ -181,6 +183,8 @@ function insertTextLink() {
   let insert;
   if (isImage) {
     insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+  } else if (url.includes('twitter.com') || url.includes('x.com')) {
+    insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
     const text = prompt('リンクテキストを入力:', url);
     if (!text) return;
