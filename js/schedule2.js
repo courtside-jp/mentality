@@ -369,29 +369,37 @@ function buildDetail(g) {
   const isF = g.status === 'final';
   const isP = g.status === 'pre';
   const hl  = g.home.score > g.away.score;
-  const m   = g.timeLeft ? Math.floor(g.timeLeft / 60) : 0;
-  const s   = g.timeLeft ? String(g.timeLeft % 60).padStart(2, '0') : '00';
-  const upd = ntime(); // utils.js
-  const clockRaw = g.clock || (m + ':' + s);
-  const clockDisp = (clockRaw === '0:00') ? '' : clockRaw;
 
-  // クォータースコア行
-  const ql = ['Q1','Q2','Q3','Q4'];
-  let qH = ql.map((l, i) => {
-    const cur = isL && i === g.qh.length - 1;
-    const hv  = g.qh[i] !== undefined ? g.qh[i] : '-';
-    const av  = g.qa[i] !== undefined ? g.qa[i] : '-';
-    return `<div class="qi"><div class="qi-l">${l}</div><div class="qi-h${cur ? ' cur' : ''}">${hv}</div><div class="qi-a">${av}</div></div>`;
-  }).join('');
-  qH += `<div class="qi"><div class="qi-l">TOT</div><div class="qi-h" style="color:${hl ? 'var(--or)' : '#fff'}">${isP ? '—' : g.home.score}</div><div class="qi-a">${isP ? '—' : g.away.score}</div></div>`;
+  // クォータースコア表
+  const quarterTableHTML = `<div class="ls-wrap">
+      <div class="ls-row ls-head-row">
+        <div class="ls-name-cell"></div>
+        <div class="ls-q-cell">Q1</div>
+        <div class="ls-q-cell">Q2</div>
+        <div class="ls-q-cell">Q3</div>
+        <div class="ls-q-cell">Q4</div>
+        <div class="ls-q-cell ls-tot-cell">TOT</div>
+      </div>
+      <div class="ls-row">
+        <div class="ls-name-cell">${g.home.abbr}</div>
+        ${g.qh.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qh.length-1?' ls-cur':''}">${v}</div>`).join('')}
+        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qh.length))}
+        <div class="ls-q-cell ls-tot-cell" style="color:${hl?'#C9082A':'#000'}">${isP?'—':g.home.score}</div>
+      </div>
+      <div class="ls-row">
+        <div class="ls-name-cell">${g.away.abbr}</div>
+        ${g.qa.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qa.length-1?' ls-cur':''}">${v}</div>`).join('')}
+        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qa.length))}
+        <div class="ls-q-cell ls-tot-cell" style="color:${!hl&&!isP?'#C9082A':'#000'}">${isP?'—':g.away.score}</div>
+      </div>
+    </div>`;
 
-  const sBadge = isL
-    ? `<div class="sbd-badge-live">● LIVE</div><div class="sbd-q">${g.q} ${clockDisp}</div>`
-    : isF
-    ? `<div class="sbd-badge-fin">✓ FINAL</div>`
-    : `<div class="sbd-badge-pre">▸ ${g.startTime}〜</div>`;
+  // チーム比較バー（ESPNデータ取得後にloadESPNPlayerStatsが置き換える）
+  const cmpHTML = isP
+    ? `<div class="no-stats cmp-area">試合開始後にチーム比較が表示されます</div>`
+    : `<div class="no-stats cmp-area">📊 比較データ取得中...</div>`;
 
-  // 選手カード
+  // 選手カード（ESPN以外のデモデータ用フォールバック表示）
   const rPl = (pl) => pl.map(p => {
     const oc  = p.on && isL;
     const cls = `pcrd${p.hot ? ' hot' : oc ? ' on-c' : !p.on && isL ? ' bench' : ''}`;
@@ -426,41 +434,159 @@ function buildDetail(g) {
     ? `<div class="no-stats">試合開始後にスタッツが表示されます</div>`
     : `<div class="no-stats">📊 スタッツ取得中...</div>`;
 
-  const notifyHTML = "";
-
-  // Lv5 リアルタイム実況チャット（試合前・試合中のみ）
-  const chatHTML = '';
-
-  // Lv2 試合前勝敗投票UI
-  const voteHTML = '';
-
-  return `<div class="ls-wrap">
-      <div class="ls-row ls-head-row">
-        <div class="ls-name-cell"></div>
-        <div class="ls-q-cell">Q1</div>
-        <div class="ls-q-cell">Q2</div>
-        <div class="ls-q-cell">Q3</div>
-        <div class="ls-q-cell">Q4</div>
-        <div class="ls-q-cell ls-tot-cell">TOT</div>
-      </div>
-      <div class="ls-row">
-        <div class="ls-name-cell">${g.home.abbr}</div>
-        ${g.qh.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qh.length-1?' ls-cur':''}">${v}</div>`).join('')}
-        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qh.length))}
-        <div class="ls-q-cell ls-tot-cell" style="color:${hl?'#C9082A':'#000'}">${isP?'—':g.home.score}</div>
-      </div>
-      <div class="ls-row">
-        <div class="ls-name-cell">${g.away.abbr}</div>
-        ${g.qa.map((v,i)=>`<div class="ls-q-cell${isL&&i===g.qa.length-1?' ls-cur':''}">${v}</div>`).join('')}
-        ${'<div class="ls-q-cell">-</div>'.repeat(Math.max(0,4-g.qa.length))}
-        <div class="ls-q-cell ls-tot-cell" style="color:${!hl&&!isP?'#C9082A':'#000'}">${isP?'—':g.away.score}</div>
-      </div>
+  return `
+    <div style="display:flex;background:var(--card);border-bottom:1px solid var(--bd);">
+      <div id="dtab-matchup-${g.id}" onclick="showDetailTab('${g.id}','matchup')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">対戦</div>
+      <div id="dtab-box-${g.id}" onclick="showDetailTab('${g.id}','box')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--tx3);border-bottom:2px solid transparent;cursor:pointer;">ボックススコア</div>
     </div>
-  </div>
-  ${notifyHTML}
-  ${voteHTML}
-  ${chatHTML}
-  ${statsHTML}`;
+    <div id="dc-matchup-${g.id}">
+      ${quarterTableHTML}
+      ${cmpHTML}
+    </div>
+    <div id="dc-box-${g.id}" style="display:none;">
+      ${statsHTML}
+    </div>`;
+}
+
+// ============================================================
+// 対戦／ボックススコア タブ切り替え
+// ============================================================
+function showDetailTab(id, tab) {
+  const mEl  = document.getElementById('dc-matchup-' + id);
+  const bEl  = document.getElementById('dc-box-' + id);
+  const mTab = document.getElementById('dtab-matchup-' + id);
+  const bTab = document.getElementById('dtab-box-' + id);
+  if (mEl) mEl.style.display = tab === 'matchup' ? 'block' : 'none';
+  if (bEl) bEl.style.display = tab === 'box' ? 'block' : 'none';
+  if (mTab) { mTab.style.color = tab === 'matchup' ? '#C9082A' : 'var(--tx3)'; mTab.style.borderBottomColor = tab === 'matchup' ? '#C9082A' : 'transparent'; }
+  if (bTab) { bTab.style.color = tab === 'box' ? '#C9082A' : 'var(--tx3)'; bTab.style.borderBottomColor = tab === 'box' ? '#C9082A' : 'transparent'; }
+}
+
+// ============================================================
+// チーム比較バー（FG%・3P%・FT%・リバウンドなど）
+// ============================================================
+function statVal(arr, name) {
+  const s = (arr || []).find(x => x.name === name);
+  return s ? s.displayValue : null;
+}
+function pctFromMadeAtt(str) {
+  if (!str || str.indexOf('-') === -1) return null;
+  const parts = str.split('-').map(Number);
+  const made = parts[0], att = parts[1];
+  if (!att) return 0;
+  return (made / att * 100);
+}
+function buildComparisonPanel(hArr, aArr, hAbbr, aAbbr) {
+  const metrics = [
+    { key:'fieldGoalsMade-fieldGoalsAttempted', label:'フィールドゴール', type:'pct' },
+    { key:'threePointFieldGoalsMade-threePointFieldGoalsAttempted', label:'3ポイント', type:'pct' },
+    { key:'freeThrowsMade-freeThrowsAttempted', label:'フリースロー', type:'pct' },
+    { key:'totalRebounds', label:'総リバウンド数', type:'num' },
+    { key:'offensiveRebounds', label:'オフェンスリバウンド', type:'num' },
+  ];
+  const rows = metrics.map(m => {
+    let hNum, aNum, hDisp, aDisp;
+    if (m.type === 'pct') {
+      hNum = pctFromMadeAtt(statVal(hArr, m.key));
+      aNum = pctFromMadeAtt(statVal(aArr, m.key));
+      if (hNum === null || aNum === null) return '';
+      hDisp = hNum.toFixed(1) + '%';
+      aDisp = aNum.toFixed(1) + '%';
+    } else {
+      hNum = parseFloat(statVal(hArr, m.key)) || 0;
+      aNum = parseFloat(statVal(aArr, m.key)) || 0;
+      hDisp = String(hNum);
+      aDisp = String(aNum);
+    }
+    const total = hNum + aNum;
+    const lp = total > 0 ? (hNum / total * 100) : 50;
+    return `
+      <div style="padding:.55rem .9rem .1rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;">
+        <span style="font-size:.8rem;font-weight:800;color:var(--tx);min-width:44px;">${hDisp}</span>
+        <span style="font-size:.66rem;color:var(--tx3);font-weight:700;flex:1;text-align:center;">${m.label}</span>
+        <span style="font-size:.8rem;font-weight:800;color:var(--tx);min-width:44px;text-align:right;">${aDisp}</span>
+      </div>
+      <div style="padding:0 .9rem .6rem;">
+        <div style="display:flex;height:5px;border-radius:3px;overflow:hidden;background:var(--bg3);">
+          <div style="width:${lp}%;background:#C9082A;"></div>
+          <div style="width:${100 - lp}%;background:#1d4ed8;"></div>
+        </div>
+      </div>`;
+  }).join('');
+  if (!rows) return `<div class="no-stats cmp-area">比較データを取得できませんでした</div>`;
+  return `<div class="cmp-area" style="margin:0 14px 14px;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;">
+    <div style="padding:.6rem .9rem;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--tx);text-align:center;border-bottom:1px solid var(--bd);">⚖️ チーム比較</div>
+    ${rows}
+  </div>`;
+}
+
+// ============================================================
+// ボックススコア表（チーム切り替えタブ付き）
+// ============================================================
+function photoHTML(p) {
+  return p.photoUrl
+    ? `<img src="${p.photoUrl}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg3);" onerror="this.style.display='none'">`
+    : `<div style="width:30px;height:30px;border-radius:50%;background:var(--bg3);flex-shrink:0;"></div>`;
+}
+function playerRowHTML(p) {
+  if (p.didNotPlay || p._sec === 0) {
+    return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-bottom:1px solid var(--bd);opacity:.4;">
+      ${photoHTML(p)}
+      <div style="flex:1;min-width:0;font-size:.74rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.lastName}</div>
+      <div style="font-size:.62rem;color:var(--tx3);">DNP</div>
+    </div>`;
+  }
+  return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-bottom:1px solid var(--bd);">
+    ${photoHTML(p)}
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:.5rem;color:var(--tx3);font-weight:700;">${p.jerseyNum ? '#' + p.jerseyNum + ' ' : ''}${p.pos}</div>
+      <div style="font-size:.76rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.lastName}</div>
+    </div>
+    <div style="width:34px;text-align:center;font-size:.66rem;color:var(--tx2);">${p.min}</div>
+    <div style="width:30px;text-align:center;font-size:.82rem;font-weight:800;color:${p.pts >= 20 ? '#C9082A' : 'var(--tx)'};">${p.pts}</div>
+    <div style="width:30px;text-align:center;font-size:.78rem;font-weight:700;color:var(--tx);">${p.reb}</div>
+    <div style="width:30px;text-align:center;font-size:.78rem;font-weight:700;color:var(--tx);">${p.ast}</div>
+  </div>`;
+}
+function buildTeamTable(players) {
+  const starters = players.filter(p => !p.didNotPlay && p._sec > 0 && p.starter);
+  const bench    = players.filter(p => !p.didNotPlay && p._sec > 0 && !p.starter);
+  const dnp      = players.filter(p => p.didNotPlay || p._sec === 0);
+  const secHdr = (label) => `<div style="padding:.3rem .6rem;font-size:.6rem;font-weight:700;color:var(--tx3);background:var(--bg3);border-bottom:1px solid var(--bd);">${label}</div>`;
+  const headHTML = `<div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .6rem;border-bottom:1px solid var(--bd);">
+    <div style="width:30px;"></div>
+    <div style="flex:1;font-size:.58rem;font-weight:700;color:var(--tx3);">PLAYER</div>
+    <div style="width:34px;text-align:center;font-size:.58rem;font-weight:700;color:var(--tx3);">MIN</div>
+    <div style="width:30px;text-align:center;font-size:.58rem;font-weight:700;color:var(--tx3);">PTS</div>
+    <div style="width:30px;text-align:center;font-size:.58rem;font-weight:700;color:var(--tx3);">REB</div>
+    <div style="width:30px;text-align:center;font-size:.58rem;font-weight:700;color:var(--tx3);">AST</div>
+  </div>`;
+  return `<div style="border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--card);">
+    ${headHTML}
+    ${starters.length ? secHdr('STARTERS') + starters.map(playerRowHTML).join('') : ''}
+    ${bench.length ? secHdr('BENCH') + bench.map(playerRowHTML).join('') : ''}
+    ${dnp.length ? secHdr('DNP') + dnp.map(playerRowHTML).join('') : ''}
+  </div>`;
+}
+function buildBoxArea(g, homePlayers, awayPlayers) {
+  return `<div class="stats-area" style="margin:0 14px 14px;">
+    <div style="display:flex;background:var(--bg3);border-radius:100px;padding:3px;margin-bottom:.6rem;">
+      <div id="bxtab-home-${g.id}" onclick="showBoxTeam('${g.id}','home')" style="flex:1;text-align:center;padding:.45rem 0;border-radius:100px;font-size:.78rem;font-weight:700;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.12);color:var(--tx);">${g.home.abbr}</div>
+      <div id="bxtab-away-${g.id}" onclick="showBoxTeam('${g.id}','away')" style="flex:1;text-align:center;padding:.45rem 0;border-radius:100px;font-size:.78rem;font-weight:700;color:var(--tx3);">${g.away.abbr}</div>
+    </div>
+    <div id="bx-home-${g.id}">${buildTeamTable(homePlayers)}</div>
+    <div id="bx-away-${g.id}" style="display:none;">${buildTeamTable(awayPlayers)}</div>
+  </div>`;
+}
+function showBoxTeam(id, side) {
+  const hWrap = document.getElementById('bx-home-' + id);
+  const aWrap = document.getElementById('bx-away-' + id);
+  const hTab  = document.getElementById('bxtab-home-' + id);
+  const aTab  = document.getElementById('bxtab-away-' + id);
+  if (hWrap) hWrap.style.display = side === 'home' ? 'block' : 'none';
+  if (aWrap) aWrap.style.display = side === 'away' ? 'block' : 'none';
+  if (hTab) { hTab.style.background = side === 'home' ? 'var(--card)' : 'transparent'; hTab.style.boxShadow = side === 'home' ? '0 1px 3px rgba(0,0,0,.12)' : 'none'; hTab.style.color = side === 'home' ? 'var(--tx)' : 'var(--tx3)'; }
+  if (aTab) { aTab.style.background = side === 'away' ? 'var(--card)' : 'transparent'; aTab.style.boxShadow = side === 'away' ? '0 1px 3px rgba(0,0,0,.12)' : 'none'; aTab.style.color = side === 'away' ? 'var(--tx)' : 'var(--tx3)'; }
 }
 
 // ============================================================
@@ -530,72 +656,20 @@ async function loadESPNPlayerStats(g, espnId, panel) {
     const homePlayers = parsePlayers(homeData);
     const awayPlayers = parsePlayers(awayData);
 
-    const renderRow = (p) => {
-      const photo = p.photoUrl
-        ? `<img src="${p.photoUrl}" style="width:32px;height:24px;object-fit:cover;border-radius:3px;flex-shrink:0;" onerror="this.style.display='none'">`
-        : `<div style="width:32px;height:24px;border-radius:3px;background:rgba(0,0,0,.06);flex-shrink:0;"></div>`;
-      if (p.didNotPlay || p._sec === 0) {
-        return `<div style="display:flex;align-items:center;gap:.35rem;padding:.38rem .55rem;border-bottom:1px solid var(--bd);opacity:.38;">
-          ${photo}
-          <div style="flex:1;"><div style="font-size:.65rem;font-weight:600;color:var(--tx);">${p.lastName}</div><div style="font-size:.5rem;color:var(--tx3);">DNP</div></div>
-        </div>`;
-      }
-      const cols = [
-        {v:p.min, s:'color:var(--tx2);font-size:.62rem;'},
-        {v:p.pts, s:p.pts>=20?'color:var(--or);font-weight:800;':'font-weight:700;'},
-        {v:p.fg,  s:'font-size:.6rem;'}, {v:p.fg3, s:'font-size:.6rem;'}, {v:p.ft, s:'font-size:.6rem;'},
-        {v:p.reb, s:p.reb>=10?'color:#a78bfa;font-weight:800;':'font-weight:700;'},
-        {v:p.ast, s:p.ast>=10?'color:#60a5fa;font-weight:800;':'font-weight:700;'},
-        {v:p.stl, s:p.stl>=5?'color:#34d399;font-weight:800;':'font-weight:700;'},
-        {v:p.blk, s:p.blk>=5?'color:#34d399;font-weight:800;':'font-weight:700;'},
-        {v:p.to,  s:p.to>=4?'color:var(--rd);':''},
-        {v:p.pf,  s:p.pf>=5?'color:var(--rd);':''},
-        {v:p.pm,  s:p.pm.startsWith('+')?'color:var(--gr);':p.pm.startsWith('-')?'color:var(--rd);':'color:var(--tx3);'},
-      ];
-      const labels = ['分','点','FG','3P','FT','RB','AS','ST','BL','TO','PF','±'];
-      return `<div style="border-bottom:1px solid var(--bd);">
-        <div style="display:flex;align-items:center;gap:.35rem;padding:.35rem .45rem .1rem;">
-          ${photo}
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:.65rem;font-weight:600;color:var(--tx);">${p.jerseyNum?'<span style="color:var(--tx3);font-size:.5rem;">'+p.jerseyNum+' </span>':''}${p.lastName}</div>
-            <div style="font-size:.48rem;color:var(--tx3);">${p.pos}</div>
-          </div>
-        </div>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:.05rem .45rem .35rem;">
-          <div style="display:inline-flex;min-width:max-content;border:1px solid var(--bd);border-radius:4px;overflow:hidden;">
-            ${cols.map((col,i) => `<div style="text-align:center;min-width:34px;padding:.2rem .05rem;${i>0?'border-left:1px solid var(--bd);':''}">
-              <div style="font-size:.68rem;${col.s}">${col.v !== undefined && col.v !== '' ? col.v : '-'}</div>
-              <div style="font-size:.36rem;color:var(--tx3);font-family:'Barlow Condensed',sans-serif;">${labels[i]}</div>
-            </div>`).join('')}
-          </div>
-        </div>
-      </div>`;
-    };
-
-    const buildTable = (players, abbr, isHome) => {
-      const starters = players.filter(p => !p.didNotPlay && p._sec > 0 && p.starter);
-      const bench    = players.filter(p => !p.didNotPlay && p._sec > 0 && !p.starter);
-      const dnp      = players.filter(p => p.didNotPlay || p._sec === 0);
-      const cdnId    = TEAM_CDN_IDS[abbr] || '';
-      const logo     = cdnId ? `<img src="${NBA_CDN_LOGO(cdnId)}" style="width:20px;height:20px;object-fit:contain;margin-right:.3rem;" onerror="this.style.display='none'">` : '';
-      const secHdr   = (label) => `<div style="padding:.25rem .55rem;font-size:.58rem;font-weight:700;color:var(--tx3);background:var(--bg3);border-bottom:1px solid var(--bd);">▸ ${label}</div>`;
-      return `<div style="border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:.6rem;">
-        <div class="col-hdr ${isHome ? 'col-h' : 'col-a'}" style="border-radius:0;display:flex;align-items:center;justify-content:center;">${logo}${abbr}</div>
-        ${starters.length ? secHdr('スターター') + starters.map(renderRow).join('') : ''}
-        ${bench.length    ? secHdr('ベンチ')     + bench.map(renderRow).join('')    : ''}
-        ${dnp.length      ? secHdr('DNP')        + dnp.map(renderRow).join('')      : ''}
-      </div>`;
-    };
-
-    const newHTML = `<div class="stats-area">
-      <div class="area-label">選手スタッツ</div>
-      ${buildTable(homePlayers, g.home.abbr, true)}
-      ${buildTable(awayPlayers, g.away.abbr, false)}
-    </div>`;
-
+    // ボックススコア（チーム切り替えタブ付きの新デザイン）
+    const newHTML = buildBoxArea(g, homePlayers, awayPlayers);
     const statsArea = panel.querySelector('.stats-area, .no-stats');
     if (statsArea) statsArea.outerHTML = newHTML;
     console.log('✅ 選手スタッツ取得成功');
+
+    // チーム比較バー（FG%・3P%・FT%・リバウンド）
+    const teams = data.boxscore?.teams || [];
+    const hTeam = teams.find(t => t.homeAway === 'home');
+    const aTeam = teams.find(t => t.homeAway === 'away');
+    const cmpArea = panel.querySelector('.cmp-area');
+    if (cmpArea && hTeam?.statistics && aTeam?.statistics) {
+      cmpArea.outerHTML = buildComparisonPanel(hTeam.statistics, aTeam.statistics, g.home.abbr, g.away.abbr);
+    }
 
   } catch(e) {
     console.warn('スタッツ取得失敗:', e.message);
@@ -640,10 +714,6 @@ async function loadESPNScoreboard() {
 
     if (!events.length) {
       if (wrap) wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">本日の試合はありません<br><span style="font-size:.7rem;">次の試合をお待ちください</span></div>';
-      const dateEl0 = document.getElementById('dbDate');
-      if (dateEl0) dateEl0.innerHTML = toJPDateLabel(jp);
-      const subEl0 = document.getElementById('dbSub');
-      if (subEl0) subEl0.innerHTML = 'TODAY<span class="db-today">今日</span>';
       return;
     }
 
