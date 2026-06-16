@@ -640,6 +640,10 @@ async function loadESPNScoreboard() {
 
     if (!events.length) {
       if (wrap) wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">本日の試合はありません<br><span style="font-size:.7rem;">次の試合をお待ちください</span></div>';
+      const dateEl0 = document.getElementById('dbDate');
+      if (dateEl0) dateEl0.innerHTML = toJPDateLabel(jp);
+      const subEl0 = document.getElementById('dbSub');
+      if (subEl0) subEl0.innerHTML = 'TODAY<span class="db-today">今日</span>';
       return;
     }
 

@@ -85,7 +85,7 @@ function goPage(id, btn) {
   const jp   = getJPDate(); // utils.js の関数
   const dateEl = document.getElementById('dbDate');
   const subEl  = document.getElementById('dbSub');
-  if (dateEl) dateEl.textContent = toJPDateLabel(jp); // utils.js の関数
+  if (dateEl) dateEl.innerHTML = toJPDateLabel(jp); // utils.js の関数
   if (subEl)  subEl.innerHTML = 'TODAY<span class="db-today">今日</span>';
 })();
 
