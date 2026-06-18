@@ -84,39 +84,56 @@ data['roster'] = roster
 
 # 全選手スタッツ：このスクリプトが直前で取得したNBA公式のリーグリーダーデータ
 # (pts/fg/fg3/stl/blk/min/to)から選手名で引けるマップを作る。
-# 旧バージョンは外部の無料API(nbaapi.com)に毎回問い合わせていたが、
-# このAPIは今シーズンのデータをまだ持っておらず、得点・リバウンド・アシストの
-# 3項目しか取れていなかった。このAPIへの依存はもう無い。
-#
-# 重要: このスクリプトは6時間ごとに動き、毎回all_playersを作り直す。
-# scripts/update_stats.py(深夜のジョブ)が追加したスティール・ブロック・FG%・3P%・
-# 出場試合・出場時間は、ここで作り直さないと数時間後に消えてしまう
-# (実際に発生していた不具合)。ここで最初から全項目を埋めることで解決する。
 def build_name_to_stats(data):
-    sources = ['pts', 'fg', 'fg3', 'stl', 'blk', 'min', 'to']
+    # 注意: fg/fg3 はPerMode=Totals(合計値)で取得している。
+    # pts/stl/blk/min/to はPerMode=PerGame(1試合平均)。同じ列名でも単位が違うので、
+    # fg/fg3を使うときは試合数(GP)で割って平均に変換する。これを忘れると、
+    # 1試合平均ランキングに載っていない選手(出場が少ない/負傷中など)が
+    # 合計値のまま表示される不具合が起きる(例:ギアニスが「993得点」と表示される)。
+    PER_GAME_SOURCES = ['pts', 'stl', 'blk', 'min', 'to']
+    TOTAL_SOURCES = ['fg', 'fg3']
     out = {}
-    for src in sources:
-        rs = data.get(src, {}).get('resultSet', {})
-        headers = rs.get('headers', [])
-        rows = rs.get('rowSet', [])
-        if not headers or not rows or 'PLAYER' not in headers:
-            continue
-        idx = {h: i for i, h in enumerate(headers)}
+
+    def consume(rows, idx, is_total):
         for row in rows:
             key = norm(row[idx['PLAYER']])
             if key in out:
                 continue
+            g = row[idx['GP']] if 'GP' in idx else 0
+            g = g if g else 1
+
+            def val(col):
+                v = row[idx[col]]
+                return round(v / g, 1) if is_total else v
+
             entry = {}
-            if 'PTS' in idx: entry['pts'] = row[idx['PTS']]
-            if 'REB' in idx: entry['reb'] = row[idx['REB']]
-            if 'AST' in idx: entry['ast'] = row[idx['AST']]
-            if 'STL' in idx: entry['stl'] = row[idx['STL']]
-            if 'BLK' in idx: entry['blk'] = row[idx['BLK']]
+            if 'PTS' in idx: entry['pts'] = val('PTS')
+            if 'REB' in idx: entry['reb'] = val('REB')
+            if 'AST' in idx: entry['ast'] = val('AST')
+            if 'STL' in idx: entry['stl'] = val('STL')
+            if 'BLK' in idx: entry['blk'] = val('BLK')
             if 'GP' in idx: entry['gp'] = row[idx['GP']]
-            if 'MIN' in idx: entry['min'] = row[idx['MIN']]
+            if 'MIN' in idx: entry['min'] = val('MIN')
             if 'FG_PCT' in idx: entry['fg'] = round(row[idx['FG_PCT']] * 100, 1)
             if 'FG3_PCT' in idx: entry['fg3'] = round(row[idx['FG3_PCT']] * 100, 1)
             out[key] = entry
+
+    for src in PER_GAME_SOURCES:
+        rs = data.get(src, {}).get('resultSet', {})
+        headers, rows = rs.get('headers', []), rs.get('rowSet', [])
+        if not headers or not rows or 'PLAYER' not in headers:
+            continue
+        idx = {h: i for i, h in enumerate(headers)}
+        consume(rows, idx, is_total=False)
+
+    for src in TOTAL_SOURCES:
+        rs = data.get(src, {}).get('resultSet', {})
+        headers, rows = rs.get('headers', []), rs.get('rowSet', [])
+        if not headers or not rows or 'PLAYER' not in headers:
+            continue
+        idx = {h: i for i, h in enumerate(headers)}
+        consume(rows, idx, is_total=True)
+
     return out
 
 stats_by_name = build_name_to_stats(data)
