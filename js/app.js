@@ -1,10 +1,3 @@
-  if (id === 'items' && typeof loadItems === 'function') {
-    loadItems();
-  }
-  if (id === 'home') {
-    if (typeof loadHomeGames === 'function') loadHomeGames();
-    if (typeof loadHomeFeed === 'function') loadHomeFeed();
-  }
 // app.js — ページ切り替え・オンライン人数・初期化
 // 読み込み順: data.js → utils.js → app.js → 各機能JS
 
@@ -72,14 +65,14 @@ function goPage(id, btn) {
   if (id === 'sneakers' && typeof loadSneakers === 'function') {
     loadSneakers();
   }
-    if (id === 'items' && typeof loadItems === 'function') {
+  if (id === 'items' && typeof loadItems === 'function') {
     loadItems();
   }
   if (id === 'home') {
     if (typeof loadHomeGames === 'function') loadHomeGames();
     if (typeof loadHomeFeed === 'function') loadHomeFeed();
   }
-if (id === 'chat' && typeof goChat === 'function') {
+  if (id === 'chat' && typeof goChat === 'function') {
     var m=document.getElementById('chatMsgs'),b=document.querySelector('.chat-input-bar');
     if(m)m.style.display='';
     if(b)b.style.display='';
