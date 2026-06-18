@@ -7,6 +7,12 @@
 # 新バージョンは、サイトが毎日取得しているNBA公式データ(data.json内の
 # pts/ast/reb/stl/blk/fg/fg3/min/to。fetch-nba-data.ymlが取得)を直接使う。
 # 外部APIへの通信は一切行わないため、安定していて今シーズンの実データになる。
+#
+# 注意: data.json内の fg/fg3 は「合計値」(PerMode=Totals)で取得されている。
+# pts/stl/blk/min/to は「1試合平均」(PerMode=PerGame)。同じ列名でも単位が違うので、
+# fg/fg3を使うときは試合数(GP)で割って平均に変換する。これを忘れると、
+# 1試合平均ランキングに載っていない選手(出場が少ない/負傷中など)が
+# 合計値のまま表示される不具合が起きる(例:ギアニスが「993得点」と表示される)。
 
 import json, unicodedata
 
@@ -19,31 +25,55 @@ def clean_name(s):
 with open("data.json") as f:
     d = json.load(f)
 
-SOURCES = ["pts", "fg", "fg3", "stl", "blk", "min", "to"]
+PER_GAME_SOURCES = ["pts", "stl", "blk", "min", "to"]  # 1試合平均
+TOTAL_SOURCES = ["fg", "fg3"]  # 合計値。GPで割って平均にする
 
-name_to_stats = {}
-for src in SOURCES:
-    rs = d.get(src, {}).get("resultSet", {})
-    headers = rs.get("headers", [])
-    rows = rs.get("rowSet", [])
-    if not headers or not rows or "PLAYER" not in headers:
-        continue
-    idx = {h: i for i, h in enumerate(headers)}
-    for row in rows:
-        key = normalize(row[idx["PLAYER"]])
-        if key in name_to_stats:
+def build_name_to_stats(d):
+    out = {}
+
+    def consume(rows, idx, is_total):
+        for row in rows:
+            key = normalize(row[idx["PLAYER"]])
+            if key in out:
+                continue
+            g = row[idx["GP"]] if "GP" in idx else 0
+            g = g if g else 1
+
+            def val(col):
+                v = row[idx[col]]
+                return round(v / g, 1) if is_total else v
+
+            entry = {}
+            if "PTS" in idx: entry["pts"] = val("PTS")
+            if "REB" in idx: entry["reb"] = val("REB")
+            if "AST" in idx: entry["ast"] = val("AST")
+            if "STL" in idx: entry["stl"] = val("STL")
+            if "BLK" in idx: entry["blk"] = val("BLK")
+            if "GP" in idx: entry["gp"] = row[idx["GP"]]
+            if "MIN" in idx: entry["min"] = val("MIN")
+            if "FG_PCT" in idx: entry["fg"] = round(row[idx["FG_PCT"]] * 100, 1)
+            if "FG3_PCT" in idx: entry["fg3"] = round(row[idx["FG3_PCT"]] * 100, 1)
+            out[key] = entry
+
+    for src in PER_GAME_SOURCES:
+        rs = d.get(src, {}).get("resultSet", {})
+        headers, rows = rs.get("headers", []), rs.get("rowSet", [])
+        if not headers or not rows or "PLAYER" not in headers:
             continue
-        entry = {}
-        if "PTS" in idx: entry["pts"] = row[idx["PTS"]]
-        if "REB" in idx: entry["reb"] = row[idx["REB"]]
-        if "AST" in idx: entry["ast"] = row[idx["AST"]]
-        if "STL" in idx: entry["stl"] = row[idx["STL"]]
-        if "BLK" in idx: entry["blk"] = row[idx["BLK"]]
-        if "GP" in idx: entry["gp"] = row[idx["GP"]]
-        if "MIN" in idx: entry["min"] = row[idx["MIN"]]
-        if "FG_PCT" in idx: entry["fg"] = round(row[idx["FG_PCT"]] * 100, 1)
-        if "FG3_PCT" in idx: entry["fg3"] = round(row[idx["FG3_PCT"]] * 100, 1)
-        name_to_stats[key] = entry
+        idx = {h: i for i, h in enumerate(headers)}
+        consume(rows, idx, is_total=False)
+
+    for src in TOTAL_SOURCES:
+        rs = d.get(src, {}).get("resultSet", {})
+        headers, rows = rs.get("headers", []), rs.get("rowSet", [])
+        if not headers or not rows or "PLAYER" not in headers:
+            continue
+        idx = {h: i for i, h in enumerate(headers)}
+        consume(rows, idx, is_total=True)
+
+    return out
+
+name_to_stats = build_name_to_stats(d)
 
 players = d.get("all_players", [])
 updated = 0
