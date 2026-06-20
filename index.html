@@ -153,16 +153,24 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <nav class="second-nav">
-  <button class="sn on" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
+  <button class="sn on" id="sn-home" onclick="goPage('home',this)">ホーム</button>
+  <button class="sn" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
   <button class="sn" id="sn-ranking" onclick="goPage('ranking',this)">順位/スタッツ</button>
   <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
   <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
+  <button class="sn" id="sn-items" onclick="goPage('items',this)">アイテム</button>
   <button class="sn" id="sn-players" onclick="goPage('players',this)">選手</button>
 </nav>
 
 <div class="content-wrap" id="mainScroll">
 
-<div id="pg-schedule" class="pg show">
+<div id="pg-home" class="pg show">
+  <div id="homeGamesWrap"></div>
+  <div class="section-hd"><div class="section-ttl">新着フィード</div></div>
+  <div id="homeFeedWrap" style="padding:8px;"></div>
+</div>
+
+<div id="pg-schedule" class="pg">
   <div class="date-bar">
     <button class="db-btn" onclick="moveDate(-1)">‹</button>
     <div class="db-center">
@@ -180,6 +188,9 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 <div id="pg-sneakers" class="pg">
   <div id="sneakersWrap" style="padding:8px;"></div>
+</div>
+<div id="pg-items" class="pg">
+  <div id="itemsWrap" style="padding:8px;"></div>
 </div>
 <div id="pg-players" class="pg">
   <div id="playerFilter" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:10px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;"></div>
@@ -241,6 +252,13 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
           </div>
           <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">バッシュ管理</div><div style="font-size:11px;color:#999;margin-top:2px;">バッシュ情報の投稿・編集・削除</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div onclick="showAdminPage('admin-item')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">アイテム管理</div><div style="font-size:11px;color:#999;margin-top:2px;">アイテム情報の投稿・編集・削除</div></div>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
         <div onclick="showAdminPage('admin-ad')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
@@ -366,6 +384,57 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
     </div>
 
+    <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
     <div id="admin-ad" style="display:none;">
       <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
         <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
@@ -393,7 +462,11 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div class="bottom-nav">
-  <div class="bnav-item active" data-page="schedule" onclick="goPage('schedule',null,this)">
+  <div class="bnav-item active" data-page="home" onclick="goPage('home',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+    <div class="bnav-label">ホーム</div>
+  </div>
+  <div class="bnav-item" data-page="schedule" onclick="goPage('schedule',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     <div class="bnav-label">試合</div>
   </div>
@@ -408,6 +481,10 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div class="bnav-item" data-page="sneakers" onclick="goPage('sneakers',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
     <div class="bnav-label">バッシュ</div>
+  </div>
+  <div class="bnav-item" data-page="items" onclick="goPage('items',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+    <div class="bnav-label">アイテム</div>
   </div>
   <div class="bnav-item" data-page="players" onclick="goPage('players',null,this)">
     <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -703,10 +780,11 @@ function loadTitleData() {
   ).join('');
 }
 function showAdminPage(id){
-  ['admin-menu','admin-article','admin-sneaker','admin-ad'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
+  ['admin-menu','admin-article','admin-sneaker','admin-item','admin-ad'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
   const t=document.getElementById(id);if(t)t.style.display='block';
   if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
   if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
+  if(id==='admin-item' && typeof loadAdminItems==='function') loadAdminItems();
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
@@ -744,9 +822,9 @@ if(_articleId) window._directArticleId = _articleId;
 
 <script>
 window.addEventListener('load', function() {
-  var hash = location.hash.replace('#','') || 'schedule';
-  var valid = ['schedule','ranking','articles','sneakers','players'];
-  var page = valid.indexOf(hash) >= 0 ? hash : 'schedule';
+  var hash = location.hash.replace('#','') || 'home';
+  var valid = ['home','schedule','ranking','articles','sneakers','items','players'];
+  var page = valid.indexOf(hash) >= 0 ? hash : 'home';
   if(typeof goPage === 'function') {
     goPage(page);
     var btn = document.getElementById('sn-' + page);
@@ -768,6 +846,8 @@ window.addEventListener('load', function() {
 <script src="js/schedule2.js?v=7"></script>
 <script src="js/articles.js?v=2"></script>
 <script src="js/sneakers.js?v=2"></script>
+<script src="js/items.js"></script>
+<script src="js/home.js"></script>
 <script src="js/players3.js"></script>
 <script src="js/stats.js?v=2"></script>
 <script src="js/search.js"></script>
@@ -808,7 +888,7 @@ window.addEventListener('load', function() {
 <script>
 (function() {
   var last = localStorage.getItem('lastPage');
-  if (last && last !== 'schedule') {
+  if (last && last !== 'home') {
     setTimeout(function() {
       var btn = document.getElementById('sn-' + last);
       goPage(last, btn);
