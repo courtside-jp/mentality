@@ -151,7 +151,6 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 <nav class="second-nav">
   <button class="sn on" id="sn-home" onclick="goPage('home',this)">ホーム</button>
   <button class="sn" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
-  <button class="sn" id="sn-ranking" onclick="goPage('ranking',this)">順位/スタッツ</button>
   <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
   <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
   <button class="sn" id="sn-items" onclick="goPage('items',this)">アイテム</button>
@@ -167,16 +166,55 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div id="pg-schedule" class="pg">
-  <div class="date-bar">
-    <button class="db-btn" onclick="moveDate(-1)">‹</button>
-    <div class="db-center">
-      <div class="db-date" id="dbDate"></div>
-      <div class="db-sub" id="dbSub"></div>
-      <div style="font-size:9px;color:#bbb;margin-top:2px;">※時刻はすべてアメリカ東部時間（ET）</div>
-    </div>
-    <button class="db-btn" onclick="moveDate(1)">›</button>
+  <!-- 試合一覧/順位/スタッツ切り替えタブ -->
+  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;">
+    <div id="subtab-games" onclick="showSubTab('games')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">試合一覧</div>
+    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">順位</div>
+    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
   </div>
-  <div id="gameWrap"></div>
+
+  <!-- 試合一覧エリア -->
+  <div id="sub-games">
+    <div class="date-bar">
+      <button class="db-btn" onclick="moveDate(-1)">‹</button>
+      <div class="db-center">
+        <div class="db-date" id="dbDate"></div>
+        <div class="db-sub" id="dbSub"></div>
+        <div style="font-size:9px;color:#bbb;margin-top:2px;">※時刻はすべてアメリカ東部時間（ET）</div>
+      </div>
+      <button class="db-btn" onclick="moveDate(1)">›</button>
+    </div>
+    <div id="gameWrap"></div>
+  </div>
+
+  <!-- 順位エリア -->
+  <div id="sub-ranking" style="display:none;">
+    <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:132px;z-index:98;">
+      <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
+      <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
+    </div>
+    <div id="standingsWrap"></div>
+  </div>
+
+  <!-- タイトルエリア -->
+  <div id="sub-title" style="display:none;">
+    <div id="titleWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+  <!-- プレーインエリア -->
+  <div id="sub-playin" style="display:none;">
+    <div id="playinWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+  <!-- プレーオフエリア -->
+  <div id="sub-playoff" style="display:none;">
+    <div id="playoffWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+
+  <!-- スタッツエリア -->
+  <div id="sub-stats" style="display:none;">
+    <div id="statCats" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:8px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;flex-wrap:nowrap;"></div>
+    <div id="statsLoading" style="text-align:center;padding:2rem;color:#999;font-size:12px;">読み込み中...</div>
+    <div id="leaderList"></div>
+  </div>
 </div>
 
 <div id="pg-articles" class="pg">
@@ -192,41 +230,6 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
   <div id="playerFilter" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:10px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;"></div>
 <div id="playerGrid"></div>
 </div>
-
-<div id="pg-ranking" class="pg">
-  <!-- 順位/スタッツ切り替えタブ -->
-  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;">
-    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">順位</div>
-    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
-  </div>
-  <!-- 順位エリア -->
-  <div id="sub-ranking">
-    <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:132px;z-index:98;">
-      <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
-      <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
-    </div>
-    <div id="standingsWrap"></div>
-  </div>
-  <!-- タイトルエリア -->
-  <div id="sub-title" style="display:none;">
-    <div id="titleWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
-  </div>
-  <!-- プレーインエリア -->
-  <div id="sub-playin" style="display:none;">
-    <div id="playinWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
-  </div>
-  <!-- プレーオフエリア -->
-  <div id="sub-playoff" style="display:none;">
-    <div id="playoffWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
-  </div>
-  <!-- スタッツエリア -->
-  <div id="sub-stats" style="display:none;">
-    <div id="statCats" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:8px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;flex-wrap:nowrap;"></div>
-    <div id="statsLoading" style="text-align:center;padding:2rem;color:#999;font-size:12px;">読み込み中...</div>
-    <div id="leaderList"></div>
-  </div>
-</div>
-
 
 <div id="pg-admin" class="pg" style="overflow-y:auto;background:#fff;min-height:100vh;">
   <div style="background:#fff;padding-bottom:80px;">
@@ -659,7 +662,7 @@ function handleSearch(val){
   results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
 }
 function showSubTab(tab) {
-  ['ranking','stats','title'].forEach(t => {
+  ['games','ranking','stats','title'].forEach(t => {
     const el = document.getElementById('sub-' + t);
     if(el) el.style.display = t === tab ? 'block' : 'none';
     const bt = document.getElementById('subtab-' + t);
