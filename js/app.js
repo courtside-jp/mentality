@@ -22,10 +22,12 @@ function goPage(id, btn) {
   history.replaceState(null, '', '#' + id);
   // 全ページを非表示
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('show'));
-  // 指定ページを表示
-  const pgEl = document.getElementById('pg-' + id);
+  // 指定ページを表示（順位/スタッツは試合ページに統合済みのためpg-scheduleへ）
+  const realId = (id === 'ranking') ? 'schedule' : id;
+  const pgEl = document.getElementById('pg-' + realId);
   if(pgEl) pgEl.classList.add('show');
   if(id === 'ranking') {
+    if(typeof showSubTab === 'function') showSubTab('ranking');
     if(typeof renderStandings === 'function') renderStandings();
     if(typeof initStats === 'function') initStats();
   }
@@ -46,8 +48,9 @@ function goPage(id, btn) {
 
   // ページごとに必要な初期化を呼ぶ
   // ※ 各jsファイルが読み込まれていれば自動で動く
-  if (id === 'schedule' && typeof loadESPNScoreboard === 'function') {
-    loadESPNScoreboard();
+  if (id === 'schedule') {
+    if (typeof showSubTab === 'function') showSubTab('games');
+    if (typeof loadESPNScoreboard === 'function') loadESPNScoreboard();
   }
   if (id === 'stats' && typeof loadESPNLeaders === 'function') {
     loadESPNLeaders(curStatKey || 'pts', curMode || 'season');
