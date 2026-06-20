@@ -122,14 +122,14 @@ async function openItemModal(id) {
   }
   if (!s) return;
 
-  body.innerHTL =
+  body.innerHTML =
     (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
     '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (ITEM_BRANDS[s.brand]||s.brand||'') + '</div>' +
     '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.name||'') + '</div>' +
-    (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">関連選挋: ' + s.player + '</div>' : '') +
+    (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">関連選手: ' + s.player + '</div>' : '') +
     (s.desc ? '<div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px;">' + s.desc + '</div>' : '') +
     (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
-    (s.link ? '<a href="' + s.link + '" target="_blank" style="display:block;dext-align:center;padding:12px;background:#C9082A;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;">商品を見る</a>' : '');
+    (s.link ? '<a href="' + s.link + '" target="_blank" style="display:block;text-align:center;padding:12px;background:#C9082A;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;">商品を見る</a>' : '');
 
   modal.style.display = 'block';
 }
@@ -142,7 +142,7 @@ function closeItemModal() {
 async function loadAdminItems() {
   const wrap = document.getElementById('adminItemList');
   if (!wrap) return;
-  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">貭み込み中...</div>';
+  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">読み込み中...</div>';
   try {
     const res = await fetch(`${FB_ITEMS}.json?orderBy="$key"&limitToLast=200`);
     const data = await res.json();
@@ -154,7 +154,7 @@ async function loadAdminItems() {
           <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${s.brand||''}</div>
           <div style="font-size:9px;color:#999;">${s.date||''}</div>
         </div>
-        <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:4px;">${s.name||'朁題'}</div>
+        <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:4px;">${s.name||'無題'}</div>
         <div style="font-size:11px;color:#666;margin-bottom:8px;">${s.player||''} ${s.price ? '· ' + s.price : ''}</div>
         <div style="display:flex;gap:6px;">
           <button onclick="editItem('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
@@ -202,5 +202,5 @@ async function editItem(id) {
   document.getElementById('itemPrice').value = d.price || '';
   document.getElementById('itemImg').value = d.img || '';
   document.getElementById('itemLink').value = d.link || '';
-  document.getElementById('itemSubmitBtn').textContent = '��雸��保存';
+  document.getElementById('itemSubmitBtn').textContent = '上書き保存';
 }
