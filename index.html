@@ -406,8 +406,13 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
             <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
           <div>
-            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
-            <input id="sneakerImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
           </div>
           <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
@@ -886,7 +891,7 @@ window.addEventListener('load', function() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=7"></script>
 <script src="js/articles.js?v=3"></script>
-<script src="js/sneakers.js?v=5"></script>
+<script src="js/sneakers.js?v=6"></script>
 <script src="js/items.js?v=2"></script>
 <script src="js/home.js?v=1"></script>
 <script src="js/players3.js?v=1"></script>
