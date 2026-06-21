@@ -36,11 +36,12 @@ function renderSneakers(list) {
       <div style="padding:.8rem;">
         <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;">
           ${s.isNew ? '<span style="font-size:.55rem;background:#ff5a00;color:#fff;padding:.1rem .5rem;border-radius:10px;font-weight:700;">NEW</span>' : ''}
+          ${s.gymOk ? '<span style="font-size:.55rem;background:#0a7c3e;color:#fff;padding:.1rem .5rem;border-radius:10px;font-weight:700;">🏋️ ジムにもOK</span>' : ''}
           <span style="font-size:.6rem;background:var(--bg3);color:var(--tx3);padding:.1rem .5rem;border-radius:10px;">${BRANDS[s.brand]||s.brand||''}</span>
           ${s.player ? `<span style="font-size:.6rem;color:var(--tx3);">👤 ${s.player}</span>` : ''}
         </div>
         <div style="font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;">${s.model||s.name||''}</div>
-        ${s.score ? `<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem;"><span style="font-size:.7rem;color:var(--tx3);">評価</span><div style="flex:1;background:var(--bg3);border-radius:10px;height:6px;"><div style="width:${s.score}%;background:var(--or);border-radius:10px;height:6px;"></div></div><span style="font-size:.75rem;font-weight:700;color:var(--or);">${s.score}/100</span></div>` : ''}
+        ${s.score ? `<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem;"><span style="font-size:.7rem;color:var(--tx3);">評価</span><div style="flex:1;background:var(--bg3);border-radius:10px;height:6px;"><div style="width:${s.score}%;background:${snkScoreColor(s.score)};border-radius:10px;height:6px;"></div></div><span style="font-size:.75rem;font-weight:700;color:${snkScoreColor(s.score)};">${s.score}/100</span></div>` : ''}
         ${s.desc ? `<div style="font-size:.75rem;color:var(--tx2);line-height:1.6;margin-bottom:.5rem;">${s.desc}</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;">
           ${s.price ? `<span style="font-size:.9rem;font-weight:700;color:var(--or);">${s.price}</span>` : '<span></span>'}
@@ -84,6 +85,7 @@ async function submitSneaker() {
   const linkRakuten   = document.getElementById('sneakerLinkRakuten').value.trim();
   const linkStockx    = document.getElementById('sneakerLinkStockx').value.trim();
   const linkSnkrdunk  = document.getElementById('sneakerLinkSnkrdunk').value.trim();
+  const gymOk = document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false;
   const editId = document.getElementById('sneakerEditId')?.value;
 
   if (!name) { alert('モデル名は必須です'); return; }
@@ -97,6 +99,7 @@ async function submitSneaker() {
     scoreCushion, scoreHold, scoreTraction, scoreWeight, score,
     sizeFeel, position,
     linkAmazon, linkRakuten, linkStockx, linkSnkrdunk,
+    gymOk,
     link: linkAmazon, // 旧フィールドとの互換用
     ts: Date.now()
   };
@@ -121,11 +124,19 @@ async function submitSneaker() {
   loadSneakers();
 }
 
+function snkScoreColor(val) {
+  const v = parseInt(val, 10);
+  if (v >= 95) return '#FFD700';
+  if (v >= 90) return '#FF8C00';
+  return '#C9082A';
+}
+
 function snkScoreBar(label, val) {
   if (val === undefined || val === null || val === '') return '';
+  const c = snkScoreColor(val);
   return '<div style="margin-bottom:8px;">' +
-    '<div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:3px;"><span>' + label + '</span><span style="font-weight:700;color:#C9082A;">' + val + '/100</span></div>' +
-    '<div style="background:#eee;border-radius:10px;height:6px;"><div style="width:' + val + '%;background:#C9082A;border-radius:10px;height:6px;"></div></div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:3px;"><span>' + label + '</span><span style="font-weight:700;color:' + c + ';">' + val + '/100</span></div>' +
+    '<div style="background:#eee;border-radius:10px;height:6px;"><div style="width:' + val + '%;background:' + c + ';border-radius:10px;height:6px;"></div></div>' +
   '</div>';
 }
 
@@ -147,6 +158,7 @@ function openSnkModal(id) {
   body.innerHTML = 
     (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
     '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (s.brand||'') + '</div>' +
+    (s.gymOk ? '<span style="display:inline-block;margin:4px 0;font-size:11px;background:#0a7c3e;color:#fff;padding:.2rem .6rem;border-radius:10px;font-weight:700;">🏋️ ジムにもOK</span>' : '') +
     '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.model||s.name||'') + '</div>' +
     (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">着用選手: ' + s.player + '</div>' : '') +
     (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
@@ -235,6 +247,7 @@ function openNewSneaker() {
   document.getElementById('sneakerLinkRakuten').value = '';
   document.getElementById('sneakerLinkStockx').value = '';
   document.getElementById('sneakerLinkSnkrdunk').value = '';
+  if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = false;
   document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
 }
 
@@ -262,5 +275,6 @@ async function editSneaker(id) {
   document.getElementById('sneakerLinkRakuten').value = d.linkRakuten || '';
   document.getElementById('sneakerLinkStockx').value = d.linkStockx || '';
   document.getElementById('sneakerLinkSnkrdunk').value = d.linkSnkrdunk || '';
+  if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = !!d.gymOk;
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
