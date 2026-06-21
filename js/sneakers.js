@@ -39,7 +39,7 @@ function renderSneakers(list) {
           <span style="font-size:.6rem;background:var(--bg3);color:var(--tx3);padding:.1rem .5rem;border-radius:10px;">${BRANDS[s.brand]||s.brand||''}</span>
           ${s.player ? `<span style="font-size:.6rem;color:var(--tx3);">👤 ${s.player}</span>` : ''}
         </div>
-        <div style="font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;">${s.name}</div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;">${s.model||s.name||''}</div>
         ${s.score ? `<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem;"><span style="font-size:.7rem;color:var(--tx3);">評価</span><div style="flex:1;background:var(--bg3);border-radius:10px;height:6px;"><div style="width:${s.score}%;background:var(--or);border-radius:10px;height:6px;"></div></div><span style="font-size:.75rem;font-weight:700;color:var(--or);">${s.score}/100</span></div>` : ''}
         ${s.desc ? `<div style="font-size:.75rem;color:var(--tx2);line-height:1.6;margin-bottom:.5rem;">${s.desc}</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;">
