@@ -369,6 +369,35 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
             <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
           <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
             <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
@@ -377,8 +406,13 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
             <input id="sneakerImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
           <div>
-            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
-            <input id="sneakerLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
           </div>
           <div style="display:flex;gap:8px;">
             <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
@@ -848,7 +882,7 @@ window.addEventListener('load', function() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=7"></script>
 <script src="js/articles.js?v=3"></script>
-<script src="js/sneakers.js?v=2"></script>
+<script src="js/sneakers.js?v=3"></script>
 <script src="js/items.js?v=2"></script>
 <script src="js/home.js?v=1"></script>
 <script src="js/players3.js?v=1"></script>
