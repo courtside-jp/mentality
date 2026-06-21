@@ -69,6 +69,33 @@ function calcSneakerScore() {
   return Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
 }
 
+async function uploadSneakerImage(input, fieldId) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const field = document.getElementById(fieldId);
+  const label = input.parentElement.querySelector('.snkUploadLabel');
+  const originalLabel = label ? label.textContent : '';
+  if (label) label.textContent = 'アップロード中...';
+  try {
+    const form = new FormData();
+    form.append('image', file);
+    const res = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+      method: 'POST', body: form
+    });
+    const data = await res.json();
+    if (data && data.data && data.data.url) {
+      field.value = data.data.url;
+    } else {
+      alert('アップロードに失敗しました');
+    }
+  } catch (e) {
+    alert('アップロードに失敗しました: ' + e.message);
+  } finally {
+    if (label) label.textContent = originalLabel;
+    input.value = '';
+  }
+}
+
 async function submitSneaker() {
   const name   = document.getElementById('sneakerModel').value.trim();
   const brand  = document.getElementById('sneakerBrand').value;
