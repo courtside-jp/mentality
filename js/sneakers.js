@@ -44,7 +44,7 @@ function renderSneakers(list) {
         ${s.desc ? `<div style="font-size:.75rem;color:var(--tx2);line-height:1.6;margin-bottom:.5rem;">${s.desc}</div>` : ''}
         <div style="display:flex;align-items:center;justify-content:space-between;">
           ${s.price ? `<span style="font-size:.9rem;font-weight:700;color:var(--or);">${s.price}</span>` : '<span></span>'}
-          ${s.url ? `<a href="${s.url}" target="_blank" style="background:var(--or);color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.75rem;font-weight:700;text-decoration:none;">購入する →</a>` : ''}
+          ${(s.linkAmazon||s.linkRakuten||s.linkStockx||s.linkSnkrdunk||s.link) ? `<a href="${s.linkAmazon||s.linkRakuten||s.linkStockx||s.linkSnkrdunk||s.link}" target="_blank" onclick="event.stopPropagation()" style="background:var(--or);color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.75rem;font-weight:700;text-decoration:none;">購入する →</a>` : ''}
         <a href="${'https://twitter.com/intent/tweet?text=' + encodeURIComponent(s.name + ' #バッシュ #COURTSIDE https://yasukou1202.github.io/mentality/')}" target="_blank" style="background:#000;color:#fff;padding:.4rem .6rem;border-radius:8px;font-size:.75rem;text-decoration:none;">𝕏</a>
         </div>
       </div>
@@ -60,13 +60,30 @@ function filterSneakers(btn, brand) {
 }
 
 // 管理画面から投稿
+function calcSneakerScore() {
+  const vals = ['sneakerScoreCushion','sneakerScoreHold','sneakerScoreTraction','sneakerScoreWeight']
+    .map(id => parseInt(document.getElementById(id).value, 10))
+    .filter(v => !isNaN(v));
+  if (!vals.length) return null;
+  return Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
+}
+
 async function submitSneaker() {
   const name   = document.getElementById('sneakerModel').value.trim();
   const brand  = document.getElementById('sneakerBrand').value;
   const player = document.getElementById('sneakerPlayer').value.trim();
   const img    = document.getElementById('sneakerImg').value.trim();
   const price  = document.getElementById('sneakerPrice').value.trim();
-  const url    = document.getElementById('sneakerLink').value.trim();
+  const scoreCushion  = document.getElementById('sneakerScoreCushion').value.trim();
+  const scoreHold     = document.getElementById('sneakerScoreHold').value.trim();
+  const scoreTraction = document.getElementById('sneakerScoreTraction').value.trim();
+  const scoreWeight   = document.getElementById('sneakerScoreWeight').value.trim();
+  const sizeFeel  = document.getElementById('sneakerSizeFeel').value.trim();
+  const position  = document.getElementById('sneakerPosition').value.trim();
+  const linkAmazon    = document.getElementById('sneakerLinkAmazon').value.trim();
+  const linkRakuten   = document.getElementById('sneakerLinkRakuten').value.trim();
+  const linkStockx    = document.getElementById('sneakerLinkStockx').value.trim();
+  const linkSnkrdunk  = document.getElementById('sneakerLinkSnkrdunk').value.trim();
   const editId = document.getElementById('sneakerEditId')?.value;
 
   if (!name) { alert('モデル名は必須です'); return; }
@@ -74,7 +91,15 @@ async function submitSneaker() {
   const btn = document.getElementById('sneakerSubmitBtn');
   btn.textContent = '投稿中...'; btn.disabled = true;
 
-  const payload = { brand, model: name, player, img, price, link: url, ts: Date.now() };
+  const score = calcSneakerScore();
+  const payload = {
+    brand, model: name, player, img, price,
+    scoreCushion, scoreHold, scoreTraction, scoreWeight, score,
+    sizeFeel, position,
+    linkAmazon, linkRakuten, linkStockx, linkSnkrdunk,
+    link: linkAmazon, // 旧フィールドとの互換用
+    ts: Date.now()
+  };
   const now = new Date();
   payload.date = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
 
@@ -96,6 +121,14 @@ async function submitSneaker() {
   loadSneakers();
 }
 
+function snkScoreBar(label, val) {
+  if (val === undefined || val === null || val === '') return '';
+  return '<div style="margin-bottom:8px;">' +
+    '<div style="display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:3px;"><span>' + label + '</span><span style="font-weight:700;color:#C9082A;">' + val + '/100</span></div>' +
+    '<div style="background:#eee;border-radius:10px;height:6px;"><div style="width:' + val + '%;background:#C9082A;border-radius:10px;height:6px;"></div></div>' +
+  '</div>';
+}
+
 function openSnkModal(id) {
   const modal = document.getElementById('snkModal');
   const body = document.getElementById('snkModalBody');
@@ -103,6 +136,13 @@ function openSnkModal(id) {
   
   const s = (_allSneakers || []).find(s => s.id === id);
   if (!s) return;
+
+  const links = [
+    s.linkAmazon   ? {label:'Amazon',         url:s.linkAmazon,   bg:'#ff9900'} : null,
+    s.linkRakuten  ? {label:'楽天',            url:s.linkRakuten,  bg:'#bf0000'} : null,
+    s.linkStockx   ? {label:'StockX',         url:s.linkStockx,   bg:'#00a651'} : null,
+    s.linkSnkrdunk ? {label:'スニーカーダンク', url:s.linkSnkrdunk, bg:'#000'}    : null,
+  ].filter(Boolean);
   
   body.innerHTML = 
     (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
@@ -110,7 +150,19 @@ function openSnkModal(id) {
     '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.model||s.name||'') + '</div>' +
     (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">着用選手: ' + s.player + '</div>' : '') +
     (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
-    (s.link ? '<a href="' + s.link + '" target="_blank" style="display:block;text-align:center;padding:12px;background:#C9082A;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;">Amazonで見る</a>' : '');
+    ((s.scoreCushion || s.scoreHold || s.scoreTraction || s.scoreWeight) ?
+      '<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:12px;">' +
+        '<div style="font-size:11px;font-weight:700;color:#999;margin-bottom:8px;">機能スコア</div>' +
+        snkScoreBar('クッション性', s.scoreCushion) +
+        snkScoreBar('ホールド感', s.scoreHold) +
+        snkScoreBar('トラクション', s.scoreTraction) +
+        snkScoreBar('軽量性', s.scoreWeight) +
+      '</div>' : '') +
+    (s.sizeFeel ? '<div style="font-size:12px;color:#333;margin-bottom:6px;"><b>サイズ感：</b>' + s.sizeFeel + '</div>' : '') +
+    (s.position ? '<div style="font-size:12px;color:#333;margin-bottom:12px;"><b>おすすめ：</b>' + s.position + '</div>' : '') +
+    (links.length ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">' +
+      links.map(l => '<a href="' + l.url + '" target="_blank" style="display:block;text-align:center;padding:12px;background:' + l.bg + ';color:#fff;border-radius:8px;font-weight:700;text-decoration:none;font-size:13px;">' + l.label + 'で見る →</a>').join('') +
+    '</div>' : '');
   
   modal.style.display = 'block';
 }
@@ -173,7 +225,16 @@ function openNewSneaker() {
   document.getElementById('sneakerPlayer').value = '';
   document.getElementById('sneakerPrice').value = '';
   document.getElementById('sneakerImg').value = '';
-  document.getElementById('sneakerLink').value = '';
+  document.getElementById('sneakerScoreCushion').value = '';
+  document.getElementById('sneakerScoreHold').value = '';
+  document.getElementById('sneakerScoreTraction').value = '';
+  document.getElementById('sneakerScoreWeight').value = '';
+  document.getElementById('sneakerSizeFeel').value = '';
+  document.getElementById('sneakerPosition').value = '';
+  document.getElementById('sneakerLinkAmazon').value = '';
+  document.getElementById('sneakerLinkRakuten').value = '';
+  document.getElementById('sneakerLinkStockx').value = '';
+  document.getElementById('sneakerLinkSnkrdunk').value = '';
   document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
 }
 
@@ -191,6 +252,15 @@ async function editSneaker(id) {
   document.getElementById('sneakerPlayer').value = d.player || '';
   document.getElementById('sneakerPrice').value = d.price || '';
   document.getElementById('sneakerImg').value = d.img || '';
-  document.getElementById('sneakerLink').value = d.link || '';
+  document.getElementById('sneakerScoreCushion').value = d.scoreCushion || '';
+  document.getElementById('sneakerScoreHold').value = d.scoreHold || '';
+  document.getElementById('sneakerScoreTraction').value = d.scoreTraction || '';
+  document.getElementById('sneakerScoreWeight').value = d.scoreWeight || '';
+  document.getElementById('sneakerSizeFeel').value = d.sizeFeel || '';
+  document.getElementById('sneakerPosition').value = d.position || '';
+  document.getElementById('sneakerLinkAmazon').value = d.linkAmazon || d.link || '';
+  document.getElementById('sneakerLinkRakuten').value = d.linkRakuten || '';
+  document.getElementById('sneakerLinkStockx').value = d.linkStockx || '';
+  document.getElementById('sneakerLinkSnkrdunk').value = d.linkSnkrdunk || '';
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
