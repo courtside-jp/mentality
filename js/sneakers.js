@@ -74,6 +74,9 @@ async function submitSneaker() {
   const brand  = document.getElementById('sneakerBrand').value;
   const player = document.getElementById('sneakerPlayer').value.trim();
   const img    = document.getElementById('sneakerImg').value.trim();
+  const img2   = document.getElementById('sneakerImg2').value.trim();
+  const img3   = document.getElementById('sneakerImg3').value.trim();
+  const img4   = document.getElementById('sneakerImg4').value.trim();
   const price  = document.getElementById('sneakerPrice').value.trim();
   const scoreCushion  = document.getElementById('sneakerScoreCushion').value.trim();
   const scoreHold     = document.getElementById('sneakerScoreHold').value.trim();
@@ -95,7 +98,7 @@ async function submitSneaker() {
 
   const score = calcSneakerScore();
   const payload = {
-    brand, model: name, player, img, price,
+    brand, model: name, player, img, img2, img3, img4, price,
     scoreCushion, scoreHold, scoreTraction, scoreWeight, score,
     sizeFeel, position,
     linkAmazon, linkRakuten, linkStockx, linkSnkrdunk,
@@ -156,7 +159,17 @@ function openSnkModal(id) {
   ].filter(Boolean);
   
   body.innerHTML = 
-    (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
+    (function() {
+      const imgs = [s.img, s.img2, s.img3, s.img4].filter(Boolean);
+      if (!imgs.length) return '';
+      if (imgs.length === 1) {
+        return '<img src="' + imgs[0] + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">';
+      }
+      return '<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:1rem;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;">' +
+        imgs.map(u => '<img src="' + u + '" style="flex:0 0 85%;scroll-snap-align:start;height:220px;object-fit:cover;border-radius:8px;">').join('') +
+      '</div>' +
+      '<div style="text-align:center;font-size:10px;color:#999;margin:-8px 0 12px;">← スワイプして他のアングルも見る (' + imgs.length + '枚) →</div>';
+    })() +
     '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (s.brand||'') + '</div>' +
     (s.gymOk ? '<span style="display:inline-block;margin:4px 0;font-size:11px;background:#0a7c3e;color:#fff;padding:.2rem .6rem;border-radius:10px;font-weight:700;">🏋️ ジムにもOK</span>' : '') +
     '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.model||s.name||'') + '</div>' +
@@ -237,6 +250,9 @@ function openNewSneaker() {
   document.getElementById('sneakerPlayer').value = '';
   document.getElementById('sneakerPrice').value = '';
   document.getElementById('sneakerImg').value = '';
+  document.getElementById('sneakerImg2').value = '';
+  document.getElementById('sneakerImg3').value = '';
+  document.getElementById('sneakerImg4').value = '';
   document.getElementById('sneakerScoreCushion').value = '';
   document.getElementById('sneakerScoreHold').value = '';
   document.getElementById('sneakerScoreTraction').value = '';
@@ -265,6 +281,9 @@ async function editSneaker(id) {
   document.getElementById('sneakerPlayer').value = d.player || '';
   document.getElementById('sneakerPrice').value = d.price || '';
   document.getElementById('sneakerImg').value = d.img || '';
+  document.getElementById('sneakerImg2').value = d.img2 || '';
+  document.getElementById('sneakerImg3').value = d.img3 || '';
+  document.getElementById('sneakerImg4').value = d.img4 || '';
   document.getElementById('sneakerScoreCushion').value = d.scoreCushion || '';
   document.getElementById('sneakerScoreHold').value = d.scoreHold || '';
   document.getElementById('sneakerScoreTraction').value = d.scoreTraction || '';
