@@ -78,6 +78,7 @@ async function submitItem() {
   const img    = document.getElementById('itemImg').value.trim();
   const price  = document.getElementById('itemPrice').value.trim();
   const url    = document.getElementById('itemLink').value.trim();
+  const xUrl   = document.getElementById('itemXUrl').value.trim();
   const editId = document.getElementById('itemEditId')?.value;
 
   if (!name) { alert('商品名は必須です'); return; }
@@ -85,7 +86,7 @@ async function submitItem() {
   const btn = document.getElementById('itemSubmitBtn');
   btn.textContent = '投稿中...'; btn.disabled = true;
 
-  const payload = { brand, name, player, desc, img, price, link: url, ts: Date.now() };
+  const payload = { brand, name, player, desc, img, price, link: url, xUrl, ts: Date.now() };
   const now = new Date();
   payload.date = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
 
@@ -130,6 +131,11 @@ async function openItemModal(id) {
     (s.desc ? '<div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px;">' + s.desc + '</div>' : '') +
     (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
     (s.link ? '<a href="' + s.link + '" target="_blank" style="display:block;text-align:center;padding:12px;background:#C9082A;color:#fff;border-radius:8px;font-weight:700;text-decoration:none;">商品を見る</a>' : '');
+
+  if (s.xUrl) {
+    body.innerHTML += '<blockquote class="twitter-tweet"><a href="' + s.xUrl + '"></a></blockquote>';
+    setTimeout(function() { if (window.twttr && twttr.widgets) twttr.widgets.load(); }, 50);
+  }
 
   modal.style.display = 'block';
 }
@@ -183,6 +189,7 @@ function openNewItem() {
   document.getElementById('itemPrice').value = '';
   document.getElementById('itemImg').value = '';
   document.getElementById('itemLink').value = '';
+  document.getElementById('itemXUrl').value = '';
   document.getElementById('itemSubmitBtn').textContent = '投稿する';
 }
 
@@ -202,5 +209,6 @@ async function editItem(id) {
   document.getElementById('itemPrice').value = d.price || '';
   document.getElementById('itemImg').value = d.img || '';
   document.getElementById('itemLink').value = d.link || '';
+  document.getElementById('itemXUrl').value = d.xUrl || '';
   document.getElementById('itemSubmitBtn').textContent = '上書き保存';
 }
