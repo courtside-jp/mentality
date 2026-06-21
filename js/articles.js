@@ -14,7 +14,7 @@ function renderBody(body) {
     if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
     if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
     if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
-    if (t.includes('twitter.com') || t.includes('x.com')) return '<div class="tweet-embed" data-url="' + t + '" style="margin:.8rem 0;border:1px solid #eee;border-radius:12px;padding:1rem;background:#f9f9f9;"><a href="' + t + '" target="_blank" style="color:#1d9bf0;font-size:.85rem;">🐦 Xのポストを見る</a></div>';
+    if (t.includes('twitter.com') || t.includes('x.com')) return '<div style="margin:.8rem 0;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
     if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
     const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]/);
     if (productMatch) {
@@ -82,8 +82,6 @@ function insertTextLink() {
   let insert;
   if (isImage) {
     insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
-  } else if (url.includes('twitter.com') || url.includes('x.com')) {
-    insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
     showLinkModal(url, ta, start, end);
     return;
@@ -182,8 +180,6 @@ function insertTextLink() {
   let insert;
   if (isImage) {
     insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
-  } else if (url.includes('twitter.com') || url.includes('x.com')) {
-    insert = `\n<blockquote class="twitter-tweet"><a href="${url}">ツイート</a></blockquote>\n`;
   } else {
     showLinkModal(url, ta, start, end);
     return;
@@ -1056,7 +1052,48 @@ function updateBodyPreview() {
   const ta = document.getElementById('adminBody');
   const preview = document.getElementById('adminBodyPreview');
   if (!preview) return;
-  preview.innerHTML = ta.value || '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+  preview.innerHTML = ta.value ? renderBody(ta.value) : '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+  if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load();
+  if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
+}
+
+// SNS埋め込み挿入（X / Instagram / TikTok 自動判別）
+let _snsEmbedTA = null;
+function insertSnsEmbed() {
+  _snsEmbedTA = document.getElementById('adminBody');
+  const urlInput = document.getElementById('snsEmbedUrl');
+  const detected = document.getElementById('snsEmbedDetected');
+  urlInput.value = '';
+  detected.textContent = '';
+  document.getElementById('snsEmbedModal').style.display = 'flex';
+  urlInput.oninput = () => {
+    const v = urlInput.value;
+    let platform = '';
+    if (v.includes('twitter.com') || v.includes('x.com')) platform = '✓ X (Twitter) の投稿として認識しました';
+    else if (v.includes('instagram.com')) platform = '✓ Instagram の投稿として認識しました';
+    else if (v.includes('tiktok.com')) platform = '✓ TikTok の投稿として認識しました';
+    detected.textContent = platform;
+  };
+  urlInput.focus();
+}
+function closeSnsEmbedModal() {
+  document.getElementById('snsEmbedModal').style.display = 'none';
+}
+function confirmSnsEmbed() {
+  const url = document.getElementById('snsEmbedUrl').value.trim();
+  if (!url) return;
+  if (!url.includes('twitter.com') && !url.includes('x.com') && !url.includes('instagram.com') && !url.includes('tiktok.com')) {
+    alert('X (Twitter) / Instagram / TikTokのURLを入力してください');
+    return;
+  }
+  const ta = _snsEmbedTA;
+  const start = ta.selectionStart;
+  const insert = `\n${url}\n`;
+  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(start);
+  ta.selectionStart = ta.selectionEnd = start + insert.length;
+  ta.focus();
+  updateBodyPreview();
+  closeSnsEmbedModal();
 }
 
 // ============================================================
