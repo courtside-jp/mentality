@@ -6,7 +6,7 @@ let _allSneakers = [];
 const BRANDS = {
   nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas',
   underarmour: 'Under Armour', puma: 'Puma',
-  newbalance: 'New Balance', anta: 'Anta', lining: 'Li-Ning'
+  newbalance: 'New Balance', anta: 'Anta', lining: 'Li-Ning', on: 'On Running'
 };
 
 async function loadSneakers() {
