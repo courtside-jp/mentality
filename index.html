@@ -963,7 +963,7 @@ function showAdminPage(id){
   if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
   if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
   if(id==='admin-item' && typeof loadAdminItems==='function') loadAdminItems();
-  if (page === 'admin-ad') loadAdminAds();
+  if (id === 'admin-ad') loadAdminAds();
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
