@@ -225,13 +225,19 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </div>
 
 <div id="pg-articles" class="pg">
-  <div id="articlesWrap" style="padding:8px;"></div>
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="articlesWrap" style="padding:8px;"></div>
 </div>
 <div id="pg-sneakers" class="pg">
-  <div id="sneakersWrap" style="padding:8px;"></div>
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="sneakersWrap" style="padding:8px;"></div>
 </div>
 <div id="pg-items" class="pg">
-  <div id="itemsWrap" style="padding:8px;"></div>
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="itemsWrap" style="padding:8px;"></div>
 </div>
 <div id="pg-players" class="pg">
   <div id="playerFilter" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:10px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;"></div>
@@ -261,6 +267,10 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
         </div>
         <div onclick="showAdminPage('admin-item')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+          </div>
+        <div onclick="showAdminPage('admin-ad')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
           <div style="width:44px;height:44px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
           </div>
@@ -458,7 +468,43 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
     </div>
 
-    <div id="admin-item" style="display:none;">
+    
+        <div id="admin-ad" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#000;color:#fff;padding:12px 16px;border-radius:12px 12px 0 0;margin-bottom:0;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button onclick="showAdminPage(null)" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">&#8249;</button>
+              <span style="font-weight:700;font-size:15px;">広告管理</span>
+            </div>
+            <button onclick="openNewAd()" style="background:#C9082A;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+          </div>
+          <div id="adForm" style="display:none;padding:16px;border:1px solid #eee;border-radius:0 0 12px 12px;margin-bottom:16px;">
+            <input type="hidden" id="adEditId">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">広告タイトル（必須）</div>
+                <input id="adTitle" type="text" placeholder="例：NBA選手も使う英会話アプリ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">説明文（任意）</div>
+                <input id="adDesc" type="text" placeholder="例：まずは無料体験から。" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">バナー画像URL（任意）</div>
+                <input id="adImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アフィリエイトリンクURL（必須）</div>
+                <input id="adLink" type="text" placeholder="https://px.a8.net/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="cancelAdEdit()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;">キャンセル</button>
+                <button id="adSubmitBtn" onclick="submitAd()" style="flex:2;padding:10px;border:none;border-radius:8px;background:#C9082A;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">保存する</button>
+              </div>
+            </div>
+          </div>
+          <div id="adminAdList" style="padding:8px 0;"></div>
+        </div>
+        <div id="admin-item" style="display:none;">
       <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
         <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
@@ -921,6 +967,7 @@ window.addEventListener('load', function() {
 <script src="js/articles.js?v=3"></script>
 <script src="js/sneakers.js?v=8"></script>
 <script src="js/items.js?v=3"></script>
+  <script src="js/ads.js?v=1"></script>
 <script src="js/home.js?v=1"></script>
 <script src="js/players3.js?v=1"></script>
 <script src="js/stats.js?v=2"></script>
