@@ -1,21 +1,21 @@
 const FB_ADS = 'https://mentality-nba-default-rtdb.firebaseio.com/ads';
-let _allAds = [];
+window._allAds = window._allAds || [];
 
 // 広告を読み込んで表示
 async function loadAds() {
   try {
     const res = await fetch(`${FB_ADS}.json`);
     const data = await res.json();
-    if (!data) { _allAds = []; return; }
-    _allAds = Object.entries(data).map(([id, v]) => ({ id, ...v }));
-  } catch(e) { _allAds = []; }
+    if (!data) { window._allAds = []; return; }
+    window._allAds = Object.entries(data).map(([id, v]) => ({ id, ...v }));
+  } catch(e) { window._allAds = []; }
 }
 
 // 広告枠をレンダリング（アクティブな広告をランダムに1件表示）
 function renderAdBanner(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const active = _allAds.filter(a => a.active !== false);
+  const active = (window._allAds||[]).filter(a => a.active !== false);
   if (!active.length) { container.innerHTML = ''; return; }
   const ad = active[Math.floor(Math.random() * active.length)];
   container.innerHTML = `
@@ -49,8 +49,8 @@ async function loadAdminAds() {
   await loadAds();
   const list = document.getElementById('adminAdList');
   if (!list) return;
-  if (!_allAds.length) { list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;font-size:13px;">広告なし</div>'; return; }
-  list.innerHTML = _allAds.map(a => `
+  if (!window._allAds||!window._allAds.length) { list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;font-size:13px;">広告なし</div>'; return; }
+  list.innerHTML = (window._allAds||[]).map(a => `
     <div style="border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;${a.active===false?'opacity:0.5':''}">
       ${a.img
         ? `<img src="${a.img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
