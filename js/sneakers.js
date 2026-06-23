@@ -216,12 +216,18 @@ function openSnkModal(id) {
       links.map(l => '<a href="' + l.url + '" target="_blank" style="display:block;text-align:center;padding:12px;background:' + l.bg + ';color:#fff;border-radius:8px;font-weight:700;text-decoration:none;font-size:13px;">' + l.label + 'で見る →</a>').join('') +
     '</div>' : '');
   
+  // SEO: バッシュタイトルをセット
+  document.title = (s.model||s.name||'バッシュ') + ' レビュー・評価 | COURTSIDE';
+  const md = document.querySelector('meta[name="description"]');
+  if (md) md.setAttribute('content', (s.brand?s.brand+' ':''+(s.model||s.name||''))+'のバッシュレビュー。クッション性・ホールド感・トラクション・軽量性を100点満点でスコア評価。'+(s.player?s.player+'着用モデル。':''));
+
   modal.style.display = 'block';
 }
 
 function closeSnkModal() {
   const modal = document.getElementById('snkModal');
   if (modal) modal.style.display = 'none';
+  document.title = 'COURTSIDE - NBA速報・まとめ';
 }
 
 function filterSneakersDropdown() {
