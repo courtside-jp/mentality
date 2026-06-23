@@ -137,12 +137,18 @@ async function openItemModal(id) {
     setTimeout(function() { if (window.twttr && twttr.widgets) twttr.widgets.load(); }, 50);
   }
 
+  // SEO: アイテムタイトルをセット
+  document.title = (s.name||'アイテム') + ' | NBAアパレル | COURTSIDE';
+  const md2 = document.querySelector('meta[name="description"]');
+  if (md2) md2.setAttribute('content', (s.brand?s.brand+' ':''+(s.name||''))+'。NBAバスケットボール関連アパレル・グッズ情報。'+(s.price?'価格：'+s.price+' ':'')+' | COURTSIDE');
+
   modal.style.display = 'block';
 }
 
 function closeItemModal() {
   const modal = document.getElementById('itmModal');
   if (modal) modal.style.display = 'none';
+  document.title = 'COURTSIDE - NBA速報・まとめ';
 }
 
 async function loadAdminItems() {
