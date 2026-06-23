@@ -333,12 +333,19 @@ async function openArticle(id) {
   const modal = document.getElementById('articleModal');
   const body = document.getElementById('articleModalBody');
   if (!modal || !body) return;
+  // SEO: 記事タイトルを動的にセット
+  if (window.__currentArticle && window.__currentArticle.title) {
+    document.title = window.__currentArticle.title + ' | COURTSIDE';
+    const md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute('content', window.__currentArticle.title + ' - COURTSIDE NBA専門メディア。' + (window.__currentArticle.desc || ''));
+  }
   modal.style.display = 'block';
   body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">読み込み中...</div>';
 
   try {
     const res = await fetch(FB_ARTICLES + '/' + id + '.json');
     const a = await res.json();
+    window.__currentArticle = a;
     body.innerHTML = '<div style="padding:1rem;">' +
       '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>' +
       (a.img ? '<img src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
