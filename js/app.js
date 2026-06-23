@@ -20,6 +20,24 @@ function goPage(id, btn) {
   localStorage.setItem('lastPage', id);
   // URLハッシュにタブを保存
   history.replaceState(null, '', '#' + id);
+  // SEO: ページごとにタイトルを変更
+  const pageTitles = {
+    home: 'COURTSIDE - NBA速報・まとめ',
+    articles: '記事一覧 | COURTSIDE',
+    sneakers: 'バッシュ・レビュー | COURTSIDE',
+    items: 'NBAアパレル・アイテム | COURTSIDE',
+    players: 'NBA選手情報 | COURTSIDE',
+    schedule: 'NBA試合日程・結果 | COURTSIDE'
+  };
+  document.title = pageTitles[id] || 'COURTSIDE - NBA速報・まとめ';
+  const metaDesc = document.querySelector('meta[name="description"]');
+  const descMap = {
+    articles: 'NBA速報・まとめ記事一覧。1分で読めるNBA専門記事を毎日更新。河村勇輝・八村塁・カリーなど最新情報。',
+    sneakers: 'NBAバッシュ・スニーカーレビュー一覧。クッション性・トラクションなど機能スコアで比較。',
+    items: 'NBAアパレル・バスケグッズ情報。Nike・adidas・On Running最新アイテム。',
+    players: 'NBA選手スタッツ・プロフィール一覧。現役選手の最新成績・年俸情報。'
+  };
+  if (metaDesc && descMap[id]) metaDesc.setAttribute('content', descMap[id]);
   // 全ページを非表示
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('show'));
   // 指定ページを表示（順位/スタッツは試合ページに統合済みのためpg-scheduleへ）
