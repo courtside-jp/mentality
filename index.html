@@ -549,10 +549,352 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
       <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
     </div>
 
+        <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+        <button onclick="openNewSneaker()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="sneakerForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="sneakerEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="sneakerBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+            <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;">
+            <input id="sneakerGymOk" type="checkbox" style="width:16px;height:16px;">
+            <label for="sneakerGymOk" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="sneakerSubmitBtn" onclick="submitSneaker()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みバッシュ一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みバッシュ</div>
+      <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+    
+        
+        <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option><option>On Running</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">X投稿URL（任意・公式の投稿などを埋め込み表示）</div>
+            <input id="itemXUrl" type="text" placeholder="https://x.com/.../status/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+        <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+        <button onclick="openNewSneaker()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="sneakerForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="sneakerEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="sneakerBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+            <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;">
+            <input id="sneakerGymOk" type="checkbox" style="width:16px;height:16px;">
+            <label for="sneakerGymOk" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="sneakerSubmitBtn" onclick="submitSneaker()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みバッシュ一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みバッシュ</div>
+      <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+    
+        
+        <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option><option>On Running</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">X投稿URL（任意・公式の投稿などを埋め込み表示）</div>
+            <input id="itemXUrl" type="text" placeholder="https://x.com/.../status/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
         <div id="admin-ad" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#000;position:sticky;top:0;z-index:10;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <button onclick="showAdminPage(null)" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;">&#8592;</button>
+              <button onclick="showAdminPage('admin-menu')" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;">&#8592;</button>
               <span style="color:#fff;font-weight:700;font-size:15px;">広告管理</span>
             </div>
             <button onclick="openNewAd()" style="background:#C9082A;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;">+ 新規追加</button>
