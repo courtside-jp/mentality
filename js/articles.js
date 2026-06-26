@@ -39,6 +39,7 @@ async function insertArticleLink() {
     .map(([id, a]) => ({id, ...a}))
     .filter(a => a.status !== 'archived')
     .sort((a, b) => (b.ts||0) - (a.ts||0))
+    .filter(a => { const p = a.publishAt; return !p || p <= Date.now(); })
     .slice(0, 20);
 
   const overlay = document.createElement('div');
@@ -416,10 +417,19 @@ async function submitArticle() {
       await fetch(`${FB_ARTICLES}/${editId}.json`, {
         method: 'PATCH',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, body, img, category })
+        body: JSON.stringify({
+          title, body, img, category,
+          ts: Date.now(),
+          publishAt: (function(){
+            const el = document.getElementById('adminPublishAt');
+            if (!el || !el.value) return null;
+            return new Date(el.value).getTime();
+          })()
+        })
       });
       alert('更新しました！');
       document.getElementById('adminEditId').value = '';
+  const paEl = document.getElementById('adminPublishAt'); if(paEl) paEl.value = '';
       const btn = document.getElementById('adminSubmitBtn');
       if (btn) btn.textContent = '投稿する';
     } else {
@@ -640,7 +650,7 @@ async function loadAdminArticles() {
     wrap.innerHTML = articles.map(a => `
       <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}</div>
+          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}${a.publishAt && a.publishAt > Date.now() ? '<span style="background:#f59e0b;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:700;">予約中</span>' : ''}</div>
           <div style="font-size:.58rem;color:var(--tx3);">${a.category||'NBA'} · ${new Date(a.ts).toLocaleDateString('ja-JP')}</div>
         </div>
         <button onclick="editArticle('${a.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;margin-right:.3rem;">編集</button><button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
