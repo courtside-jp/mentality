@@ -367,7 +367,11 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
               <div id="adminBodyPreview" style="display:none;padding:10px 12px;min-height:300px;font-size:13px;line-height:1.8;color:#333;"></div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;">
+          <div>
+                <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">公開日時（空白 = 今すぐ公開 / 未来の日時 = 予約投稿）</label>
+                <input id="adminPublishAt" type="datetime-local" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="display:flex;gap:8px;">
             <button onclick="cancelArticleEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
             <button id="adminSubmitBtn" onclick="submitArticle()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
           </div>
