@@ -278,6 +278,37 @@ async function deleteSneaker(id) {
 
 function openNewSneaker() {
   document.getElementById('sneakerForm').style.display = 'block';
+  const rv = document.getElementById('sneakerReview');
+  if (rv && !rv.value) {
+    rv.value = `■ 基本情報
+ブランド：
+着用選手：
+価格：
+発売日：
+
+【① 部活生（中高生）視点】
+価格は親を説得できるか：
+毎日の練習に耐える耐久性：
+体育館でのグリップ：
+日本人の足幅への対応：
+同価格帯との比較：
+部活生おすすめ度：★★★☆☆
+
+【② NBA層（社会人）視点】
+なぜこの選手はこれを選んだか：
+プレースタイルとの関係：
+街でも履けるか（アスレジャー）：
+ストーリー・哲学：
+NBA層おすすめ度：★★★★☆
+
+■ 最安値情報
+Amazon：
+楽天：
+Nike/adidas公式：
+
+■ まとめ
+`;
+  }
   document.getElementById('sneakerEditId').value = '';
   document.getElementById('sneakerModel').value = '';
   document.getElementById('sneakerPlayer').value = '';
