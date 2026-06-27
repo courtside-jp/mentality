@@ -299,7 +299,8 @@ async function loadArticles() {
       return;
     }
 
-    const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts);
+    const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts)
+    .filter(a => { const p = a.publishAt; return !p || p <= Date.now(); });
     console.log('記事数:', articles.length, articles.map(a=>a.title));
     if (window._directArticleId) {
       const target = articles.find(a => a.id === window._directArticleId);
