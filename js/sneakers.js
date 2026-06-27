@@ -126,6 +126,7 @@ async function submitSneaker() {
   const score = calcSneakerScore();
   const payload = {
     brand, model: name, player, img, img2, img3, img4, price,
+      review: document.getElementById('sneakerReview')?.value || '',
     scoreCushion, scoreHold, scoreTraction, scoreWeight, score,
     sizeFeel, position,
     linkAmazon, linkRakuten, linkStockx, linkSnkrdunk,
