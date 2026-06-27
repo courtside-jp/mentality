@@ -20,7 +20,7 @@ function generateTOC(body) {
   if (headings.length < 2) return '';
   const items = headings.map((h, i) => {
     const label = h.text.replace(/<[^>]+>/g, '').replace(/^[\u25a0\u25aa]\s*/, '').trim();
-    return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:#111;text-decoration:none;font-size:12px;line-height:1.7;">${label}</a></li>`;
+    return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">${label}</a></li>`;
   }).join('');
   const uid = 'toc-' + Math.random().toString(36).slice(2,7);
   return `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
