@@ -8,12 +8,12 @@ function isHeadingLine(t) {
 // === 目次生成 ===
 function generateTOC(body) {
   if (!body) return '';
+  function _isH(t) { const p = t.replace(/<[^>]+>/g,'').trim(); return p && (p.charCodeAt(0) === 9632 || p.charCodeAt(0) === 9642); }
   const lines = body.split('\n');
   const headings = [];
   lines.forEach((line, i) => {
     const t = line.trim();
-    // ■▪で始まる行のみ目次に表示
-    if (t && isHeadingLine(t)) {
+    if (t && _isH(t)) {
       headings.push({ text: t, idx: i });
     }
   });
@@ -53,8 +53,8 @@ function renderBody(body) {
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
     }
     // ■ → 大見出し（目次対応・赤い目立つスタイル）
-    if (t && isHeadingLine(t)) {
-      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && isHeadingLine(lt)) cnt++; } return cnt; })();
+    if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
+      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
       const label = t.replace(/<[^>]+>/g, '').trim();
       return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:var(--accent,#e63946);">${label}</h2>`;
     }
