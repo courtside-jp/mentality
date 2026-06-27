@@ -1,3 +1,10 @@
+function isHeadingLine(t) {
+  // タグを除去してチェック
+  const plain = t.replace(/<[^>]+>/g, '').trim();
+  if (!plain) return false;
+  const c = plain.charCodeAt(0);
+  return c === 9632 || c === 9642; // ■ or ▪
+}
 // === 目次生成 ===
 function generateTOC(body) {
   if (!body) return '';
@@ -5,14 +12,14 @@ function generateTOC(body) {
   const headings = [];
   lines.forEach((line, i) => {
     const t = line.trim();
-    // ■で始まる行のみ目次に表示
-    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654)) {
+    // ■▪で始まる行のみ目次に表示
+    if (t && isHeadingLine(t)) {
       headings.push({ text: t, idx: i });
     }
   });
   if (headings.length < 2) return '';
   const items = headings.map((h, i) => {
-    const label = h.text.replace(/^[\u25a0\u25b6]\s*/, '').replace(/^\u300a|\u300b$/g, '').replace(/^\u3010|\u3011$/g, '').replace(/^\u300e|\u300f$/g, '').trim();
+    const label = h.text.replace(/<[^>]+>/g, '').replace(/^[\u25a0\u25aa]\s*/, '').trim();
     return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:var(--accent,#e63946);text-decoration:none;font-size:12px;line-height:1.7;">${label}</a></li>`;
   }).join('');
   return `<div style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;padding:14px 16px;margin:0 0 20px;">
@@ -46,9 +53,10 @@ function renderBody(body) {
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
     }
     // ■ → 大見出し（目次対応・赤い目立つスタイル）
-    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654)) {
-      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (lt.charCodeAt(0) === 9632 || lt.charCodeAt(0) === 9654)) cnt++; } return cnt; })();
-      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:var(--accent,#e63946);">${t}</h2>`;
+    if (t && isHeadingLine(t)) {
+      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && isHeadingLine(lt)) cnt++; } return cnt; })();
+      const label = t.replace(/<[^>]+>/g, '').trim();
+      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:var(--accent,#e63946);">${label}</h2>`;
     }
     // 【】→ 小見出し（控えめスタイル、目次なし）
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
