@@ -279,9 +279,10 @@ async function deleteSneaker(id) {
 
 function openNewSneaker() {
   document.getElementById('sneakerForm').style.display = 'block';
-  const rv = document.getElementById('sneakerReview');
-  if (rv && !rv.value) {
-    rv.value = `■ 基本情報
+  setTimeout(() => {
+    const rv = document.getElementById('sneakerReview');
+    if (rv && !rv.value) {
+      rv.value = `■ 基本情報
 ブランド：
 着用選手：
 価格：
@@ -309,27 +310,27 @@ Nike/adidas公式：
 
 ■ まとめ
 `;
-  }
-  document.getElementById('sneakerEditId').value = '';
-  document.getElementById('sneakerModel').value = '';
-  document.getElementById('sneakerPlayer').value = '';
-  document.getElementById('sneakerPrice').value = '';
-  document.getElementById('sneakerImg').value = '';
-  document.getElementById('sneakerImg2').value = '';
-  document.getElementById('sneakerImg3').value = '';
-  document.getElementById('sneakerImg4').value = '';
-  document.getElementById('sneakerScoreCushion').value = '';
-  document.getElementById('sneakerScoreHold').value = '';
-  document.getElementById('sneakerScoreTraction').value = '';
-  document.getElementById('sneakerScoreWeight').value = '';
-  document.getElementById('sneakerSizeFeel').value = '';
-  document.getElementById('sneakerPosition').value = '';
-  document.getElementById('sneakerLinkAmazon').value = '';
-  document.getElementById('sneakerLinkRakuten').value = '';
-  document.getElementById('sneakerLinkStockx').value = '';
-  document.getElementById('sneakerLinkSnkrdunk').value = '';
-  if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = false;
-  document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
+    }
+    document.getElementById('sneakerEditId').value = '';
+    document.getElementById('sneakerModel').value = '';
+    document.getElementById('sneakerPlayer').value = '';
+    document.getElementById('sneakerPrice').value = '';
+    document.getElementById('sneakerImg').value = '';
+    document.getElementById('sneakerImg2').value = '';
+    document.getElementById('sneakerImg3').value = '';
+    document.getElementById('sneakerImg4').value = '';
+    document.getElementById('sneakerScoreCushion').value = '';
+    document.getElementById('sneakerScoreHold').value = '';
+    document.getElementById('sneakerScoreTraction').value = '';
+    document.getElementById('sneakerScoreWeight').value = '';
+    document.getElementById('sneakerSizeFeel').value = '';
+    document.getElementById('sneakerPosition').value = '';
+    document.getElementById('sneakerLinkAmazon').value = '';
+    document.getElementById('sneakerLinkRakuten').value = '';
+    document.getElementById('sneakerLinkStockx').value = '';
+    document.getElementById('sneakerLinkSnkrdunk').value = '';
+    if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = false;
+    document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
 }
 
 function cancelSneakerEdit() {
