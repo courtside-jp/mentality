@@ -1,3 +1,33 @@
+// ===== \u30d0\u30c3\u30b7\u30e5\u30ec\u30d3\u30e5\u30fc\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8 =====
+window.SNK_REVIEW_TEMPLATE = `\u25a0 \u57fa\u672c\u60c5\u5831
+\u30d6\u30e9\u30f3\u30c9\uff1a
+\u7740\u7528\u9078\u624b\uff1a
+\u4fa1\u683c\uff1a
+\u767a\u58f2\u65e5\uff1a
+
+\u3010\u2460 \u90e8\u6d3b\u751f\uff08\u4e2d\u9ad8\u751f\uff09\u8996\u70b9\u3011
+\u4fa1\u683c\u306f\u89aa\u3092\u8aac\u5f97\u3067\u304d\u308b\u304b\uff1a
+\u6bce\u65e5\u306e\u7df4\u7fd2\u306b\u8014\u3048\u308b\u8010\u4e45\u6027\uff1a
+\u4f53\u80b2\u9928\u3067\u306e\u30b0\u30ea\u30c3\u30d7\uff1a
+\u65e5\u672c\u4eba\u306e\u8db3\u5e45\u3078\u306e\u5bfe\u5fdc\uff1a
+\u540c\u4fa1\u683c\u5e2f\u3068\u306e\u6bd4\u8f03\uff1a
+\u90e8\u6d3b\u751f\u304a\u3059\u3059\u3081\u5ea6\uff1a\u2605\u2605\u2605\u2606\u2606
+
+\u3010\u2461 NBA\u5c64\uff08\u793e\u4f1a\u4eba\uff09\u8996\u70b9\u3011
+\u306a\u305c\u3053\u306e\u9078\u624b\u306f\u3053\u308c\u3092\u9078\u3093\u3060\u304b\uff1a
+\u30d7\u30ec\u30fc\u30b9\u30bf\u30a4\u30eb\u3068\u306e\u95a2\u4fc2\uff1a
+\u8857\u3067\u3082\u5c65\u3051\u308b\u304b\uff08\u30a2\u30b9\u30ec\u30b8\u30e3\u30fc\uff09\uff1a
+\u30b9\u30c8\u30fc\u30ea\u30fc\u30fb\u54f2\u5b66\uff1a
+NBA\u5c64\u304a\u3059\u3059\u3081\u5ea6\uff1a\u2605\u2605\u2605\u2605\u2606
+
+\u25a0 \u6700\u5b89\u5024\u60c5\u5831
+Amazon\uff1a
+\u697d\u5929\uff1a
+Nike/adidas\u516c\u5f0f\uff1a
+
+\u25a0 \u307e\u3068\u3081
+`;
+
 // sneakers.js — バッシュ情報
 
 const FB_SNEAKERS = `${FB_URL}/sneakers`;
@@ -279,63 +309,36 @@ async function deleteSneaker(id) {
 
 function openNewSneaker() {
   document.getElementById('sneakerForm').style.display = 'block';
+  document.getElementById('sneakerEditId').value = '';
+  document.getElementById('sneakerModel').value = '';
+  document.getElementById('sneakerPlayer').value = '';
+  document.getElementById('sneakerScoreCushion').value = '';
+  document.getElementById('sneakerScoreHold').value = '';
+  document.getElementById('sneakerScoreTraction').value = '';
+  document.getElementById('sneakerScoreWeight').value = '';
+  document.getElementById('sneakerSizeFeel').value = '';
+  document.getElementById('sneakerPosition').value = '';
+  document.getElementById('sneakerGymOk').checked = false;
+  document.getElementById('sneakerPrice').value = '';
+  document.getElementById('sneakerImg').value = '';
+  document.getElementById('sneakerImg2').value = '';
+  document.getElementById('sneakerImg3').value = '';
+  document.getElementById('sneakerImg4').value = '';
+  document.getElementById('sneakerLinkAmazon').value = '';
+  document.getElementById('sneakerLinkRakuten').value = '';
+  document.getElementById('sneakerLinkStockx').value = '';
+  document.getElementById('sneakerLinkSnkrdunk').value = '';
+  const rv = document.getElementById('sneakerReview');
+  if (rv) rv.value = '';
+  document.getElementById('sneakerSubmitBtn').textContent = '\u6295\u7a3f\u3059\u308b';
   setTimeout(() => {
-    const rv = document.getElementById('sneakerReview');
-    if (rv && !rv.value) {
-      rv.value = `■ 基本情報
-ブランド：
-着用選手：
-価格：
-発売日：
-
-【① 部活生（中高生）視点】
-価格は親を説得できるか：
-毎日の練習に耐える耐久性：
-体育館でのグリップ：
-日本人の足幅への対応：
-同価格帯との比較：
-部活生おすすめ度：★★★☆☆
-
-【② NBA層（社会人）視点】
-なぜこの選手はこれを選んだか：
-プレースタイルとの関係：
-街でも履けるか（アスレジャー）：
-ストーリー・哲学：
-NBA層おすすめ度：★★★★☆
-
-■ 最安値情報
-Amazon：
-楽天：
-Nike/adidas公式：
-
-■ まとめ
-`;
+    const rv2 = document.getElementById('sneakerReview');
+    if (rv2 && !rv2.value) {
+      rv2.value = window.SNK_REVIEW_TEMPLATE || '';
     }
-    document.getElementById('sneakerEditId').value = '';
-    document.getElementById('sneakerModel').value = '';
-    document.getElementById('sneakerPlayer').value = '';
-    document.getElementById('sneakerPrice').value = '';
-    document.getElementById('sneakerImg').value = '';
-    document.getElementById('sneakerImg2').value = '';
-    document.getElementById('sneakerImg3').value = '';
-    document.getElementById('sneakerImg4').value = '';
-    document.getElementById('sneakerScoreCushion').value = '';
-    document.getElementById('sneakerScoreHold').value = '';
-    document.getElementById('sneakerScoreTraction').value = '';
-    document.getElementById('sneakerScoreWeight').value = '';
-    document.getElementById('sneakerSizeFeel').value = '';
-    document.getElementById('sneakerPosition').value = '';
-    document.getElementById('sneakerLinkAmazon').value = '';
-    document.getElementById('sneakerLinkRakuten').value = '';
-    document.getElementById('sneakerLinkStockx').value = '';
-    document.getElementById('sneakerLinkSnkrdunk').value = '';
-    if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = false;
-    document.getElementById('sneakerSubmitBtn').textContent = '投稿する';
+  }, 200);
 }
 
-function cancelSneakerEdit() {
-  document.getElementById('sneakerForm').style.display = 'none';
-}
 
 async function editSneaker(id) {
   const res = await fetch(`${FB_SNEAKERS}/${id}.json`);
