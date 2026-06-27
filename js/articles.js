@@ -25,7 +25,7 @@ function generateTOC(body) {
   const uid = 'toc-' + Math.random().toString(36).slice(2,7);
   return `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
     <summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">
-      <span style="font-size:14px;">&#128218;</span> \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
+      \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
     </summary>
     <div style="padding:4px 16px 14px;">
       <ol style="margin:0;padding-left:20px;">${items}</ol>
