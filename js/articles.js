@@ -5,7 +5,8 @@ function generateTOC(body) {
   const headings = [];
   lines.forEach((line, i) => {
     const t = line.trim();
-    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654 || (t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))))) {
+    // 【】で囲まれた行のみ目次に表示
+    if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
       headings.push({ text: t, idx: i });
     }
   });
@@ -44,9 +45,14 @@ function renderBody(body) {
       const [, pName, pPrice, pUrl] = productMatch;
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
     }
-    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654 || (t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))))) {
-      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (lt.charCodeAt(0) === 9632 || lt.charCodeAt(0) === 9654 || (lt.charCodeAt(0) === 12304 && lt.includes(String.fromCharCode(12305))))) cnt++; } return cnt; })();
-      return `<h2 id="toc-${hIdx}" style="font-size:.95rem;font-weight:800;margin:1.4em 0 .5em;padding:8px 12px;background:linear-gradient(90deg,rgba(230,57,70,.08),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${t}</h2>`;
+    // 【】→ 大見出し（目次対応）
+    if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
+      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && lt.charCodeAt(0) === 12304 && lt.includes(String.fromCharCode(12305))) cnt++; } return cnt; })();
+      return `<h2 id="toc-${hIdx}" style="font-size:.95rem;font-weight:800;margin:1.6em 0 .5em;padding:8px 12px;background:linear-gradient(90deg,rgba(230,57,70,.08),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${t}</h2>`;
+    }
+    // ■ → 小見出し（スタイルのみ、目次なし）
+    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654)) {
+      return `<h3 style="font-size:.88rem;font-weight:800;margin:1.2em 0 .4em;color:var(--accent,#e63946);">${t}</h3>`;
     }
     return t ? '<p style="margin:.4rem 0;">' + t + '</p>' : '<br>';
   }).join('');
