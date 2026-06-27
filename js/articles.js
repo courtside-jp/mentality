@@ -22,10 +22,15 @@ function generateTOC(body) {
     const label = h.text.replace(/<[^>]+>/g, '').replace(/^[\u25a0\u25aa]\s*/, '').trim();
     return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:var(--accent,#e63946);text-decoration:none;font-size:12px;line-height:1.7;">${label}</a></li>`;
   }).join('');
-  return `<div style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;padding:14px 16px;margin:0 0 20px;">
-    <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:8px;letter-spacing:.08em;">&#128218; \u76ee\u6b21</div>
-    <ol style="margin:0;padding-left:20px;">${items}</ol>
-  </div>`;
+  const uid = 'toc-' + Math.random().toString(36).slice(2,7);
+  return `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
+    <summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">
+      <span style="font-size:14px;">&#128218;</span> \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
+    </summary>
+    <div style="padding:4px 16px 14px;">
+      <ol style="margin:0;padding-left:20px;">${items}</ol>
+    </div>
+  </details>`;
 }
 
 // articles.js — 記事投稿・一覧・詳細
@@ -56,7 +61,7 @@ function renderBody(body) {
     if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
       const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
       const label = t.replace(/<[^>]+>/g, '').trim();
-      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:var(--accent,#e63946);">${label}</h2>`;
+      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:#111;">${label}</h2>`;
     }
     // 【】→ 小見出し（控えめスタイル、目次なし）
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
