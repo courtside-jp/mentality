@@ -1,3 +1,25 @@
+// === 目次生成 ===
+function generateTOC(body) {
+  if (!body) return '';
+  const lines = body.split('\n');
+  const headings = [];
+  lines.forEach((line, i) => {
+    const t = line.trim();
+    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654 || (t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))))) {
+      headings.push({ text: t, idx: i });
+    }
+  });
+  if (headings.length < 2) return '';
+  const items = headings.map((h, i) => {
+    const label = h.text.replace(/^[\u25a0\u25b6]\s*/, '').replace(/^\u300a|\u300b$/g, '').replace(/^\u3010|\u3011$/g, '').replace(/^\u300e|\u300f$/g, '').trim();
+    return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:var(--accent,#e63946);text-decoration:none;font-size:12px;line-height:1.7;">${label}</a></li>`;
+  }).join('');
+  return `<div style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;padding:14px 16px;margin:0 0 20px;">
+    <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:8px;letter-spacing:.08em;">&#128218; \u76ee\u6b21</div>
+    <ol style="margin:0;padding-left:20px;">${items}</ol>
+  </div>`;
+}
+
 // articles.js — 記事投稿・一覧・詳細
 
 const FB_ARTICLES = `${FB_URL}/articles`;
@@ -8,7 +30,8 @@ const ADMIN_PASSWORD = '3579';
 // ============================================================
 function renderBody(body) {
   if (!body) return '';
-  return body.split('\n').map(line => {
+  const lines = body.split('\n');
+  return lines.map(line => {
     const t = line.trim();
     const yt = t.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
@@ -20,6 +43,10 @@ function renderBody(body) {
     if (productMatch) {
       const [, pName, pPrice, pUrl] = productMatch;
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
+    }
+    if (t && (t.charCodeAt(0) === 9632 || t.charCodeAt(0) === 9654 || (t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))))) {
+      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (lt.charCodeAt(0) === 9632 || lt.charCodeAt(0) === 9654 || (lt.charCodeAt(0) === 12304 && lt.includes(String.fromCharCode(12305))))) cnt++; } return cnt; })();
+      return `<h2 id="toc-${hIdx}" style="font-size:.95rem;font-weight:800;margin:1.4em 0 .5em;padding:8px 12px;background:linear-gradient(90deg,rgba(230,57,70,.08),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${t}</h2>`;
     }
     return t ? '<p style="margin:.4rem 0;">' + t + '</p>' : '<br>';
   }).join('');
@@ -356,7 +383,7 @@ async function openArticle(id) {
       '<span style="font-size:.58rem;color:var(--tx3);">' + new Date(a.ts).toLocaleDateString('ja-JP') + '</span>' +
       '</div>' +
       '<div style="font-size:1rem;font-weight:700;color:var(--tx);line-height:1.5;margin-bottom:.8rem;">' + a.title + '</div>' +
-      '<div id="articleBodyDiv" style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + renderBody(a.body) + '</div>' +
+      '<div id="articleBodyDiv" style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
       '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/?article=' + id) + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
       '</div>';
