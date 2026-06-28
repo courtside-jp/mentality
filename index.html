@@ -1427,5 +1427,14 @@ window.addEventListener('load', function() {
     <div id="itmModalBody" style="padding:1rem;"></div>
   </div>
 </div>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/mentality/service-worker.js')
+      .then(() => console.log('SW registered'))
+      .catch(e => console.log('SW error', e));
+  });
+}
+</script>
 </body>
 </html>
