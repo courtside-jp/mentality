@@ -1,26 +1,30 @@
 {
   "name": "COURTSIDE - NBA速報・まとめ",
   "short_name": "COURTSIDE",
-  "description": "スキマ時間で読めるNBA最新情報メディア。試合速報・選手情報・バッシュ・記事をまとめてチェック。",
-  "start_url": "./",
-  "scope": "./",
+  "description": "NBA速報・記事・バッシュレビュー・選手スタッツをまとめたNBAメディア",
+  "start_url": "/mentality/",
+  "scope": "/mentality/",
   "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#e63946",
   "orientation": "portrait",
-  "background_color": "#0a1628",
-  "theme_color": "#0a1628",
-  "lang": "ja",
   "icons": [
     {
-      "src": "assets/icon-192.png",
+      "src": "/mentality/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/icon-512.png",
+      "src": "/mentality/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": [
+    "sports",
+    "news"
+  ],
+  "lang": "ja"
 }
