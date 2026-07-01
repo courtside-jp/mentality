@@ -951,7 +951,8 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-              <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル（右側に表示）</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル（右側に表示）</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="下部バナー">下部バナー（全ページ共通）</option><option value="記事下">記事下（記事を読んだ後）</option><option value="ホーム">ホームページのみ</option></select></div>
               <div style="display:flex;gap:8px;">
                 <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
                 <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
@@ -1469,6 +1470,21 @@ if ('serviceWorker' in navigator) {
 <script>
 (function(){
   if(sessionStorage.getItem('adClosed')==='1') return;
+  // 記事・バッシュ・プレイヤー詳細が開いているときはバナーを非表示
+  const _origOpenArticle = window.openArticle;
+  const _origCloseArticle = window.closeArticle;
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('articleModal');
+    const snkModal = document.getElementById('snkModal');
+    const banner = document.getElementById('fixedAdBanner');
+    if (!banner) return;
+    setTimeout(() => {
+      const artOpen = modal && modal.style.display !== 'none' && modal.offsetHeight > 0;
+      const snkOpen = snkModal && snkModal.style.display !== 'none' && snkModal.offsetHeight > 0;
+      banner.style.opacity = (artOpen || snkOpen) ? '0' : '1';
+      banner.style.pointerEvents = (artOpen || snkOpen) ? 'none' : 'auto';
+    }, 100);
+  });
   fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
     .then(r=>r.json())
     .then(data=>{
