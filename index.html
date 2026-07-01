@@ -1458,14 +1458,15 @@ if ('serviceWorker' in navigator) {
 
 <!-- 固定アフィリエイトバナー -->
 <div id="fixedAdBanner" style="position:fixed;bottom:75px;left:0;right:0;z-index:1000;background:#111;border-top:2px solid #e63946;box-shadow:0 -2px 12px rgba(0,0,0,.4);display:none;">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;">
-    <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
-      <span style="font-size:9px;color:#e63946;font-weight:800;border:1px solid #e63946;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
-      <a id="fixedAdLink" href="#" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;"></a>
+  <a id="fixedAdLink" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:7px 12px;text-decoration:none;flex:1;overflow:hidden;">
+    <img id="fixedAdImg" src="" alt="" style="height:28px;width:auto;max-width:60px;object-fit:contain;flex-shrink:0;display:none;border-radius:4px;">
+    <div style="flex:1;overflow:hidden;min-width:0;">
+      <div id="fixedAdText" style="color:#fff;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+      <div id="fixedAdSub" style="color:#aaa;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;"></div>
     </div>
-    <span id="fixedAdLabel" style="font-size:9px;font-weight:800;white-space:nowrap;margin-left:8px;color:#999;"></span>
-    <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:4px 8px;flex-shrink:0;line-height:1;margin-left:4px;">×</button>
-  </div>
+    <span style="font-size:9px;color:#e63946;font-weight:800;border:1px solid #e63946;padding:1px 4px;border-radius:3px;white-space:nowrap;flex-shrink:0;">PR</span>
+  </a>
+  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="position:absolute;top:50%;right:6px;transform:translateY(-50%);background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:4px 6px;line-height:1;">×</button>
 </div>
 <script>
 (function(){
@@ -1491,17 +1492,23 @@ if ('serviceWorker' in navigator) {
       if(!data) return;
       const banners = Object.values(data).filter(a=>a.type==='banner'&&a.active);
       if(!banners.length) return;
-      const ad = banners[Math.floor(Math.random()*banners.length)];
       const banner = document.getElementById('fixedAdBanner');
-      const link = document.getElementById('fixedAdLink');
-      const label = document.getElementById('fixedAdLabel');
-      if(link) { link.textContent = ad.text; link.href = ad.link; }
-      if(label) { label.textContent = ad.label||''; }
+      function showAd(ad) {
+        const link = document.getElementById('fixedAdLink');
+        const img = document.getElementById('fixedAdImg');
+        const text = document.getElementById('fixedAdText');
+        const sub = document.getElementById('fixedAdSub');
+        if(link) link.href = ad.link || '#';
+        if(img) { if(ad.img){ img.src=ad.img; img.style.display='block'; }else{ img.style.display='none'; } }
+        if(text) text.textContent = ad.text || '';
+        if(sub) sub.textContent = ad.subtext || '';
+        if(banner) banner.style.borderTopColor = ad.bgColor || '#e63946';
+      }
+      let idx = Math.floor(Math.random()*banners.length);
+      showAd(banners[idx]);
       if(banner) banner.style.display='block';
-      // 5秒ごとに別のバナーに切り替え
       if(banners.length>1) {
-        let i=banners.indexOf(ad);
-        setInterval(()=>{ i=(i+1)%banners.length; const b=banners[i]; if(link){link.textContent=b.text;link.href=b.link;} if(label)label.textContent=b.label||''; },5000);
+        setInterval(()=>{ idx=(idx+1)%banners.length; showAd(banners[idx]); }, 5000);
       }
     }).catch(()=>{});
 })();
