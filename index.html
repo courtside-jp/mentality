@@ -940,7 +940,25 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 
           <div style="padding:16px;">
             <div style="font-size:11px;color:#999;margin-bottom:8px;">登録済み広告</div>
-            <div id="adminAdList"><div style="text-align:center;color:#999;padding:20px;font-size:13px;">広告なし</div></div>
+            <div id="adminAdList"><div style="text-align:center;color:#999;padding:20px;font-size:13px;">広告なし</div>
+          <div style="margin-top:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:700;color:#333;">📢 下部バナー広告</div>
+              <button onclick="openNewBanner()" style="background:#e63946;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+            </div>
+            <div id="bannerForm" style="display:none;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:14px;margin-bottom:12px;">
+              <input type="hidden" id="bannerEditId">
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル（右側に表示）</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
+                <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
+              </div>
+            </div>
+            <div id="adminBannerList"></div>
+          </div></div>
           </div>
         </div>
 
@@ -1272,7 +1290,7 @@ function showAdminPage(id){
   if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
   if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
   if(id==='admin-item' && typeof loadAdminItems==='function') loadAdminItems();
-  if (id === 'admin-ad') loadAdminAds();
+  if (id === 'admin-ad') loadAdminAds(); if(typeof loadAdminBanners==="function") loadAdminBanners();
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
