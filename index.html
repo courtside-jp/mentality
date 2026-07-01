@@ -1436,5 +1436,22 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<!-- 固定アフィリエイトバナー -->
+<div id="fixedAdBanner" style="position:fixed;bottom:56px;left:0;right:0;z-index:1000;background:#111;border-top:2px solid #e63946;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;box-shadow:0 -2px 12px rgba(0,0,0,.4);">
+  <div style="display:flex;align-items:center;gap:10px;flex:1;overflow:hidden;">
+    <span style="font-size:9px;color:#e63946;font-weight:800;letter-spacing:.05em;white-space:nowrap;">PR</span>
+    <a id="fixedAdLink" href="https://hb.afl.rakuten.co.jp/hgc/g00qcd42.rhufm9a3.g00qcd42.rhufn7c5/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">🏀 バッシュ最安値を楽天でチェック →</a>
+  </div>
+  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="background:none;border:none;color:#999;font-size:16px;cursor:pointer;padding:4px 6px;flex-shrink:0;">×</button>
+</div>
+<script>
+  if (sessionStorage.getItem('adClosed') === '1') {
+    document.addEventListener('DOMContentLoaded', function() {
+      const b = document.getElementById('fixedAdBanner');
+      if (b) b.style.display = 'none';
+    });
+  }
+</script>
 </body>
 </html>
