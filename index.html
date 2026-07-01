@@ -1438,35 +1438,45 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <!-- 固定アフィリエイトバナー -->
-<div id="fixedAdBanner" style="position:fixed;bottom:56px;left:0;right:0;z-index:1000;background:#111;border-top:2px solid #e63946;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;box-shadow:0 -2px 12px rgba(0,0,0,.4);">
-  <div style="display:flex;align-items:center;gap:10px;flex:1;overflow:hidden;">
-    <span style="font-size:9px;color:#e63946;font-weight:800;letter-spacing:.05em;white-space:nowrap;border:1px solid #e63946;padding:1px 4px;border-radius:3px;">PR</span>
-    <a id="fixedAdLink" href="#" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;"></a>
+<div id="fixedAdBanner" style="position:fixed;bottom:58px;left:0;right:0;z-index:1000;background:#111;border-top:2px solid #e63946;box-shadow:0 -2px 12px rgba(0,0,0,.4);">
+  <!-- Amazon バナー -->
+  <div id="adAmazon" style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
+      <span style="font-size:9px;color:#e63946;font-weight:800;border:1px solid #e63946;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
+      <a href="https://www.amazon.co.jp/s?k=%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA&tag=courtsidejp20-22" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">🛒 Amazonでバッシュをチェック →</a>
+    </div>
+    <span style="font-size:9px;color:#ff9900;font-weight:800;white-space:nowrap;margin-left:8px;">Amazon</span>
   </div>
-  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:4px 8px;flex-shrink:0;line-height:1;">×</button>
+  <!-- 楽天バナー -->
+  <div id="adRakuten" style="display:none;align-items:center;justify-content:space-between;padding:7px 14px;">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
+      <span style="font-size:9px;color:#e63946;font-weight:800;border:1px solid #e63946;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
+      <a href="https://hb.afl.rakuten.co.jp/ichiba/4f24f2da.da6339af.4f24f2db.d1736aba/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">🏀 楽天でバッシュ最安値を探す →</a>
+    </div>
+    <span style="font-size:9px;color:#bf0000;font-weight:800;white-space:nowrap;margin-left:8px;">楽天</span>
+  </div>
+  <!-- 閉じるボタン -->
+  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="position:absolute;top:50%;right:8px;transform:translateY(-50%);background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:4px 6px;line-height:1;">×</button>
 </div>
 <script>
 (function(){
-  if (sessionStorage.getItem('adClosed') === '1') {
-    document.addEventListener('DOMContentLoaded', function() {
-      var b = document.getElementById('fixedAdBanner');
-      if (b) b.style.display = 'none';
+  if(sessionStorage.getItem('adClosed')==='1'){
+    document.addEventListener('DOMContentLoaded',function(){
+      var b=document.getElementById('fixedAdBanner');
+      if(b)b.style.display='none';
     });
     return;
   }
-  var ads = [
-    { text: '🏀 バッシュ最安値を楽天でチェック →', url: 'https://hb.afl.rakuten.co.jp/ichiba/4f24f2da.da6339af.4f24f2db.d1736aba/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA&m=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA' },
-    { text: '🏀 Amazonでバッシュをチェック →', url: 'https://www.amazon.co.jp/s?k=%E3%83%90%E3%82%B9%E3%82%B1%E3%83%83%E3%83%88%E3%83%9C%E3%83%BC%E3%83%AB%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA&tag=courtsidejp20-22' },
-    { text: '⚡ ゼビオでバッシュを最安値で探す →', url: 'https://www.supersportsxebio.com/shop/g/g/?scat=&utm_source=a8&utm_medium=affiliate' }
-  ];
-  var idx = Math.floor(Math.random() * ads.length);
-  document.addEventListener('DOMContentLoaded', function() {
-    var link = document.getElementById('fixedAdLink');
-    if (link) {
-      link.textContent = ads[idx].text;
-      link.href = ads[idx].url;
-    }
-  });
+  // 5秒ごとにAmazon⇔楽天を切り替え
+  var isAmazon = true;
+  setInterval(function(){
+    var am=document.getElementById('adAmazon');
+    var ra=document.getElementById('adRakuten');
+    if(!am||!ra)return;
+    isAmazon=!isAmazon;
+    am.style.display=isAmazon?'flex':'none';
+    ra.style.display=isAmazon?'none':'flex';
+  }, 5000);
 })();
 </script>
 </body>
