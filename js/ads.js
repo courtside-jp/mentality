@@ -114,3 +114,87 @@
     window.loadAdminAds();
   };
 })();
+
+
+// === バナー広告管理 ===
+async function loadAdminBanners() {
+  const wrap = document.getElementById('adminBannerList');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;color:#999;font-size:12px;padding:20px;">読み込み中...</div>';
+  const res = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json');
+  const data = await res.json();
+  if (!data) { wrap.innerHTML = '<div style="text-align:center;color:#999;font-size:12px;padding:20px;">バナーなし</div>'; return; }
+  const banners = Object.entries(data).filter(([,a]) => a.type === 'banner').sort((a,b) => (b[1].ts||0)-(a[1].ts||0));
+  if (!banners.length) { wrap.innerHTML = '<div style="text-align:center;color:#999;font-size:12px;padding:20px;">バナー広告がありません</div>'; return; }
+  wrap.innerHTML = banners.map(([id, a]) => `
+    <div style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;">${a.title||a.text||''}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="toggleBannerAd('${id}', ${!a.active})" style="background:${a.active?'#e63946':'#ccc'};color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;">${a.active?'表示中':'停止中'}</button>
+          <button onclick="editBannerAd('${id}')" style="background:#f3f3f3;border:1px solid #ddd;border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;">編集</button>
+          <button onclick="deleteBannerAd('${id}')" style="background:#fff0f0;border:1px solid #fcc;color:#e63946;border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;">削除</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.text||''}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.link||''}</div>
+    </div>
+  `).join('');
+}
+
+async function toggleBannerAd(id, active) {
+  await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ active })
+  });
+  loadAdminBanners();
+}
+
+async function deleteBannerAd(id) {
+  if (!confirm('このバナーを削除しますか？')) return;
+  await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, { method: 'DELETE' });
+  loadAdminBanners();
+}
+
+function editBannerAd(id) {
+  fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`)
+    .then(r => r.json()).then(a => {
+      document.getElementById('bannerEditId').value = id;
+      document.getElementById('bannerTitle').value = a.title || '';
+      document.getElementById('bannerText').value = a.text || '';
+      document.getElementById('bannerLink').value = a.link || '';
+      document.getElementById('bannerLabel').value = a.label || '';
+      document.getElementById('bannerForm').style.display = 'block';
+    });
+}
+
+function openNewBanner() {
+  document.getElementById('bannerEditId').value = '';
+  document.getElementById('bannerTitle').value = '';
+  document.getElementById('bannerText').value = '';
+  document.getElementById('bannerLink').value = '';
+  document.getElementById('bannerLabel').value = '';
+  document.getElementById('bannerForm').style.display = 'block';
+}
+
+async function submitBanner() {
+  const id = document.getElementById('bannerEditId').value;
+  const data = {
+    title: document.getElementById('bannerTitle').value,
+    text: document.getElementById('bannerText').value,
+    link: document.getElementById('bannerLink').value,
+    label: document.getElementById('bannerLabel').value,
+    type: 'banner', active: true, ts: Date.now()
+  };
+  if (id) {
+    await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)
+    });
+  } else {
+    await fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)
+    });
+  }
+  document.getElementById('bannerForm').style.display = 'none';
+  loadAdminBanners();
+  alert(id ? '更新しました' : '追加しました');
+}
