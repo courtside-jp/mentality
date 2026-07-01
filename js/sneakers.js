@@ -79,29 +79,39 @@ async function loadSneakers() {
 function renderSneakers(list) {
   const wrap = document.getElementById('sneakersWrap');
   if (!wrap) return;
-  if (!list.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">該当するバッシュがありません</div>'; return; }
+  if (!list.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ情報がありません</div>'; return; }
 
-  wrap.innerHTML = list.map(s => `
-    <div onclick="openSnkModal('${s.id}')" style="background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:.8rem;overflow:hidden;cursor:pointer;">
-      ${s.img ? `<img src="${s.img}" style="width:100%;height:200px;object-fit:cover;" onerror="this.style.display='none'">` : '<div style="width:100%;height:160px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;">👟</div>'}
-      <div style="padding:.8rem;">
-        <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;">
-          ${s.isNew ? '<span style="font-size:.55rem;background:#ff5a00;color:#fff;padding:.1rem .5rem;border-radius:10px;font-weight:700;">NEW</span>' : ''}
-          ${s.gymOk ? '<span style="font-size:.55rem;background:#0a7c3e;color:#fff;padding:.1rem .5rem;border-radius:10px;font-weight:700;">🏋️ ジムにもOK</span>' : ''}
-          <span style="font-size:.6rem;background:var(--bg3);color:var(--tx3);padding:.1rem .5rem;border-radius:10px;">${BRANDS[s.brand]||s.brand||''}</span>
-          ${s.player ? `<span style="font-size:.6rem;color:var(--tx3);">👤 ${s.player}</span>` : ''}
-        </div>
-        <div style="font-size:.9rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;">${s.model||s.name||''}</div>
-        ${s.score ? `<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem;"><span style="font-size:.7rem;color:var(--tx3);">評価</span><div style="flex:1;background:var(--bg3);border-radius:10px;height:6px;"><div style="width:${s.score}%;background:${snkScoreColor(s.score)};border-radius:10px;height:6px;"></div></div><span style="font-size:.75rem;font-weight:700;color:${snkScoreColor(s.score)};">${s.score}/100</span></div>` : ''}
-        ${s.desc ? `<div style="font-size:.75rem;color:var(--tx2);line-height:1.6;margin-bottom:.5rem;">${s.desc}</div>` : ''}
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          ${s.price ? `<span style="font-size:.9rem;font-weight:700;color:var(--or);">${s.price}</span>` : '<span></span>'}
-          ${(s.linkAmazon||s.linkRakuten||s.linkStockx||s.linkSnkrdunk||s.link) ? `<a href="${s.linkAmazon||s.linkRakuten||s.linkStockx||s.linkSnkrdunk||s.link}" target="_blank" onclick="event.stopPropagation()" style="background:var(--or);color:#fff;padding:.4rem .9rem;border-radius:8px;font-size:.75rem;font-weight:700;text-decoration:none;">購入する →</a>` : ''}
-        <a href="${'https://twitter.com/intent/tweet?text=' + encodeURIComponent(s.name + ' #バッシュ #COURTSIDE https://yasukou1202.github.io/mentality/')}" target="_blank" style="background:#000;color:#fff;padding:.4rem .6rem;border-radius:8px;font-size:.75rem;text-decoration:none;">𝕏</a>
-        </div>
-      </div>
+  wrap.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:4px 0;">
+      ${list.map(s => {
+        const score = Math.round((((s.cushion||80)+(s.traction||80)+(s.hold||80)+(s.lightness||80))/4));
+        const imgs = s.images && s.images.length ? s.images : (s.img ? [s.img] : []);
+        const imgUrl = imgs[0] || '';
+        const brandColors = {Nike:'#111',adidas:'#000',ASICS:'#003DA5','Under Armour':'#C8102E',Puma:'#D2202A',Jordan:'#111'};
+        const bc = brandColors[s.brand] || '#e63946';
+        return `
+        <div onclick="openSnkModal('${s.id}')" style="background:#fff;border:0.5px solid #eee;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="position:relative;aspect-ratio:1;background:#f5f5f5;overflow:hidden;">
+            ${imgUrl ? `<img src="${imgUrl}" alt="${s.model||''}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;">👟</div>`}
+            <div style="position:absolute;top:8px;left:8px;background:${bc};color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;">${s.brand||''}</div>
+            ${score>=90?'<div style="position:absolute;top:8px;right:8px;background:#e63946;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;">人気</div>':''}
+          </div>
+          <div style="padding:10px 12px 12px;">
+            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||'未設定'}</div>
+            ${s.player ? `<div style="font-size:10px;color:#888;margin-bottom:6px;">${s.player}</div>` : ''}
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px;">
+              <div style="flex:1;height:3px;background:#f0f0f0;border-radius:2px;overflow:hidden;"><div style="height:100%;width:${score}%;background:#e63946;border-radius:2px;"></div></div>
+              <span style="font-size:10px;font-weight:700;color:#e63946;">${score}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:13px;font-weight:700;color:#111;">${s.price ? '¥'+Number(s.price).toLocaleString() : '価格未定'}</span>
+              <span style="font-size:10px;color:#888;background:#f5f5f5;padding:3px 8px;border-radius:4px;">詳細 →</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
     </div>
-  `).join('');
+  `;
 }
 
 function filterSneakers(btn, brand) {
