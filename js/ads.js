@@ -129,7 +129,10 @@ async function loadAdminBanners() {
   wrap.innerHTML = banners.map(([id, a]) => `
     <div style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:10px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:12px;font-weight:700;">${a.title||a.text||''}</div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <div style="font-size:12px;font-weight:700;">${a.title||a.text||''}</div>
+          <span style="background:#e8f4ff;color:#0066cc;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">📍 ${a.location||'下部バナー'}</span>
+        </div>
         <div style="display:flex;gap:6px;">
           <button onclick="toggleBannerAd('${id}', ${!a.active})" style="background:${a.active?'#e63946':'#ccc'};color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;">${a.active?'表示中':'停止中'}</button>
           <button onclick="editBannerAd('${id}')" style="background:#f3f3f3;border:1px solid #ddd;border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;">編集</button>
@@ -163,6 +166,8 @@ function editBannerAd(id) {
       document.getElementById('bannerText').value = a.text || '';
       document.getElementById('bannerLink').value = a.link || '';
       document.getElementById('bannerLabel').value = a.label || '';
+      const locEl = document.getElementById('bannerLocation');
+      if(locEl) locEl.value = a.location || '下部バナー';
       document.getElementById('bannerForm').style.display = 'block';
     });
 }
@@ -183,6 +188,7 @@ async function submitBanner() {
     text: document.getElementById('bannerText').value,
     link: document.getElementById('bannerLink').value,
     label: document.getElementById('bannerLabel').value,
+    location: document.getElementById('bannerLocation')?.value || '下部バナー',
     type: 'banner', active: true, ts: Date.now()
   };
   if (id) {
