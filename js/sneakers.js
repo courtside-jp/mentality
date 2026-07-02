@@ -277,7 +277,7 @@ function openSnkModal(id) {
     </div>
     ${shops.length ? `<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
   `;
-  modal.style.display = 'flex';
+  modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
 }
 function closeSnkModal() {
