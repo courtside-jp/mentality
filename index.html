@@ -183,7 +183,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
   <button class="sn" id="sn-players" onclick="goPage('players',this)">選手</button>
 </nav>
 
-<div class="content-wrap" id="mainScroll" style="padding-top:134px;">
+<div class="content-wrap" id="mainScroll" style="padding-top:96px;">
 <!-- 上部バナー広告（動画配信） -->
 <div id="topAdBanner" style="display:none;position:fixed;top:90px;left:0;right:0;z-index:97;background:#0a0a0a;border-bottom:1px solid #222;width:100%;">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 14px;">
@@ -213,7 +213,18 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
         if(topLink) { topLink.textContent = ad.text; topLink.href = ad.link; }
         if(topSub) topSub.textContent = ad.subtext || '';
         if(topLabel) topLabel.textContent = ad.label || '';
-        if(topBanner) topBanner.style.display = 'block';
+        if(topBanner) {
+        topBanner.style.display = 'block';
+        // second-navの下に配置
+        const snav = document.querySelector('.second-nav');
+        if(snav) {
+          const snavBottom = snav.getBoundingClientRect().top + snav.offsetHeight;
+          topBanner.style.top = snavBottom + 'px';
+          // mainScrollのpaddingも更新
+          const ms = document.getElementById('mainScroll');
+          if(ms) ms.style.paddingTop = (snavBottom + topBanner.offsetHeight + 4) + 'px';
+        }
+      }
       }
       let topIdx = 0;
       showTop(banners[topIdx]);
