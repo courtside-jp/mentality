@@ -168,100 +168,22 @@ function filterSneakers(btn, brand) {
 }
 
 // 管理画面から投稿
-function calcSneakerScore() {
+function calcSneakerScore(s) {
+  // オブジェクト渡しの場合（カードレンダリング用）
+  if (s && typeof s === 'object') {
+    const vals = [s.cushion, s.traction, s.weight, s.cost, s.support, s.durability]
+      .map(v => parseInt(v)||0)
+      .filter(v => v > 0);
+    if (!vals.length) return 0;
+    return Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
+  }
+  // DOM読み取り（管理画面フォーム用）
   const vals = ['sneakerScoreCushion','sneakerScoreHold','sneakerScoreTraction','sneakerScoreWeight']
-    .map(id => parseInt(document.getElementById(id).value, 10))
+    .map(id => parseInt(document.getElementById(id)?.value, 10))
     .filter(v => !isNaN(v));
   if (!vals.length) return null;
   return Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
 }
-
-async function uploadSneakerImage(input, fieldId) {
-  const file = input.files && input.files[0];
-  if (!file) return;
-  const field = document.getElementById(fieldId);
-  const label = input.parentElement.querySelector('.snkUploadLabel');
-  const originalLabel = label ? label.textContent : '';
-  if (label) label.textContent = 'アップロード中...';
-  try {
-    const form = new FormData();
-    form.append('image', file);
-    const res = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
-      method: 'POST', body: form
-    });
-    const data = await res.json();
-    if (data && data.data && data.data.url) {
-      field.value = data.data.url;
-    } else {
-      alert('アップロードに失敗しました');
-    }
-  } catch (e) {
-    alert('アップロードに失敗しました: ' + e.message);
-  } finally {
-    if (label) label.textContent = originalLabel;
-    input.value = '';
-  }
-}
-
-async function submitSneaker() {
-  const name   = document.getElementById('sneakerModel').value.trim();
-  const brand  = document.getElementById('sneakerBrand').value;
-  const player = document.getElementById('sneakerPlayer').value.trim();
-  const img    = document.getElementById('sneakerImg').value.trim();
-  const img2   = document.getElementById('sneakerImg2').value.trim();
-  const img3   = document.getElementById('sneakerImg3').value.trim();
-  const img4   = document.getElementById('sneakerImg4').value.trim();
-  const price  = document.getElementById('sneakerPrice').value.trim();
-  const scoreCushion  = document.getElementById('sneakerScoreCushion').value.trim();
-  const scoreHold     = document.getElementById('sneakerScoreHold').value.trim();
-  const scoreTraction = document.getElementById('sneakerScoreTraction').value.trim();
-  const scoreWeight   = document.getElementById('sneakerScoreWeight').value.trim();
-  const sizeFeel  = document.getElementById('sneakerSizeFeel').value.trim();
-  const position  = document.getElementById('sneakerPosition').value.trim();
-  const linkAmazon    = document.getElementById('sneakerLinkAmazon').value.trim();
-  const linkRakuten   = document.getElementById('sneakerLinkRakuten').value.trim();
-  const linkStockx    = document.getElementById('sneakerLinkStockx').value.trim();
-  const linkSnkrdunk  = document.getElementById('sneakerLinkSnkrdunk').value.trim();
-  const gymOk = document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false;
-  const editId = document.getElementById('sneakerEditId')?.value;
-
-  if (!name) { alert('モデル名は必須です'); return; }
-
-  const btn = document.getElementById('sneakerSubmitBtn');
-  btn.textContent = '投稿中...'; btn.disabled = true;
-
-  const score = calcSneakerScore();
-  const payload = {
-    brand, model: name, player, img, img2, img3, img4, price,
-      review: document.getElementById('sneakerReview')?.value || '',
-    scoreCushion, scoreHold, scoreTraction, scoreWeight, score,
-    sizeFeel, position,
-    linkAmazon, linkRakuten, linkStockx, linkSnkrdunk,
-    gymOk,
-    link: linkAmazon, // 旧フィールドとの互換用
-    ts: Date.now()
-  };
-  const now = new Date();
-  payload.date = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
-
-  if (editId) {
-    await fetch(`${FB_SNEAKERS}/${editId}.json`, {
-      method: 'PATCH', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-  } else {
-    await fetch(FB_SNEAKERS + '.json', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-  }
-
-  btn.textContent = '投稿する'; btn.disabled = false;
-  document.getElementById('sneakerForm').style.display = 'none';
-  loadAdminSneakers();
-  loadSneakers();
-}
-
 function snkScoreColor(val) {
   const v = parseInt(val, 10);
   if (v >= 95) return '#FFD700';
