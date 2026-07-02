@@ -118,31 +118,25 @@
 
 // === バナー広告管理 ===
 async function loadAdminBanners() {
-  // admin-adセクション内に動的にバナー管理UIを注入
-  const adSection = document.getElementById('admin-ad');
-  if (!adSection) return;
-
-  // 既存のバナー管理UIを削除して再作成
-  let bannerUI = document.getElementById('bannerMgmtSection');
-  if (bannerUI) bannerUI.remove();
-
-  // Firebaseからデータ取得
+  const wrap = document.getElementById('adminAdList');
+  if (!wrap) return;
   const res = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json');
   const data = await res.json();
-  const all = data ? Object.entries(data).filter(([,a]) => a.type === 'banner').sort((a,b) => (b[1].ts||0)-(a[1].ts||0)) : [];
-  const topBanners = all.filter(([,a]) => a.location === '上部バナー');
-  const botBanners = all.filter(([,a]) => a.location !== '上部バナー');
+  if (!data) { wrap.innerHTML = '<div style="color:#999;font-size:12px;padding:10px;">広告なし</div>'; return; }
+  const all = Object.entries(data).filter(([,a]) => a.type === 'banner').sort((a,b) => (b[1].ts||0)-(a[1].ts||0));
+  const topAds = all.filter(([,a]) => a.location === '上部バナー');
+  const botAds = all.filter(([,a]) => a.location !== '上部バナー');
 
-  function cardHtml(id, a) {
-    return `<div style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:8px;">
+  function renderCard([id, a]) {
+    return `<div style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:10px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:8px;">
-        ${a.img ? `<img src="${a.img}" style="width:40px;height:28px;object-fit:contain;border-radius:4px;">` : `<div style="width:40px;height:28px;background:#eee;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#999;">画像なし</div>`}
-        <div style="flex:1;min-width:0;">
+        ${a.img ? `<img src="${a.img}" style="width:40px;height:28px;object-fit:contain;border-radius:4px;background:#000;flex-shrink:0;">` : '<div style="width:40px;height:28px;background:#eee;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#999;flex-shrink:0;">画像なし</div>'}
+        <div style="flex:1;overflow:hidden;min-width:0;">
           <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title||a.text||''}</div>
-          <div style="font-size:10px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.text||''}</div>
+          <div style="font-size:10px;color:#999;">${a.active?'表示中':'停止中'}</div>
         </div>
         <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button onclick="toggleBannerAd('${id}',${!a.active})" style="background:${a.active?'#e63946':'#ccc'};color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;">${a.active?'表示中':'停止中'}</button>
+          <button onclick="toggleBannerAd('${id}', ${!a.active})" style="background:${a.active?'#e63946':'#ccc'};color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;">${a.active?'停止':'開始'}</button>
           <button onclick="editBannerAd('${id}')" style="background:#f3f3f3;border:1px solid #ddd;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;">編集</button>
           <button onclick="deleteBannerAd('${id}')" style="background:#fff0f0;border:1px solid #fcc;color:#e63946;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;">削除</button>
         </div>
@@ -150,25 +144,20 @@ async function loadAdminBanners() {
     </div>`;
   }
 
-  const section = document.createElement('div');
-  section.id = 'bannerMgmtSection';
-  section.style.marginTop = '16px';
-  section.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div style="font-size:12px;font-weight:700;color:#333;">📢 バナー広告管理</div>
-      <button onclick="openNewBanner()" style="background:#e63946;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+  wrap.innerHTML = `
+    <div style="margin-top:14px;">
+      <div style="font-size:11px;font-weight:700;color:#555;padding:6px 10px;background:#f0f4ff;border-radius:6px;margin-bottom:8px;">📺 上部バー（動画配信）</div>
+      ${topAds.length ? topAds.map(renderCard).join('') : '<div style="color:#999;font-size:12px;padding:8px;">なし</div>'}
+      <div style="font-size:11px;font-weight:700;color:#555;padding:6px 10px;background:#fff3f0;border-radius:6px;margin:10px 0 8px;">🛒 下部バー（商品広告）</div>
+      ${botAds.length ? botAds.map(renderCard).join('') : '<div style="color:#999;font-size:12px;padding:8px;">なし</div>'}
     </div>
-    <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:6px;padding:6px 10px;background:#f0f4ff;border-radius:6px;">📺 上部バー（動画配信）</div>
-    ${topBanners.length ? topBanners.map(([id,a])=>cardHtml(id,a)).join('') : '<div style="color:#999;font-size:12px;padding:8px;">広告なし</div>'}
-    <div style="font-size:11px;font-weight:700;color:#555;margin:10px 0 6px;padding:6px 10px;background:#fff3f0;border-radius:6px;">🛒 下部バー（商品広告）</div>
-    ${botBanners.length ? botBanners.map(([id,a])=>cardHtml(id,a)).join('') : '<div style="color:#999;font-size:12px;padding:8px;">広告なし</div>'}
-    <!-- バナーフォーム -->
+    <!-- バナー追加フォーム -->
     <div id="bannerForm" style="display:none;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:14px;margin-top:12px;">
       <input type="hidden" id="bannerEditId">
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon Prime Video" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：NBAをPrime Videoで観る" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
       <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル</label><input id="bannerLabel" type="text" placeholder="例：Prime Video" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
       <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">🖼 PR画像URL（任意）</label><input id="bannerImg" type="url" placeholder="https://...画像URL" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
       <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="上部バナー">上部バー（動画配信）</option><option value="下部バナー">下部バー（商品広告）</option></select></div>
       <div style="display:flex;gap:8px;">
@@ -177,7 +166,6 @@ async function loadAdminBanners() {
       </div>
     </div>
   `;
-  adSection.appendChild(section);
 }
 async function toggleBannerAd(id, active) {
   await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, {
