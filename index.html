@@ -1529,7 +1529,7 @@ if ('serviceWorker' in navigator) {
     .then(r=>r.json())
     .then(data=>{
       if(!data) return;
-      const banners = Object.values(data).filter(a=>a.type==='banner'&&a.active);
+      const banners = Object.values(data).filter(a=>a.type==='banner'&&a.active&&a.location==='下部バナー');
       if(!banners.length) return;
       const banner = document.getElementById('fixedAdBanner');
       function showAd(ad) {
