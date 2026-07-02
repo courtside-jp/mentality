@@ -89,7 +89,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
 .stat-rank-tabs::-webkit-scrollbar{display:none;}
 .srt{flex-shrink:0;padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .srt.active{color:var(--black);border-bottom-color:var(--red);}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--white);border-top:1px solid #eee;display:flex;padding:8px 0 20px;z-index:100;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;background:var(--white);border-top:1px solid #eee;display:flex;padding:8px 0 20px;z-index:100;}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;}
 .bnav-item *{pointer-events:none;}
 .bnav-icon{font-size:22px;color:#bbb;}
@@ -183,9 +183,9 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
   <button class="sn" id="sn-players" onclick="goPage('players',this)">選手</button>
 </nav>
 
-<div class="content-wrap" id="mainScroll" style="padding-top:130px;">
+<div class="content-wrap" id="mainScroll" style="padding-top:134px;">
 <!-- 上部バナー広告（動画配信） -->
-<div id="topAdBanner" style="display:none;position:fixed;top:44px;left:0;right:0;z-index:99;background:#0a0a0a;border-bottom:1px solid #222;width:100%;">
+<div id="topAdBanner" style="display:none;position:fixed;top:90px;left:0;right:0;z-index:97;background:#0a0a0a;border-bottom:1px solid #222;width:100%;">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 14px;">
     <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
       <span style="font-size:9px;color:#aaa;font-weight:700;border:1px solid #444;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
