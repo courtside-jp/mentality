@@ -66,7 +66,7 @@ async function loadHomeFeed() {
     const sneakers = snkData ? Object.entries(snkData).map(([id, s]) => ({ ...s, id, _type: 'sneaker' })) : [];
     const items    = itmData ? Object.entries(itmData).map(([id, s]) => ({ ...s, id, _type: 'item' })) : [];
 
-    _homeFeedCache = [...articles, ...sneakers, ...items].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 7);
+    _homeFeedCache = [...articles, ...sneakers, ...items].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
 
     renderHomeFeed(_homeFeedCache);
   } catch (e) {
