@@ -991,13 +991,14 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
               <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル（右側に表示）</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">🖼 PR画像URL（任意）</label><input id="bannerImg" type="url" placeholder="https://...画像のURL" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
               <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="下部バナー">下部バナー（全ページ共通）</option><option value="記事下">記事下（記事を読んだ後）</option><option value="ホーム">ホームページのみ</option></select></div>
               <div style="display:flex;gap:8px;">
                 <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
                 <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
               </div>
             </div>
-            <div id="adminBannerList"></div>
+            <div id="adminBotBannerList"></div>
           </div></div>
           </div>
         </div>
