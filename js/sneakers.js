@@ -77,7 +77,7 @@ async function loadSneakers() {
 }
 
 function renderSneakers(list) {
-  const wrap = document.getElementById('snkWrap');
+  const wrap = document.getElementById('sneakersWrap');
   if (!wrap) return;
   if (!list || !list.length) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
