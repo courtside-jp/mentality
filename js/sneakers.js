@@ -77,43 +77,64 @@ async function loadSneakers() {
 }
 
 function renderSneakers(list) {
-  const wrap = document.getElementById('sneakersWrap');
+  const wrap = document.getElementById('snkWrap');
   if (!wrap) return;
-  if (!list.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ情報がありません</div>'; return; }
-
-  wrap.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:4px 0;">
-      ${list.map(s => {
-        const score = Math.round((((s.cushion||80)+(s.traction||80)+(s.hold||80)+(s.lightness||80))/4));
-        const imgs = s.images && s.images.length ? s.images : (s.img ? [s.img] : []);
-        const imgUrl = imgs[0] || '';
-        const brandColors = {Nike:'#111',adidas:'#000',ASICS:'#003DA5','Under Armour':'#C8102E',Puma:'#D2202A',Jordan:'#111'};
-        const bc = brandColors[s.brand] || '#e63946';
-        return `
-        <div onclick="openSnkModal('${s.id}')" style="background:#fff;border:0.5px solid #eee;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-          <div style="position:relative;aspect-ratio:1;background:#f5f5f5;overflow:hidden;">
-            ${imgUrl ? `<img src="${imgUrl}" alt="${s.model||''}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;">👟</div>`}
-            <div style="position:absolute;top:8px;left:8px;background:${bc};color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;">${s.brand||''}</div>
-            ${score>=90?'<div style="position:absolute;top:8px;right:8px;background:#e63946;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;">人気</div>':''}
+  if (!list || !list.length) {
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
+    return;
+  }
+  wrap.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:0;';
+  wrap.innerHTML = list.map(s => {
+    const score = calcSneakerScore(s);
+    const shops = s.shops || [];
+    const lowestShop = shops.length ? shops.reduce((a,b) => (parseInt(a.price.replace(/[^0-9]/g,'')) <= parseInt(b.price.replace(/[^0-9]/g,''))) ? a : b, shops[0]) : null;
+    const scoreItems = [
+      {lbl:'クッション', val: s.cushion || 0},
+      {lbl:'グリップ', val: s.traction || 0},
+      {lbl:'軽量性', val: s.weight || 0},
+      {lbl:'コスパ', val: s.cost || 0}
+    ];
+    const shopsHtml = shops.length ? `
+      <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+        ${shops.map(sh => `
+        <tr style="border-bottom:0.5px solid var(--border);">
+          <td style="padding:5px 2px;font-size:11px;font-weight:500;color:var(--text-secondary);white-space:nowrap;">${sh.icon||''} ${sh.name}</td>
+          <td style="padding:5px 2px;text-align:center;">${sh.lowest?'<span style="background:#fff3e0;color:#bf6000;font-size:8px;font-weight:500;padding:1px 4px;border-radius:3px;">最安値</span>':''}</td>
+          <td style="padding:5px 2px;font-size:12px;font-weight:500;color:var(--text-primary);text-align:right;white-space:nowrap;">${sh.price||''}</td>
+          <td style="padding:5px 2px;padding-left:6px;"><button onclick="event.stopPropagation();window.open('${sh.url}','_blank')" style="padding:3px 8px;border-radius:5px;border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);font-size:10px;font-weight:500;cursor:pointer;white-space:nowrap;">買う</button></td>
+        </tr>`).join('')}
+      </table>
+    ` : (s.price ? `<div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">${s.price}</div>` : '');
+    return `
+    <div onclick="openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--border-strong)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="width:100%;aspect-ratio:1;background:var(--surface-1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        ${s.images?.[0] ? `<img src="${s.images[0]}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="ti ti-shoe" style="font-size:52px;color:var(--text-muted);"></i>`}
+        ${s.badge ? `<span style="position:absolute;top:8px;left:8px;background:#e63946;color:#fff;font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;">${s.badge}</span>` : ''}
+      </div>
+      <div style="padding:10px 11px 12px;">
+        <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">${s.brand||''}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;line-height:1.35;">${s.model||''}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;">
+          ${scoreItems.map(i => `
+          <div style="background:var(--surface-1);border-radius:6px;padding:5px 7px;">
+            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">${i.lbl}</div>
+            <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px;"><div style="height:100%;background:#e63946;border-radius:2px;width:${i.val}%"></div></div>
+            <div style="font-size:11px;font-weight:500;color:var(--text-primary);">${i.val}</div>
+          </div>`).join('')}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-size:22px;font-weight:500;color:#e63946;">${score}</span>
+          <div>
+            <div style="color:#f0a500;font-size:11px;">${score>=90?'★★★★★':score>=80?'★★★★☆':'★★★☆☆'}</div>
+            <div style="font-size:10px;color:var(--text-muted);">総合スコア</div>
           </div>
-          <div style="padding:10px 12px 12px;">
-            <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:4px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||'未設定'}</div>
-            ${s.player ? `<div style="font-size:10px;color:#888;margin-bottom:6px;">${s.player}</div>` : ''}
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px;">
-              <div style="flex:1;height:3px;background:#f0f0f0;border-radius:2px;overflow:hidden;"><div style="height:100%;width:${score}%;background:#e63946;border-radius:2px;"></div></div>
-              <span style="font-size:10px;font-weight:700;color:#e63946;">${score}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:13px;font-weight:700;color:#111;">${s.price ? '¥'+Number(s.price).toLocaleString() : '価格未定'}</span>
-              <span style="font-size:10px;color:#888;background:#f5f5f5;padding:3px 8px;border-radius:4px;">詳細 →</span>
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
+        </div>
+        ${shopsHtml}
+        <button onclick="event.stopPropagation();openSnkModal('${s.id}')" style="width:100%;padding:8px 0;border-radius:7px;border:none;font-size:11px;font-weight:500;cursor:pointer;background:#e63946;color:#fff;">📖 詳しいレビューを見る</button>
+      </div>
+    </div>`;
+  }).join('');
 }
-
 function filterSneakers(btn, brand) {
   document.querySelectorAll('#pg-sneakers .conf-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -236,56 +257,82 @@ function openSnkModal(id) {
   const modal = document.getElementById('snkModal');
   const body = document.getElementById('snkModalBody');
   if (!modal || !body) return;
-  
-  const s = (_allSneakers || []).find(s => s.id === id);
+  const s = (_allSneakers || []).find(x => x.id === id);
   if (!s) return;
+  const score = calcSneakerScore(s);
+  const shops = s.shops || [];
+  const scoreItems = [
+    {lbl:'クッション', val:s.cushion||0},
+    {lbl:'グリップ', val:s.traction||0},
+    {lbl:'軽量性', val:s.weight||0},
+    {lbl:'コスパ', val:s.cost||0},
+    {lbl:'サポート', val:s.support||0},
+    {lbl:'耐久性', val:s.durability||0}
+  ];
+  let curTab = '①';
+  function renderModal() {
+    const revText = curTab === '①'
+      ? `<div style="font-size:12px;font-weight:500;color:#e63946;margin-bottom:6px;">① 部活生・中高生視点</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">${s.reviewBeginner || s.review || '（レビューなし）'}</div>`
+      : `<div style="font-size:12px;font-weight:500;color:#e63946;margin-bottom:6px;">② NBA層・社会人視点</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">${s.reviewNBA || s.review || '（レビューなし）'}</div>`;
+    const shopsHtml = shops.length ? `
+      <table style="width:100%;border-collapse:collapse;">
+        ${shops.map(sh => `
+        <tr style="border-bottom:0.5px solid var(--border);">
+          <td style="padding:10px 6px;width:36px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:${sh.color||'#eee'}20;display:flex;align-items:center;justify-content:center;font-size:16px;">${sh.icon||'🛒'}</div>
+          </td>
+          <td style="padding:10px 6px;">
+            <div style="font-size:12px;font-weight:500;color:var(--text-primary);">${sh.name}</div>
+            ${sh.lowest?'<div style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px;">最安値</div>':''}
+          </td>
+          <td style="padding:10px 6px;text-align:right;padding-right:8px;">
+            <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${sh.price||''}</div>
+          </td>
+          <td style="padding:10px 6px;width:70px;">
+            <button onclick="window.open('${sh.url}','_blank')" style="width:100%;padding:7px 10px;border-radius:7px;border:none;font-size:11px;font-weight:500;cursor:pointer;background:${sh.color||'#333'};color:${sh.textColor||'#fff'};">買う</button>
+          </td>
+        </tr>`).join('')}
+      </table>` : (s.price ? `<div style="font-size:14px;color:var(--text-primary);">${s.price}</div>` : '<div style="color:#999;font-size:12px;">購入情報なし</div>');
 
-  const links = [
-    s.linkAmazon   ? {label:'Amazon',         url:s.linkAmazon,   bg:'#ff9900'} : null,
-    s.linkRakuten  ? {label:'楽天',            url:s.linkRakuten,  bg:'#bf0000'} : null,
-    s.linkStockx   ? {label:'StockX',         url:s.linkStockx,   bg:'#00a651'} : null,
-    s.linkSnkrdunk ? {label:'スニーカーダンク', url:s.linkSnkrdunk, bg:'#000'}    : null,
-  ].filter(Boolean);
-  
-  body.innerHTML = 
-    (function() {
-      const imgs = [s.img, s.img2, s.img3, s.img4].filter(Boolean);
-      if (!imgs.length) return '';
-      if (imgs.length === 1) {
-        return '<img src="' + imgs[0] + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">';
-      }
-      return '<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:1rem;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;">' +
-        imgs.map(u => '<img src="' + u + '" style="flex:0 0 85%;scroll-snap-align:start;height:220px;object-fit:cover;border-radius:8px;">').join('') +
-      '</div>' +
-      '<div style="text-align:center;font-size:10px;color:#999;margin:-8px 0 12px;">← スワイプして他のアングルも見る (' + imgs.length + '枚) →</div>';
-    })() +
-    '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (s.brand||'') + '</div>' +
-    (s.gymOk ? '<span style="display:inline-block;margin:4px 0;font-size:11px;background:#0a7c3e;color:#fff;padding:.2rem .6rem;border-radius:10px;font-weight:700;">🏋️ ジムにもOK</span>' : '') +
-    '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.model||s.name||'') + '</div>' +
-    (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">着用選手: ' + s.player + '</div>' : '') +
-    (s.price ? '<div style="font-size:16px;font-weight:700;color:#C9082A;margin-bottom:12px;">' + s.price + '</div>' : '') +
-    ((s.scoreCushion || s.scoreHold || s.scoreTraction || s.scoreWeight) ?
-      '<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px;margin-bottom:12px;">' +
-        '<div style="font-size:11px;font-weight:700;color:#999;margin-bottom:8px;">機能スコア</div>' +
-        snkScoreBar('クッション性', s.scoreCushion) +
-        snkScoreBar('ホールド感', s.scoreHold) +
-        snkScoreBar('トラクション', s.scoreTraction) +
-        snkScoreBar('軽量性', s.scoreWeight) +
-      '</div>' : '') +
-    (s.sizeFeel ? '<div style="font-size:12px;color:#333;margin-bottom:6px;"><b>サイズ感：</b>' + s.sizeFeel + '</div>' : '') +
-    (s.position ? '<div style="font-size:12px;color:#333;margin-bottom:12px;"><b>おすすめ：</b>' + s.position + '</div>' : '') +
-    (links.length ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">' +
-      links.map(l => '<a href="' + l.url + '" target="_blank" style="display:block;text-align:center;padding:12px;background:' + l.bg + ';color:#fff;border-radius:8px;font-weight:700;text-decoration:none;font-size:13px;">' + l.label + 'で見る →</a>').join('') +
-    '</div>' : '');
-  
-  // SEO: バッシュタイトルをセット
-  document.title = (s.model||s.name||'バッシュ') + ' レビュー・評価 | COURTSIDE';
-  const md = document.querySelector('meta[name="description"]');
-  if (md) md.setAttribute('content', (s.brand?s.brand+' ':''+(s.model||s.name||''))+'のバッシュレビュー。クッション性・ホールド感・トラクション・軽量性を100点満点でスコア評価。'+(s.player?s.player+'着用モデル。':''));
-
-  modal.style.display = 'block';
+    body.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
+          <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${s.model||''}</div>
+        </div>
+        <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:16px;"><i class="ti ti-x"></i></button>
+      </div>
+      ${s.images?.[0] ? `<img src="${s.images[0]}" style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:14px;">` : ''}
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="font-size:36px;font-weight:500;color:#e63946;">${score}</div>
+        <div>
+          <div style="color:#f0a500;font-size:14px;">${score>=90?'★★★★★':score>=80?'★★★★☆':'★★★☆☆'}</div>
+          <div style="font-size:11px;color:var(--text-muted);">総合スコア / 100</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">パフォーマンス スコア</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+        ${scoreItems.map(i => `
+        <div style="background:var(--surface-1);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">${i.lbl}</div>
+          <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px;"><div style="height:100%;background:#e63946;border-radius:3px;width:${i.val}%"></div></div>
+          <div style="font-size:14px;font-weight:500;color:var(--text-primary);">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
+        </div>`).join('')}
+      </div>
+      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">レビュー</div>
+      <div style="display:flex;gap:4px;margin-bottom:10px;">
+        <button onclick="(function(){curTab='①';renderModal();})()" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border);font-size:11px;cursor:pointer;${curTab==='①'?'background:#e63946;color:#fff;border-color:#e63946;':'background:var(--surface-2);color:var(--text-secondary);'}">① 部活生視点</button>
+        <button onclick="(function(){curTab='②';renderModal();})()" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border);font-size:11px;cursor:pointer;${curTab==='②'?'background:#e63946;color:#fff;border-color:#e63946;':'background:var(--surface-2);color:var(--text-secondary);'}">② NBA層視点</button>
+      </div>
+      ${revText}
+      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin:14px 0 8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">価格比較・購入</div>
+      ${shopsHtml}
+    `;
+  }
+  renderModal();
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
-
 function closeSnkModal() {
   const modal = document.getElementById('snkModal');
   if (modal) modal.style.display = 'none';
