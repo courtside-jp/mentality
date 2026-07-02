@@ -184,6 +184,45 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;max-width:430
 </nav>
 
 <div class="content-wrap" id="mainScroll">
+<!-- 上部バナー広告（動画配信） -->
+<div id="topAdBanner" style="display:none;width:100%;background:#0a0a0a;border-bottom:1px solid #222;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 14px;">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
+      <span style="font-size:9px;color:#aaa;font-weight:700;border:1px solid #444;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
+      <div style="flex:1;overflow:hidden;">
+        <a id="topAdLink" href="#" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></a>
+        <div id="topAdSub" style="font-size:10px;color:#aaa;margin-top:1px;"></div>
+      </div>
+    </div>
+    <span id="topAdLabel" style="font-size:9px;font-weight:700;color:#aaa;white-space:nowrap;margin-left:8px;"></span>
+  </div>
+</div>
+<script>
+(function(){
+  fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data) return;
+      const banners = Object.values(data).filter(a=>a.location==='上部バナー'&&a.active);
+      if(!banners.length) return;
+      const topBanner = document.getElementById('topAdBanner');
+      const topLink = document.getElementById('topAdLink');
+      const topSub = document.getElementById('topAdSub');
+      const topLabel = document.getElementById('topAdLabel');
+      function showTop(ad) {
+        if(topLink) { topLink.textContent = ad.text; topLink.href = ad.link; }
+        if(topSub) topSub.textContent = ad.subtext || '';
+        if(topLabel) topLabel.textContent = ad.label || '';
+        if(topBanner) topBanner.style.display = 'block';
+      }
+      let topIdx = 0;
+      showTop(banners[topIdx]);
+      if(banners.length > 1) {
+        setInterval(()=>{ topIdx=(topIdx+1)%banners.length; showTop(banners[topIdx]); }, 6000);
+      }
+    }).catch(()=>{});
+})();
+</script>
 
 <div id="pg-home" class="pg show">
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">COURTSIDE - スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。</h1>
