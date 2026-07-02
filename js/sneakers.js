@@ -76,6 +76,12 @@ async function loadSneakers() {
   }
 }
 
+
+function snkScoreColor(score) {
+  if (score >= 95) return '#f0a500';
+  if (score >= 90) return '#27ae60';
+  return '#e63946';
+}
 function renderSneakers(list) {
   const wrap = document.getElementById('sneakersWrap');
   if (!wrap) return;
@@ -83,54 +89,73 @@ function renderSneakers(list) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
     return;
   }
-  wrap.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:0;';
+  // スマホ：1列、タブレット以上：2列
+  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:14px;padding:0;';
   wrap.innerHTML = list.map(s => {
     const score = calcSneakerScore(s);
+    const scoreColor = snkScoreColor(score);
     const shops = s.shops || [];
-    const lowestShop = shops.length ? shops.reduce((a,b) => (parseInt(a.price.replace(/[^0-9]/g,'')) <= parseInt(b.price.replace(/[^0-9]/g,''))) ? a : b, shops[0]) : null;
     const scoreItems = [
-      {lbl:'クッション', val: s.cushion || 0},
-      {lbl:'グリップ', val: s.traction || 0},
-      {lbl:'軽量性', val: s.weight || 0},
-      {lbl:'コスパ', val: s.cost || 0}
+      {lbl:'クッション', val:s.cushion||0},
+      {lbl:'グリップ', val:s.traction||0},
+      {lbl:'軽量性', val:s.weight||0},
+      {lbl:'コスパ', val:s.cost||0}
     ];
+    const imgs = s.images || [];
+    const imgHtml = imgs.length
+      ? `<div style="width:100%;background:var(--surface-1);border-radius:10px 10px 0 0;overflow:hidden;position:relative;">
+          <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;">
+          ${imgs.length > 1 ? `<details style="background:rgba(0,0,0,0.7);padding:0;position:absolute;bottom:0;left:0;right:0;">
+            <summary style="padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;">
+              <span>📷 全${imgs.length}枚を見る</span><span>▼</span>
+            </summary>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px;">
+              ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:80px;object-fit:cover;">`).join('')}
+            </div>
+          </details>` : ''}
+          ${s.badge ? `<span style="position:absolute;top:10px;left:10px;background:#e63946;color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;">${s.badge}</span>` : ''}
+        </div>`
+      : `<div style="width:100%;height:140px;background:var(--surface-1);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;position:relative;">
+          <i class="ti ti-shoe" style="font-size:56px;color:var(--text-muted);"></i>
+          ${s.badge ? `<span style="position:absolute;top:10px;left:10px;background:#e63946;color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;">${s.badge}</span>` : ''}
+        </div>`;
+
     const shopsHtml = shops.length ? `
-      <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+      <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
         ${shops.map(sh => `
         <tr style="border-bottom:0.5px solid var(--border);">
-          <td style="padding:5px 2px;font-size:11px;font-weight:500;color:var(--text-secondary);white-space:nowrap;">${sh.icon||''} ${sh.name}</td>
-          <td style="padding:5px 2px;text-align:center;">${sh.lowest?'<span style="background:#fff3e0;color:#bf6000;font-size:8px;font-weight:500;padding:1px 4px;border-radius:3px;">最安値</span>':''}</td>
-          <td style="padding:5px 2px;font-size:12px;font-weight:500;color:var(--text-primary);text-align:right;white-space:nowrap;">${sh.price||''}</td>
-          <td style="padding:5px 2px;padding-left:6px;"><button onclick="event.stopPropagation();window.open('${sh.url}','_blank')" style="padding:3px 8px;border-radius:5px;border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);font-size:10px;font-weight:500;cursor:pointer;white-space:nowrap;">買う</button></td>
+          <td style="padding:7px 4px;font-size:12px;font-weight:500;color:var(--text-secondary);white-space:nowrap;">${sh.icon||''} ${sh.name}</td>
+          <td style="padding:7px 4px;text-align:center;">${sh.lowest?'<span style="background:#fff3e0;color:#bf6000;font-size:9px;font-weight:500;padding:2px 5px;border-radius:3px;">最安値</span>':''}</td>
+          <td style="padding:7px 4px;font-size:13px;font-weight:500;color:var(--text-primary);text-align:right;white-space:nowrap;">${sh.price||'確認する'}</td>
+          <td style="padding:7px 4px 7px 8px;"><button onclick="event.stopPropagation();window.open('${sh.url}','_blank')" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);font-size:11px;font-weight:500;cursor:pointer;">買う</button></td>
         </tr>`).join('')}
-      </table>
-    ` : (s.price ? `<div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">${s.price}</div>` : '');
+      </table>` : '';
+
     return `
-    <div onclick="openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--border-strong)'" onmouseout="this.style.borderColor='var(--border)'">
-      <div style="width:100%;aspect-ratio:1;background:var(--surface-1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-        ${s.images?.[0] ? `<img src="${s.images[0]}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="ti ti-shoe" style="font-size:52px;color:var(--text-muted);"></i>`}
-        ${s.badge ? `<span style="position:absolute;top:8px;left:8px;background:#e63946;color:#fff;font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;">${s.badge}</span>` : ''}
-      </div>
-      <div style="padding:10px 11px 12px;">
-        <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">${s.brand||''}</div>
-        <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;line-height:1.35;">${s.model||''}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;">
+    <div onclick="openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
+      ${imgHtml}
+      <div style="padding:14px;">
+        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">${s.brand||''}</div>
+        <div style="font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:12px;">${s.model||''}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
           ${scoreItems.map(i => `
-          <div style="background:var(--surface-1);border-radius:6px;padding:5px 7px;">
-            <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px;">${i.lbl}</div>
-            <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px;"><div style="height:100%;background:#e63946;border-radius:2px;width:${i.val}%"></div></div>
-            <div style="font-size:11px;font-weight:500;color:var(--text-primary);">${i.val}</div>
+          <div style="background:var(--surface-1);border-radius:8px;padding:8px 10px;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">${i.lbl}</div>
+            <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px;">
+              <div style="height:100%;background:${snkScoreColor(i.val)};border-radius:3px;width:${i.val}%"></div>
+            </div>
+            <div style="font-size:13px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}</div>
           </div>`).join('')}
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <span style="font-size:22px;font-weight:500;color:#e63946;">${score}</span>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:var(--surface-1);border-radius:8px;">
+          <div style="font-size:32px;font-weight:500;color:${scoreColor};">${score}</div>
           <div>
-            <div style="color:#f0a500;font-size:11px;">${score>=90?'★★★★★':score>=80?'★★★★☆':'★★★☆☆'}</div>
-            <div style="font-size:10px;color:var(--text-muted);">総合スコア</div>
+            <div style="font-size:11px;color:var(--text-muted);">総合スコア / 100</div>
+            ${score>=95?'<div style="font-size:10px;color:#f0a500;font-weight:500;">🏆 プレミアム</div>':score>=90?'<div style="font-size:10px;color:#27ae60;font-weight:500;">✅ おすすめ</div>':''}
           </div>
         </div>
         ${shopsHtml}
-        <button onclick="event.stopPropagation();openSnkModal('${s.id}')" style="width:100%;padding:8px 0;border-radius:7px;border:none;font-size:11px;font-weight:500;cursor:pointer;background:#e63946;color:#fff;">📖 詳しいレビューを見る</button>
+        <button onclick="event.stopPropagation();openSnkModal('${s.id}')" style="width:100%;padding:10px 0;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface-1);color:var(--text-primary);border:0.5px solid var(--border-strong);">📊 詳細スコアを見る</button>
       </div>
     </div>`;
   }).join('');
@@ -260,7 +285,9 @@ function openSnkModal(id) {
   const s = (_allSneakers || []).find(x => x.id === id);
   if (!s) return;
   const score = calcSneakerScore(s);
+  const scoreColor = snkScoreColor(score);
   const shops = s.shops || [];
+  const imgs = s.images || [];
   const scoreItems = [
     {lbl:'クッション', val:s.cushion||0},
     {lbl:'グリップ', val:s.traction||0},
@@ -269,67 +296,65 @@ function openSnkModal(id) {
     {lbl:'サポート', val:s.support||0},
     {lbl:'耐久性', val:s.durability||0}
   ];
-  let curTab = '①';
-  function renderModal() {
-    const revText = curTab === '①'
-      ? `<div style="font-size:12px;font-weight:500;color:#e63946;margin-bottom:6px;">① 部活生・中高生視点</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">${s.reviewBeginner || s.review || '（レビューなし）'}</div>`
-      : `<div style="font-size:12px;font-weight:500;color:#e63946;margin-bottom:6px;">② NBA層・社会人視点</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">${s.reviewNBA || s.review || '（レビューなし）'}</div>`;
-    const shopsHtml = shops.length ? `
-      <table style="width:100%;border-collapse:collapse;">
-        ${shops.map(sh => `
-        <tr style="border-bottom:0.5px solid var(--border);">
-          <td style="padding:10px 6px;width:36px;">
-            <div style="width:32px;height:32px;border-radius:8px;background:${sh.color||'#eee'}20;display:flex;align-items:center;justify-content:center;font-size:16px;">${sh.icon||'🛒'}</div>
-          </td>
-          <td style="padding:10px 6px;">
-            <div style="font-size:12px;font-weight:500;color:var(--text-primary);">${sh.name}</div>
-            ${sh.lowest?'<div style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px;">最安値</div>':''}
-          </td>
-          <td style="padding:10px 6px;text-align:right;padding-right:8px;">
-            <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${sh.price||''}</div>
-          </td>
-          <td style="padding:10px 6px;width:70px;">
-            <button onclick="window.open('${sh.url}','_blank')" style="width:100%;padding:7px 10px;border-radius:7px;border:none;font-size:11px;font-weight:500;cursor:pointer;background:${sh.color||'#333'};color:${sh.textColor||'#fff'};">買う</button>
-          </td>
-        </tr>`).join('')}
-      </table>` : (s.price ? `<div style="font-size:14px;color:var(--text-primary);">${s.price}</div>` : '<div style="color:#999;font-size:12px;">購入情報なし</div>');
 
-    body.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <div>
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
-          <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${s.model||''}</div>
+  const imgGallery = imgs.length ? `
+    <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
+    ${imgs.length > 1 ? `<details style="margin-bottom:12px;">
+      <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;padding:6px 0;">📷 他の写真を見る（${imgs.length-1}枚）▼</summary>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
+        ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;">`).join('')}
+      </div>
+    </details>` : ''}` : '';
+
+  const shopsHtml = shops.length ? `
+    <table style="width:100%;border-collapse:collapse;">
+      ${shops.map(sh => `
+      <tr style="border-bottom:0.5px solid var(--border);">
+        <td style="padding:10px 6px;width:36px;">
+          <div style="width:34px;height:34px;border-radius:8px;background:var(--surface-1);display:flex;align-items:center;justify-content:center;font-size:18px;">${sh.icon||'🛒'}</div>
+        </td>
+        <td style="padding:10px 6px;">
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary);">${sh.name}</div>
+          ${sh.lowest?'<span style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;">最安値</span>':''}
+        </td>
+        <td style="padding:10px 6px;text-align:right;padding-right:8px;">
+          <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${sh.price||'確認する'}</div>
+        </td>
+        <td style="padding:10px 6px;width:70px;">
+          <button onclick="window.open('${sh.url}','_blank')" style="width:100%;padding:8px 10px;border-radius:7px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${sh.color||'#333'};color:${sh.textColor||'#fff'};">買う</button>
+        </td>
+      </tr>`).join('')}
+    </table>` : '';
+
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div>
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
+        <div style="font-size:17px;font-weight:500;color:var(--text-primary);">${s.model||''}</div>
+      </div>
+      <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
+    </div>
+    ${imgGallery}
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px;background:var(--surface-1);border-radius:10px;">
+      <div style="font-size:40px;font-weight:500;color:${scoreColor};">${score}</div>
+      <div>
+        <div style="font-size:12px;color:var(--text-muted);">総合スコア / 100</div>
+        ${score>=95?'<div style="font-size:11px;color:#f0a500;font-weight:500;">🏆 プレミアム</div>':score>=90?'<div style="font-size:11px;color:#27ae60;font-weight:500;">✅ おすすめ</div>':'<div style="font-size:11px;color:#e63946;font-weight:500;">📊 標準</div>'}
+      </div>
+    </div>
+    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">パフォーマンス スコア</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      ${scoreItems.map(i => `
+      <div style="background:var(--surface-1);border-radius:8px;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">${i.lbl}</div>
+        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px;">
+          <div style="height:100%;background:${snkScoreColor(i.val)};border-radius:3px;width:${i.val}%"></div>
         </div>
-        <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:16px;"><i class="ti ti-x"></i></button>
-      </div>
-      ${s.images?.[0] ? `<img src="${s.images[0]}" style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:14px;">` : ''}
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-        <div style="font-size:36px;font-weight:500;color:#e63946;">${score}</div>
-        <div>
-          <div style="color:#f0a500;font-size:14px;">${score>=90?'★★★★★':score>=80?'★★★★☆':'★★★☆☆'}</div>
-          <div style="font-size:11px;color:var(--text-muted);">総合スコア / 100</div>
-        </div>
-      </div>
-      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">パフォーマンス スコア</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-        ${scoreItems.map(i => `
-        <div style="background:var(--surface-1);border-radius:8px;padding:10px 12px;">
-          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">${i.lbl}</div>
-          <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px;"><div style="height:100%;background:#e63946;border-radius:3px;width:${i.val}%"></div></div>
-          <div style="font-size:14px;font-weight:500;color:var(--text-primary);">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
-        </div>`).join('')}
-      </div>
-      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">レビュー</div>
-      <div style="display:flex;gap:4px;margin-bottom:10px;">
-        <button onclick="(function(){curTab='①';renderModal();})()" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border);font-size:11px;cursor:pointer;${curTab==='①'?'background:#e63946;color:#fff;border-color:#e63946;':'background:var(--surface-2);color:var(--text-secondary);'}">① 部活生視点</button>
-        <button onclick="(function(){curTab='②';renderModal();})()" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border);font-size:11px;cursor:pointer;${curTab==='②'?'background:#e63946;color:#fff;border-color:#e63946;':'background:var(--surface-2);color:var(--text-secondary);'}">② NBA層視点</button>
-      </div>
-      ${revText}
-      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin:14px 0 8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);">価格比較・購入</div>
-      ${shopsHtml}
-    `;
-  }
-  renderModal();
+        <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
+      </div>`).join('')}
+    </div>
+    ${shops.length ? `<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
+  `;
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
