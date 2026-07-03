@@ -2528,21 +2528,19 @@ window.addEventListener('load', function() {
 })();
 </script>
 <script>
-// bottom-navをbodyに確実に配置
+// モーダルとナビをbody直下に確実に配置
 (function(){
-  function fixBnav() {
+  function fixAll() {
+    ['articleModal','snkModal'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && el.parentElement !== document.body) document.body.appendChild(el);
+    });
     var bn = document.querySelector('.bottom-nav');
-    if(bn && bn.parentElement && bn.parentElement !== document.body) {
-      document.body.appendChild(bn);
-    }
+    if(bn && bn.parentElement !== document.body) document.body.appendChild(bn);
   }
-  if(document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fixBnav);
-  } else {
-    fixBnav();
-  }
-  // 念のため少し後にも実行
-  setTimeout(fixBnav, 100);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fixAll);
+  else fixAll();
+  setTimeout(fixAll,200);
 })();
 </script>
 </body>
