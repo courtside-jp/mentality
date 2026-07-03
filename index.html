@@ -1571,7 +1571,7 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   var ms = document.getElementById('mainScroll');
   if(!ms || document.getElementById('siteFooter')) return;
 
