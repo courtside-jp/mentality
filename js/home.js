@@ -86,7 +86,7 @@ function renderHomeFeed(list) {
                      : p._type === 'sneaker' ? `openSnkModal('${p.id}')`
                      : `openItemModal('${p.id}')`;
     return `
-    <div onclick="${onclickFn}" style="display:flex;gap:.7rem;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem;margin-bottom:.6rem;cursor:pointer;">
+    <div onclick="${onclickFn}" style="display:flex;gap:.4rem;background:var(--card);border:0;border-bottom:1px solid var(--bd);padding:.4rem;margin-bottom:0;cursor:pointer;">
       ${img
         ? `<img src="${img}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">`
         : `<div style="width:64px;height:64px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;">${HOME_TYPE_EMOJI[p._type]}</div>`
