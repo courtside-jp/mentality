@@ -1452,18 +1452,5 @@ window.addEventListener('load', function() {
   </div>
 </div>
 
-<script>
-(function() {
-  var ms = document.getElementById('mainScroll');
-  if (!ms || document.getElementById('siteFooter')) return;
-  var f = document.createElement('div');
-  f.id = 'siteFooter';
-  f.style.cssText = 'position:fixed;bottom:56px;left:0;right:0;z-index:96;background:#0a0a0a;border-top:1px solid #222;padding:5px 14px;display:flex;align-items:center;justify-content:space-between;';
-  f.innerHTML = '<div style="display:flex;gap:10px;"><a href="https://x.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#777;font-size:11px;text-decoration:none;">X</a><a href="https://instagram.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#777;font-size:11px;text-decoration:none;">Instagram</a><a href="https://youtube.com" target="_blank" rel="noopener" style="color:#777;font-size:11px;text-decoration:none;">YouTube</a></div><div style="display:flex;gap:8px;"><a href="#" style="color:#555;font-size:10px;text-decoration:none;">プライバシー</a><a href="#" style="color:#555;font-size:10px;text-decoration:none;">お問い合わせ</a></div>';
-  document.body.appendChild(f);
-  var banner = document.getElementById('fixedAdBanner');
-  if (banner) banner.style.bottom = (56 + 32) + 'px';
-})();
-</script>
-</body>
-</html>
+
+</html></body>
