@@ -1454,6 +1454,1486 @@ window.addEventListener('load', function() {
 
 <script>
 (function() {
+  var ms = document.getElementById('mainScroll');
+  if (!ms || document.getElementById('siteFooter')) return;
+  var links = [
+    ['X', 'https://x.com/mentalitybrand8'],
+    ['Instagram', 'https://instagram.com/mentalitybrand8'],
+    ['YouTube', 'https://youtube.com'],
+    ['TikTok', 'https://tiktok.com']
+  ];
+  var pages = [
+    ['プライバシー', '#'],
+    ['利用規約', '#'],
+    ['お問い合わせ', '#']
+  ];
+  var f = document.createElement('div');
+  f.id = 'siteFooter';
+  f.style.cssText = 'position:fixed;bottom:56px;left:0;right:0;z-index:96;background:#0a0a0a;border-top:1px solid #222;padding:5px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;';
+  var snsSide = '<div style="display:flex;gap:10px;">' + links.map(function(l){ return '<a href="' + l[1] + '" target="_blank" rel="noopener" style="color:#777;font-size:11px;text-decoration:none;">' + l[0] + '</a>'; }).join('') + '</div>';
+  var infoSide = '<div style="display:flex;gap:8px;">' + pages.map(function(p){ return '<a href="' + p[1] + '" style="color:#555;font-size:10px;text-decoration:none;">' + p[0] + '</a>'; }).join('') + '</div>';
+  f.innerHTML = snsSide + infoSide;
+  document.body.appendChild(f);
+  var banner = document.getElementById('fixedAdBanner');
+  if (banner) banner.style.bottom = (56 + (f.offsetHeight || 30)) + 'px';
+})();
+</script>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>COURTSIDE - NBA速報・まとめ</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1628">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="COURTSIDE">
+<meta name="description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
+<meta name="keywords" content="NBA,NBA日本語,NBAまとめ,NBAハイライト,NBA速報,河村勇輝,八村塁,NBAプレーオフ,NBA順位表,NBAスタッツ,カリー,レブロン,バッシュ,NBAファイナル,NBA年俸,1分NBA">
+<meta name="author" content="COURTSIDE">
+<meta property="og:title" content="COURTSIDE - NBA速報・まとめ">
+<meta property="og:description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://courtside-jp.github.io/mentality/">
+<meta property="og:site_name" content="COURTSIDE">
+<meta property="og:image" content="https://courtside-jp.github.io/mentality/assets/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="COURTSIDE - NBA速報・まとめ">
+<meta name="twitter:description" content="スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。">
+<meta name="twitter:image" content="https://courtside-jp.github.io/mentality/assets/ogp.png">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C9082A;--black:#0a0a0a;--dark:#111;--dark2:#1a1a1a;--gray:#888;--light:#f5f5f5;--white:#fff;--border:rgba(255,255,255,0.08);--or:#E8510A;--go:#00A855;--bg:#f5f5f5;--bg2:#fff;--bg3:#f0f0f0;--tx:#0a0a0a;--tx2:#444;--tx3:#888;--bd:#eee;--card:#fff;--rd:#C9082A;--gr:#00A855;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.header{background:var(--black);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;width:100%;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.logo span{color:var(--red);}
+.online-pill{display:flex;align-items:center;gap:5px;background:rgba(201,8,42,0.15);border:1px solid rgba(201,8,42,0.3);padding:4px 10px;border-radius:20px;}
+.online-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.online-text{font-size:10px;color:var(--red);font-weight:700;font-family:'Barlow Condensed',sans-serif;}
+.hero{background:var(--black);padding:0 16px 16px;}
+.hero-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--red);font-weight:700;letter-spacing:2px;padding:8px 0 6px;}
+.game-hero{background:var(--dark);border-radius:14px;overflow:hidden;}
+.game-hero-top{background:var(--red);padding:6px 14px;display:flex;align-items:center;justify-content:space-between;}
+.live-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--white);letter-spacing:1px;display:flex;align-items:center;gap:5px;}
+.quarter-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,0.8);}
+.game-score-area{padding:16px;display:flex;align-items:center;justify-content:space-between;}
+.game-team{text-align:center;flex:1;}
+.team-city{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gray);letter-spacing:1px;}
+.team-abbr{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--white);letter-spacing:2px;line-height:1;}
+.team-score{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--white);line-height:1;}
+.team-score.win{color:var(--red);}
+.game-divider{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--gray);padding:0 12px;}
+.hero-actions{border-top:1px solid var(--border);padding:10px 14px;display:flex;gap:8px;}
+.hero-btn{flex:1;padding:8px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;text-align:center;}
+.hero-btn-primary{background:var(--red);color:var(--white);}
+.hero-btn-secondary{background:var(--dark2);color:var(--white);border:1px solid var(--border);}
+
+.content-wrap{padding-bottom:80px;}
+.section-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;background:var(--white);border-bottom:1px solid #f0f0f0;margin-top:8px;}
+.section-ttl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--black);letter-spacing:1px;}
+.section-more{font-size:11px;color:var(--red);}
+.game-item{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f5f5f5;background:var(--white);cursor:pointer;}
+.game-status{width:44px;flex-shrink:0;}
+.gs-text{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;}
+.gs-live{color:var(--red);}
+.gs-final{color:var(--gray);}
+.gs-time{color:#333;}
+.game-teams{flex:1;padding:0 10px;}
+.gt-row{display:flex;align-items:center;gap:8px;padding:3px 0;}
+.tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tname{font-size:12px;color:var(--black);flex:1;font-weight:500;}
+.tscore{font-size:13px;font-weight:700;color:var(--black);min-width:28px;text-align:right;}
+.tscore.win{color:var(--red);}
+.team-selector{display:flex;overflow-x:auto;padding:12px 16px;gap:8px;background:var(--white);border-bottom:1px solid #eee;scrollbar-width:none;}
+.team-selector::-webkit-scrollbar{display:none;}
+.team-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;cursor:pointer;border:1px solid #ddd;background:var(--white);color:#666;white-space:nowrap;}
+.team-btn.active{background:var(--red);color:var(--white);border-color:var(--red);}
+.player-card{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f5f5f5;background:var(--white);}
+.player-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--white);flex-shrink:0;margin-right:12px;}
+.player-info{flex:1;min-width:0;}
+.player-name-full{font-size:12px;font-weight:700;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.player-detail{font-size:10px;color:var(--gray);}
+.conf-tabs{display:flex;background:var(--white);border-bottom:1px solid #eee;}
+.conf-tab{flex:1;text-align:center;padding:11px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;letter-spacing:0.5px;}
+.conf-tab.active{color:var(--black);border-bottom-color:var(--red);}
+.stat-rank-tabs{overflow-x:auto;display:flex;background:var(--white);border-bottom:1px solid #eee;scrollbar-width:none;}
+.stat-rank-tabs::-webkit-scrollbar{display:none;}
+.srt{flex-shrink:0;padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.srt.active{color:var(--black);border-bottom-color:var(--red);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;background:var(--white);border-top:1px solid #eee;display:flex;padding:8px 0 20px;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;}
+.bnav-item *{pointer-events:none;}
+.bnav-icon{font-size:22px;color:#bbb;}
+.bnav-label{font-size:9px;color:#bbb;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.3px;}
+.bnav-item.active .bnav-icon,.bnav-item.active .bnav-label{color:var(--red);}
+.bnav-badge{background:var(--red);color:var(--white);font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;}
+.pg{display:none!important;}.pg.show{display:block!important;}.second-nav{background:#fff;display:flex;align-items:center;justify-content:center;gap:2px;padding:6px 6px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #f0f0f0;position:fixed;top:52px;left:0;right:0;z-index:98;width:100%;;z-index:99;}
+.second-nav::-webkit-scrollbar{display:none;}
+.sn{flex-shrink:0;padding:4px 11px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.3px;color:#999;border:none;background:transparent;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .25s cubic-bezier(.4,0,.2,1);}
+.sn.on,.sn.active{color:#fff;background:#0a0a0a;}
+</style>
+<link rel="stylesheet" href="css/schedule.css?v=3">
+<link rel="stylesheet" href="css/stats.css?v=3">
+<style>
+.date-bar{display:flex;align-items:center;background:#fff;border-bottom:1px solid #eee;padding:8px 12px;}
+.db-btn{background:none;border:none;font-size:18px;color:#999;cursor:pointer;padding:4px 10px;line-height:1;}
+.db-center{flex:1;text-align:center;}
+.db-date{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#000;letter-spacing:0.5px;}
+.db-sub{font-size:10px;color:#999;margin-top:2px;}
+.pg-title{display:none;}
+.sbd{padding:12px 14px;background:#fff;}
+.sbd-badge-live{display:inline-flex;align-items:center;gap:4px;background:#C9082A;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;}
+.sbd-badge-fin{display:inline-flex;align-items:center;gap:4px;background:#00A855;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;}
+.sbd-badge-pre{display:inline-flex;align-items:center;gap:4px;background:#888;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;}
+.sbd-q{font-size:10px;color:#C9082A;font-family:'Barlow Condensed',sans-serif;margin-bottom:4px;}
+.p2col{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.pf{font-family:'Bebas Neue',sans-serif;font-size:13px;color:#888;letter-spacing:1px;}
+.p-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.q-row{display:flex;align-items:center;border-bottom:1px solid #f0f0f0;padding:4px 0;}
+.qi{flex:1;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;}
+.qi-l{flex:1;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#999;font-weight:700;}
+.qi-h{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#000;}
+.qi-a{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#000;}
+.qi-h.cur,.qi-a.cur{color:#C9082A;}
+.vote-panel{padding:12px 14px;border-top:1px solid #f0f0f0;background:#fff;}
+.vote-title{font-size:12px;font-weight:700;margin-bottom:8px;}
+.ls-wrap{margin:12px 14px;border-radius:10px;overflow:hidden;border:1px solid #eee;}
+.ls-row{display:flex;align-items:center;}
+.ls-head-row{background:#000;}
+.ls-name-cell{width:44px;flex-shrink:0;padding:8px 10px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;}
+.ls-head-row .ls-name-cell{color:#666;}
+.ls-q-cell{flex:1;text-align:center;padding:8px 4px;font-family:'Bebas Neue',sans-serif;font-size:15px;}
+.ls-head-row .ls-q-cell{color:#555;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;}
+.ls-tot-cell{font-size:18px;font-weight:700;border-left:1px solid #eee;}
+.ls-head-row .ls-tot-cell{border-left:1px solid #222;}
+.ls-cur{color:#C9082A!important;}
+.ls-row:not(.ls-head-row){background:#fff;border-top:1px solid #f0f0f0;}
+.ls-row:not(.ls-head-row) .ls-name-cell{color:#000;font-size:14px;}
+.gc-name-row{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.gc-abbr-inline{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--tx);letter-spacing:1px;}
+.gc-nickname-inline{font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:700;color:var(--tx3);}
+</style>
+  <link rel="canonical" href="https://courtside-jp.github.io/mentality/">
+  <link rel="sitemap" type="application/xml" href="/mentality/sitemap.xml">
+  <meta name="robots" content="index, follow">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "COURTSIDE",
+    "alternateName": "コートサイド",
+    "url": "https://courtside-jp.github.io/mentality/",
+    "description": "スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。",
+    "inLanguage": "ja",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://courtside-jp.github.io/mentality/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">COURT<span>SIDE</span></div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="online-pill"><div class="online-dot"></div><div class="online-text" id="headerOnlineCount">17人が閲覧中</div></div>
+    <div onclick="openSearch()" style="cursor:pointer;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+  </div>
+</div>
+
+<nav class="second-nav">
+  <button class="sn on" id="sn-home" onclick="goPage('home',this)">ホーム</button>
+  <button class="sn" id="sn-schedule" onclick="goPage('schedule',this)">試合</button>
+  <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
+  <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
+  <button class="sn" id="sn-items" onclick="goPage('items',this)">アイテム</button>
+  <button class="sn" id="sn-players" onclick="goPage('players',this)">選手</button>
+</nav>
+
+<div class="content-wrap" id="mainScroll" style="padding-top:96px;">
+<!-- 上部バナー広告（動画配信） -->
+<div id="topAdBanner" style="display:none;position:fixed;top:90px;left:0;right:0;z-index:97;background:#0a0a0a;border-bottom:1px solid #222;width:100%;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 14px;">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;overflow:hidden;">
+      <span style="font-size:9px;color:#aaa;font-weight:700;border:1px solid #444;padding:1px 4px;border-radius:3px;white-space:nowrap;">PR</span>
+      <div style="flex:1;overflow:hidden;">
+        <a id="topAdLink" href="#" target="_blank" rel="noopener" style="color:#fff;text-decoration:none;font-size:11px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></a>
+        <div id="topAdSub" style="font-size:10px;color:#aaa;margin-top:1px;"></div>
+      </div>
+    </div>
+    <span id="topAdLabel" style="font-size:9px;font-weight:700;color:#aaa;white-space:nowrap;margin-left:8px;"></span>
+  </div>
+</div>
+<script>
+(function(){
+  fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data) return;
+      const banners = Object.values(data).filter(a=>a.location==='上部バナー'&&a.active);
+      if(!banners.length) return;
+      const topBanner = document.getElementById('topAdBanner');
+      const topLink = document.getElementById('topAdLink');
+      const topSub = document.getElementById('topAdSub');
+      const topLabel = document.getElementById('topAdLabel');
+      function showTop(ad) {
+        if(topLink) { topLink.textContent = ad.text; topLink.href = ad.link; }
+        if(topSub) topSub.textContent = ad.subtext || '';
+        if(topLabel) topLabel.textContent = ad.label || '';
+        if(topBanner) {
+        topBanner.style.display = 'block';
+        // second-navの下に配置
+        const snav = document.querySelector('.second-nav');
+        if(snav) {
+          const snavBottom = snav.getBoundingClientRect().top + snav.offsetHeight;
+          topBanner.style.top = snavBottom + 'px';
+          // mainScrollのpaddingも更新
+          const ms = document.getElementById('mainScroll');
+          if(ms) ms.style.paddingTop = (snavBottom + topBanner.offsetHeight + 4) + 'px';
+        }
+      }
+      }
+      let topIdx = 0;
+      showTop(banners[topIdx]);
+      if(banners.length > 1) {
+        setInterval(()=>{ topIdx=(topIdx+1)%banners.length; showTop(banners[topIdx]); }, 6000);
+      }
+    }).catch(()=>{});
+})();
+</script>
+
+<div id="pg-home" class="pg show">
+  <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">COURTSIDE - スキマ時間で読めるNBA専門メディア。試合速報・選手スタッツ・バッシュ・1分で読める記事を毎日更新。</h1>
+  <div id="homeGamesWrap"></div>
+  <div class="section-hd"><div class="section-ttl">新着フィード</div></div>
+  <div id="homeFeedWrap" style="padding:8px;"></div>
+</div>
+
+<div id="pg-schedule" class="pg">
+  <!-- 試合一覧/順位/スタッツ切り替えタブ -->
+  <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:99;">
+    <div id="subtab-games" onclick="showSubTab('games')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">試合一覧</div>
+    <div id="subtab-ranking" onclick="showSubTab('ranking')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">順位</div>
+    <div id="subtab-stats" onclick="showSubTab('stats')" style="flex:1;text-align:center;padding:10px 8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">スタッツ</div>
+  </div>
+
+  <!-- 試合一覧エリア -->
+  <div id="sub-games">
+    <div class="date-bar">
+      <button class="db-btn" onclick="moveDate(-1)">‹</button>
+      <div class="db-center">
+        <div class="db-date" id="dbDate"></div>
+        <div class="db-sub" id="dbSub"></div>
+        <div style="font-size:9px;color:#bbb;margin-top:2px;">※時刻はすべてアメリカ東部時間（ET）</div>
+      </div>
+      <button class="db-btn" onclick="moveDate(1)">›</button>
+    </div>
+    <div id="gameWrap"></div>
+  </div>
+
+  <!-- 順位エリア -->
+  <div id="sub-ranking" style="display:none;">
+    <div style="display:flex;background:#fff;border-bottom:1px solid #eee;position:sticky;top:132px;z-index:98;">
+      <div id="conf-east" onclick="showConf(this,'east')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#C9082A;border-bottom:2px solid #C9082A;cursor:pointer;">イースタン</div>
+      <div id="conf-west" onclick="showConf(this,'west')" style="flex:1;text-align:center;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#999;border-bottom:2px solid transparent;cursor:pointer;">ウェスタン</div>
+    </div>
+    <div id="standingsWrap"></div>
+  </div>
+
+  <!-- タイトルエリア -->
+  <div id="sub-title" style="display:none;">
+    <div id="titleWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+  <!-- プレーインエリア -->
+  <div id="sub-playin" style="display:none;">
+    <div id="playinWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+  <!-- プレーオフエリア -->
+  <div id="sub-playoff" style="display:none;">
+    <div id="playoffWrap" style="padding:16px;text-align:center;color:#999;font-size:12px;">読み込み中...</div>
+  </div>
+
+  <!-- スタッツエリア -->
+  <div id="sub-stats" style="display:none;">
+    <div id="statCats" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:8px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;flex-wrap:nowrap;"></div>
+    <div id="statsLoading" style="text-align:center;padding:2rem;color:#999;font-size:12px;">読み込み中...</div>
+    <div id="leaderList"></div>
+  </div>
+</div>
+
+<div id="pg-articles" class="pg">
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="articlesWrap" style="padding:8px;"></div>
+<div id="adBannerArticle" style="padding:0 12px;"></div>
+</div>
+<div id="pg-sneakers" class="pg">
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="sneakersWrap" style="padding:8px;"></div>
+<div id="adBannerSneaker" style="padding:0 12px;"></div>
+</div>
+<div id="pg-items" class="pg">
+  
+        <div class="ad-banner-slot" style="padding:0 16px;margin-bottom:8px;"></div>
+        <div id="itemsWrap" style="padding:8px;"></div>
+<div id="adBannerItem" style="padding:0 12px;"></div>
+</div>
+<div id="pg-players" class="pg">
+  <div id="playerFilter" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:10px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:98;"></div>
+<div id="playerGrid"></div>
+</div>
+
+<div id="pg-admin" class="pg" style="overflow-y:auto;background:#fff;min-height:100vh;">
+  <div style="background:#fff;padding-bottom:80px;">
+    <div id="admin-menu">
+      <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:2px;">管理画面</div>
+        <div style="font-size:10px;color:#888;">COURTSIDE ADMIN</div>
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div onclick="showAdminPage('admin-article')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#C9082A;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">記事管理</div><div style="font-size:11px;color:#999;margin-top:2px;">記事の投稿・編集・削除</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div onclick="showAdminPage('admin-sneaker')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
+          </div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#000;">バッシュ管理</div><div style="font-size:11px;color:#999;margin-top:2px;">バッシュ情報の投稿・編集・削除</div></div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div onclick="showAdminPage('admin-item')" style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;">
+          <div style="width:44px;height:44px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;">アイテム管理</div>
+            <div style="font-size:11px;color:#999;">アイテム情報の投稿・編集・削除</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ccc" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <div onclick="showAdminPage('admin-ad')" style="background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <div>
+            <div style="font-size:12px;font-weight:700;">広告管理</div>
+            <div style="font-size:10px;color:#999;">アフィリエイト広告の管理</div>
+          </div>
+        </div>
+
+        
+    </div>
+
+        </div>
+<div id="admin-article" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事管理</div>
+        <button onclick="openNewArticle()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="articleForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="adminEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">カテゴリ</div>
+            <select id="adminCategory" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>NBAファイナル</option><option>ニュース・速報</option><option>試合レポート</option><option>プレイオフ</option><option>選手・チーム</option><option>歴史・レジェンド</option><option>トレード・移籍</option><option>ドラフト</option><option>ルーキー</option><option>考察・議論</option><option>ルール・戦術</option><option>スタッツ・データ</option><option>ランキング</option><option>ビジネス・契約</option><option>シューズ・バッシュ</option><option>スポンサー・広告</option><option>インタビュー・発言</option><option>動画・まとめ</option><option>コラム</option><option>NBA豆知識</option><option>体験・自己紹介</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">タイトル</div>
+            <input id="adminTitle" type="text" placeholder="記事タイトル" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サムネイル画像URL</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input id="adminImg" type="text" placeholder="画像URL (https://...)" style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <label style="padding:9px 12px;background:#f0f0f0;border:1px solid #eee;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;">
+                📷 画像選択
+                <input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">
+              </label>
+            </div>
+            <div id="adminImgPreview" style="display:none;margin-top:6px;"><img id="adminImgPreviewImg" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">本文</div>
+            <div style="border:1px solid #eee;border-radius:8px;overflow:hidden;">
+              <div style="background:#f9f9f9;padding:6px 10px;border-bottom:1px solid #eee;display:flex;gap:6px;flex-wrap:wrap;">
+                <label style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">
+                  📷 画像挿入
+                  <input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">
+                </label>
+                <button type="button" onclick="insertArticleLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🔗 記事リンク</button>
+                <button type="button" onclick="insertTextLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🌐 URLリンク</button>
+                <button type="button" onclick="insertSnsEmbed()" style="padding:4px 10px;background:#fff;border:1px solid #C9082A;border-radius:6px;font-size:11px;cursor:pointer;color:#C9082A;font-weight:700;">📱 SNS埋め込み</button>
+                <button type="button" onclick="insertBodyTag('bold')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;">B</button>
+                <button type="button" onclick="insertBodyTag('h2')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">H2</button>
+                <button type="button" onclick="insertBodyTag('h3')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">H3</button>
+                <button type="button" onclick="insertBodyTag('hr')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">― 仕切り</button>
+                <button type="button" onclick="insertBodyTag('quote')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">" 引用</button>
+              </div>
+              <div style="display:flex;border-bottom:1px solid #eee;background:#f9f9f9;">
+                <button onclick="switchBodyTab('edit')" id="bodyTabEdit" style="padding:6px 16px;border:none;background:#C9082A;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+                <button onclick="switchBodyTab('preview')" id="bodyTabPreview" style="padding:6px 16px;border:none;background:transparent;color:#999;font-size:11px;font-weight:700;cursor:pointer;">プレビュー</button>
+              </div>
+              <textarea id="adminBody" placeholder="本文を入力..." style="width:100%;padding:10px 12px;border:none;font-size:12px;outline:none;height:300px;resize:vertical;box-sizing:border-box;" oninput="updateBodyPreview()"></textarea>
+              <div id="adminBodyPreview" style="display:none;padding:10px 12px;min-height:300px;font-size:13px;line-height:1.8;color:#333;"></div>
+            </div>
+          </div>
+          <div>
+                <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">公開日時（空白 = 今すぐ公開 / 未来の日時 = 予約投稿）</label>
+                <input id="adminPublishAt" type="datetime-local" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="display:flex;gap:8px;">
+            <button onclick="cancelArticleEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="adminSubmitBtn" onclick="submitArticle()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済み記事一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済み記事</div>
+      <div id="adminArticleList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+        <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+        <button onclick="openNewSneaker()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="sneakerForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="sneakerEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="sneakerBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+            <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;">
+            <input id="sneakerGymOk" type="checkbox" style="width:16px;height:16px;">
+            <label for="sneakerGymOk" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+              <div>
+                <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">レビュー本文（①部活生視点・②NBA層視点）</label>
+                <textarea id="sneakerReview" rows="12" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;" placeholder="テンプレートが自動入力されます"></textarea>
+              </div>
+            <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="sneakerSubmitBtn" onclick="submitSneaker()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みバッシュ一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みバッシュ</div>
+      <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+    
+        
+        <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option><option>On Running</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">X投稿URL（任意・公式の投稿などを埋め込み表示）</div>
+            <input id="itemXUrl" type="text" placeholder="https://x.com/.../status/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+        <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+        <button onclick="openNewSneaker()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="sneakerForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="sneakerEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="sneakerBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+            <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;">
+            <input id="sneakerGymOk" type="checkbox" style="width:16px;height:16px;">
+            <label for="sneakerGymOk" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="sneakerSubmitBtn" onclick="submitSneaker()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みバッシュ一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みバッシュ</div>
+      <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+    
+        
+        <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option><option>On Running</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">X投稿URL（任意・公式の投稿などを埋め込み表示）</div>
+            <input id="itemXUrl" type="text" placeholder="https://x.com/.../status/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+        <div id="admin-sneaker" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ管理</div>
+        <button onclick="openNewSneaker()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="sneakerForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="sneakerEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="sneakerBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+            <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+                <input id="sneakerScoreCushion" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+                <input id="sneakerScoreHold" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+                <input id="sneakerScoreTraction" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+                <input id="sneakerScoreWeight" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+            <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+            <input id="sneakerPosition" type="text" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;">
+            <input id="sneakerGymOk" type="checkbox" style="width:16px;height:16px;">
+            <label for="sneakerGymOk" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="sneakerPrice" type="text" placeholder="例：¥22,000" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg" type="text" placeholder="メイン画像 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#f5f5f5;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                  <span class="snkUploadLabel">📷 アップロード</span>
+                  <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入先リンク</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input id="sneakerLinkAmazon" type="text" placeholder="【Amazon】https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkRakuten" type="text" placeholder="【楽天】https://item.rakuten.co.jp/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkStockx" type="text" placeholder="【StockX】https://stockx.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              <input id="sneakerLinkSnkrdunk" type="text" placeholder="【スニーカーダンク】https://snkrdunk.com/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelSneakerEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="sneakerSubmitBtn" onclick="submitSneaker()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みバッシュ一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みバッシュ</div>
+      <div id="adminSneakerList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+    
+        
+        <div id="admin-item" style="display:none;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+        <div onclick="showAdminPage('admin-menu')" style="color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">アイテム管理</div>
+        <button onclick="openNewItem()" style="margin-left:auto;padding:6px 14px;background:#C9082A;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">+ 新規投稿</button>
+      </div>
+      <!-- 新規/編集フォーム -->
+      <div id="itemForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
+        <input type="hidden" id="itemEditId">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+            <select id="itemBrand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;">
+              <option>Nike</option><option>Jordan</option><option>Adidas</option><option>Under Armour</option><option>Puma</option><option>New Balance</option><option>Anta</option><option>Li-Ning</option><option>On Running</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品名</div>
+            <input id="itemName" type="text" placeholder="例：Tech Fleece パーカー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">関連選手（任意）</div>
+            <input id="itemPlayer" type="text" placeholder="例：レブロン・ジェームズ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明（任意）</div>
+            <textarea id="itemDesc" placeholder="商品の特徴など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;height:70px;resize:vertical;"></textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">価格</div>
+            <input id="itemPrice" type="text" placeholder="例：¥12,800" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL</div>
+            <input id="itemImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">Amazonリンク</div>
+            <input id="itemLink" type="text" placeholder="https://amzn.to/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">X投稿URL（任意・公式の投稿などを埋め込み表示）</div>
+            <input id="itemXUrl" type="text" placeholder="https://x.com/.../status/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="cancelItemEdit()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
+            <button id="itemSubmitBtn" onclick="submitItem()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">投稿する</button>
+          </div>
+        </div>
+      </div>
+      <!-- 投稿済みアイテム一覧 -->
+      <div style="padding:8px 12px;font-size:10px;color:#999;font-weight:700;background:#f9f9f9;border-bottom:1px solid #eee;">投稿済みアイテム</div>
+      <div id="adminItemList" style="overflow-y:auto;max-height:calc(100vh - 200px);"></div>
+    </div>
+
+        <div id="admin-ad" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#000;position:sticky;top:0;z-index:10;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button onclick="showAdminPage('admin-menu')" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;">&#8592;</button>
+              <span style="color:#fff;font-weight:700;font-size:15px;">広告管理</span>
+            </div>
+            <button onclick="openNewAd()" style="background:#C9082A;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+          </div>
+
+          <div id="adForm" style="display:none;padding:16px;border-bottom:1px solid #eee;">
+            <input type="hidden" id="adEditId">
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">広告タイトル <span style="color:#C9082A;">*</span></div>
+                <input id="adTitle" type="text" placeholder="例：NBA選手も使う英会話アプリ" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">説明文（1行・任意）</div>
+                <input id="adDesc" type="text" placeholder="例：まずは無料体験から。" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ボタンテキスト（任意）</div>
+                <input id="adCta" type="text" placeholder="例：無料で試す →（省略時：詳しくはこちら →）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">バナー画像URL（任意）</div>
+                <input id="adImg" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div>
+                <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アフィリエイトリンクURL <span style="color:#C9082A;">*</span></div>
+                <input id="adLink" type="text" placeholder="https://px.a8.net/..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="cancelAdEdit()" style="flex:1;padding:11px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;cursor:pointer;">キャンセル</button>
+                <button id="adSubmitBtn" onclick="submitAd()" style="flex:1;padding:11px;background:#C9082A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">保存する</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:16px;">
+            <div style="font-size:11px;color:#999;margin-bottom:8px;">登録済み広告</div>
+            <div id="adminAdList"><div style="text-align:center;color:#999;padding:20px;font-size:13px;">広告なし</div>
+<div style="margin-top:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:700;color:#333;">📢 バナー広告管理</div>
+              <button onclick="openNewBanner()" style="background:#e63946;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+            </div>
+            
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:700;color:#333;">📢 下部バナー広告</div>
+              <button onclick="openNewBanner()" style="background:#e63946;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;">+ 新規追加</button>
+            </div>
+            <div id="bannerForm" style="display:none;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:14px;margin-bottom:12px;">
+              <input type="hidden" id="bannerEditId">
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル（右側に表示）</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">🖼 PR画像URL（任意）</label><input id="bannerImg" type="url" placeholder="https://...画像のURL" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+              <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="下部バナー">下部バナー（全ページ共通）</option><option value="記事下">記事下（記事を読んだ後）</option><option value="ホーム">ホームページのみ</option></select></div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
+                <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
+              </div>
+            </div>
+            
+            <div style="font-size:11px;font-weight:700;color:#555;margin:12px 0 6px;padding:6px 10px;background:#f0f4ff;border-radius:6px;">📺 上部バー（動画配信）</div>
+            <div id="adminTopBannerList"></div>
+            <div style="font-size:11px;font-weight:700;color:#555;margin:10px 0 6px;padding:6px 10px;background:#fff3f0;border-radius:6px;">🛒 下部バー（商品広告）</div>
+            <div id="adminBotBannerList"></div>
+          </div>
+        </div>
+
+    
+
+  </div>
+  
+
+
+</div>
+<div class="bottom-nav">
+  <div class="bnav-item active" data-page="home" onclick="goPage('home',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+    <div class="bnav-label">ホーム</div>
+  </div>
+  <div class="bnav-item" data-page="schedule" onclick="goPage('schedule',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <div class="bnav-label">試合</div>
+  </div>
+  <div class="bnav-item" data-page="articles" onclick="goPage('articles',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    <div class="bnav-label">記事</div>
+  </div>
+  <div class="bnav-item" data-page="sneakers" onclick="goPage('sneakers',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 8 5 5 9 5h6c4 0 7 3 7 7v2H2v-2z"/><path d="M2 14h20"/></svg>
+    <div class="bnav-label">バッシュ</div>
+  </div>
+  <div class="bnav-item" data-page="items" onclick="goPage('items',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+    <div class="bnav-label">アイテム</div>
+  </div>
+  <div class="bnav-item" data-page="players" onclick="goPage('players',null,this)">
+    <svg class="bnav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="bnav-label">選手</div>
+  </div>
+</div>
+
+<!-- 選手詳細モーダル -->
+<div id="playerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('playerDetailModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">選手詳細</div>
+    </div>
+    <div id="playerDetailBody" style="padding:1rem;"></div>
+  </div>
+</div>
+
+<!-- バッシュ詳細モーダル -->
+<div id="snkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;overflow-y:auto;display:none;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="closeSnkModal()" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ詳細</div>
+    </div>
+    <div id="snkModalBody" style="background:#fff;min-height:100vh;padding:16px;box-sizing:border-box;"></div>
+  </div>
+</div>
+
+<!-- 記事モーダル -->
+<div id="articleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('articleModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事</div>
+    </div>
+    <div id="articleModalBody" style="padding:0;"></div>
+  </div>
+</div>
+
+<!-- 選手詳細モーダル -->
+<div id="playerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('playerDetailModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">選手詳細</div>
+    </div>
+    <div id="playerDetailBody" style="padding:1rem;"></div>
+  </div>
+</div>
+
+<!-- バッシュ詳細モーダル -->
+<div id="snkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="closeSnkModal()" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">バッシュ詳細</div>
+    </div>
+    <div id="snkModalBody" style="padding:1rem;"></div>
+  </div>
+</div>
+
+<!-- 記事モーダル -->
+<div id="articleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
+  <div style="background:#fff;min-height:100vh;">
+    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
+      <div onclick="document.getElementById('articleModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">記事</div>
+    </div>
+    <div id="articleModalBody" style="padding:0;"></div>
+  </div>
+</div>
+
+<!-- 検索モーダル -->
+<div id="search-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;">
+  <div style="padding:16px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="flex:1;display:flex;align-items:center;background:#1a1a1a;border-radius:10px;padding:10px 14px;gap:8px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search-input" type="text" placeholder="選手名・チーム・記事を検索..." style="flex:1;background:transparent;border:none;color:#fff;font-size:14px;outline:none;" oninput="handleSearch(this.value)">
+      </div>
+      <div onclick="closeSearch()" style="color:#fff;font-size:14px;cursor:pointer;padding:4px 8px;">キャンセル</div>
+    </div>
+    <div id="search-results">
+      <div style="font-size:11px;color:#555;margin-bottom:12px;letter-spacing:0.5px;">最近の検索</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ウェンバンヤマ</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">スパーズ</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ブランソン</div>
+        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">NBAファイナル</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const teams=[{id:'spurs',name:'スパーズ',color:'#000',players:[{name:'ビクター・ウェンバンヤマ',pos:'C/F',num:'1',pts:27.3,reb:10.9,ast:3.1,blk:2.7,stl:1.4,fg:54.2,tp:40.0,min:34.2},{name:'ステフォン・キャッスル',pos:'PG',num:'5',pts:18.4,reb:4.2,ast:7.1,blk:0.3,stl:1.5,fg:46.8,tp:42.8,min:33.6},{name:'ディアロン・フォックス',pos:'SG',num:'4',pts:22.1,reb:4.8,ast:6.4,blk:0.4,stl:1.2,fg:48.2,tp:36.4,min:32.8},{name:'デビン・バセル',pos:'SF',num:'5',pts:17.2,reb:3.8,ast:2.4,blk:1.1,stl:0.9,fg:46.4,tp:37.6,min:30.4},{name:'ジュリアン・シャンペニー',pos:'PF',num:'7',pts:12.4,reb:5.2,ast:1.8,blk:0.8,stl:0.6,fg:52.1,tp:38.2,min:28.6},{name:'ディラン・ハーパー',pos:'SG',num:'9',pts:14.6,reb:3.4,ast:4.2,blk:0.2,stl:0.8,fg:44.6,tp:35.8,min:24.4},{name:'ケルドン・ジョンソン',pos:'SF',num:'3',pts:10.8,reb:4.6,ast:1.4,blk:0.4,stl:0.6,fg:48.2,tp:34.2,min:20.8},{name:'ルーク・コーネット',pos:'C',num:'2',pts:6.2,reb:5.8,ast:1.2,blk:1.1,stl:0.3,fg:58.4,tp:0,min:16.4}]},{id:'knicks',name:'ニックス',color:'#006BB6',players:[{name:'ジェイレン・ブランソン',pos:'PG',num:'11',pts:26.9,reb:2.8,ast:6.6,blk:0.2,stl:1.2,fg:48.2,tp:41.2,min:36.8},{name:'カール・アンソニー・タウンズ',pos:'C',num:'32',pts:24.1,reb:13.2,ast:3.8,blk:1.4,stl:1.1,fg:51.8,tp:38.4,min:32.4},{name:'ミケル・ブリッジズ',pos:'SF',num:'13',pts:16.8,reb:4.4,ast:3.2,blk:0.6,stl:1.4,fg:46.2,tp:38.2,min:34.1},{name:'OG・アヌノビー',pos:'SF',num:'8',pts:15.2,reb:5.6,ast:2.1,blk:0.8,stl:1.6,fg:52.4,tp:36.8,min:32.8},{name:'ジョシュ・ハート',pos:'SF',num:'3',pts:12.4,reb:8.1,ast:4.2,blk:0.2,stl:1.3,fg:54.6,tp:32.4,min:31.4},{name:'ランドリー・シャメット',pos:'SG',num:'14',pts:11.8,reb:2.4,ast:2.8,blk:0.1,stl:0.4,fg:44.8,tp:43.5,min:22.6},{name:'ミッチェル・ロビンソン',pos:'C',num:'23',pts:8.4,reb:9.2,ast:0.8,blk:1.8,stl:0.3,fg:62.4,tp:0,min:18.2}]},{id:'celtics',name:'セルティックス',color:'#007A33',players:[{name:'ジェイソン・テイタム',pos:'SF',num:'0',pts:26.9,reb:8.2,ast:4.8,blk:0.6,stl:1.1,fg:46.6,tp:37.2,min:36.2},{name:'ジェイレン・ブラウン',pos:'SG',num:'7',pts:23.4,reb:5.6,ast:3.4,blk:0.4,stl:1.2,fg:49.2,tp:35.8,min:34.8},{name:'クリスタプス・ポルジンギス',pos:'C',num:'8',pts:18.6,reb:7.4,ast:2.2,blk:1.9,stl:0.6,fg:52.4,tp:36.4,min:28.6},{name:'デリック・ホワイト',pos:'PG',num:'9',pts:15.2,reb:4.2,ast:5.6,blk:0.8,stl:1.4,fg:44.8,tp:38.6,min:32.4},{name:'ジュルー・ホリデー',pos:'PG',num:'4',pts:12.8,reb:5.4,ast:6.2,blk:0.4,stl:1.8,fg:48.2,tp:36.2,min:30.8}]},{id:'lakers',name:'レイカーズ',color:'#552583',players:[{name:'アンソニー・デイビス',pos:'C',num:'3',pts:24.8,reb:12.4,ast:3.6,blk:2.4,stl:1.2,fg:56.8,tp:28.4,min:34.6},{name:'レブロン・ジェームズ',pos:'SF',num:'23',pts:22.4,reb:7.8,ast:8.2,blk:0.6,stl:1.4,fg:52.4,tp:36.8,min:35.2},{name:'オースティン・リーブス',pos:'SG',num:'15',pts:16.4,reb:4.2,ast:5.8,blk:0.2,stl:1.1,fg:46.2,tp:40.4,min:32.8},{name:'ラス',pos:'PG',num:'0',pts:11.2,reb:5.6,ast:7.4,blk:0.2,stl:1.4,fg:44.8,tp:32.6,min:28.4}]}];
+
+
+const pages=['home','articles','sneakers','players','stats','ranking','match','admin'];
+let currentTeam='spurs',currentConf='east',currentStat='得点';
+function goPage(id, tabEl, navEl) {
+  const pageId = 'pg-' + (id==='home'?'schedule':id);
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('show'));
+  const target = document.getElementById(pageId);
+  if(target) target.classList.add('show');
+  document.querySelectorAll('.sn').forEach(t => t.classList.remove('on'));
+  const snEl = document.getElementById('sn-' + (id==='home'?'schedule':id));
+  if(snEl) snEl.classList.add('on');
+  // ボトムナビのアクティブ状態を更新
+  document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
+  const activeNav = document.querySelector('.bnav-item[data-page="'+id+'"]');
+  if(activeNav) activeNav.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='ranking'&&typeof initRanking==='function') initRanking();
+  if(id==='articles'&&typeof loadArticles==='function') loadArticles();
+  if(id==='sneakers'&&typeof loadSneakers==='function') loadSneakers();
+  if(id==='items'&&typeof loadItems==='function') loadItems();
+  if((id==='sneakers'||id==='items'||id==='articles')&&typeof refreshAllAdBanners==='function') setTimeout(refreshAllAdBanners,100);
+  if(id==='players'&&typeof initPlayers==='function') initPlayers();
+  if(id==='stats'&&typeof initBox==='function') initBox('sa');
+}
+function showPage(id,tabEl,navEl){
+  pages.forEach(p=>{const el=document.getElementById(p);if(el){el.classList.remove('active');}});
+  const t=document.getElementById(id);if(t)t.classList.add('active');
+  if(tabEl){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));tabEl.classList.add('active');}
+  if(navEl){document.querySelectorAll('.bnav-item').forEach(n=>n.classList.remove('active'));navEl.classList.add('active');}
+  window.scrollTo(0,0);
+  if(id==='players')initPlayers();
+  if(id==='ranking')initRanking();
+  if(id==='match')initBox('sa');
+}
+
+function showBox(team,el){
+  ['sa','ny','team'].forEach(t=>{const b=document.getElementById('box-'+t);if(b){b.style.color='#888';b.style.borderBottom='2px solid transparent';}});
+  if(el){el.style.color='#fff';el.style.borderBottom='2px solid #C9082A';}
+  const content=document.getElementById('box-content');
+  if(team==='team'){
+    content.innerHTML=`<div style="background:#fff;padding:16px;">${[['FG%','48.2%','51.4%'],['3P%','38.5%','42.1%'],['FT%','84.2%','88.6%'],['リバウンド','34','38'],['アシスト','22','28'],['スティール','4','6'],['ブロック','4','3'],['ターンオーバー','8','6']].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;"><div style="font-size:12px;font-weight:700;color:#C9082A;text-align:center;flex:1;">${r[1]}</div><div style="font-size:11px;font-weight:700;color:#999;width:80px;text-align:center;">${r[0]}</div><div style="font-size:12px;font-weight:700;color:#006BB6;text-align:center;flex:1;">${r[2]}</div></div>`).join('')}</div>`;
+    return;
+  }
+  const box=boxScores[team];if(!box)return;
+  const renderRows=players=>players.map(p=>`
+    <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:#fff;">
+      <div style="width:30px;height:30px;border-radius:50%;background:${p.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-right:8px;">${p.name[0]}</div>
+      <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div><div style="font-size:10px;color:#999;">${p.pos}·${p.min}分</div></div>
+      <div style="display:flex;gap:0;">
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;color:#C9082A;">${p.pts}</div>
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;">${p.reb}</div>
+        <div style="width:32px;text-align:center;font-size:13px;font-weight:700;">${p.ast}</div>
+        <div style="width:28px;text-align:center;font-size:13px;color:#666;">${p.stl}</div>
+        <div style="width:28px;text-align:center;font-size:13px;color:#666;">${p.blk}</div>
+      </div>
+    </div>
+  `).join('');
+  content.innerHTML=`
+    <div style="display:flex;padding:8px 16px;background:#f9f9f9;border-bottom:1px solid #eee;">
+      <div style="flex:1;font-size:10px;color:#999;font-weight:700;">選手</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">得点</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">RB</div>
+      <div style="width:32px;text-align:center;font-size:10px;color:#999;font-weight:700;">AS</div>
+      <div style="width:28px;text-align:center;font-size:10px;color:#999;font-weight:700;">ST</div>
+      <div style="width:28px;text-align:center;font-size:10px;color:#999;font-weight:700;">BK</div>
+    </div>
+    <div style="padding:8px 16px;font-size:10px;font-weight:700;color:#C9082A;background:#fff8f8;border-bottom:1px solid #fee;font-family:'Barlow Condensed',sans-serif;">スターター</div>
+    ${renderRows(box.starters)}
+    <div style="padding:8px 16px;font-size:10px;font-weight:700;color:#999;background:#f9f9f9;border-bottom:1px solid #eee;font-family:'Barlow Condensed',sans-serif;">ベンチ</div>
+    ${renderRows(box.bench)}
+  `;
+}
+function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
+function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
+function handleSearch(val){
+  if(val==='3579'){closeSearch();goPage('admin');showAdminPage('admin-menu');return;}
+  const results=document.getElementById('search-results');
+  if(val.length===0){results.innerHTML=`<div style="font-size:11px;color:#555;margin-bottom:12px;">最近の検索</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ウェンバンヤマ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">スパーズ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ブランソン</div></div>`;return;}
+  const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
+  results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
+}
+function showSubTab(tab) {
+  ['games','ranking','stats','title'].forEach(t => {
+    const el = document.getElementById('sub-' + t);
+    if(el) el.style.display = t === tab ? 'block' : 'none';
+    const bt = document.getElementById('subtab-' + t);
+    if(bt) {
+      bt.style.color = t === tab ? '#C9082A' : '#999';
+      bt.style.borderBottom = t === tab ? '2px solid #C9082A' : '2px solid transparent';
+    }
+  });
+  if(tab === 'stats') {
+    if(typeof initStats === 'function') initStats();
+    if(typeof loadESPNLeaders === 'function') loadESPNLeaders('pts', 'season');
+  }
+  if(tab === 'playin') loadPlayinData();
+  if(tab === 'playoff') loadPlayoffData();
+  if(tab === 'title') loadTitleData();
+}
+function loadPlayinData() {
+  const wrap = document.getElementById('playinWrap');
+  if(!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;font-size:12px;">取得中...</div>';
+  fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?seasontype=5&limit=20')
+    .then(r => r.json())
+    .then(data => {
+      const events = data.events || [];
+      if(!events.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">データがありません</div>'; return; }
+      wrap.innerHTML = events.map(ev => {
+        const comp = ev.competitions[0];
+        const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
+        const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+        const status = ev.status.type.shortDetail || '';
+        const hl = parseInt(home.score||0) > parseInt(away.score||0);
+        return '<div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">' +
+          '<div><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (hl?'#C9082A':'#000') + '">' + home.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + home.team.location + '</div></div>' +
+          '<div style="text-align:center;"><div style="font-family:Bebas Neue,sans-serif;font-size:20px;">' + (home.score||'-') + ' - ' + (away.score||'-') + '</div><div style="font-size:10px;color:#999;">' + status + '</div></div>' +
+          '<div style="text-align:right;"><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (!hl?'#C9082A':'#000') + '">' + away.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + away.team.location + '</div></div></div>';
+      }).join('');
+    }).catch(() => { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">取得失敗</div>'; });
+}
+function loadPlayoffData() {
+  const wrap = document.getElementById('playoffWrap');
+  if(!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;font-size:12px;">取得中...</div>';
+  fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?seasontype=3&limit=50')
+    .then(r => r.json())
+    .then(data => {
+      const events = data.events || [];
+      if(!events.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">データがありません</div>'; return; }
+      wrap.innerHTML = events.map(ev => {
+        const comp = ev.competitions[0];
+        const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
+        const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+        const status = ev.status.type.shortDetail || '';
+        const hl = parseInt(home.score||0) > parseInt(away.score||0);
+        return '<div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">' +
+          '<div><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (hl?'#C9082A':'#000') + '">' + home.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + home.team.location + '</div></div>' +
+          '<div style="text-align:center;"><div style="font-family:Bebas Neue,sans-serif;font-size:20px;">' + (home.score||'-') + ' - ' + (away.score||'-') + '</div><div style="font-size:10px;color:#999;">' + status + '</div></div>' +
+          '<div style="text-align:right;"><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:' + (!hl?'#C9082A':'#000') + '">' + away.team.abbreviation + '</div><div style="font-size:10px;color:#999;">' + away.team.location + '</div></div></div>';
+      }).join('');
+    }).catch(() => { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:#999;">取得失敗</div>'; });
+}
+function loadTitleData() {
+  const wrap = document.getElementById('titleWrap');
+  if(!wrap) return;
+  const awards = [
+    { section:'個人賞', items:[
+      {label:'MVP', player:'シャイ・ギルジャス=アレクサンダー', team:'OKC'},
+      {label:'DPOY（最優秀守備選手）', player:'ビクター・ウェンバンヤマ', team:'SAS'},
+      {label:'ROY（新人王）', player:'クーパー・フラッグ', team:'DAL'},
+      {label:'MIP（最成長選手）', player:'ニケイル・アレクサンダー=ウォーカー', team:'ATL'},
+      {label:'6MOY（シックスマン賞）', player:'ケルドン・ジョンソン', team:'SAS'},
+      {label:'Clutch Player of the Year', player:'シャイ・ギルジャス=アレクサンダー', team:'OKC'},
+      {label:'Coach of the Year', player:'J.B. ビッカースタッフ', team:'DET'},
+      {label:'Sportsmanship Award', player:'デリック・ホワイト', team:'BOS'},
+    ]},
+    { section:'オールNBA', items:[
+      {label:'1st Team', player:'SGA / ヨキッチ / ウェンバンヤマ / ドンチッチ / カニンガム', team:''},
+      {label:'2nd Team', player:'J.ブラウン / ブランソン / K.デュラント / D.ミッチェル / K.レナード', team:''},
+      {label:'3rd Team', player:'T.マクシー / J.マレー / J.ジョンソン / J.デューレン / チェット', team:''},
+    ]},
+    { section:'オールディフェンシブ', items:[
+      {label:'1st Team', player:'ウェンバンヤマ / チェット / オーザー / ゴベア / D.ホワイト', team:''},
+      {label:'2nd Team', player:'バム / OG / S.バーンズ / D.ダニエルズ / C.ウォレス', team:''},
+    ]},
+    { section:'オールルーキー', items:[
+      {label:'1st Team', player:'C.フラッグ / K.クネッペル / VJ.エジコーム / D.ハーパー / C.コワード', team:''},
+      {label:'2nd Team', player:'A.ベイリー / J.フィアーズ / C.マレー=ボイルズ / M.レイノー / D.クイーン', team:''},
+    ]},
+    { section:'スタッツタイトル', items:[
+      {label:'得点王', player:'ルカ・ドンチッチ（33.5 PPG）', team:'LAL'},
+      {label:'アシスト王', player:'ニコラ・ヨキッチ', team:'DEN'},
+      {label:'リバウンド王', player:'ニコラ・ヨキッチ', team:'DEN'},
+      {label:'スティール王', player:'オーザー・トンプソン', team:'DET'},
+      {label:'ブロック王', player:'ビクター・ウェンバンヤマ（3.1 BPG）', team:'SAS'},
+      {label:'FG%王', player:'ニコラ・ヨキッチ', team:'DEN'},
+    ]},
+    { section:'プレーオフ', items:[
+      {label:'NBA Champion', player:'未確定', team:''},
+      {label:'Finals MVP', player:'未確定', team:''},
+      {label:'Larry Bird Trophy（東カンファ）', player:'ジェイレン・ブランソン', team:'NYK'},
+      {label:'Magic Johnson Trophy（西カンファ）', player:'ビクター・ウェンバンヤマ', team:'SAS'},
+    ]},
+  ];
+  wrap.innerHTML = awards.map(sec =>
+    '<div style="padding:10px 16px;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:#fff;background:#111;letter-spacing:1px;">' + sec.section + '</div>' +
+    sec.items.map(it =>
+      '<div style="display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0;background:#fff;' + (it.team ? 'border-left:3px solid #C9082A;' : '') + '">' +
+      '<div style="flex:1;min-width:0;">' +
+      '<div style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:700;color:#C9082A;letter-spacing:1px;text-transform:uppercase;">' + it.label + '</div>' +
+      '<div style="font-size:14px;font-weight:700;color:#000;margin-top:3px;white-space:nowrap;overflow-x:auto;">' + it.player + '</div>' +
+      '</div>' +
+      (it.team ? '<div style="font-family:Bebas Neue,sans-serif;font-size:18px;font-weight:700;color:#000;margin-left:8px;flex-shrink:0;background:#f0f0f0;padding:4px 8px;border-radius:4px;">' + it.team + '</div>' : '') +
+      '</div>'
+    ).join('')
+  ).join('');
+}
+function showAdminPage(id){
+  ['admin-menu','admin-article','admin-sneaker','admin-item','admin-ad'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
+  const t=document.getElementById(id);if(t)t.style.display='block';
+  if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
+  if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
+  if(id==='admin-item' && typeof loadAdminItems==='function') loadAdminItems();
+  if (id === 'admin-ad') loadAdminAds(); if(typeof loadAdminBanners==="function") loadAdminBanners();
+}
+function toggleAd(el){
+  const isOn=el.dataset.on==='true';
+  el.dataset.on=String(!isOn);
+  el.style.background=!isOn?'#C9082A':'#ddd';
+  const dot=el.querySelector('div');
+  if(!isOn){dot.style.right='2px';dot.style.left='';}else{dot.style.left='2px';dot.style.right='';}
+  const label=el.parentNode.querySelector('div:first-child div:last-child');
+  if(label)label.textContent=!isOn?'現在ON':'現在OFF';
+}
+// 閲覧者数をランダムに設定
+(function() {
+  const n = Math.floor(Math.random() * 20) + 1;
+  const t = n + '人が閲覧中';
+  const h = document.getElementById('headerOnlineCount');
+  const c = document.getElementById('onlineCount');
+  if(h) h.textContent = t;
+  if(c) c.textContent = t;
+  // 3〜7分ごとに±1〜2人変動
+  setInterval(function() {
+    const cur = parseInt((h||c).textContent) || n;
+    const diff = Math.floor(Math.random() * 3) - 1;
+    const next = Math.max(1, Math.min(20, cur + diff));
+    const nt = next + '人が閲覧中';
+    if(h) h.textContent = nt;
+    if(c) c.textContent = nt;
+  }, (Math.random() * 240000) + 180000);
+})();
+
+// URLパラメータ処理
+const _urlParams = new URLSearchParams(window.location.search);
+const _articleId = _urlParams.get('article');
+if(_articleId) window._directArticleId = _articleId;
+</script>
+
+<script>
+window.addEventListener('load', function() {
+  var hash = location.hash.replace('#','') || 'home';
+  var valid = ['home','schedule','ranking','articles','sneakers','items','players'];
+  var page = valid.indexOf(hash) >= 0 ? hash : 'home';
+  if(typeof goPage === 'function') {
+    goPage(page);
+    var btn = document.getElementById('sn-' + page);
+    if(btn) btn.classList.add('on');
+  }
+});
+</script>
+
+<!-- Firebase URL -->
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J1X9EM56WW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
+
+<!-- JS読み込み -->
+<script src="js/utils.js?v=1"></script>
+<script src="js/data.js?v=2"></script>
+<script src="js/app.js?v=8"></script>
+<script src="js/schedule2.js?v=7"></script>
+<script src="js/articles.js?v=3"></script>
+<script src="js/sneakers.js?v=8"></script>
+<script src="js/items.js?v=3"></script>
+  <script src="js/ads.js?v=2"></script>
+<script src="js/home.js?v=1"></script>
+<script src="js/players3.js?v=1"></script>
+<script src="js/stats.js?v=2"></script>
+<script src="js/search.js?v=1"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async src="https://www.instagram.com/embed.js"></script>
+<script async src="https://www.tiktok.com/embed.js"></script>
+
+<!-- フッター -->
+    <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:.35rem;">
+      <a href="https://twitter.com/mentalitybrand8" target="_blank" style="color:rgba(255,255,255,.55);line-height:0;"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+      <a href="https://www.instagram.com/mentalitybrand8" target="_blank" style="color:rgba(255,255,255,.55);line-height:0;"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+      <a href="https://www.youtube.com/@mentalitybrand8" target="_blank" style="color:rgba(255,255,255,.55);line-height:0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.546 15.568V8.432L15.818 12l-6.272 3.568z"/></svg></a>
+      <a href="https://www.tiktok.com/@mentalitybrand8" target="_blank" style="color:rgba(255,255,255,.55);line-height:0;"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg></a>
+    </div>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:.25rem .5rem;margin-bottom:.25rem;">
+      <span onclick="showLegalPage('privacy')" style="font-size:.5rem;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline;">プライバシーポリシー</span>
+      <span onclick="showLegalPage('terms')" style="font-size:.5rem;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline;">利用規約</span>
+      <span onclick="showLegalPage('tokusho')" style="font-size:.5rem;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline;">特定商取引法</span>
+      <span onclick="showLegalPage('disclaimer')" style="font-size:.5rem;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline;">免責事項</span>
+      <span onclick="showLegalPage('contact')" style="font-size:.5rem;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline;">お問い合わせ</span>
+    </div>
+    <div style="font-size:.5rem;color:rgba(255,255,255,.25);">© 2026 COURTSIDE｜Amazonアソシエイト参加者</div>
+  </div>
+</div>
+
+<!-- 法的ページモーダル -->
+<div id="legalModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;overflow-y:auto;">
+  <div style="background:#fff;max-width:600px;margin:2rem auto;border-radius:12px;overflow:hidden;">
+    <div style="background:#0a1628;padding:1rem;display:flex;align-items:center;justify-content:space-between;">
+      <span id="legalTitle" style="color:#fff;font-weight:700;font-size:.9rem;"></span>
+      <span onclick="closeLegalPage()" style="color:#fff;cursor:pointer;font-size:1.2rem;">×</span>
+    </div>
+    <div id="legalBody" style="padding:1.5rem;font-size:.75rem;line-height:1.8;color:#333;"></div>
+  </div>
+</div>
+
+<script>
+(function() {
   var last = localStorage.getItem('lastPage');
   if (last && last !== 'home') {
     setTimeout(function() {
