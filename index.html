@@ -2528,11 +2528,21 @@ window.addEventListener('load', function() {
 })();
 </script>
 <script>
+// bottom-navをbodyに確実に配置
 (function(){
-  var bn = document.querySelector('.bottom-nav');
-  if(bn && bn.parentElement && bn.parentElement.id !== '') {
-    document.body.appendChild(bn);
+  function fixBnav() {
+    var bn = document.querySelector('.bottom-nav');
+    if(bn && bn.parentElement && bn.parentElement !== document.body) {
+      document.body.appendChild(bn);
+    }
   }
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fixBnav);
+  } else {
+    fixBnav();
+  }
+  // 念のため少し後にも実行
+  setTimeout(fixBnav, 100);
 })();
 </script>
 </body>
