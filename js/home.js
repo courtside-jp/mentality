@@ -96,7 +96,7 @@ function renderHomeFeed(list) {
           <span style="font-size:.55rem;background:${HOME_TYPE_COLOR[p._type]};color:#fff;padding:.1rem .45rem;border-radius:6px;font-weight:700;">${HOME_TYPE_LABEL[p._type]}</span>
           <span style="font-size:.58rem;color:var(--tx3);">${p.ts ? new Date(p.ts).toLocaleDateString('ja-JP') : ''}</span>
         </div>
-        <div style="font-size:.82rem;font-weight:700;color:var(--tx);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${title}</div>
+        <div style="font-size:.77rem;font-weight:700;color:var(--tx);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${title}</div>
       </div>
     </div>`;
   }).join('');
