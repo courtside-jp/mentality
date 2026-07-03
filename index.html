@@ -1026,25 +1026,33 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
 
   </div>
   
-<div style="background:#0a0a0a;padding:20px 16px;text-align:center;margin-top:20px;">
-  <div style="font-size:16px;font-weight:800;letter-spacing:.1em;margin-bottom:12px;"><span style="color:#fff;">COURT</span><span style="color:#e63946;">SIDE</span></div>
-  <div style="display:flex;justify-content:center;gap:16px;margin-bottom:12px;">
-    <a href="https://x.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">X</a>
-    <a href="https://instagram.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">Instagram</a>
-    <a href="https://youtube.com/@mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">YouTube</a>
-    <a href="https://tiktok.com/@mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">TikTok</a>
-  </div>
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-bottom:10px;">
-    <a href="#" style="color:#666;font-size:11px;text-decoration:none;">プライバシーポリシー</a>
-    <a href="#" style="color:#666;font-size:11px;text-decoration:none;">利用規約</a>
-    <a href="#" style="color:#666;font-size:11px;text-decoration:none;">特定商取引法</a>
-    <a href="#" style="color:#666;font-size:11px;text-decoration:none;">免責事項</a>
-    <a href="#" style="color:#666;font-size:11px;text-decoration:none;">お問い合わせ</a>
-  </div>
-  <div style="font-size:10px;color:#444;">&#169; 2026 COURTSIDE &#124; Amazon&#12450;&#12477;&#12471;&#12456;&#12452;&#12488;&#21442;&#21152;&#32773;</div>
-</div>
+
 
 </div>
+<script>
+(function(){
+  var footer = document.createElement('div');
+  footer.id = 'siteFooter';
+  footer.style.cssText = 'background:#0a0a0a;padding:20px 16px;text-align:center;margin-top:20px;';
+  footer.innerHTML = '<div style="font-size:16px;font-weight:800;letter-spacing:.1em;margin-bottom:12px;"><span style="color:#fff;">COURT</span><span style="color:#e63946;">SIDE</span></div>' +
+    '<div style="display:flex;justify-content:center;gap:16px;margin-bottom:12px;">' +
+    '<a href="https://x.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">X</a>' +
+    '<a href="https://instagram.com" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">Instagram</a>' +
+    '<a href="https://youtube.com" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">YouTube</a>' +
+    '<a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">TikTok</a>' +
+    '</div>' +
+    '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-bottom:10px;">' +
+    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">&#12503;&#12521;&#12452;&#12496;&#12471;&#12540;&#12509;&#12522;&#12471;&#12540;</a>' +
+    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">&#21033;&#29992;&#35215;&#32004;</a>' +
+    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">&#29305;&#23450;&#21830;&#21462;&#24341;&#27861;</a>' +
+    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">&#20813;&#36064;&#20107;&#39443;</a>' +
+    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">&#12362;&#21839;&#12356;&#21512;&#12431;&#12379;</a>' +
+    '</div>' +
+    '<div style="font-size:10px;color:#444;">&#169; 2026 COURTSIDE</div>';
+  var ms = document.getElementById('mainScroll');
+  if(ms) ms.appendChild(footer);
+})();
+</script>
 
 <div class="bottom-nav">
   <div class="bnav-item active" data-page="home" onclick="goPage('home',null,this)">
