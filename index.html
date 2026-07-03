@@ -1574,24 +1574,34 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', function() {
   var ms = document.getElementById('mainScroll');
   if(!ms || document.getElementById('siteFooter')) return;
+
+  // ① 固定フッター（ナビの上・コンパクト1行）
   var f = document.createElement('div');
   f.id = 'siteFooter';
-  f.style.cssText = 'background:#0a0a0a;padding:20px 16px;text-align:center;margin-top:20px;';
-  f.innerHTML = '<div style="font-size:16px;font-weight:800;letter-spacing:.1em;margin-bottom:12px;"><span style="color:#fff;">COURT</span><span style="color:#e63946;">SIDE</span></div>' +
-    '<div style="display:flex;justify-content:center;gap:16px;margin-bottom:12px;">' +
-    '<a href="https://x.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">X</a>' +
-    '<a href="https://instagram.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">Instagram</a>' +
-    '<a href="https://youtube.com" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">YouTube</a>' +
-    '<a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#888;font-size:12px;text-decoration:none;">TikTok</a></div>' +
-    '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 12px;margin-bottom:10px;">' +
-    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">' + decodeURIComponent('%E3%83%97%E3%83%A9%E3%82%A4%E3%83%90%E3%82%B7%E3%83%BC%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC') + '</a>' +
-    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">' + decodeURIComponent('%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84') + '</a>' +
-    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">' + decodeURIComponent('%E7%89%B9%E5%AE%9A%E5%95%86%E5%8F%96%E5%BC%95%E6%B3%95') + '</a>' +
-    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">' + decodeURIComponent('%E5%85%8D%E8%B2%AC%E4%BA%8B%E9%A0%85') + '</a>' +
-    '<a href="#" style="color:#666;font-size:11px;text-decoration:none;">' + decodeURIComponent('%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B') + '</a></div>' +
-    '<div style="font-size:10px;color:#444;">&#169; 2026 COURTSIDE</div>';
-  ms.appendChild(f);
+  f.style.cssText = 'position:fixed;bottom:56px;left:0;right:0;z-index:96;background:#0a0a0a;border-top:1px solid #222;padding:6px 14px;display:flex;align-items:center;justify-content:space-between;';
+  f.innerHTML =
+    '<div style="display:flex;gap:12px;">' +
+    '<a href="https://x.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:11px;text-decoration:none;">X</a>' +
+    '<a href="https://instagram.com/mentalitybrand8" target="_blank" rel="noopener" style="color:#888;font-size:11px;text-decoration:none;">Instagram</a>' +
+    '<a href="https://youtube.com" target="_blank" rel="noopener" style="color:#888;font-size:11px;text-decoration:none;">YouTube</a>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;">' +
+    '<a href="#" style="color:#555;font-size:10px;text-decoration:none;">' + decodeURIComponent('%E3%83%97%E3%83%A9%E3%82%A4%E3%83%90%E3%82%B7%E3%83%BC') + '</a>' +
+    '<a href="#" style="color:#555;font-size:10px;text-decoration:none;">' + decodeURIComponent('%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B') + '</a>' +
+    '</div>';
+  document.body.appendChild(f);
+
+  // ② 下部バナーの位置をフッターの上に調整
+  var banner = document.getElementById('fixedAdBanner');
+  if(banner) {
+    var footerH = f.offsetHeight || 32;
+    var bnavH = 56;
+    banner.style.bottom = (bnavH + footerH) + 'px';
+  }
+
+  // mainScrollのpadding-bottomを更新
+  var footerH2 = f.offsetHeight || 32;
+  ms.style.paddingBottom = (56 + footerH2 + 48 + 8) + 'px';
 });
-</script>
 </body>
 </html>
