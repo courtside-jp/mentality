@@ -2527,4 +2527,12 @@ window.addEventListener('load', function() {
     }).catch(()=>{});
 })();
 </script>
+<script>
+(function(){
+  var bn = document.querySelector('.bottom-nav');
+  if(bn && bn.parentElement && bn.parentElement.id !== '') {
+    document.body.appendChild(bn);
+  }
+})();
+</script>
 </body>
