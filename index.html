@@ -31,7 +31,7 @@
 <style>
 :root{--red:#C9082A;--black:#0a0a0a;--dark:#111;--dark2:#1a1a1a;--gray:#888;--light:#f5f5f5;--white:#fff;--border:rgba(255,255,255,0.08);--or:#E8510A;--go:#00A855;--bg:#f5f5f5;--bg2:#fff;--bg3:#f0f0f0;--tx:#0a0a0a;--tx2:#444;--tx3:#888;--bd:#eee;--card:#fff;--rd:#C9082A;--gr:#00A855;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:'Noto Sans JP',sans-serif;}
 .header{background:var(--black);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;width:100%;}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
 .logo span{color:var(--red);}
@@ -57,7 +57,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
 .hero-btn-primary{background:var(--red);color:var(--white);}
 .hero-btn-secondary{background:var(--dark2);color:var(--white);border:1px solid var(--border);}
 
-.content-wrap{padding-bottom:80px;}
+.content-wrap{position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .section-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;background:var(--white);border-bottom:1px solid #f0f0f0;margin-top:8px;}
 .section-ttl{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--black);letter-spacing:1px;}
 .section-more{font-size:11px;color:var(--red);}
