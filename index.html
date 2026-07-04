@@ -1247,8 +1247,8 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
         // second-navの下に配置
         const snav = document.querySelector('.second-nav');
         if(snav) {
-          const snavBottom = snav.getBoundingClientRect().top + snav.offsetHeight;
-          topBanner.style.top = snavBottom + 'px';
+          var hdrH = (document.querySelector('.header')?.offsetHeight || 51);
+          topBanner.style.top = hdrH + 'px';
           // mainScrollのpaddingも更新
           const ms = document.getElementById('mainScroll');
           if(ms) ms.style.paddingTop = (snavBottom + topBanner.offsetHeight + 4) + 'px';
