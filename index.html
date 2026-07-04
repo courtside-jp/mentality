@@ -2537,6 +2537,12 @@ window.addEventListener('load', function() {
     });
     var bn = document.querySelector('.bottom-nav');
     if(bn && bn.parentElement !== document.body) document.body.appendChild(bn);
+    // siteInfoModalのpadding-bottomを設定（bnav+banner分）
+    var sm = document.getElementById('siteInfoModal');
+    if(sm && !sm.dataset.fixedPad) {
+      sm.style.paddingBottom = '133px';
+      sm.dataset.fixedPad = '1';
+    }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fixAll);
   else fixAll();
