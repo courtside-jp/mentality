@@ -2162,15 +2162,7 @@ body{background:var(--light);font-family:'Noto Sans JP',sans-serif;min-height:10
       </div>
       <div onclick="closeSearch()" style="color:#fff;font-size:14px;cursor:pointer;padding:4px 8px;">キャンセル</div>
     </div>
-    <div id="search-results">
-      <div style="font-size:11px;color:#555;margin-bottom:12px;letter-spacing:0.5px;">最近の検索</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;">
-        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ウェンバンヤマ</div>
-        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">スパーズ</div>
-        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">ブランソン</div>
-        <div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;">NBAファイナル</div>
-      </div>
-    </div>
+    <div id="search-results"></div>
   </div>
 </div>
 
@@ -2252,9 +2244,9 @@ function showBox(team,el){
 function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
 function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
 function handleSearch(val){
-  if(val==='3579'){closeSearch();goPage('admin');showAdminPage('admin-menu');return;}
+  if(val==='kobe0824'){closeSearch();goPage('admin');showAdminPage('admin-menu');return;}
   const results=document.getElementById('search-results');
-  if(val.length===0){results.innerHTML=`<div style="font-size:11px;color:#555;margin-bottom:12px;">最近の検索</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ウェンバンヤマ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">スパーズ</div><div style="padding:6px 14px;background:#1a1a1a;border-radius:20px;font-size:12px;color:#fff;">ブランソン</div></div>`;return;}
+  if(val.length===0){results.innerHTML='';return;}
   const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
   results.innerHTML=items.length?items.map(i=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;"><div style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;">${i.type}</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${i.name}</div><div style="font-size:11px;color:#666;">${i.sub}</div></div></div>`).join(''):`<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${val}」の検索結果なし</div>`;
 }
@@ -2529,7 +2521,7 @@ window.addEventListener('load', function() {
 // モーダルとナビをbody直下に確実に配置
 (function(){
   function fixAll() {
-    ['articleModal','snkModal'].forEach(function(id){
+    ['articleModal','snkModal','search-modal','playerDetailModal'].forEach(function(id){
       var el = document.getElementById(id);
       if(el && el.parentElement !== document.body) document.body.appendChild(el);
     });

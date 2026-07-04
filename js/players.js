@@ -87,12 +87,12 @@ function setPTeam(btn, t) {
 
 // 名前検索
 function filterPlayers(q) {
-  if (q.trim() === "3579") {
+  if (q.trim() === "kobe0824") {
     document.getElementById("playerSearchInput").value="";
     pSearch = "";
     setTimeout(()=>{
       const pw = prompt("パスワードを入力してください");
-      if (pw !== "3579") { alert("パスワードが違います"); return; }
+      if (pw !== "kobe0824") { alert("パスワードが違います"); return; }
       document.getElementById("adminSelectModal").style.display="block"; return;
     }, 100);
     return;
