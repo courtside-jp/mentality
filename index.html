@@ -2542,6 +2542,17 @@ window.addEventListener('load', function() {
     if(sm && !sm.dataset.fixedPad) {
       sm.style.paddingBottom = '133px';
       sm.dataset.fixedPad = '1';
+      // TikTokリンクがなければ追加
+      var snsList = sm.querySelector('[style*="justify-content:center"][style*="gap"]');
+      if(snsList && !snsList.innerHTML.includes('TikTok')) {
+        var ttLink = document.createElement('a');
+        ttLink.href = 'https://tiktok.com/@mentalitybrand8';
+        ttLink.target = '_blank';
+        ttLink.rel = 'noopener';
+        ttLink.style.cssText = 'color:#888;font-size:12px;text-decoration:none;';
+        ttLink.textContent = 'TikTok';
+        snsList.appendChild(ttLink);
+      }
     }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fixAll);
