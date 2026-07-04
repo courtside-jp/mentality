@@ -138,4 +138,14 @@ sitemap_xml += '</urlset>\n'
 with open('sitemap.xml', 'w', encoding='utf-8') as f:
     f.write(sitemap_xml)
 
+# ワークフロー側のyml（git add articles/）を編集しなくても済むように、
+# このスクリプト自身でsitemap.xmlをgit stagingに追加しておく。
+# 後続のワークフローの commit ステップがそのままsitemap.xmlも一緒にコミットしてくれる。
+import subprocess
+try:
+    subprocess.run(['git', 'add', 'sitemap.xml'], check=True)
+    print('sitemap.xml を git add しました')
+except Exception as e:
+    print(f'git add に失敗（無視して続行）: {e}')
+
 print(f'完了: {count}記事 + sitemap.xml更新（{len(sitemap_urls)}URL）')
