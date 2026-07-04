@@ -2535,6 +2535,15 @@ window.addEventListener('load', function() {
     });
     var bn = document.querySelector('.bottom-nav');
     if(bn && bn.parentElement !== document.body) document.body.appendChild(bn);
+    // 上部バナーをheaderの下に配置
+    var topBanner = document.getElementById('topAdBanner');
+    var headerEl = document.querySelector('.header');
+    if(topBanner && headerEl && topBanner.style.display !== 'none') {
+      var hH = headerEl.offsetHeight || 51;
+      topBanner.style.top = hH + 'px';
+      var ms = document.getElementById('mainScroll');
+      if(ms) ms.style.paddingTop = (hH + (topBanner.offsetHeight || 44) + 4) + 'px';
+    }
     // siteInfoModalのpadding-bottomを設定（bnav+banner分）
     var sm = document.getElementById('siteInfoModal');
     if(sm && !sm.dataset.fixedPad) {
