@@ -216,14 +216,12 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
         if(topBanner) {
         topBanner.style.display = 'block';
         // second-navの下に配置
-        const snav = document.querySelector('.second-nav');
-        if(snav) {
-          const snavBottom = snav.getBoundingClientRect().top + snav.offsetHeight;
-          topBanner.style.top = snavBottom + 'px';
+        const header = document.querySelector('.header');
+          const headerH = header ? (header.offsetHeight || 51) : 51;
+          topBanner.style.top = headerH + 'px';
           // mainScrollのpaddingも更新
           const ms = document.getElementById('mainScroll');
-          if(ms) ms.style.paddingTop = (snavBottom + topBanner.offsetHeight + 4) + 'px';
-        }
+          if(ms) ms.style.paddingTop = (headerH + topBanner.offsetHeight + 4) + 'px';
       }
       }
       let topIdx = 0;
