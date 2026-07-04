@@ -713,7 +713,7 @@ async function loadESPNScoreboard() {
     }
 
     if (!events.length) {
-      if (wrap) wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">本日の試合はありません<br><span style="font-size:.7rem;">次の試合をお待ちください</span></div>';
+      if (wrap) wrap.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;color:var(--tx3);"><div style="font-size:2.4rem;line-height:1;margin-bottom:.9rem;opacity:.5;">🏀</div><div style="font-size:.95rem;font-weight:700;color:var(--tx2);">本日の試合はありません</div><div style="font-size:.75rem;margin-top:.4rem;">次の試合をお待ちください</div></div>';
       return;
     }
 
@@ -759,7 +759,7 @@ async function loadGamesForDate(dateStr) {
     const events = data.events || [];
 
     if (!events.length) {
-      if (wrap) wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">この日の試合はありません</div>';
+      if (wrap) wrap.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;color:var(--tx3);"><div style="font-size:2.4rem;line-height:1;margin-bottom:.9rem;opacity:.5;">🏀</div><div style="font-size:.95rem;font-weight:700;color:var(--tx2);">この日の試合はありません</div></div>';
       return;
     }
 
