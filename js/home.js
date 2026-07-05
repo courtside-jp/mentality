@@ -26,7 +26,7 @@ async function loadHomeGames() {
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;color:var(--tx3);letter-spacing:1px;">今日の試合</div>
       <div onclick="goPage('schedule', document.getElementById('sn-schedule'))" style="font-size:.7rem;color:var(--or);cursor:pointer;">すべて見る ›</div>
     </div>
-    <div style="display:flex;gap:.6rem;overflow-x:auto;padding:0 1rem .8rem;scrollbar-width:none;">
+    <div style="display:flex;gap:.6rem;overflow-x:auto;padding:0 1rem .5rem;scrollbar-width:none;">
       ${games.map(g => `
         <div onclick="goPage('schedule', document.getElementById('sn-schedule'));setTimeout(function(){if(typeof selectGame==='function')selectGame('${g.id}')},150)" style="flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.6rem;cursor:pointer;">
           <div style="font-size:.55rem;color:${g.status==='live'?'var(--rd)':'var(--tx3)'};font-weight:700;margin-bottom:.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.status==='live' ? '● LIVE ' + (g.note||'') : g.status==='final' ? 'FINAL' : (g.note||'')}</div>
