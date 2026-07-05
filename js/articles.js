@@ -39,6 +39,47 @@ const FB_ARTICLES = `${FB_URL}/articles`;
 const ADMIN_PASSWORD = 'kobe0824';
 
 // ============================================================
+// 関連記事（記事下に表示、回遊率アップ用）
+// ============================================================
+async function renderRelatedArticles(currentId, category) {
+  const wrap = document.getElementById('relatedArticlesWrap');
+  if (!wrap) return;
+  try {
+    const res = await fetch(FB_ARTICLES + '.json');
+    const data = await res.json();
+    if (!data) { wrap.innerHTML = ''; return; }
+    const now = Date.now();
+    let list = Object.entries(data)
+      .map(([id, a]) => ({ id, ...a }))
+      .filter(a => a.id !== currentId)
+      .filter(a => a.status !== 'archived')
+      .filter(a => !a.publishAt || a.publishAt <= now);
+
+    // 同じカテゴリを優先し、足りない分は新着で補う
+    const sameCategory = list.filter(a => a.category === category).sort((a,b) => (b.ts||0) - (a.ts||0));
+    const others = list.filter(a => a.category !== category).sort((a,b) => (b.ts||0) - (a.ts||0));
+    const picked = [...sameCategory, ...others].slice(0, 4);
+
+    if (!picked.length) { wrap.innerHTML = ''; return; }
+
+    wrap.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.85rem;font-weight:700;color:var(--tx);letter-spacing:1px;margin-bottom:.6rem;">関連記事</div>' +
+      '<div style="display:flex;flex-direction:column;gap:.6rem;">' +
+      picked.map(a => `
+        <div onclick="openArticle('${a.id}')" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:.5rem;">
+          ${a.img ? `<img src="${a.img}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;" onerror="this.style.display='none'">` : ''}
+          <div style="min-width:0;">
+            <div style="font-size:.55rem;color:var(--or);font-weight:700;margin-bottom:.2rem;">${a.category||'NBA'}</div>
+            <div style="font-size:.78rem;color:var(--tx);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${a.title||''}</div>
+          </div>
+        </div>
+      `).join('') +
+      '</div>';
+  } catch(e) {
+    wrap.innerHTML = '';
+  }
+}
+
+// ============================================================
 // 本文レンダリング（URL自動判別）
 // ============================================================
 function renderBody(body) {
@@ -388,6 +429,7 @@ async function openArticle(id) {
     if (md) md.setAttribute('content', window.__currentArticle.title + ' - COURTSIDE NBA専門メディア。' + (window.__currentArticle.desc || ''));
   }
   modal.style.display = 'block';
+  modal.scrollTop = 0;
   body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">読み込み中...</div>';
 
   try {
@@ -405,9 +447,13 @@ async function openArticle(id) {
       '<div id="articleBodyDiv" style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
       '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/?article=' + id) + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
+      '<div id="relatedArticlesWrap" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--bd);"></div>' +
       '</div>';
   } catch(e) {
     body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
+  }
+  if (window.__currentArticle) {
+    renderRelatedArticles(id, window.__currentArticle.category);
   }
   // X埋め込みを処理
   setTimeout(function() {
