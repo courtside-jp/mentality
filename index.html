@@ -1449,7 +1449,11 @@ window.addEventListener('load', function() {
       }
       let idx=Math.floor(Math.random()*banners.length);
       showAd(banners[idx]);
-      if(banner) banner.style.display='block';
+      if(banner) {
+        banner.style.display='block';
+        const nav = document.querySelector('.bottom-nav');
+        if(nav) banner.style.bottom = nav.getBoundingClientRect().height + 'px';
+      }
       if(banners.length>1){setInterval(()=>{idx=(idx+1)%banners.length;showAd(banners[idx]);},5000);}
     }).catch(()=>{});
 })();
@@ -1464,6 +1468,11 @@ window.addEventListener('load', function() {
     });
     var bn = document.querySelector('.bottom-nav');
     if(bn && bn.parentElement !== document.body) document.body.appendChild(bn);
+    // 下部広告バナーをボトムナビの実際の高さに合わせる
+    var fixedAd = document.getElementById('fixedAdBanner');
+    if(fixedAd && bn && fixedAd.style.display !== 'none') {
+      fixedAd.style.bottom = bn.getBoundingClientRect().height + 'px';
+    }
     // 上部バナーをheaderの下に配置
     var topBanner = document.getElementById('topAdBanner');
     var headerEl = document.querySelector('.header');
@@ -1494,6 +1503,7 @@ window.addEventListener('load', function() {
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fixAll);
   else fixAll();
   setTimeout(fixAll,200);
+  window.addEventListener('resize', fixAll);
 })();
 </script>
 
