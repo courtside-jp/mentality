@@ -165,7 +165,7 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 <body>
 
 <div class="header">
-  <div class="logo">COURT<span>SIDE</span></div><button onclick="document.getElementById('siteInfoModal').style.display='flex'" style="background:none;border:none;color:#888;font-size:9px;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0;white-space:nowrap;align-self:flex-end;margin-bottom:2px;">サイト情報</button>
+  <div class="logo" onclick="goPage('home')" style="cursor:pointer;">COURT<span>SIDE</span></div><button onclick="document.getElementById('siteInfoModal').style.display='flex'" style="background:none;border:none;color:#888;font-size:9px;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0;white-space:nowrap;align-self:flex-end;margin-bottom:2px;">サイト情報</button>
   <div style="display:flex;align-items:center;gap:10px;">
     <div class="online-pill"><div class="online-dot"></div><div class="online-text" id="headerOnlineCount">17人が閲覧中</div></div>
     <div onclick="openSearch()" style="cursor:pointer;">
