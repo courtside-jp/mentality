@@ -89,12 +89,13 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 .stat-rank-tabs::-webkit-scrollbar{display:none;}
 .srt{flex-shrink:0;padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#999;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .srt.active{color:var(--black);border-bottom-color:var(--red);}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;background:var(--white);border-top:1px solid #eee;display:flex;padding:14px 0 22px;z-index:100;}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;background:var(--white);border-top:1px solid #eee;display:flex;padding:11px 0 20px;z-index:100;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:3px 0 0;}
 .bnav-item *{pointer-events:none;}
-.bnav-icon{font-size:22px;color:#bbb;}
-.bnav-label{font-size:13px;color:#bbb;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.3px;}
-.bnav-item.active .bnav-icon,.bnav-item.active .bnav-label{color:var(--red);}
+.bnav-label{font-size:12.5px;color:#9a9a9a;font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;font-weight:700;letter-spacing:.02em;transition:color .15s ease;}
+.bnav-dot{width:16px;height:3px;border-radius:2px;background:transparent;transition:background .15s ease;}
+.bnav-item.active .bnav-label{color:var(--red);}
+.bnav-item.active .bnav-dot{background:var(--red);}
 .bnav-badge{background:var(--red);color:var(--white);font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;}
 .pg{display:none!important;}.pg.show{display:block!important;}.second-nav{background:#fff;display:flex;align-items:center;justify-content:center;gap:2px;padding:6px 6px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #f0f0f0;position:fixed;top:52px;left:0;right:0;z-index:98;width:100%;;z-index:99;}
 .second-nav::-webkit-scrollbar{display:none;}
@@ -1033,21 +1034,27 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 <div class="bottom-nav">
   <div class="bnav-item active" data-page="home" onclick="goPage('home',null,this)">
     <div class="bnav-label">ホーム</div>
+    <div class="bnav-dot"></div>
   </div>
   <div class="bnav-item" data-page="schedule" onclick="goPage('schedule',null,this)">
     <div class="bnav-label">試合</div>
+    <div class="bnav-dot"></div>
   </div>
   <div class="bnav-item" data-page="articles" onclick="goPage('articles',null,this)">
     <div class="bnav-label">記事</div>
+    <div class="bnav-dot"></div>
   </div>
   <div class="bnav-item" data-page="sneakers" onclick="goPage('sneakers',null,this)">
     <div class="bnav-label">バッシュ</div>
+    <div class="bnav-dot"></div>
   </div>
   <div class="bnav-item" data-page="items" onclick="goPage('items',null,this)">
     <div class="bnav-label">アイテム</div>
+    <div class="bnav-dot"></div>
   </div>
   <div class="bnav-item" data-page="players" onclick="goPage('players',null,this)">
     <div class="bnav-label">選手</div>
+    <div class="bnav-dot"></div>
   </div>
 </div>
 
