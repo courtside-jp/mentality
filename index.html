@@ -219,10 +219,10 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
         // second-navの下に配置
         const header = document.querySelector('.header');
           const headerH = header ? (header.offsetHeight || 51) : 51;
-          topBanner.style.top = (headerH + 6) + 'px';
+          topBanner.style.top = headerH + 'px';
           // mainScrollのpaddingも更新
           const ms = document.getElementById('mainScroll');
-          if(ms) ms.style.paddingTop = (headerH + 6 + topBanner.offsetHeight + 4) + 'px';
+          if(ms) ms.style.paddingTop = (headerH + topBanner.offsetHeight + 4) + 'px';
       }
       }
       let topIdx = 0;
@@ -1469,9 +1469,9 @@ window.addEventListener('load', function() {
     var headerEl = document.querySelector('.header');
     if(topBanner && headerEl && topBanner.style.display !== 'none') {
       var hH = headerEl.offsetHeight || 51;
-      topBanner.style.top = (hH + 6) + 'px';
+      topBanner.style.top = hH + 'px';
       var ms = document.getElementById('mainScroll');
-      if(ms) ms.style.paddingTop = (hH + 6 + (topBanner.offsetHeight || 44) + 4) + 'px';
+      if(ms) ms.style.paddingTop = (hH + (topBanner.offsetHeight || 44) + 4) + 'px';
     }
     // siteInfoModalのpadding-bottomを設定（bnav+banner分）
     var sm = document.getElementById('siteInfoModal');
