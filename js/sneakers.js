@@ -97,9 +97,9 @@ function renderSneakers(list) {
     const shops = s.shops || [];
     const scoreItems = [
       {lbl:'クッション', val:s.cushion||0},
+      {lbl:'ホールド感', val:s.hold||0},
       {lbl:'グリップ', val:s.traction||0},
-      {lbl:'軽量性', val:s.weight||0},
-      {lbl:'コスパ', val:s.cost||0}
+      {lbl:'軽量性', val:s.weight||0}
     ];
     const imgs = s.images || [];
     const imgHtml = imgs.length
@@ -171,7 +171,7 @@ function filterSneakers(btn, brand) {
 function calcSneakerScore(s) {
   // オブジェクト渡しの場合（カードレンダリング用）
   if (s && typeof s === 'object') {
-    const vals = [s.cushion, s.traction, s.weight, s.cost, s.support, s.durability]
+    const vals = [s.cushion, s.hold, s.traction, s.weight]
       .map(v => parseInt(v)||0)
       .filter(v => v > 0);
     if (!vals.length) return 0;
@@ -212,11 +212,9 @@ function openSnkModal(id) {
   const imgs = s.images || [];
   const scoreItems = [
     {lbl:'クッション', val:s.cushion||0},
+    {lbl:'ホールド感', val:s.hold||0},
     {lbl:'グリップ', val:s.traction||0},
-    {lbl:'軽量性', val:s.weight||0},
-    {lbl:'コスパ', val:s.cost||0},
-    {lbl:'サポート', val:s.support||0},
-    {lbl:'耐久性', val:s.durability||0}
+    {lbl:'軽量性', val:s.weight||0}
   ];
 
   const imgGallery = imgs.length ? `
@@ -297,6 +295,75 @@ function filterSneakersDropdown() {
   renderSneakers(filtered);
 }
 
+async function submitSneaker() {
+  const id = document.getElementById('sneakerEditId').value;
+  const model = document.getElementById('sneakerModel').value.trim();
+  if (!model) { alert('モデル名を入力してください'); return; }
+
+  const linkAmazon = document.getElementById('sneakerLinkAmazon').value.trim();
+  const linkRakuten = document.getElementById('sneakerLinkRakuten').value.trim();
+  const linkStockx = document.getElementById('sneakerLinkStockx').value.trim();
+  const linkSnkrdunk = document.getElementById('sneakerLinkSnkrdunk').value.trim();
+  const linkEbay = document.getElementById('sneakerLinkEbay').value.trim();
+
+  const shops = [];
+  if (linkAmazon) shops.push({ name: 'Amazon', icon: '🛒', url: linkAmazon });
+  if (linkRakuten) shops.push({ name: '楽天', icon: '🛍️', url: linkRakuten });
+  if (linkStockx) shops.push({ name: 'StockX', icon: '📈', url: linkStockx });
+  if (linkSnkrdunk) shops.push({ name: 'スニーカーダンク', icon: '👟', url: linkSnkrdunk });
+  if (linkEbay) shops.push({ name: 'eBay', icon: '🌐', url: linkEbay });
+
+  const images = [
+    document.getElementById('sneakerImg').value.trim(),
+    document.getElementById('sneakerImg2').value.trim(),
+    document.getElementById('sneakerImg3').value.trim(),
+    document.getElementById('sneakerImg4').value.trim()
+  ].filter(Boolean);
+
+  const data = {
+    brand: document.getElementById('sneakerBrand').value,
+    model,
+    player: document.getElementById('sneakerPlayer').value.trim(),
+    cushion: parseInt(document.getElementById('sneakerScoreCushion').value, 10) || 0,
+    hold: parseInt(document.getElementById('sneakerScoreHold').value, 10) || 0,
+    traction: parseInt(document.getElementById('sneakerScoreTraction').value, 10) || 0,
+    weight: parseInt(document.getElementById('sneakerScoreWeight').value, 10) || 0,
+    sizeFeel: document.getElementById('sneakerSizeFeel').value.trim(),
+    position: document.getElementById('sneakerPosition').value.trim(),
+    gymOk: document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false,
+    price: document.getElementById('sneakerPrice').value.trim(),
+    review: document.getElementById('sneakerReview') ? document.getElementById('sneakerReview').value : '',
+    images,
+    img: images[0] || '',
+    linkAmazon, linkRakuten, linkStockx, linkSnkrdunk, linkEbay,
+    shops,
+    date: new Date().toISOString().slice(0,10),
+    ts: id ? undefined : Date.now()
+  };
+  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+
+  const btn = document.getElementById('sneakerSubmitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '保存中...'; }
+  try {
+    if (id) {
+      await fetch(`${FB_SNEAKERS}/${id}.json`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    } else {
+      await fetch(`${FB_SNEAKERS}.json`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    }
+    document.getElementById('sneakerForm').style.display = 'none';
+    loadAdminSneakers();
+    loadSneakers();
+  } catch(e) {
+    alert('保存に失敗しました');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = id ? '上書き保存' : '投稿する'; }
+  }
+}
+
+function cancelSneakerEdit() {
+  document.getElementById('sneakerForm').style.display = 'none';
+}
+
 async function loadAdminSneakers() {
   const wrap = document.getElementById('adminSneakerList');
   if (!wrap) return;
@@ -353,6 +420,7 @@ function openNewSneaker() {
   document.getElementById('sneakerLinkRakuten').value = '';
   document.getElementById('sneakerLinkStockx').value = '';
   document.getElementById('sneakerLinkSnkrdunk').value = '';
+  document.getElementById('sneakerLinkEbay').value = '';
   const rv = document.getElementById('sneakerReview');
   if (rv) rv.value = '';
   document.getElementById('sneakerSubmitBtn').textContent = '\u6295\u7a3f\u3059\u308b';
@@ -378,16 +446,19 @@ async function editSneaker(id) {
   document.getElementById('sneakerImg2').value = d.img2 || '';
   document.getElementById('sneakerImg3').value = d.img3 || '';
   document.getElementById('sneakerImg4').value = d.img4 || '';
-  document.getElementById('sneakerScoreCushion').value = d.scoreCushion || '';
-  document.getElementById('sneakerScoreHold').value = d.scoreHold || '';
-  document.getElementById('sneakerScoreTraction').value = d.scoreTraction || '';
-  document.getElementById('sneakerScoreWeight').value = d.scoreWeight || '';
+  document.getElementById('sneakerScoreCushion').value = d.cushion || '';
+  document.getElementById('sneakerScoreHold').value = d.hold || '';
+  document.getElementById('sneakerScoreTraction').value = d.traction || '';
+  document.getElementById('sneakerScoreWeight').value = d.weight || '';
   document.getElementById('sneakerSizeFeel').value = d.sizeFeel || '';
   document.getElementById('sneakerPosition').value = d.position || '';
   document.getElementById('sneakerLinkAmazon').value = d.linkAmazon || d.link || '';
   document.getElementById('sneakerLinkRakuten').value = d.linkRakuten || '';
   document.getElementById('sneakerLinkStockx').value = d.linkStockx || '';
   document.getElementById('sneakerLinkSnkrdunk').value = d.linkSnkrdunk || '';
+  document.getElementById('sneakerLinkEbay').value = d.linkEbay || '';
+  const rv3 = document.getElementById('sneakerReview');
+  if (rv3) rv3.value = d.review || '';
   if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = !!d.gymOk;
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
