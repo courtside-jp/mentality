@@ -5,7 +5,7 @@ const FB_ITEMS = `${FB_URL}/items`;
 let _allItems = [];
 
 const ITEM_BRANDS = {
-  nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas',
+  mamba: 'MAMBA', nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas',
   underarmour: 'Under Armour', puma: 'Puma',
   newbalance: 'New Balance', anta: 'Anta', lining: 'Li-Ning'
 };
