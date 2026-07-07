@@ -3,12 +3,37 @@
 
 const FB_ITEMS = `${FB_URL}/items`;
 let _allItems = [];
+let _itemTab = 'general';
 
 const ITEM_BRANDS = {
   mamba: 'MAMBA', nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas',
   underarmour: 'Under Armour', puma: 'Puma',
   newbalance: 'New Balance', anta: 'Anta', lining: 'Li-Ning'
 };
+
+function switchItemTab(tab) {
+  _itemTab = tab;
+  const gEl = document.getElementById('itemTab-general');
+  const mEl = document.getElementById('itemTab-mamba');
+  const head = document.getElementById('itemsPageHead');
+  if (tab === 'mamba') {
+    if(mEl){mEl.style.background='var(--black)';mEl.style.color='#fff';}
+    if(gEl){gEl.style.background='var(--bg3)';gEl.style.color='var(--tx3)';}
+    if(head) head.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;">MAMBA COLLECTION</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">eBay取り扱いのMAMBAブランドアイテムをお届け</div>';
+  } else {
+    if(gEl){gEl.style.background='var(--black)';gEl.style.color='#fff';}
+    if(mEl){mEl.style.background='var(--bg3)';mEl.style.color='var(--tx3)';}
+    if(head) head.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;">アイテム</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">NBA関連アパレル・グッズ情報</div>';
+  }
+  applyItemTabFilter();
+}
+
+function applyItemTabFilter() {
+  const filtered = _itemTab === 'mamba'
+    ? _allItems.filter(s => (s.brand||'').toUpperCase() === 'MAMBA')
+    : _allItems.filter(s => (s.brand||'').toUpperCase() !== 'MAMBA');
+  renderItems(filtered);
+}
 
 async function loadItems() {
   const wrap = document.getElementById('itemsWrap');
@@ -20,7 +45,7 @@ async function loadItems() {
     const data = await res.json();
     if (!data) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ情報がありません</div>'; return; }
     _allItems = Object.entries(data).map(([id,s]) => ({id,...s})).sort((a,b) => b.ts - a.ts);
-    renderItems(_allItems);
+    applyItemTabFilter();
   } catch(e) {
     wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
   }
