@@ -411,6 +411,13 @@ async function loadArticles() {
 // ============================================================
 // 記事詳細モーダル
 // ============================================================
+function closeArticleModal() {
+  const modal = document.getElementById('articleModal');
+  if (modal) modal.style.display = 'none';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd && fixedAd.dataset.wasVisible === '1') fixedAd.style.display = 'block';
+}
+
 async function openArticle(id) {
   const modal = document.getElementById('articleModal');
   const body = document.getElementById('articleModalBody');
@@ -422,6 +429,8 @@ async function openArticle(id) {
     if (md) md.setAttribute('content', window.__currentArticle.title + ' - COURTSIDE NBA専門メディア。' + (window.__currentArticle.desc || ''));
   }
   modal.style.display = 'block';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
   modal.scrollTop = 0;
   body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">読み込み中...</div>';
 
@@ -464,11 +473,6 @@ async function openArticle(id) {
       }
     });
   }, 300);
-}
-
-function closeArticleModal() {
-  const modal = document.getElementById('articleModal');
-  if (modal) modal.style.display = 'none';
 }
 
 // ============================================================
