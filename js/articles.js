@@ -373,13 +373,6 @@ async function loadArticles() {
   try {
     const res = await fetch(FB_ARTICLES + '.json');
     const data = await res.json();
-    // 広告取得
-    let articleAds = [];
-    try {
-      const ar = await fetch(FB_URL + '/adslots.json');
-      const ad = await ar.json() || {};
-      articleAds = ['articles_1'].map(k => ad[k]).filter(a => a && a.url && a.enabled !== false);
-    } catch(e) {}
 
     if (!data) {
       wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ記事がありません</div>';
@@ -409,7 +402,7 @@ async function loadArticles() {
       '<div style="font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;line-height:1.4;">' + a.title + '</div>' +
       '<div style="font-size:.7rem;color:var(--tx3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + a.body + '</div>' +
       '</div>'
-    ).join('') + (articleAds[0] ? `<a href="${articleAds[0].url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${articleAds[0].img ? `<img src="${articleAds[0].img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);">${articleAds[0].title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>` : '');
+    ).join('');
   } catch(e) {
     wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
   }
