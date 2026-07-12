@@ -154,13 +154,10 @@ async function insertArticleLink() {
 }
 
 function doInsertArticleLink(id, title, img) {
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const card = `\n<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+  const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
     (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
-    `<div style="font-size:12px;font-weight:700;">${title}</div></div>\n`;
-  ta.value = ta.value.substring(0, start) + card + ta.value.substring(start);
-  ta.focus();
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
+  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
 
 // URLリンク挿入
@@ -168,19 +165,11 @@ function insertTextLink() {
   const url = prompt('URLを入力:');
   if (!url) return;
   const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  let insert;
   if (isImage) {
-    insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
-    showLinkModal(url, ta, start, end);
-    return;
+    showLinkModal(url);
   }
-  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
-  ta.selectionStart = ta.selectionEnd = start + insert.length;
-  ta.focus();
 }
 
 async function insertBodyImage(input) {
@@ -204,14 +193,7 @@ async function insertBodyImage(input) {
       if (data.success) url = data.data.url;
     } catch(e) {}
     
-    // 本文の現在のカーソル位置に画像タグを挿入
-    const ta = document.getElementById('adminBody');
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const imgTag = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
-    ta.value = ta.value.substring(0, start) + imgTag + ta.value.substring(end);
-    ta.selectionStart = ta.selectionEnd = start + imgTag.length;
-    ta.focus();
+    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
     label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
@@ -252,13 +234,10 @@ async function insertArticleLink() {
 }
 
 function doInsertArticleLink(id, title, img) {
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const card = `\n<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+  const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
     (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
-    `<div style="font-size:12px;font-weight:700;">${title}</div></div>\n`;
-  ta.value = ta.value.substring(0, start) + card + ta.value.substring(start);
-  ta.focus();
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
+  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
 
 // URLリンク挿入
@@ -266,19 +245,11 @@ function insertTextLink() {
   const url = prompt('URLを入力:');
   if (!url) return;
   const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  let insert;
   if (isImage) {
-    insert = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
+    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
-    showLinkModal(url, ta, start, end);
-    return;
+    showLinkModal(url);
   }
-  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
-  ta.selectionStart = ta.selectionEnd = start + insert.length;
-  ta.focus();
 }
 
 async function insertBodyImage(input) {
@@ -302,14 +273,7 @@ async function insertBodyImage(input) {
       if (data.success) url = data.data.url;
     } catch(e) {}
     
-    // 本文の現在のカーソル位置に画像タグを挿入
-    const ta = document.getElementById('adminBody');
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const imgTag = `\n<img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;">\n`;
-    ta.value = ta.value.substring(0, start) + imgTag + ta.value.substring(end);
-    ta.selectionStart = ta.selectionEnd = start + imgTag.length;
-    ta.focus();
+    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
     label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
@@ -496,7 +460,7 @@ function closeAdminModal() {
 
 async function submitArticle() {
   const title    = document.getElementById('adminTitle').value.trim();
-  const body     = document.getElementById('adminBody').value.trim();
+  const body     = getAdminBodyValue().trim();
   const img      = document.getElementById('adminImg').value.trim();
   const category = document.getElementById('adminCategory').value;
   const affiliateLink = document.getElementById('adminAffiliateLink') ? document.getElementById('adminAffiliateLink').value.trim() : '';
@@ -537,7 +501,7 @@ async function submitArticle() {
       alert('投稿しました！');
     }
     document.getElementById('adminTitle').value = '';
-    document.getElementById('adminBody').value = '';
+    setAdminBodyValue('');
     document.getElementById('adminImg').value = '';
     if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
     closeAdminModal();
@@ -972,7 +936,7 @@ function openNewArticle() {
   document.getElementById('articleForm').style.display = 'block';
   document.getElementById('adminEditId').value = '';
   document.getElementById('adminTitle').value = '';
-  document.getElementById('adminBody').value = '';
+  setAdminBodyValue('');
   document.getElementById('adminImg').value = '';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
   document.getElementById('adminSubmitBtn').textContent = '投稿する';
@@ -1004,7 +968,7 @@ async function editArticle(id) {
   document.getElementById('adminEditId').value = id;
   document.getElementById('adminTitle').value = d.title || '';
   document.getElementById('adminBody').value = d.body || '';
-  document.getElementById('adminImg').value = d.img || '';
+  setAdminBodyValue(d.body || '');
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
@@ -1072,69 +1036,183 @@ async function downloadOgpImage(btn) {
 }
 
 // ============================================================
-// ツールバー挿入関数
+// contenteditable版 本文エディタ用ヘルパー
 // ============================================================
-function insertBodyTag(type) {
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const selected = ta.value.substring(start, end);
-  let insert = '';
+function getAdminBodyValue() {
+  const el = document.getElementById('adminBody');
+  if (!el) return '';
+  const lines = [];
+  el.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      if (node.textContent.trim()) lines.push(node.textContent);
+      return;
+    }
+    if (node.tagName === 'BR') { lines.push(''); return; }
+    lines.push(node.innerHTML.replace(/^<br>$/i, ''));
+  });
+  return lines.join('\n');
+}
 
-  switch(type) {
-    case 'bold':
-      insert = `<strong>${selected || 'テキスト'}</strong>`;
-      break;
-    case 'h2':
-      insert = `\n<h2 style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</h2>\n`;
-      break;
-    case 'h3':
-      insert = `\n<h3 style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</h3>\n`;
-      break;
-    case 'hr':
-      insert = `\n<hr style="border:none;border-top:1px solid #eee;margin:1rem 0;">\n`;
-      break;
-    case 'quote':
-      insert = `\n<blockquote style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</blockquote>\n`;
-      break;
+function setAdminBodyValue(text) {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  const lines = (text || '').split('\n');
+  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('') || '<div><br></div>';
+}
+
+function insertHtmlAtCursor(html) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  let range;
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    range = sel.getRangeAt(0);
+  } else {
+    range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
   }
+  range.deleteContents();
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  const frag = document.createDocumentFragment();
+  let lastNode;
+  while (wrap.firstChild) { lastNode = frag.appendChild(wrap.firstChild); }
+  range.insertNode(frag);
+  if (lastNode) {
+    range.setStartAfter(lastNode);
+    range.setEndAfter(lastNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  updateBodyPreview();
+}
 
-  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
-  ta.selectionStart = ta.selectionEnd = start + insert.length;
-  ta.focus();
+function getSelectedText() {
+  const sel = window.getSelection();
+  return sel.rangeCount ? sel.toString() : '';
 }
 
 // ============================================================
 // ツールバー挿入関数
 // ============================================================
 function insertBodyTag(type) {
-  const ta = document.getElementById('adminBody');
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const selected = ta.value.substring(start, end);
+  if (type === 'bold') {
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    document.getElementById('adminBody').focus();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand('bold');
+    updateBodyPreview();
+    return;
+  }
+  const selected = getSelectedText();
   let insert = '';
-
   switch(type) {
-    case 'bold':
-      insert = `<strong>${selected || 'テキスト'}</strong>`;
-      break;
     case 'h2':
-      insert = `\n<h2 style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</h2>\n`;
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
       break;
     case 'h3':
-      insert = `\n<h3 style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</h3>\n`;
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
       break;
     case 'hr':
-      insert = `\n<hr style="border:none;border-top:1px solid #eee;margin:1rem 0;">\n`;
+      insert = `<div><hr style="border:none;border-top:1px solid #eee;margin:1rem 0;"></div><div><br></div>`;
       break;
     case 'quote':
-      insert = `\n<blockquote style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</blockquote>\n`;
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
       break;
   }
+  insertHtmlAtCursor(insert);
+}
 
-  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(end);
-  ta.selectionStart = ta.selectionEnd = start + insert.length;
-  ta.focus();
+// ============================================================
+// contenteditable版 本文エディタ用ヘルパー
+// ============================================================
+function getAdminBodyValue() {
+  const el = document.getElementById('adminBody');
+  if (!el) return '';
+  const lines = [];
+  el.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      if (node.textContent.trim()) lines.push(node.textContent);
+      return;
+    }
+    if (node.tagName === 'BR') { lines.push(''); return; }
+    lines.push(node.innerHTML.replace(/^<br>$/i, ''));
+  });
+  return lines.join('\n');
+}
+
+function setAdminBodyValue(text) {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  const lines = (text || '').split('\n');
+  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('') || '<div><br></div>';
+}
+
+function insertHtmlAtCursor(html) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  let range;
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    range = sel.getRangeAt(0);
+  } else {
+    range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+  }
+  range.deleteContents();
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  const frag = document.createDocumentFragment();
+  let lastNode;
+  while (wrap.firstChild) { lastNode = frag.appendChild(wrap.firstChild); }
+  range.insertNode(frag);
+  if (lastNode) {
+    range.setStartAfter(lastNode);
+    range.setEndAfter(lastNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  updateBodyPreview();
+}
+
+function getSelectedText() {
+  const sel = window.getSelection();
+  return sel.rangeCount ? sel.toString() : '';
+}
+
+// ============================================================
+// ツールバー挿入関数
+// ============================================================
+function insertBodyTag(type) {
+  if (type === 'bold') {
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    document.getElementById('adminBody').focus();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand('bold');
+    updateBodyPreview();
+    return;
+  }
+  const selected = getSelectedText();
+  let insert = '';
+  switch(type) {
+    case 'h2':
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
+      break;
+    case 'h3':
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
+      break;
+    case 'hr':
+      insert = `<div><hr style="border:none;border-top:1px solid #eee;margin:1rem 0;"></div><div><br></div>`;
+      break;
+    case 'quote':
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
+      break;
+  }
+  insertHtmlAtCursor(insert);
 }
 
 // ============================================================
@@ -1165,18 +1243,44 @@ function switchBodyTab(tab) {
 }
 
 function updateBodyPreview() {
-  const ta = document.getElementById('adminBody');
   const preview = document.getElementById('adminBodyPreview');
   if (!preview) return;
-  preview.innerHTML = ta.value ? renderBody(ta.value) : '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+  const val = getAdminBodyValue();
+  preview.innerHTML = val ? renderBody(val) : '<span style="color:#ccc;">プレビューがここに表示されます</span>';
   if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load();
   if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
 }
 
 // SNS埋め込み挿入（X / Instagram / TikTok 自動判別）
 let _snsEmbedTA = null;
+let _savedBodyRange = null;
+function saveBodyCursorRange() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    _savedBodyRange = sel.getRangeAt(0).cloneRange();
+  } else {
+    _savedBodyRange = null;
+  }
+}
+function insertHtmlAtSavedRange(html) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  if (_savedBodyRange) {
+    sel.addRange(_savedBodyRange);
+  } else {
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    r.collapse(false);
+    sel.addRange(r);
+  }
+  insertHtmlAtCursor(html);
+}
+
 function insertSnsEmbed() {
-  _snsEmbedTA = document.getElementById('adminBody');
+  saveBodyCursorRange();
   const urlInput = document.getElementById('snsEmbedUrl');
   const detected = document.getElementById('snsEmbedDetected');
   urlInput.value = '';
@@ -1202,25 +1306,15 @@ function confirmSnsEmbed() {
     alert('X (Twitter) / Instagram / TikTokのURLを入力してください');
     return;
   }
-  const ta = _snsEmbedTA;
-  const start = ta.selectionStart;
-  const insert = `\n${url}\n`;
-  ta.value = ta.value.substring(0, start) + insert + ta.value.substring(start);
-  ta.selectionStart = ta.selectionEnd = start + insert.length;
-  ta.focus();
-  updateBodyPreview();
+  insertHtmlAtSavedRange(`<div>${url}</div><div><br></div>`);
   closeSnsEmbedModal();
 }
 
 // ============================================================
 // リンク挿入モーダル
 // ============================================================
-let _linkModalTA = null, _linkModalStart = 0, _linkModalEnd = 0;
-
-function showLinkModal(url, ta, start, end) {
-  _linkModalTA = ta;
-  _linkModalStart = start;
-  _linkModalEnd = end;
+function showLinkModal(url) {
+  saveBodyCursorRange();
   const modal = document.getElementById('linkInsertModal');
   document.getElementById('linkModalUrl').value = url || '';
   document.getElementById('linkModalText').value = '';
@@ -1236,9 +1330,6 @@ function confirmLinkInsert() {
   const text = document.getElementById('linkModalText').value.trim();
   if (!url) return;
   const insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text || url}</a>`;
-  const ta = _linkModalTA;
-  ta.value = ta.value.substring(0, _linkModalStart) + insert + ta.value.substring(_linkModalEnd);
-  ta.selectionStart = ta.selectionEnd = _linkModalStart + insert.length;
-  ta.focus();
+  insertHtmlAtSavedRange(insert);
   closeLinkModal();
 }
