@@ -451,6 +451,7 @@ async function openArticle(id) {
       '</div>' +
       '<div style="font-size:1rem;font-weight:700;color:var(--tx);line-height:1.5;margin-bottom:.8rem;">' + a.title + '</div>' +
       '<div id="articleBodyDiv" style="font-size:.78rem;color:var(--tx2);line-height:1.8;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
+      (a.affiliateLink ? '<a href="' + a.affiliateLink + '" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.2rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;"><span style="font-size:1.2rem;">🛒</span><span style="color:var(--or);font-weight:700;font-size:.85rem;">商品を見る</span></a>' : '') +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
       '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/?article=' + id) + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
       '<div id="relatedArticlesWrap" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--bd);"></div>' +
@@ -498,6 +499,7 @@ async function submitArticle() {
   const body     = document.getElementById('adminBody').value.trim();
   const img      = document.getElementById('adminImg').value.trim();
   const category = document.getElementById('adminCategory').value;
+  const affiliateLink = document.getElementById('adminAffiliateLink') ? document.getElementById('adminAffiliateLink').value.trim() : '';
 
   if (!title || !body) { alert('タイトルと本文は必須です'); return; }
 
@@ -512,7 +514,7 @@ async function submitArticle() {
         method: 'PATCH',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          title, body, img, category,
+          title, body, img, category, affiliateLink,
           ts: Date.now(),
           publishAt: (function(){
             const el = document.getElementById('adminPublishAt');
@@ -530,13 +532,14 @@ async function submitArticle() {
       await fetch(FB_ARTICLES + '.json', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, body, img, category, ts: Date.now() })
+        body: JSON.stringify({ title, body, img, category, affiliateLink, ts: Date.now() })
       });
       alert('投稿しました！');
     }
     document.getElementById('adminTitle').value = '';
     document.getElementById('adminBody').value = '';
     document.getElementById('adminImg').value = '';
+    if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
     closeAdminModal();
     loadArticles();
   } catch(e) {
@@ -971,6 +974,7 @@ function openNewArticle() {
   document.getElementById('adminTitle').value = '';
   document.getElementById('adminBody').value = '';
   document.getElementById('adminImg').value = '';
+  if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
   document.getElementById('adminSubmitBtn').textContent = '投稿する';
 }
 
@@ -1002,6 +1006,7 @@ async function editArticle(id) {
   document.getElementById('adminBody').value = d.body || '';
   document.getElementById('adminImg').value = d.img || '';
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
+  if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
 }
 

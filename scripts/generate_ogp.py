@@ -73,6 +73,7 @@ for article_id, a in articles.items():
     img = a.get('img') or f'{SITE_URL}/assets/ogp.png'
     body = a.get('body', '')
     category = a.get('category', 'NBA')
+    affiliate_link = a.get('affiliateLink', '')
     ts = a.get('ts')
     date_str = datetime.fromtimestamp(ts / 1000, JST).strftime('%Y年%m月%d日') if ts else ''
 
@@ -111,6 +112,7 @@ p{{margin:.6em 0;font-size:.92rem;}}
 img{{max-width:100%;border-radius:10px;display:block;margin:.8em 0;}}
 .top-img{{width:100%;border-radius:12px;margin-bottom:1rem;}}
 .cta{{display:block;text-align:center;background:#000;color:#fff;text-decoration:none;padding:14px;border-radius:10px;font-weight:700;margin:2.2rem 0 1rem;font-size:.9rem;}}
+.aff{{display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.4rem;padding:.8rem 1rem;background:#f5f5f5;border:1px solid #eee;border-radius:12px;color:#e63946;font-weight:700;font-size:.9rem;}}
 </style>
 </head>
 <body>
@@ -119,6 +121,7 @@ img{{max-width:100%;border-radius:10px;display:block;margin:.8em 0;}}
 <h1>{title_esc}</h1>
 <div class="meta"><span>{html.escape(category)}</span>{date_str}</div>
 {body_html}
+{f'<a class="aff" href="{affiliate_link}" rel="sponsored">🛒 商品を見る</a>' if affiliate_link else ''}
 <a class="cta" href="{article_url}">COURTSIDEアプリで読む・シェアする →</a>
 </body>
 </html>'''
