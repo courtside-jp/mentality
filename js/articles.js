@@ -82,6 +82,10 @@ async function renderRelatedArticles(currentId, category) {
 // ============================================================
 // 本文レンダリング（URL自動判別）
 // ============================================================
+function applyInlineBold(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:800;">$1</strong>');
+}
+
 function renderBody(body) {
   if (!body) return '';
   const lines = body.split('\n');
@@ -101,14 +105,14 @@ function renderBody(body) {
     // ■ → 大見出し（目次対応・赤い目立つスタイル）
     if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
       const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
-      const label = t.replace(/<[^>]+>/g, '').trim();
+      const label = applyInlineBold(t.replace(/<[^>]+>/g, '').trim());
       return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:#111;">${label}</h2>`;
     }
     // 【】→ 小見出し（控えめスタイル、目次なし）
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
-      return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${t}</h3>`;
+      return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${applyInlineBold(t)}</h3>`;
     }
-    return t ? '<p style="margin:.4rem 0;">' + t + '</p>' : '<br>';
+    return t ? '<p style="margin:.4rem 0;">' + applyInlineBold(t) + '</p>' : '<br>';
   }).join('');
 }
 

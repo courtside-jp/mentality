@@ -16,9 +16,13 @@ if not articles:
 os.makedirs('articles', exist_ok=True)
 
 
+def apply_inline_bold(escaped_text):
+    return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', escaped_text)
+
+
 def render_body_html(body):
     """記事本文（プレーンテキスト）を簡易HTMLに変換する。
-    js/articles.js の renderBody() と同じルールを踏襲（■見出し・【】小見出し・画像URL・段落）。
+    js/articles.js の renderBody() と同じルールを踏襲（■見出し・【】小見出し・太字・画像URL・段落）。
     検索エンジン向けに本文をそのままページ内に出すためのシンプル版。
     """
     if not body:
@@ -33,11 +37,11 @@ def render_body_html(body):
         plain = re.sub(r'<[^>]+>', '', t).strip()
         # ■ / ▪ → 大見出し
         if plain and ord(plain[0]) in (0x25A0, 0x25AA):
-            out.append(f'<h2>{html.escape(plain)}</h2>')
+            out.append(f'<h2>{apply_inline_bold(html.escape(plain))}</h2>')
             continue
         # 【...】→ 小見出し
         if plain.startswith('【') and '】' in plain:
-            out.append(f'<h3>{html.escape(plain)}</h3>')
+            out.append(f'<h3>{apply_inline_bold(html.escape(plain))}</h3>')
             continue
         # 画像URL
         if re.search(r'\.(jpg|jpeg|png|gif|webp)(\?.*)?$', t, re.IGNORECASE):
@@ -47,7 +51,7 @@ def render_body_html(body):
         if t.startswith('http://') or t.startswith('https://'):
             out.append(f'<p><a href="{html.escape(t)}" target="_blank" rel="noopener">{html.escape(t)}</a></p>')
             continue
-        out.append(f'<p>{html.escape(t)}</p>')
+        out.append(f'<p>{apply_inline_bold(html.escape(t))}</p>')
     return ''.join(out)
 
 
