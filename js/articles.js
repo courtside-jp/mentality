@@ -1056,8 +1056,9 @@ function getAdminBodyValue() {
 function setAdminBodyValue(text) {
   const el = document.getElementById('adminBody');
   if (!el) return;
-  const lines = (text || '').split('\n');
-  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('') || '<div><br></div>';
+  if (!text) { el.innerHTML = '<br>'; return; }
+  const lines = text.split('\n');
+  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('');
 }
 
 function insertHtmlAtCursor(html) {
@@ -1146,8 +1147,9 @@ function getAdminBodyValue() {
 function setAdminBodyValue(text) {
   const el = document.getElementById('adminBody');
   if (!el) return;
-  const lines = (text || '').split('\n');
-  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('') || '<div><br></div>';
+  if (!text) { el.innerHTML = '<br>'; return; }
+  const lines = text.split('\n');
+  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('');
 }
 
 function insertHtmlAtCursor(html) {

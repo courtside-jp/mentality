@@ -142,7 +142,7 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 .gc-name-row{display:flex;align-items:center;gap:6px;margin-top:4px;}
 .gc-abbr-inline{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--tx);letter-spacing:1px;}
 .gc-nickname-inline{font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:700;color:var(--tx3);}
-#adminBody:empty:before,#adminBody > div:only-child:empty:before{content:attr(data-placeholder);color:#ccc;}
+#adminBody:empty:before,#adminBody:has(> br:only-child):before{content:attr(data-placeholder);color:#ccc;pointer-events:none;}
 </style>
   <link rel="canonical" href="https://courtside-jp.github.io/mentality/">
   <link rel="sitemap" type="application/xml" href="/mentality/sitemap.xml">
@@ -421,7 +421,7 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                 <button onclick="switchBodyTab('edit')" id="bodyTabEdit" style="padding:6px 16px;border:none;background:#C9082A;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
                 <button onclick="switchBodyTab('preview')" id="bodyTabPreview" style="padding:6px 16px;border:none;background:transparent;color:#999;font-size:11px;font-weight:700;cursor:pointer;">プレビュー</button>
               </div>
-              <div id="adminBody" contenteditable="true" data-placeholder="本文を入力..." oninput="updateBodyPreview()" style="width:100%;padding:10px 12px;font-size:12px;line-height:1.8;outline:none;min-height:300px;box-sizing:border-box;overflow-y:auto;"><div><br></div></div>
+              <div id="adminBody" contenteditable="true" data-placeholder="本文を入力..." oninput="updateBodyPreview()" style="width:100%;padding:10px 12px;font-size:12px;line-height:1.8;outline:none;min-height:300px;box-sizing:border-box;overflow-y:auto;"><br></div>
               <div id="adminBodyPreview" style="display:none;padding:10px 12px;min-height:300px;font-size:13px;line-height:1.8;color:#333;"></div>
             </div>
           </div>
