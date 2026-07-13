@@ -327,10 +327,22 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 
 <div id="pg-admin" class="pg" style="background:#fff;min-height:100vh;">
   <div style="background:#fff;padding-bottom:80px;">
-    <div id="admin-menu">
+    <div id="admin-login" style="display:none;">
+      <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:2px;">管理者ログイン</div>
+        <div style="font-size:10px;color:#888;">COURTSIDE ADMIN</div>
+      </div>
+      <div style="padding:24px 16px;display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto;">
+        <input id="adminLoginEmail" type="email" placeholder="メールアドレス" style="width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+        <input id="adminLoginPassword" type="password" placeholder="パスワード" style="width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+        <div id="adminLoginError" style="font-size:11px;color:#C9082A;display:none;"></div>
+        <button id="adminLoginBtn" onclick="signInAdmin()" style="width:100%;padding:11px;background:#C9082A;border:none;border-radius:8px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;margin-top:4px;">ログイン</button>
+      </div>
+    </div>
+    <div id="admin-menu" style="display:none;">
       <div style="background:#000;padding:16px;display:flex;align-items:center;justify-content:space-between;">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:2px;">管理画面</div>
-        <div style="font-size:10px;color:#888;">COURTSIDE ADMIN</div>
+        <div onclick="signOutAdmin()" style="font-size:10px;color:#888;cursor:pointer;">ログアウト</div>
       </div>
       <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
         <div onclick="showAdminPage('admin-article')" style="background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;">
@@ -1239,7 +1251,7 @@ function showBox(team,el){
 function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
 function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
 function handleSearch(val){
-  if(val==='kobe0824'){closeSearch();goPage('admin');showAdminPage('admin-menu');return;}
+  if(val==='kobe0824'){closeSearch();goPage('admin');showAdminPage((typeof firebase!=='undefined' && firebase.auth().currentUser) ? 'admin-menu' : 'admin-login');return;}
   const results=document.getElementById('search-results');
   if(val.length===0){results.innerHTML='';return;}
   const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
@@ -1363,7 +1375,7 @@ function loadTitleData() {
   ).join('');
 }
 function showAdminPage(id){
-  ['admin-menu','admin-article','admin-sneaker','admin-item','admin-ad'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
+  ['admin-login','admin-menu','admin-article','admin-sneaker','admin-item','admin-ad'].forEach(p=>{const el=document.getElementById(p);if(el)el.style.display='none';});
   const t=document.getElementById(id);if(t)t.style.display='block';
   if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
   if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
@@ -1424,6 +1436,70 @@ window.addEventListener('load', function() {
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-J1X9EM56WW');</script>
 
 <!-- JS読み込み -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+let __adminIdToken = null;
+
+if (typeof firebase !== 'undefined') {
+  firebase.initializeApp({
+    apiKey: "AIzaSyB4paPXF_cnqJWR3HRvMDzp08Ctsofi4c0",
+    authDomain: "mentality-nba.firebaseapp.com",
+    databaseURL: "https://mentality-nba-default-rtdb.firebaseio.com",
+    projectId: "mentality-nba"
+  });
+
+  firebase.auth().onIdTokenChanged(async function(user) {
+    __adminIdToken = user ? await user.getIdToken() : null;
+  });
+  // トークンは1時間で失効するので、定期的に更新しておく
+  setInterval(async function() {
+    const user = firebase.auth().currentUser;
+    if (user) __adminIdToken = await user.getIdToken(true);
+  }, 30 * 60 * 1000);
+}
+
+async function signInAdmin() {
+  const email = document.getElementById('adminLoginEmail').value.trim();
+  const password = document.getElementById('adminLoginPassword').value;
+  const errEl = document.getElementById('adminLoginError');
+  const btn = document.getElementById('adminLoginBtn');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'メールアドレスとパスワードを入力してください'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'ログイン中...';
+  try {
+    const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
+    __adminIdToken = await cred.user.getIdToken();
+    document.getElementById('adminLoginPassword').value = '';
+    showAdminPage('admin-menu');
+  } catch (e) {
+    errEl.textContent = 'ログインできませんでした。メールアドレスかパスワードが間違っています';
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'ログイン';
+  }
+}
+
+function signOutAdmin() {
+  firebase.auth().signOut();
+  __adminIdToken = null;
+  goPage('home');
+}
+
+// Firebase Realtime Databaseへの書き込み(POST/PUT/PATCH/DELETE)には
+// 自動でログイン済みユーザーの認証トークンを付与する
+(function() {
+  const origFetch = window.fetch;
+  window.fetch = function(url, opts) {
+    if (typeof url === 'string' && url.indexOf('mentality-nba-default-rtdb.firebaseio.com') !== -1 &&
+        opts && opts.method && opts.method !== 'GET' && __adminIdToken) {
+      const sep = url.indexOf('?') !== -1 ? '&' : '?';
+      url = url + sep + 'auth=' + __adminIdToken;
+    }
+    return origFetch(url, opts);
+  };
+})();
+</script>
 <script src="js/utils.js?v=1"></script>
 <script src="js/data.js?v=2"></script>
 <script src="js/app.js?v=8"></script>

@@ -90,11 +90,8 @@ function filterPlayers(q) {
   if (q.trim() === "kobe0824") {
     document.getElementById("playerSearchInput").value="";
     pSearch = "";
-    setTimeout(()=>{
-      const pw = prompt("パスワードを入力してください");
-      if (pw !== "kobe0824") { alert("パスワードが違います"); return; }
-      document.getElementById("adminSelectModal").style.display="block"; return;
-    }, 100);
+    goPage('admin');
+    showAdminPage((typeof firebase!=='undefined' && firebase.auth().currentUser) ? 'admin-menu' : 'admin-login');
     return;
   }
   pSearch = q;
