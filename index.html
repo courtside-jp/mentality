@@ -403,19 +403,26 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
           <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">本文</div>
             <div style="border:1px solid #eee;border-radius:8px;overflow:hidden;">
-              <div style="background:#f9f9f9;padding:6px 10px;border-bottom:1px solid #eee;display:flex;gap:6px;flex-wrap:wrap;">
-                <label style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">
-                  📷 画像挿入
-                  <input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">
-                </label>
-                <button type="button" onclick="insertArticleLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🔗 記事リンク</button>
-                <button type="button" onclick="insertTextLink()" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">🌐 URLリンク</button>
-                <button type="button" onclick="insertSnsEmbed()" style="padding:4px 10px;background:#fff;border:1px solid #C9082A;border-radius:6px;font-size:11px;cursor:pointer;color:#C9082A;font-weight:700;">📱 SNS埋め込み</button>
-                <button type="button" onclick="insertBodyTag('bold')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;">B</button>
-                <button type="button" onclick="insertBodyTag('h2')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">H2</button>
-                <button type="button" onclick="insertBodyTag('h3')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">H3</button>
-                <button type="button" onclick="insertBodyTag('hr')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">― 仕切り</button>
-                <button type="button" onclick="insertBodyTag('quote')" style="padding:4px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;">" 引用</button>
+              <div style="background:#f9f9f9;padding:8px 10px;border-bottom:1px solid #eee;">
+                <div style="font-size:9px;color:#999;font-weight:700;margin-bottom:5px;letter-spacing:.5px;">挿入</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+                  <label style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:6px;font-size:11px;cursor:pointer;color:#2a5cd8;">
+                    📷 画像
+                    <input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">
+                  </label>
+                  <button type="button" onclick="insertArticleLink()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:6px;font-size:11px;cursor:pointer;color:#2a5cd8;">🔗 記事リンク</button>
+                  <button type="button" onclick="insertTextLink()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:6px;font-size:11px;cursor:pointer;color:#2a5cd8;">🌐 URLリンク</button>
+                  <button type="button" onclick="insertSnsEmbed()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:6px;font-size:11px;cursor:pointer;color:#2a5cd8;">📱 SNS埋め込み</button>
+                  <button type="button" onclick="insertProductLink()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#fff3e0;border:1px solid #ffd9a0;border-radius:6px;font-size:11px;cursor:pointer;color:#c9720a;font-weight:700;">🛒 商品リンク</button>
+                </div>
+                <div style="font-size:9px;color:#999;font-weight:700;margin-bottom:5px;letter-spacing:.5px;">書式</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button type="button" onclick="insertBodyTag('bold')" style="padding:5px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;color:#333;">B 太字</button>
+                  <button type="button" onclick="insertBodyTag('h2')" style="padding:5px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;color:#333;">H2 見出し</button>
+                  <button type="button" onclick="insertBodyTag('h3')" style="padding:5px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;color:#333;">H3 小見出し</button>
+                  <button type="button" onclick="insertBodyTag('hr')" style="padding:5px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;color:#333;">― 仕切り線</button>
+                  <button type="button" onclick="insertBodyTag('quote')" style="padding:5px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;color:#333;">" 引用</button>
+                </div>
               </div>
               <div style="display:flex;border-bottom:1px solid #eee;background:#f9f9f9;">
                 <button onclick="switchBodyTab('edit')" id="bodyTabEdit" style="padding:6px 16px;border:none;background:#C9082A;color:#fff;font-size:11px;font-weight:700;cursor:pointer;">編集</button>

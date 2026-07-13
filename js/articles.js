@@ -739,19 +739,14 @@ async function deleteArticle(id) {
 }
 
 // 商品リンク挿入
-function insertProductLink(targetId) {
+function insertProductLink() {
   const name  = prompt('商品名を入力してください');
   if (!name) return;
   const price = prompt('価格を入力してください（例：¥22,000）') || '';
   const url   = prompt('購入URLを入力してください');
   if (!url) return;
-
-  const card = `\n[product name="${name}" price="${price}" url="${url}"]\n`;
-  const ta = document.getElementById(targetId);
-  if (!ta) return;
-  const pos = ta.selectionStart;
-  ta.value = ta.value.slice(0, pos) + card + ta.value.slice(pos);
-  ta.dispatchEvent(new Event('input'));
+  const card = `[product name="${name}" price="${price}" url="${url}"]`;
+  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
 
 // 下書き保存
