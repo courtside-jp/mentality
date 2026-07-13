@@ -1158,28 +1158,35 @@ function setAdminBodyValue(text) {
   });
 }
 
+// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+function getCurrentTopLevelLine() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  let node = sel.getRangeAt(0).commonAncestorContainer;
+  if (!el.contains(node)) return null;
+  while (node && node.parentElement !== el) node = node.parentElement;
+  return node; // el直下の要素、またはnull
+}
+
 function insertNodeAtCursor(node) {
   snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
-  const sel = window.getSelection();
-  let range;
-  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-    range = sel.getRangeAt(0);
-  } else {
-    range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-  }
-  range.deleteContents();
+  const currentLine = getCurrentTopLevelLine();
   const spacer = document.createElement('div');
   spacer.innerHTML = '<br>';
-  const frag = document.createDocumentFragment();
-  frag.appendChild(node);
-  frag.appendChild(spacer);
-  range.insertNode(frag);
+  if (currentLine && currentLine.parentElement === el) {
+    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    currentLine.after(node, spacer);
+  } else {
+    el.appendChild(node);
+    el.appendChild(spacer);
+  }
+  const range = document.createRange();
   range.setStartAfter(spacer);
   range.setEndAfter(spacer);
+  const sel = window.getSelection();
   sel.removeAllRanges();
   sel.addRange(range);
   updateBodyPreview();
@@ -1189,28 +1196,23 @@ function insertHtmlAtCursor(html) {
   snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
-  const sel = window.getSelection();
-  let range;
-  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-    range = sel.getRangeAt(0);
-  } else {
-    range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-  }
-  range.deleteContents();
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
-  const frag = document.createDocumentFragment();
-  let lastNode;
-  while (wrap.firstChild) { lastNode = frag.appendChild(wrap.firstChild); }
-  range.insertNode(frag);
-  if (lastNode) {
-    range.setStartAfter(lastNode);
-    range.setEndAfter(lastNode);
-    sel.removeAllRanges();
-    sel.addRange(range);
+  const nodes = [...wrap.childNodes];
+  if (!nodes.length) return;
+  const currentLine = getCurrentTopLevelLine();
+  if (currentLine && currentLine.parentElement === el) {
+    currentLine.after(...nodes);
+  } else {
+    nodes.forEach(n => el.appendChild(n));
   }
+  const lastNode = nodes[nodes.length - 1];
+  const range = document.createRange();
+  range.setStartAfter(lastNode);
+  range.setEndAfter(lastNode);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
   updateBodyPreview();
 }
 
@@ -1320,28 +1322,35 @@ function setAdminBodyValue(text) {
   });
 }
 
+// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+function getCurrentTopLevelLine() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  let node = sel.getRangeAt(0).commonAncestorContainer;
+  if (!el.contains(node)) return null;
+  while (node && node.parentElement !== el) node = node.parentElement;
+  return node; // el直下の要素、またはnull
+}
+
 function insertNodeAtCursor(node) {
   snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
-  const sel = window.getSelection();
-  let range;
-  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-    range = sel.getRangeAt(0);
-  } else {
-    range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-  }
-  range.deleteContents();
+  const currentLine = getCurrentTopLevelLine();
   const spacer = document.createElement('div');
   spacer.innerHTML = '<br>';
-  const frag = document.createDocumentFragment();
-  frag.appendChild(node);
-  frag.appendChild(spacer);
-  range.insertNode(frag);
+  if (currentLine && currentLine.parentElement === el) {
+    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    currentLine.after(node, spacer);
+  } else {
+    el.appendChild(node);
+    el.appendChild(spacer);
+  }
+  const range = document.createRange();
   range.setStartAfter(spacer);
   range.setEndAfter(spacer);
+  const sel = window.getSelection();
   sel.removeAllRanges();
   sel.addRange(range);
   updateBodyPreview();
@@ -1351,28 +1360,23 @@ function insertHtmlAtCursor(html) {
   snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
-  const sel = window.getSelection();
-  let range;
-  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
-    range = sel.getRangeAt(0);
-  } else {
-    range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-  }
-  range.deleteContents();
   const wrap = document.createElement('div');
   wrap.innerHTML = html;
-  const frag = document.createDocumentFragment();
-  let lastNode;
-  while (wrap.firstChild) { lastNode = frag.appendChild(wrap.firstChild); }
-  range.insertNode(frag);
-  if (lastNode) {
-    range.setStartAfter(lastNode);
-    range.setEndAfter(lastNode);
-    sel.removeAllRanges();
-    sel.addRange(range);
+  const nodes = [...wrap.childNodes];
+  if (!nodes.length) return;
+  const currentLine = getCurrentTopLevelLine();
+  if (currentLine && currentLine.parentElement === el) {
+    currentLine.after(...nodes);
+  } else {
+    nodes.forEach(n => el.appendChild(n));
   }
+  const lastNode = nodes[nodes.length - 1];
+  const range = document.createRange();
+  range.setStartAfter(lastNode);
+  range.setEndAfter(lastNode);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
   updateBodyPreview();
 }
 
