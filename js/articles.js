@@ -967,6 +967,7 @@ function openNewArticle() {
   document.getElementById('adminImg').value = '';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
   document.getElementById('adminSubmitBtn').textContent = '投稿する';
+  _bodyUndoStack = [];
 }
 
 function cancelArticleEdit() {
@@ -994,11 +995,11 @@ async function editArticle(id) {
   document.getElementById('articleForm').style.display = 'block';
   document.getElementById('adminEditId').value = id;
   document.getElementById('adminTitle').value = d.title || '';
-  document.getElementById('adminBody').value = d.body || '';
   setAdminBodyValue(d.body || '');
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
+  _bodyUndoStack = [];
 }
 
 // ============================================================
@@ -1065,6 +1066,33 @@ async function downloadOgpImage(btn) {
 // ============================================================
 // contenteditable版 本文エディタ用ヘルパー
 // ============================================================
+// ============================================================
+// 本文編集の「元に戻す」機能（エクセルのUndoのようなもの）
+// ============================================================
+let _bodyUndoStack = [];
+let _bodyUndoTimer = null;
+
+function snapshotBodyHistory() {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  const current = el.innerHTML;
+  if (_bodyUndoStack.length && _bodyUndoStack[_bodyUndoStack.length - 1] === current) return;
+  _bodyUndoStack.push(current);
+  if (_bodyUndoStack.length > 30) _bodyUndoStack.shift();
+}
+
+function snapshotBodyHistoryDebounced() {
+  clearTimeout(_bodyUndoTimer);
+  _bodyUndoTimer = setTimeout(snapshotBodyHistory, 600);
+}
+
+function undoBodyEdit() {
+  const el = document.getElementById('adminBody');
+  if (!el || !_bodyUndoStack.length) return;
+  el.innerHTML = _bodyUndoStack.pop();
+  updateBodyPreview();
+}
+
 function getAdminBodyValue() {
   const el = document.getElementById('adminBody');
   if (!el) return '';
@@ -1131,6 +1159,7 @@ function setAdminBodyValue(text) {
 }
 
 function insertNodeAtCursor(node) {
+  snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
   const sel = window.getSelection();
@@ -1157,6 +1186,7 @@ function insertNodeAtCursor(node) {
 }
 
 function insertHtmlAtCursor(html) {
+  snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
   const sel = window.getSelection();
@@ -1196,6 +1226,7 @@ function insertBodyTag(type) {
   if (type === 'bold') {
     const sel = window.getSelection();
     if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    snapshotBodyHistory();
     document.getElementById('adminBody').focus();
     document.execCommand('styleWithCSS', false, true);
     document.execCommand('bold');
@@ -1290,6 +1321,7 @@ function setAdminBodyValue(text) {
 }
 
 function insertNodeAtCursor(node) {
+  snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
   const sel = window.getSelection();
@@ -1316,6 +1348,7 @@ function insertNodeAtCursor(node) {
 }
 
 function insertHtmlAtCursor(html) {
+  snapshotBodyHistory();
   const el = document.getElementById('adminBody');
   el.focus();
   const sel = window.getSelection();
@@ -1355,6 +1388,7 @@ function insertBodyTag(type) {
   if (type === 'bold') {
     const sel = window.getSelection();
     if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    snapshotBodyHistory();
     document.getElementById('adminBody').focus();
     document.execCommand('styleWithCSS', false, true);
     document.execCommand('bold');
