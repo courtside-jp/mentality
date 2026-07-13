@@ -378,6 +378,10 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
       <!-- 新規/編集フォーム -->
       <div id="articleForm" style="display:none;padding:12px;border-bottom:2px solid #C9082A;background:#fff8f8;">
         <input type="hidden" id="adminEditId">
+        <button type="button" onclick="cancelArticleEdit()" style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:11px;color:#666;cursor:pointer;margin-bottom:12px;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          戻る
+        </button>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">カテゴリ</div>
