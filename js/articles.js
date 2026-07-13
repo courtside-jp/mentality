@@ -746,7 +746,8 @@ function insertProductLink() {
   const url   = prompt('購入URLを入力してください');
   if (!url) return;
   const card = `[product name="${name}" price="${price}" url="${url}"]`;
-  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
+  const chip = createEmbedChip('product', card, `${name} ${price ? '(' + price + ')' : ''}`);
+  insertNodeAtCursor(chip);
 }
 
 // 下書き保存
@@ -1043,9 +1044,44 @@ function getAdminBodyValue() {
       return;
     }
     if (node.tagName === 'BR') { lines.push(''); return; }
+    if (node.dataset && node.dataset.embedLine !== undefined) { lines.push(node.dataset.embedLine); return; }
     lines.push(node.innerHTML.replace(/^<br>$/i, ''));
   });
   return lines.join('\n');
+}
+
+// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
+// 枠付きの目立つブロックとして表示するためのチップを作る
+function createEmbedChip(kind, rawLine, displayHtml) {
+  const div = document.createElement('div');
+  div.setAttribute('contenteditable', 'false');
+  div.dataset.embedLine = rawLine;
+  const colors = {
+    tweet:   {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product: {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    link:    {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+  }[kind];
+  div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
+  div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
+  return div;
+}
+
+// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+function tryBuildEmbedChip(line) {
+  const t = line.trim();
+  if (!t) return null;
+  if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
+    if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
+  }
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
+  if (productMatch) {
+    return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
+  if (linkMatch) {
+    return createEmbedChip('link', t, linkMatch[2] || linkMatch[1]);
+  }
+  return null;
 }
 
 function setAdminBodyValue(text) {
@@ -1053,7 +1089,40 @@ function setAdminBodyValue(text) {
   if (!el) return;
   if (!text) { el.innerHTML = '<br>'; return; }
   const lines = text.split('\n');
-  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('');
+  el.innerHTML = '';
+  lines.forEach(l => {
+    const chip = tryBuildEmbedChip(l);
+    if (chip) { el.appendChild(chip); return; }
+    const div = document.createElement('div');
+    div.innerHTML = l || '<br>';
+    el.appendChild(div);
+  });
+}
+
+function insertNodeAtCursor(node) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  let range;
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    range = sel.getRangeAt(0);
+  } else {
+    range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+  }
+  range.deleteContents();
+  const spacer = document.createElement('div');
+  spacer.innerHTML = '<br>';
+  const frag = document.createDocumentFragment();
+  frag.appendChild(node);
+  frag.appendChild(spacer);
+  range.insertNode(frag);
+  range.setStartAfter(spacer);
+  range.setEndAfter(spacer);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
 }
 
 function insertHtmlAtCursor(html) {
@@ -1134,9 +1203,44 @@ function getAdminBodyValue() {
       return;
     }
     if (node.tagName === 'BR') { lines.push(''); return; }
+    if (node.dataset && node.dataset.embedLine !== undefined) { lines.push(node.dataset.embedLine); return; }
     lines.push(node.innerHTML.replace(/^<br>$/i, ''));
   });
   return lines.join('\n');
+}
+
+// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
+// 枠付きの目立つブロックとして表示するためのチップを作る
+function createEmbedChip(kind, rawLine, displayHtml) {
+  const div = document.createElement('div');
+  div.setAttribute('contenteditable', 'false');
+  div.dataset.embedLine = rawLine;
+  const colors = {
+    tweet:   {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product: {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    link:    {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+  }[kind];
+  div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
+  div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
+  return div;
+}
+
+// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+function tryBuildEmbedChip(line) {
+  const t = line.trim();
+  if (!t) return null;
+  if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
+    if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
+  }
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
+  if (productMatch) {
+    return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
+  if (linkMatch) {
+    return createEmbedChip('link', t, linkMatch[2] || linkMatch[1]);
+  }
+  return null;
 }
 
 function setAdminBodyValue(text) {
@@ -1144,7 +1248,40 @@ function setAdminBodyValue(text) {
   if (!el) return;
   if (!text) { el.innerHTML = '<br>'; return; }
   const lines = text.split('\n');
-  el.innerHTML = lines.map(l => '<div>' + (l || '<br>') + '</div>').join('');
+  el.innerHTML = '';
+  lines.forEach(l => {
+    const chip = tryBuildEmbedChip(l);
+    if (chip) { el.appendChild(chip); return; }
+    const div = document.createElement('div');
+    div.innerHTML = l || '<br>';
+    el.appendChild(div);
+  });
+}
+
+function insertNodeAtCursor(node) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  let range;
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    range = sel.getRangeAt(0);
+  } else {
+    range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+  }
+  range.deleteContents();
+  const spacer = document.createElement('div');
+  spacer.innerHTML = '<br>';
+  const frag = document.createDocumentFragment();
+  frag.appendChild(node);
+  frag.appendChild(spacer);
+  range.insertNode(frag);
+  range.setStartAfter(spacer);
+  range.setEndAfter(spacer);
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
 }
 
 function insertHtmlAtCursor(html) {
@@ -1276,6 +1413,22 @@ function insertHtmlAtSavedRange(html) {
   insertHtmlAtCursor(html);
 }
 
+function insertNodeAtSavedRange(node) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  if (_savedBodyRange) {
+    sel.addRange(_savedBodyRange);
+  } else {
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    r.collapse(false);
+    sel.addRange(r);
+  }
+  insertNodeAtCursor(node);
+}
+
 function insertSnsEmbed() {
   saveBodyCursorRange();
   const urlInput = document.getElementById('snsEmbedUrl');
@@ -1303,7 +1456,8 @@ function confirmSnsEmbed() {
     alert('X (Twitter) / Instagram / TikTokのURLを入力してください');
     return;
   }
-  insertHtmlAtSavedRange(`<div>${url}</div><div><br></div>`);
+  const chip = createEmbedChip('tweet', url, url);
+  insertNodeAtSavedRange(chip);
   closeSnsEmbedModal();
 }
 
@@ -1326,7 +1480,8 @@ function confirmLinkInsert() {
   const url = document.getElementById('linkModalUrl').value.trim();
   const text = document.getElementById('linkModalText').value.trim();
   if (!url) return;
-  const insert = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text || url}</a>`;
-  insertHtmlAtSavedRange(insert);
+  const rawLine = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text || url}</a>`;
+  const chip = createEmbedChip('link', rawLine, text || url);
+  insertNodeAtSavedRange(chip);
   closeLinkModal();
 }
