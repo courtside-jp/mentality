@@ -32,7 +32,6 @@ def render_body_html(body):
     for line in lines:
         t = line.strip()
         if not t:
-            out.append('<br>')
             continue
         plain = re.sub(r'<[^>]+>', '', t).strip()
         # ■ / ▪ → 大見出し
