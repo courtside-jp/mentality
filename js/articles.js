@@ -1243,7 +1243,7 @@ function insertBodyTag(type) {
       insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
       break;
     case 'hr':
-      insert = `<div><hr style="border:none;border-top:1px solid #eee;margin:1rem 0;"></div><div><br></div>`;
+      insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
       break;
     case 'quote':
       insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
@@ -1405,7 +1405,7 @@ function insertBodyTag(type) {
       insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
       break;
     case 'hr':
-      insert = `<div><hr style="border:none;border-top:1px solid #eee;margin:1rem 0;"></div><div><br></div>`;
+      insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
       break;
     case 'quote':
       insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
