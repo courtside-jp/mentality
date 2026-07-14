@@ -447,7 +447,7 @@ async function openArticle(id) {
       '<div id="articleBodyDiv" style="font-size:.95rem;color:var(--tx2);line-height:1.85;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
       (a.affiliateLink ? '<a href="' + a.affiliateLink + '" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.2rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;"><span style="font-size:1.2rem;">🛒</span><span style="color:var(--or);font-weight:700;font-size:.85rem;">商品を見る</span></a>' : '') +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
-      '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/?article=' + id) + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
+      '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/articles/' + id + '.html') + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
       '<div id="relatedArticlesWrap" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--bd);"></div>' +
       '</div>';
   } catch(e) {
