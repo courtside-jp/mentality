@@ -50,7 +50,18 @@ def render_body_html(body):
         if t.startswith('http://') or t.startswith('https://'):
             out.append(f'<p><a href="{html.escape(t)}" target="_blank" rel="noopener">{html.escape(t)}</a></p>')
             continue
-        out.append(f'<p>{apply_inline_bold(html.escape(t))}</p>')
+        # 商品リンク [product name="..." price="..." url="..."]
+        product_match = re.match(r'^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$', t)
+        if product_match:
+            p_name, p_price, p_url = product_match.groups()
+            price_html = f' <strong>{html.escape(p_price)}</strong>' if p_price else ''
+            out.append(
+                f'<p><a href="{html.escape(p_url)}" target="_blank" rel="noopener sponsored" '
+                f'style="display:block;text-decoration:none;background:#f5f5f5;border-radius:10px;padding:.8rem;">'
+                f'🛒 {html.escape(p_name)}{price_html}</a></p>'
+            )
+            continue
+        out.append(f'<p>{apply_inline_bold(t)}</p>')
     return ''.join(out)
 
 
