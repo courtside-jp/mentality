@@ -186,7 +186,7 @@ async function insertBodyImage(input) {
     try {
       const form = new FormData();
       form.append('image', base64);
-      const resp = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+      const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
         method: 'POST', body: form
       });
       const data = await resp.json();
@@ -266,7 +266,7 @@ async function insertBodyImage(input) {
     try {
       const form = new FormData();
       form.append('image', base64);
-      const resp = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+      const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
         method: 'POST', body: form
       });
       const data = await resp.json();
@@ -298,7 +298,7 @@ async function uploadArticleImage(input) {
     const form = new FormData();
     form.append('image', base64);
     
-    const resp = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+    const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
       method: 'POST', body: form
     });
     const data = await resp.json();
