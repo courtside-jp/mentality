@@ -285,6 +285,9 @@ function filterSneakers(btn, brand) {
 function calcSneakerScore(s) {
   // オブジェクト渡しの場合（カードレンダリング用）
   if (s && typeof s === 'object') {
+    // 総合値が手動入力されていればそれを優先
+    const manual = parseInt(s.overallScore, 10);
+    if (!isNaN(manual) && manual > 0) return manual;
     const vals = [s.cushion, s.hold, s.traction, s.weight]
       .map(v => parseInt(v)||0)
       .filter(v => v > 0);
@@ -432,6 +435,7 @@ async function submitSneaker() {
     hold: parseInt(document.getElementById('sneakerScoreHold').value, 10) || 0,
     traction: parseInt(document.getElementById('sneakerScoreTraction').value, 10) || 0,
     weight: parseInt(document.getElementById('sneakerScoreWeight').value, 10) || 0,
+    overallScore: parseInt(document.getElementById('sneakerOverallScore')?.value, 10) || 0,
     sizeFeel: document.getElementById('sneakerSizeFeel').value.trim(),
     position: document.getElementById('sneakerPosition').value.trim(),
     gymOk: document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false,
@@ -563,6 +567,7 @@ function openNewSneaker() {
   document.getElementById('sneakerScoreHold').value = '';
   document.getElementById('sneakerScoreTraction').value = '';
   document.getElementById('sneakerScoreWeight').value = '';
+  if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = '';
   document.getElementById('sneakerSizeFeel').value = '';
   document.getElementById('sneakerPosition').value = '';
   document.getElementById('sneakerGymOk').checked = false;
@@ -603,6 +608,7 @@ async function editSneaker(id) {
   document.getElementById('sneakerScoreHold').value = d.hold || '';
   document.getElementById('sneakerScoreTraction').value = d.traction || '';
   document.getElementById('sneakerScoreWeight').value = d.weight || '';
+  if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = d.overallScore || '';
   document.getElementById('sneakerSizeFeel').value = d.sizeFeel || '';
   document.getElementById('sneakerPosition').value = d.position || '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = d.desc || '';
@@ -649,6 +655,7 @@ function addRankingItem() {
       <input type="number" min="0" max="100" id="${ns}-traction" placeholder="グリップ" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
       <input type="number" min="0" max="100" id="${ns}-weight" placeholder="軽量性" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
     </div>
+    <input type="number" min="1" max="100" id="${ns}-overallscore" placeholder="総合値（任意・空欄なら4項目から自動計算）" style="width:100%;padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;margin-bottom:8px;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <input type="text" id="${ns}-sizefeel" placeholder="サイズ感 例：ジャストサイズ" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
       <input type="text" id="${ns}-position" placeholder="おすすめポジション/プレースタイル" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
@@ -714,6 +721,7 @@ async function submitSneakerRanking() {
       hold: parseInt(document.getElementById(`${ns}-hold`)?.value, 10) || 0,
       traction: parseInt(document.getElementById(`${ns}-traction`)?.value, 10) || 0,
       weight: parseInt(document.getElementById(`${ns}-weight`)?.value, 10) || 0,
+      overallScore: parseInt(document.getElementById(`${ns}-overallscore`)?.value, 10) || 0,
       sizeFeel: (document.getElementById(`${ns}-sizefeel`)?.value || '').trim(),
       position: (document.getElementById(`${ns}-position`)?.value || '').trim(),
       gymOk: document.getElementById(`${ns}-gymok`) ? document.getElementById(`${ns}-gymok`).checked : false,

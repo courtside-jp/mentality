@@ -548,6 +548,10 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
             </div>
           </div>
           <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">総合値（任意・空欄なら上の4項目から自動計算）</div>
+            <input id="sneakerOverallScore" type="number" min="1" max="100" placeholder="例：92（未入力なら自動平均）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+          </div>
+          <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
             <input id="sneakerSizeFeel" type="text" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
@@ -1185,7 +1189,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=8"></script>
 <script src="js/articles.js?v=3"></script>
-<script src="js/sneakers.js?v=11"></script>
+<script src="js/sneakers.js?v=12"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=2"></script>
 <script src="js/home.js?v=1"></script>
