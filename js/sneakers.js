@@ -641,6 +641,7 @@ function addRankingItem() {
       </select>
       <input type="text" id="${ns}-model" placeholder="モデル名" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
     </div>
+    <input type="text" id="${ns}-player" placeholder="着用選手 例：ステフィン・カリー" style="width:100%;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;margin-bottom:8px;">
     <div style="font-size:10px;color:#999;margin-bottom:5px;">機能スコア(0〜100)</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <input type="number" min="0" max="100" id="${ns}-cushion" placeholder="クッション" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
@@ -648,11 +649,32 @@ function addRankingItem() {
       <input type="number" min="0" max="100" id="${ns}-traction" placeholder="グリップ" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
       <input type="number" min="0" max="100" id="${ns}-weight" placeholder="軽量性" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="${ns}-sizefeel" placeholder="サイズ感 例：ジャストサイズ" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+      <input type="text" id="${ns}-position" placeholder="おすすめポジション/プレースタイル" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #eee;border-radius:6px;padding:8px 9px;margin-bottom:8px;">
+      <input id="${ns}-gymok" type="checkbox" style="width:14px;height:14px;">
+      <label for="${ns}-gymok" style="font-size:11px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+    </div>
     <textarea id="${ns}-desc" placeholder="商品説明文(短め)" style="width:100%;height:50px;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;resize:vertical;margin-bottom:8px;"></textarea>
+    <div style="font-size:10px;color:#999;margin-bottom:5px;">レビュー本文（①部活生視点・②NBA層視点）</div>
+    <textarea id="${ns}-review" rows="8" style="width:100%;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;resize:vertical;line-height:1.6;margin-bottom:8px;" placeholder="テンプレートが自動入力されます"></textarea>
+    <div style="font-size:10px;color:#999;margin-bottom:5px;">画像URL（最大4枚）</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">
+      <input type="text" id="${ns}-img" placeholder="メイン画像 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+      <input type="text" id="${ns}-img2" placeholder="画像2 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+      <input type="text" id="${ns}-img3" placeholder="画像3 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+      <input type="text" id="${ns}-img4" placeholder="画像4 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    </div>
     <div style="font-size:10px;color:#999;margin-bottom:5px;">購入リンク(媒体ごと)</div>
     <div id="${ns}-shopblocks" style="display:flex;flex-direction:column;gap:6px;">${snkShopBlocksHtml(ns)}</div>
   `;
   wrap.appendChild(row);
+  setTimeout(() => {
+    const rv = document.getElementById(`${ns}-review`);
+    if (rv && !rv.value) rv.value = window.SNK_REVIEW_TEMPLATE || '';
+  }, 100);
 }
 
 function removeRankingItem(ns) {
@@ -678,14 +700,27 @@ async function submitSneakerRanking() {
     const model = (document.getElementById(`${ns}-model`)?.value || '').trim();
     if (!model) return;
     const shops = snkCollectShops(ns);
+    const images = [
+      (document.getElementById(`${ns}-img`)?.value || '').trim(),
+      (document.getElementById(`${ns}-img2`)?.value || '').trim(),
+      (document.getElementById(`${ns}-img3`)?.value || '').trim(),
+      (document.getElementById(`${ns}-img4`)?.value || '').trim()
+    ].filter(Boolean);
     items.push({
       brand: document.getElementById(`${ns}-brand`)?.value || '',
       model,
+      player: (document.getElementById(`${ns}-player`)?.value || '').trim(),
       cushion: parseInt(document.getElementById(`${ns}-cushion`)?.value, 10) || 0,
       hold: parseInt(document.getElementById(`${ns}-hold`)?.value, 10) || 0,
       traction: parseInt(document.getElementById(`${ns}-traction`)?.value, 10) || 0,
       weight: parseInt(document.getElementById(`${ns}-weight`)?.value, 10) || 0,
+      sizeFeel: (document.getElementById(`${ns}-sizefeel`)?.value || '').trim(),
+      position: (document.getElementById(`${ns}-position`)?.value || '').trim(),
+      gymOk: document.getElementById(`${ns}-gymok`) ? document.getElementById(`${ns}-gymok`).checked : false,
       desc: (document.getElementById(`${ns}-desc`)?.value || '').trim(),
+      review: document.getElementById(`${ns}-review`) ? document.getElementById(`${ns}-review`).value : '',
+      images,
+      img: images[0] || '',
       shops,
       price: snkCheapestPriceLabel(shops)
     });
@@ -769,6 +804,10 @@ function openSnkRankingModal(id) {
             <span style="font-size:11px;color:var(--text-muted);">${it.brand||''}</span>
           </div>
           <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:6px;">${it.model||''}</div>
+          ${(it.images && it.images.length) ? `<img src="${it.images[0]}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;">` : ''}
+          ${it.player ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">👤 ${it.player}</div>` : ''}
+          ${(it.sizeFeel || it.position) ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${it.sizeFeel ? '📏 '+it.sizeFeel : ''}${it.sizeFeel && it.position ? '　' : ''}${it.position ? '🏀 '+it.position : ''}</div>` : ''}
+          ${it.gymOk ? `<div style="font-size:11px;color:#27ae60;margin-bottom:4px;">🏋️ ジム・トレーニング用にもおすすめ</div>` : ''}
           ${it.desc ? `<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;">${it.desc}</div>` : ''}
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
             <div style="font-size:22px;font-weight:500;color:${scoreColor};">${score}</div>
