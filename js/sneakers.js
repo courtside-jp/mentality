@@ -304,9 +304,6 @@ function openSnkModal(id) {
     <table style="width:100%;border-collapse:collapse;">
       ${shops.map(sh => `
       <tr style="border-bottom:0.5px solid var(--border);">
-        <td style="padding:10px 6px;width:36px;">
-          <div style="width:34px;height:34px;border-radius:8px;background:var(--surface-1);display:flex;align-items:center;justify-content:center;font-size:18px;">${sh.icon||'🛒'}</div>
-        </td>
         <td style="padding:10px 6px;">
           <div style="font-size:13px;font-weight:500;color:var(--text-primary);">${sh.name}</div>
           ${sh.lowest?'<span style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;">最安値</span>':''}
@@ -320,6 +317,16 @@ function openSnkModal(id) {
       </tr>`).join('')}
     </table>` : '';
 
+  const infoTags = [
+    s.player ? `着用選手：${s.player}` : '',
+    s.sizeFeel ? `サイズ感：${s.sizeFeel}` : '',
+    s.position ? `おすすめポジション：${s.position}` : ''
+  ].filter(Boolean);
+
+  const reviewHtml = s.review ? `
+    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">レビュー</div>
+    <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap;background:var(--surface-1);border-radius:10px;padding:14px;margin-bottom:16px;">${s.review}</div>` : '';
+
   body.innerHTML = `
     ${_snkModalReturnTo ? `<button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
@@ -330,13 +337,11 @@ function openSnkModal(id) {
       <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
     </div>
     ${imgGallery}
+    ${infoTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${infoTags.map(t => `<span style="font-size:11px;color:var(--text-secondary);background:var(--surface-1);padding:4px 10px;border-radius:12px;">${t}</span>`).join('')}${s.gymOk ? `<span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span>` : ''}</div>` : ''}
     ${s.desc ? `<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:14px;">${s.desc}</div>` : ''}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px;background:var(--surface-1);border-radius:10px;">
       <div style="font-size:40px;font-weight:500;color:${scoreColor};">${score}</div>
-      <div>
-        <div style="font-size:12px;color:var(--text-muted);">総合スコア / 100</div>
-        ${score>=95?'<div style="font-size:11px;color:#f0a500;font-weight:500;">🏆 プレミアム</div>':score>=90?'<div style="font-size:11px;color:#27ae60;font-weight:500;">✅ おすすめ</div>':'<div style="font-size:11px;color:#e63946;font-weight:500;">📊 標準</div>'}
-      </div>
+      <div style="font-size:12px;color:var(--text-muted);">総合スコア / 100</div>
     </div>
     <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">パフォーマンス スコア</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
@@ -349,6 +354,7 @@ function openSnkModal(id) {
         <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
       </div>`).join('')}
     </div>
+    ${reviewHtml}
     ${shops.length ? `<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
   `;
   modal.style.display = 'block';
