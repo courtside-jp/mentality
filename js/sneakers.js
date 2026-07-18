@@ -55,6 +55,7 @@ const FB_SNEAKERS = `${FB_URL}/sneakers`;
 const FB_SNEAKER_RANKINGS = `${FB_URL}/sneakerRankings`;
 let _allSneakers = [];
 let _allSneakerRankings = [];
+let _snkModalReturnTo = null; // { type: 'ranking', id } or null — enables the 戻る button in openSnkModal
 
 const BRANDS = {
   asics: 'Asics', nike: 'Nike', jordan: 'Jordan', adidas: 'Adidas',
@@ -183,71 +184,27 @@ function snkScoreColor(score) {
 }
 function snkSingleCardHtml(s) {
   const score = calcSneakerScore(s);
-    const scoreColor = snkScoreColor(score);
-    const shops = s.shops || [];
-    const scoreItems = [
-      {lbl:'クッション', val:s.cushion||0},
-      {lbl:'ホールド感', val:s.hold||0},
-      {lbl:'グリップ', val:s.traction||0},
-      {lbl:'軽量性', val:s.weight||0}
-    ];
-    const imgs = s.images || [];
-    const imgHtml = imgs.length
-      ? `<div style="width:100%;background:var(--surface-1);border-radius:10px 10px 0 0;overflow:hidden;position:relative;">
-          <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;">
-          ${imgs.length > 1 ? `<details style="background:rgba(0,0,0,0.7);padding:0;position:absolute;bottom:0;left:0;right:0;">
-            <summary style="padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;">
-              <span>📷 全${imgs.length}枚を見る</span><span>▼</span>
-            </summary>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px;">
-              ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:80px;object-fit:cover;">`).join('')}
-            </div>
-          </details>` : ''}
-          ${s.badge ? `<span style="position:absolute;top:10px;left:10px;background:#e63946;color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;">${s.badge}</span>` : ''}
-        </div>`
-      : `<div style="width:100%;height:140px;background:var(--surface-1);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;position:relative;">
-          <i class="ti ti-shoe" style="font-size:56px;color:var(--text-muted);"></i>
-          ${s.badge ? `<span style="position:absolute;top:10px;left:10px;background:#e63946;color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:5px;">${s.badge}</span>` : ''}
-        </div>`;
-
-    const shopsHtml = shops.length ? `
-      <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
-        ${shops.map(sh => `
-        <tr style="border-bottom:0.5px solid var(--border);">
-          <td style="padding:7px 4px;font-size:12px;font-weight:500;color:var(--text-secondary);white-space:nowrap;">${sh.icon||''} ${sh.name}</td>
-          <td style="padding:7px 4px;text-align:center;">${sh.lowest?'<span style="background:#fff3e0;color:#bf6000;font-size:9px;font-weight:500;padding:2px 5px;border-radius:3px;">最安値</span>':''}</td>
-          <td style="padding:7px 4px;font-size:13px;font-weight:500;color:var(--text-primary);text-align:right;white-space:nowrap;">${sh.price||'確認する'}</td>
-          <td style="padding:7px 4px 7px 8px;"><button onclick="event.stopPropagation();window.open('${sh.url}','_blank')" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);font-size:11px;font-weight:500;cursor:pointer;">買う</button></td>
-        </tr>`).join('')}
-      </table>` : '';
-
-    return `
-    <div onclick="openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
-      ${imgHtml}
-      <div style="padding:14px;">
-        <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">${s.brand||''}</div>
-        <div style="font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:12px;">${s.model||''}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
-          ${scoreItems.map(i => `
-          <div style="background:var(--surface-1);border-radius:8px;padding:8px 10px;">
-            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">${i.lbl}</div>
-            <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px;">
-              <div style="height:100%;background:${snkScoreColor(i.val)};border-radius:3px;width:${i.val}%"></div>
-            </div>
-            <div style="font-size:13px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}</div>
-          </div>`).join('')}
+  const scoreColor = snkScoreColor(score);
+  const thumb = (s.images && s.images[0]) || s.img || '';
+  return `
+  <div onclick="_snkModalReturnTo=null;openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:8px 10px;cursor:pointer;">
+    <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+      <span style="font-size:8px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${(s.brand||'').toUpperCase()}</span>
+      <span style="font-size:9px;color:var(--text-muted);">${s.date||''}</span>
+      ${s.badge ? `<span style="font-size:8px;font-weight:700;color:#e63946;background:rgba(230,57,70,0.08);padding:2px 6px;border-radius:4px;">${s.badge}</span>` : ''}
+    </div>
+    <div style="display:flex;gap:9px;">
+      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--surface-1);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><i class="ti ti-shoe" style="font-size:22px;color:var(--text-muted);"></i></div>`}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||''}</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;">
+          <span style="font-size:15px;font-weight:800;color:${scoreColor};">${score}<span style="font-size:8px;color:var(--text-muted);font-weight:500;">/100</span></span>
+          ${s.price ? `<span style="font-size:11.5px;font-weight:700;color:#C9082A;">${s.price}</span>` : ''}
         </div>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:var(--surface-1);border-radius:8px;">
-          <div style="font-size:32px;font-weight:500;color:${scoreColor};">${score}</div>
-          <div>
-            <div style="font-size:11px;color:var(--text-muted);">総合スコア / 100</div>
-            ${score>=95?'<div style="font-size:10px;color:#f0a500;font-weight:500;">🏆 プレミアム</div>':score>=90?'<div style="font-size:10px;color:#27ae60;font-weight:500;">✅ おすすめ</div>':''}
-          </div>
-        </div>
-        ${shopsHtml}
-        <button onclick="event.stopPropagation();openSnkModal('${s.id}')" style="width:100%;padding:10px 0;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface-1);color:var(--text-primary);border:0.5px solid var(--border-strong);">📊 詳細スコアを見る</button>
+        ${s.desc ? `<div style="font-size:10px;color:var(--text-muted);line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${s.desc}</div>` : ''}
       </div>
-    </div>`;
+    </div>
+  </div>`;
 }
 
 function renderSneakers(list) {
@@ -257,7 +214,7 @@ function renderSneakers(list) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
     return;
   }
-  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:14px;padding:0;';
+  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:8px;padding:0;';
   wrap.innerHTML = list.map(snkSingleCardHtml).join('');
 }
 
@@ -271,7 +228,7 @@ function renderSneakerFeed(list, rankings) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
     return;
   }
-  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:14px;padding:0;';
+  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:8px;padding:0;';
   wrap.innerHTML = merged.map(e => e.html).join('');
 }
 function filterSneakers(btn, brand) {
@@ -364,6 +321,7 @@ function openSnkModal(id) {
     </table>` : '';
 
   body.innerHTML = `
+    ${_snkModalReturnTo ? `<button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
@@ -402,8 +360,19 @@ function closeSnkModal() {
   const modal = document.getElementById('snkModal');
   if (modal) modal.style.display = 'none';
   document.title = 'COURTSIDE - NBA速報・まとめ';
+  _snkModalReturnTo = null;
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd && fixedAd.dataset.wasVisible === '1') fixedAd.style.display = 'block';
+}
+
+function snkModalGoBack() {
+  if (_snkModalReturnTo && _snkModalReturnTo.type === 'ranking') {
+    const rid = _snkModalReturnTo.id;
+    _snkModalReturnTo = null;
+    openSnkRankingModal(rid);
+  } else {
+    closeSnkModal();
+  }
 }
 
 function filterSneakersDropdown() {
@@ -780,20 +749,19 @@ function snkResolveRankingItems(r) {
 function renderSneakerRankingCard(r) {
   const items = snkResolveRankingItems(r);
   const thumb = r.img || (items[0] && items[0].img) || '';
+  const top = items[0];
   return `
-  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
-    ${thumb ? `<img src="${thumb}" style="width:100%;height:160px;object-fit:cover;" onerror="this.style.display='none'">` : ''}
-    <div style="padding:14px;">
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-      <span style="font-size:9px;font-weight:700;color:#c9720a;background:#fff3e0;padding:2px 8px;border-radius:10px;">ランキング</span>
-      <span style="font-size:10px;color:var(--text-muted);">${r.mall||''}・${items.length}アイテム</span>
+  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:8px 10px;cursor:pointer;">
+    <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+      <span style="font-size:8px;font-weight:700;color:#c9720a;background:#fff3e0;padding:2px 6px;border-radius:4px;">🏆 ランキング</span>
+      <span style="font-size:9px;color:var(--text-muted);">${r.mall||''}・${items.length}アイテム</span>
     </div>
-    <div style="font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">${r.title||''}</div>
-    <div style="display:flex;flex-direction:column;gap:4px;">
-      ${items.slice(0,3).map((it,i) => `<div style="font-size:12px;color:var(--text-secondary);">${i+1}. ${it.brand||''} ${it.model||''} ${it.price?('・'+it.price):''}</div>`).join('')}
-      ${items.length>3 ? `<div style="font-size:11px;color:var(--text-muted);">他${items.length-3}件</div>` : ''}
-    </div>
-    <button onclick="event.stopPropagation();openSnkRankingModal('${r.id}')" style="width:100%;margin-top:12px;padding:10px 0;border-radius:8px;border:0.5px solid var(--border-strong);font-size:12px;font-weight:500;cursor:pointer;background:var(--surface-1);color:var(--text-primary);">ランキング全部見る</button>
+    <div style="display:flex;gap:9px;">
+      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--surface-1);border-radius:8px;flex-shrink:0;"></div>`}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title||''}</div>
+        <div style="font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${top ? `1位：${top.brand||''} ${top.model||''}` : ''}</div>
+      </div>
     </div>
   </div>`;
 }
@@ -819,7 +787,7 @@ function openSnkRankingModal(id) {
         const score = calcSneakerScore(it);
         const scoreColor = snkScoreColor(score);
         return `
-        <div onclick="openSnkModal('${it.id}')" style="background:var(--surface-1);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
+        <div onclick="_snkModalReturnTo={type:'ranking',id:'${r.id}'};openSnkModal('${it.id}')" style="background:var(--surface-1);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
           <div style="position:relative;flex-shrink:0;">
             ${it.img ? `<img src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--surface-2);border-radius:8px;"></div>`}
             <div style="position:absolute;top:-6px;left:-6px;background:#C9082A;color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${i+1}</div>
