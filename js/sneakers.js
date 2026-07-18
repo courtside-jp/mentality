@@ -641,41 +641,80 @@ function addRankingItem() {
       <span style="font-size:11px;font-weight:700;color:#C9082A;">商品</span>
       <button type="button" onclick="removeRankingItem('${ns}')" style="border:none;background:none;color:#999;font-size:11px;cursor:pointer;">削除</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <select id="${ns}-brand" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;background:#fff;">
-        <option>Asics</option><option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
-      </select>
-      <input type="text" id="${ns}-model" placeholder="モデル名" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div>
+        <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
+        <select id="${ns}-brand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;box-sizing:border-box;">
+          <option>Asics</option><option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
+        <input type="text" id="${ns}-model" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+      </div>
     </div>
-    <input type="text" id="${ns}-player" placeholder="着用選手 例：ステフィン・カリー" style="width:100%;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;margin-bottom:8px;">
-    <div style="font-size:10px;color:#999;margin-bottom:5px;">機能スコア(0〜100)</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="number" min="0" max="100" id="${ns}-cushion" placeholder="クッション" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="number" min="0" max="100" id="${ns}-hold" placeholder="ホールド感" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="number" min="0" max="100" id="${ns}-traction" placeholder="グリップ" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="number" min="0" max="100" id="${ns}-weight" placeholder="軽量性" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+      <input type="text" id="${ns}-player" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
     </div>
-    <input type="number" min="1" max="100" id="${ns}-overallscore" placeholder="総合値（任意・空欄なら4項目から自動計算）" style="width:100%;padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;margin-bottom:8px;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="text" id="${ns}-sizefeel" placeholder="サイズ感 例：ジャストサイズ" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="text" id="${ns}-position" placeholder="おすすめポジション/プレースタイル" style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+        <div>
+          <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
+          <input type="number" min="1" max="100" id="${ns}-cushion" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
+          <input type="number" min="1" max="100" id="${ns}-hold" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
+          <input type="number" min="1" max="100" id="${ns}-traction" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
+          <input type="number" min="1" max="100" id="${ns}-weight" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #eee;border-radius:6px;padding:8px 9px;margin-bottom:8px;">
-      <input id="${ns}-gymok" type="checkbox" style="width:14px;height:14px;">
-      <label for="${ns}-gymok" style="font-size:11px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">総合値（任意・空欄なら上の4項目から自動計算）</div>
+      <input type="number" min="1" max="100" id="${ns}-overallscore" placeholder="例：92（未入力なら自動平均）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
     </div>
-    <textarea id="${ns}-desc" placeholder="商品説明文(短め)" style="width:100%;height:50px;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;resize:vertical;margin-bottom:8px;"></textarea>
-    <div style="font-size:10px;color:#999;margin-bottom:5px;">レビュー本文（①部活生視点・②NBA層視点）</div>
-    <textarea id="${ns}-review" rows="8" style="width:100%;padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;resize:vertical;line-height:1.6;margin-bottom:8px;" placeholder="テンプレートが自動入力されます"></textarea>
-    <div style="font-size:10px;color:#999;margin-bottom:5px;">画像URL（最大4枚）</div>
-    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">
-      <input type="text" id="${ns}-img" placeholder="メイン画像 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="text" id="${ns}-img2" placeholder="画像2 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="text" id="${ns}-img3" placeholder="画像3 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-      <input type="text" id="${ns}-img4" placeholder="画像4 https://..." style="padding:8px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
+      <input type="text" id="${ns}-sizefeel" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
     </div>
-    <div style="font-size:10px;color:#999;margin-bottom:5px;">購入リンク(媒体ごと)</div>
-    <div id="${ns}-shopblocks" style="display:flex;flex-direction:column;gap:6px;">${snkShopBlocksHtml(ns)}</div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
+      <input type="text" id="${ns}-position" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
+      <input id="${ns}-gymok" type="checkbox" style="width:16px;height:16px;">
+      <label for="${ns}-gymok" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明文</div>
+      <textarea id="${ns}-desc" rows="3" placeholder="足幅・向いているプレースタイル・特徴などを記入（カード表示用の短い説明）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">レビュー本文（①部活生視点・②NBA層視点）</label>
+      <textarea id="${ns}-review" rows="10" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;" placeholder="テンプレートが自動入力されます"></textarea>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <input type="text" id="${ns}-img" placeholder="メイン画像 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+        <input type="text" id="${ns}-img2" placeholder="サイド/別アングル画像2 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+        <input type="text" id="${ns}-img3" placeholder="背面/ソール画像3 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+        <input type="text" id="${ns}-img4" placeholder="着用イメージ画像4 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+      </div>
+    </div>
+    <div>
+      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入リンク（媒体ごとに最低価格も入力）</div>
+      <div id="${ns}-shopblocks" style="display:flex;flex-direction:column;gap:8px;">${snkShopBlocksHtml(ns)}</div>
+    </div>
   `;
   wrap.appendChild(row);
   setTimeout(() => {
