@@ -108,7 +108,7 @@ function snkCollectShops(ns) {
       name: p.label,
       icon: p.icon,
       url,
-      price: priceRaw ? (priceRaw.match(/^[¥\d,]+$/) ? priceRaw : '¥' + priceRaw.replace(/[^0-9]/g, '')) : '',
+      price: priceRaw ? (priceRaw.startsWith('¥') ? priceRaw : '¥' + priceRaw.replace(/[^0-9]/g, '')) : '',
       _priceNum: isNaN(priceNum) ? null : priceNum
     });
   });
