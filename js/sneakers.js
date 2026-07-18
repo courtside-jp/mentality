@@ -395,11 +395,15 @@ function openSnkModal(id) {
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
 }
 function closeSnkModal() {
   const modal = document.getElementById('snkModal');
   if (modal) modal.style.display = 'none';
   document.title = 'COURTSIDE - NBA速報・まとめ';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd && fixedAd.dataset.wasVisible === '1') fixedAd.style.display = 'block';
 }
 
 function filterSneakersDropdown() {
@@ -892,4 +896,6 @@ function openSnkRankingModal(id) {
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
 }
