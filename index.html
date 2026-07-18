@@ -633,8 +633,15 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
           <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サムネイル画像URL（任意・空欄なら1番目の商品画像を使用）</div>
           <input id="rankingThumb" type="text" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
         </div>
-        <div id="rankingItems" style="display:flex;flex-direction:column;gap:10px;"></div>
-        <button type="button" onclick="addRankingItem()" style="width:100%;margin-top:8px;padding:9px;background:#fff3e0;border:1px dashed #ffb84d;border-radius:8px;color:#c9720a;font-size:12px;font-weight:700;cursor:pointer;">+ 商品を追加</button>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品を検索して追加（先に「1つだけ紹介」で投稿しておく必要があります）</div>
+          <input id="rankingSearchInput" type="text" placeholder="ブランド名・モデル名で検索" oninput="filterRankingPicker()" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;margin-bottom:8px;">
+          <div id="rankingPickerList" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;border:1px solid #eee;border-radius:8px;padding:8px;background:#fff;"></div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">選択中の商品（並び順がそのままランキング順位になります）</div>
+          <div id="rankingSelectedList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button onclick="cancelSneakerRanking()" style="flex:1;padding:10px;background:#f0f0f0;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">キャンセル</button>
           <button id="rankingSubmitBtn" onclick="submitSneakerRanking()" style="flex:1;padding:10px;background:#C9082A;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;">まとめて投稿する</button>
@@ -1193,7 +1200,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=8"></script>
 <script src="js/articles.js?v=3"></script>
-<script src="js/sneakers.js?v=16"></script>
+<script src="js/sneakers.js?v=17"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=2"></script>
 <script src="js/home.js?v=2"></script>

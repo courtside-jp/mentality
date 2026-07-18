@@ -552,9 +552,7 @@ function switchSneakerPattern(mode) {
     single.style.display = 'none'; multi.style.display = 'block';
     tabM.style.background = '#000'; tabM.style.color = '#fff'; tabM.style.border = 'none';
     tabS.style.background = '#f5f5f5'; tabS.style.color = '#666'; tabS.style.border = '1px solid #eee';
-    if (!document.getElementById('rankingItems').children.length) {
-      addRankingItem(); addRankingItem();
-    }
+    loadRankingPicker();
   }
 }
 
@@ -630,177 +628,123 @@ async function editSneaker(id) {
 // ============================================================
 // 複数紹介（ランキング）投稿
 // ============================================================
-let _rankingItemCount = 0;
+let _rankingSelectedIds = [];
 
-function addRankingItem() {
-  _rankingItemCount++;
-  const ns = 'r' + _rankingItemCount;
-  const wrap = document.getElementById('rankingItems');
+async function loadRankingPicker() {
+  try {
+    const res = await fetch(FB_SNEAKERS + '.json');
+    const data = await res.json();
+    _allSneakers = data ? Object.entries(data).map(([id,s]) => ({id,...s})).sort((a,b) => (b.ts||0)-(a.ts||0)) : [];
+  } catch(e) { /* keep whatever _allSneakers currently has */ }
+  renderRankingPickerList();
+  renderRankingSelectedList();
+}
+
+function filterRankingPicker() {
+  renderRankingPickerList();
+}
+
+function renderRankingPickerList() {
+  const wrap = document.getElementById('rankingPickerList');
   if (!wrap) return;
-  const row = document.createElement('div');
-  row.setAttribute('data-ranking-row', ns);
-  row.style.cssText = 'background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px;';
-  row.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <span class="ranking-item-badge" style="font-size:12px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:3px 10px;border-radius:12px;">商品</span>
-      <button type="button" onclick="removeRankingItem('${ns}')" style="border:none;background:none;color:#999;font-size:11px;cursor:pointer;">削除</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div>
-        <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ブランド</div>
-        <select id="${ns}-brand" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;background:#fff;outline:none;box-sizing:border-box;">
-          <option>Asics</option><option>Nike</option><option>Jordan</option><option>Adidas</option><option>Li-Ning</option><option>On Running</option><option>Under Armour</option><option>Puma</option><option>New Balance</option>
-        </select>
+  const q = (document.getElementById('rankingSearchInput')?.value || '').trim().toLowerCase();
+  const list = (_allSneakers || []).filter(s => {
+    if (!q) return true;
+    return `${s.brand||''} ${s.model||''}`.toLowerCase().includes(q);
+  });
+  if (!list.length) {
+    wrap.innerHTML = '<div style="font-size:11px;color:#999;text-align:center;padding:10px;">該当するソロ投稿がありません。先に「1つだけ紹介」で商品を投稿してください</div>';
+    return;
+  }
+  wrap.innerHTML = list.map(s => {
+    const picked = _rankingSelectedIds.includes(s.id);
+    return `
+    <div style="display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px;${picked ? 'opacity:0.4;' : ''}">
+      ${s.img ? `<img src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : `<div style="width:36px;height:36px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>`}
+      <div style="flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <span style="color:#999;">${s.brand||''}</span> ${s.model||''}
       </div>
-      <div>
-        <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">モデル名</div>
-        <input type="text" id="${ns}-model" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-      </div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
-      <input type="text" id="${ns}-player" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">機能スコア（1〜100）</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
-        <div>
-          <div style="font-size:9px;color:#999;margin-bottom:3px;">クッション性</div>
-          <input type="number" min="1" max="100" id="${ns}-cushion" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-        </div>
-        <div>
-          <div style="font-size:9px;color:#999;margin-bottom:3px;">ホールド感</div>
-          <input type="number" min="1" max="100" id="${ns}-hold" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-        </div>
-        <div>
-          <div style="font-size:9px;color:#999;margin-bottom:3px;">トラクション</div>
-          <input type="number" min="1" max="100" id="${ns}-traction" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-        </div>
-        <div>
-          <div style="font-size:9px;color:#999;margin-bottom:3px;">軽量性</div>
-          <input type="number" min="1" max="100" id="${ns}-weight" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-        </div>
-      </div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">総合値（任意・空欄なら上の4項目から自動計算）</div>
-      <input type="number" min="1" max="100" id="${ns}-overallscore" placeholder="例：92（未入力なら自動平均）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">サイズ感</div>
-      <input type="text" id="${ns}-sizefeel" placeholder="例：ジャストサイズ／ハーフアップ推奨" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">おすすめポジション/プレースタイル</div>
-      <input type="text" id="${ns}-position" placeholder="例：軽量重視のガード向け" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
-      <input id="${ns}-gymok" type="checkbox" style="width:16px;height:16px;">
-      <label for="${ns}-gymok" style="font-size:12px;font-weight:700;cursor:pointer;">🏋️ ジム・トレーニング用にもおすすめ</label>
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明文</div>
-      <textarea id="${ns}-desc" rows="3" placeholder="足幅・向いているプレースタイル・特徴などを記入（カード表示用の短い説明）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
-    </div>
-    <div style="margin-bottom:10px;">
-      <label style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">レビュー本文（①部活生視点・②NBA層視点）</label>
-      <textarea id="${ns}-review" rows="10" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;" placeholder="テンプレートが自動入力されます"></textarea>
-    </div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <input type="text" id="${ns}-img" placeholder="メイン画像 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-        <input type="text" id="${ns}-img2" placeholder="サイド/別アングル画像2 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-        <input type="text" id="${ns}-img3" placeholder="背面/ソール画像3 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-        <input type="text" id="${ns}-img4" placeholder="着用イメージ画像4 https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-      </div>
-    </div>
-    <div>
-      <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">購入リンク（媒体ごとに最低価格も入力）</div>
-      <div id="${ns}-shopblocks" style="display:flex;flex-direction:column;gap:8px;">${snkShopBlocksHtml(ns)}</div>
-    </div>
-  `;
-  wrap.appendChild(row);
-  setTimeout(() => {
-    const rv = document.getElementById(`${ns}-review`);
-    if (rv && !rv.value) rv.value = window.SNK_REVIEW_TEMPLATE || '';
-  }, 100);
-  renumberRankingItems();
+      <button type="button" ${picked ? 'disabled' : ''} onclick="addRankingPick('${s.id}')" style="padding:5px 10px;border-radius:6px;border:none;font-size:11px;font-weight:700;flex-shrink:0;cursor:${picked ? 'default' : 'pointer'};background:${picked ? '#eee' : '#C9082A'};color:${picked ? '#999' : '#fff'};">${picked ? '追加済み' : '追加'}</button>
+    </div>`;
+  }).join('');
+}
+
+function addRankingPick(id) {
+  if (_rankingSelectedIds.includes(id)) return;
+  _rankingSelectedIds.push(id);
+  renderRankingPickerList();
+  renderRankingSelectedList();
+}
+
+function removeRankingPick(id) {
+  _rankingSelectedIds = _rankingSelectedIds.filter(x => x !== id);
+  renderRankingPickerList();
+  renderRankingSelectedList();
+}
+
+function moveRankingPick(id, dir) {
+  const i = _rankingSelectedIds.indexOf(id);
+  if (i < 0) return;
+  const j = i + dir;
+  if (j < 0 || j >= _rankingSelectedIds.length) return;
+  const tmp = _rankingSelectedIds[i];
+  _rankingSelectedIds[i] = _rankingSelectedIds[j];
+  _rankingSelectedIds[j] = tmp;
+  renderRankingSelectedList();
 }
 
 const CIRCLED_NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
-function renumberRankingItems() {
-  const rows = document.querySelectorAll('[data-ranking-row]');
-  rows.forEach((row, i) => {
-    const badge = row.querySelector('.ranking-item-badge');
-    if (badge) badge.textContent = '商品' + (CIRCLED_NUMS[i] || (i + 1));
-  });
-}
 
-function removeRankingItem(ns) {
-  const row = document.querySelector(`[data-ranking-row="${ns}"]`);
-  if (row) row.remove();
-  renumberRankingItems();
+function renderRankingSelectedList() {
+  const wrap = document.getElementById('rankingSelectedList');
+  if (!wrap) return;
+  if (!_rankingSelectedIds.length) {
+    wrap.innerHTML = '<div style="font-size:11px;color:#999;text-align:center;padding:10px;">上のリストから商品を追加してください</div>';
+    return;
+  }
+  wrap.innerHTML = _rankingSelectedIds.map((id, i) => {
+    const s = (_allSneakers || []).find(x => x.id === id);
+    if (!s) return '';
+    return `
+    <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:8px;">
+      <span class="ranking-item-badge" style="font-size:12px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:3px 8px;border-radius:10px;flex-shrink:0;">商品${CIRCLED_NUMS[i] || (i + 1)}</span>
+      ${s.img ? `<img src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : ''}
+      <div style="flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <span style="color:#999;">${s.brand||''}</span> ${s.model||''}
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        <button type="button" onclick="moveRankingPick('${id}',-1)" ${i === 0 ? 'disabled' : ''} style="width:24px;height:24px;border:1px solid #eee;background:#fff;border-radius:5px;cursor:pointer;font-size:11px;">▲</button>
+        <button type="button" onclick="moveRankingPick('${id}',1)" ${i === _rankingSelectedIds.length - 1 ? 'disabled' : ''} style="width:24px;height:24px;border:1px solid #eee;background:#fff;border-radius:5px;cursor:pointer;font-size:11px;">▼</button>
+        <button type="button" onclick="removeRankingPick('${id}')" style="width:24px;height:24px;border:1px solid #eee;background:#fff;border-radius:5px;cursor:pointer;font-size:11px;color:#C9082A;">✕</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function cancelSneakerRanking() {
   document.getElementById('sneakerRankingForm').style.display = 'none';
-  document.getElementById('rankingItems').innerHTML = '';
   document.getElementById('rankingTitle').value = '';
   if (document.getElementById('rankingThumb')) document.getElementById('rankingThumb').value = '';
-  _rankingItemCount = 0;
+  if (document.getElementById('rankingSearchInput')) document.getElementById('rankingSearchInput').value = '';
+  _rankingSelectedIds = [];
 }
 
 async function submitSneakerRanking() {
   const title = document.getElementById('rankingTitle').value.trim();
   if (!title) { alert('ランキングタイトルを入力してください'); return; }
+  if (!_rankingSelectedIds.length) { alert('商品を1つ以上選んでください'); return; }
   const mall = document.getElementById('rankingMall').value;
   const thumb = document.getElementById('rankingThumb') ? document.getElementById('rankingThumb').value.trim() : '';
-
-  const rows = document.querySelectorAll('[data-ranking-row]');
-  const items = [];
-  rows.forEach(row => {
-    const ns = row.getAttribute('data-ranking-row');
-    const model = (document.getElementById(`${ns}-model`)?.value || '').trim();
-    if (!model) return;
-    const shops = snkCollectShops(ns);
-    const images = [
-      (document.getElementById(`${ns}-img`)?.value || '').trim(),
-      (document.getElementById(`${ns}-img2`)?.value || '').trim(),
-      (document.getElementById(`${ns}-img3`)?.value || '').trim(),
-      (document.getElementById(`${ns}-img4`)?.value || '').trim()
-    ].filter(Boolean);
-    items.push({
-      brand: document.getElementById(`${ns}-brand`)?.value || '',
-      model,
-      player: (document.getElementById(`${ns}-player`)?.value || '').trim(),
-      cushion: parseInt(document.getElementById(`${ns}-cushion`)?.value, 10) || 0,
-      hold: parseInt(document.getElementById(`${ns}-hold`)?.value, 10) || 0,
-      traction: parseInt(document.getElementById(`${ns}-traction`)?.value, 10) || 0,
-      weight: parseInt(document.getElementById(`${ns}-weight`)?.value, 10) || 0,
-      overallScore: parseInt(document.getElementById(`${ns}-overallscore`)?.value, 10) || 0,
-      sizeFeel: (document.getElementById(`${ns}-sizefeel`)?.value || '').trim(),
-      position: (document.getElementById(`${ns}-position`)?.value || '').trim(),
-      gymOk: document.getElementById(`${ns}-gymok`) ? document.getElementById(`${ns}-gymok`).checked : false,
-      desc: (document.getElementById(`${ns}-desc`)?.value || '').trim(),
-      review: document.getElementById(`${ns}-review`) ? document.getElementById(`${ns}-review`).value : '',
-      images,
-      img: images[0] || '',
-      shops,
-      price: snkCheapestPriceLabel(shops)
-    });
-  });
-
-  if (!items.length) { alert('商品を1つ以上入力してください'); return; }
+  const firstItem = (_allSneakers || []).find(s => s.id === _rankingSelectedIds[0]);
+  const img = thumb || (firstItem && firstItem.img) || '';
 
   const btn = document.getElementById('rankingSubmitBtn');
   if (btn) { btn.disabled = true; btn.textContent = '投稿中...'; }
-  const img = thumb || items[0]?.img || '';
   try {
     await fetch(FB_SNEAKER_RANKINGS + '.json', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ title, mall, img, items, date: new Date().toISOString().slice(0,10), ts: Date.now() })
+      body: JSON.stringify({ title, mall, img, itemIds: _rankingSelectedIds.slice(), date: new Date().toISOString().slice(0,10), ts: Date.now() })
     });
     cancelSneakerRanking();
     loadAdminSneakers();
@@ -825,8 +769,16 @@ async function loadSneakerRankings() {
   }
 }
 
+function snkResolveRankingItems(r) {
+  if (Array.isArray(r.itemIds) && r.itemIds.length) {
+    return r.itemIds.map(id => (_allSneakers || []).find(s => s.id === id)).filter(Boolean);
+  }
+  // 旧データ（フルコピー方式）の後方互換
+  return r.items || [];
+}
+
 function renderSneakerRankingCard(r) {
-  const items = r.items || [];
+  const items = snkResolveRankingItems(r);
   const thumb = r.img || (items[0] && items[0].img) || '';
   return `
   <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
@@ -852,7 +804,7 @@ function openSnkRankingModal(id) {
   if (!modal || !body) return;
   const r = (_allSneakerRankings || []).find(x => x.id === id);
   if (!r) return;
-  const items = r.items || [];
+  const items = snkResolveRankingItems(r);
 
   body.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
@@ -862,34 +814,24 @@ function openSnkRankingModal(id) {
       </div>
       <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
       ${items.map((it, i) => {
         const score = calcSneakerScore(it);
         const scoreColor = snkScoreColor(score);
-        const shops = it.shops || [];
         return `
-        <div style="background:var(--surface-1);border-radius:10px;padding:12px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <span style="font-size:12px;font-weight:700;color:#C9082A;">${i+1}位</span>
-            <span style="font-size:11px;color:var(--text-muted);">${it.brand||''}</span>
+        <div onclick="openSnkModal('${it.id}')" style="background:var(--surface-1);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
+          <div style="position:relative;flex-shrink:0;">
+            ${it.img ? `<img src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--surface-2);border-radius:8px;"></div>`}
+            <div style="position:absolute;top:-6px;left:-6px;background:#C9082A;color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${i+1}</div>
           </div>
-          <div style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:6px;">${it.model||''}</div>
-          ${(it.images && it.images.length) ? `<img src="${it.images[0]}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;">` : ''}
-          ${it.player ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">👤 ${it.player}</div>` : ''}
-          ${(it.sizeFeel || it.position) ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${it.sizeFeel ? '📏 '+it.sizeFeel : ''}${it.sizeFeel && it.position ? '　' : ''}${it.position ? '🏀 '+it.position : ''}</div>` : ''}
-          ${it.gymOk ? `<div style="font-size:11px;color:#27ae60;margin-bottom:4px;">🏋️ ジム・トレーニング用にもおすすめ</div>` : ''}
-          ${it.desc ? `<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;">${it.desc}</div>` : ''}
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <div style="font-size:22px;font-weight:500;color:${scoreColor};">${score}</div>
-            <div style="font-size:10px;color:var(--text-muted);">総合スコア/100</div>
-          </div>
-          ${shops.length ? shops.map(sh => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-top:0.5px solid var(--border);">
-              <span style="font-size:12px;color:var(--text-secondary);">${sh.icon||''} ${sh.name}${sh.lowest?' <span style=\\"font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;\\">最安値</span>':''}</span>
-              <span style="font-size:12px;font-weight:500;">${sh.price||'確認する'}</span>
-              <button onclick="window.open('${sh.url}','_blank')" style="padding:5px 12px;border-radius:6px;border:0.5px solid var(--border-strong);background:var(--surface-2);font-size:11px;cursor:pointer;">買う</button>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:10px;color:var(--text-muted);">${it.brand||''}</div>
+            <div style="font-size:13px;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.model||''}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;font-weight:700;color:${scoreColor};">総合${score}</span>
+              <span style="font-size:12px;font-weight:500;color:var(--text-primary);">${it.price||''}</span>
             </div>
-          `).join('') : ''}
+          </div>
         </div>`;
       }).join('')}
     </div>
