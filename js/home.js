@@ -2,9 +2,9 @@
 
 let _homeFeedCache = [];
 
-const HOME_TYPE_LABEL = { article: '記事', sneaker: 'バッシュ', item: 'アイテム' };
-const HOME_TYPE_COLOR = { article: 'var(--or)', sneaker: '#0a84ff', item: '#8b5cf6' };
-const HOME_TYPE_EMOJI = { article: '📰', sneaker: '👟', item: '👕' };
+const HOME_TYPE_LABEL = { article: '記事', sneaker: 'バッシュ', item: 'アイテム', ranking: 'ランキング' };
+const HOME_TYPE_COLOR = { article: 'var(--or)', sneaker: '#0a84ff', item: '#8b5cf6', ranking: '#c9720a' };
+const HOME_TYPE_EMOJI = { article: '📰', sneaker: '👟', item: '👕', ranking: '🏆' };
 
 // ============================================================
 // 上部：今日の試合（軽量ウィジェット）
@@ -53,20 +53,22 @@ async function loadHomeFeed() {
   wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">取得中...</div>';
 
   try {
-    const [artRes, snkRes, itmRes] = await Promise.all([
+    const [artRes, snkRes, itmRes, rankRes] = await Promise.all([
       fetch(`${FB_URL}/articles.json`),
       fetch(`${FB_URL}/sneakers.json`),
-      fetch(`${FB_URL}/items.json`)
+      fetch(`${FB_URL}/items.json`),
+      fetch(`${FB_URL}/sneakerRankings.json`)
     ]);
-    const [artData, snkData, itmData] = await Promise.all([
-      artRes.json(), snkRes.json(), itmRes.json()
+    const [artData, snkData, itmData, rankData] = await Promise.all([
+      artRes.json(), snkRes.json(), itmRes.json(), rankRes.json()
     ]);
 
     const articles = artData ? Object.entries(artData).map(([id, a]) => ({ ...a, id, _type: 'article' })).filter(a => !a.archived) : [];
     const sneakers = snkData ? Object.entries(snkData).map(([id, s]) => ({ ...s, id, _type: 'sneaker' })) : [];
     const items    = itmData ? Object.entries(itmData).map(([id, s]) => ({ ...s, id, _type: 'item' })) : [];
+    const rankings = rankData ? Object.entries(rankData).map(([id, r]) => ({ ...r, id, _type: 'ranking', img: r.img || (r.items && r.items[0] && r.items[0].img) || '' })) : [];
 
-    _homeFeedCache = [...articles, ...sneakers, ...items].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
+    _homeFeedCache = [...articles, ...sneakers, ...items, ...rankings].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
 
     renderHomeFeed(_homeFeedCache);
   } catch (e) {
@@ -84,6 +86,7 @@ function renderHomeFeed(list) {
     const img   = p.img || '';
     const onclickFn = p._type === 'article' ? `openArticle('${p.id}')`
                      : p._type === 'sneaker' ? `openSnkModal('${p.id}')`
+                     : p._type === 'ranking' ? `goPage('sneakers');setTimeout(()=>openSnkRankingModal('${p.id}'),300)`
                      : `openItemModal('${p.id}')`;
     return `
     <div onclick="${onclickFn}" style="display:flex;gap:.4rem;background:var(--card);border:0;border-bottom:1px solid var(--bd);padding:.4rem;margin-bottom:0;cursor:pointer;">

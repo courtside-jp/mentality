@@ -742,6 +742,8 @@ function removeRankingItem(ns) {
 function cancelSneakerRanking() {
   document.getElementById('sneakerRankingForm').style.display = 'none';
   document.getElementById('rankingItems').innerHTML = '';
+  document.getElementById('rankingTitle').value = '';
+  if (document.getElementById('rankingThumb')) document.getElementById('rankingThumb').value = '';
   _rankingItemCount = 0;
 }
 
@@ -749,6 +751,7 @@ async function submitSneakerRanking() {
   const title = document.getElementById('rankingTitle').value.trim();
   if (!title) { alert('ランキングタイトルを入力してください'); return; }
   const mall = document.getElementById('rankingMall').value;
+  const thumb = document.getElementById('rankingThumb') ? document.getElementById('rankingThumb').value.trim() : '';
 
   const rows = document.querySelectorAll('[data-ranking-row]');
   const items = [];
@@ -788,11 +791,12 @@ async function submitSneakerRanking() {
 
   const btn = document.getElementById('rankingSubmitBtn');
   if (btn) { btn.disabled = true; btn.textContent = '投稿中...'; }
+  const img = thumb || items[0]?.img || '';
   try {
     await fetch(FB_SNEAKER_RANKINGS + '.json', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ title, mall, items, date: new Date().toISOString().slice(0,10), ts: Date.now() })
+      body: JSON.stringify({ title, mall, img, items, date: new Date().toISOString().slice(0,10), ts: Date.now() })
     });
     cancelSneakerRanking();
     loadAdminSneakers();
@@ -819,8 +823,11 @@ async function loadSneakerRankings() {
 
 function renderSneakerRankingCard(r) {
   const items = r.items || [];
+  const thumb = r.img || (items[0] && items[0].img) || '';
   return `
-  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;padding:14px;">
+  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
+    ${thumb ? `<img src="${thumb}" style="width:100%;height:160px;object-fit:cover;" onerror="this.style.display='none'">` : ''}
+    <div style="padding:14px;">
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
       <span style="font-size:9px;font-weight:700;color:#c9720a;background:#fff3e0;padding:2px 8px;border-radius:10px;">ランキング</span>
       <span style="font-size:10px;color:var(--text-muted);">${r.mall||''}・${items.length}アイテム</span>
@@ -831,6 +838,7 @@ function renderSneakerRankingCard(r) {
       ${items.length>3 ? `<div style="font-size:11px;color:var(--text-muted);">他${items.length-3}件</div>` : ''}
     </div>
     <button onclick="event.stopPropagation();openSnkRankingModal('${r.id}')" style="width:100%;margin-top:12px;padding:10px 0;border-radius:8px;border:0.5px solid var(--border-strong);font-size:12px;font-weight:500;cursor:pointer;background:var(--surface-1);color:var(--text-primary);">ランキング全部見る</button>
+    </div>
   </div>`;
 }
 
