@@ -638,7 +638,7 @@ function addRankingItem() {
   row.style.cssText = 'background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px;';
   row.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <span style="font-size:11px;font-weight:700;color:#C9082A;">商品</span>
+      <span class="ranking-item-badge" style="font-size:12px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:3px 10px;border-radius:12px;">商品</span>
       <button type="button" onclick="removeRankingItem('${ns}')" style="border:none;background:none;color:#999;font-size:11px;cursor:pointer;">削除</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -721,11 +721,22 @@ function addRankingItem() {
     const rv = document.getElementById(`${ns}-review`);
     if (rv && !rv.value) rv.value = window.SNK_REVIEW_TEMPLATE || '';
   }, 100);
+  renumberRankingItems();
+}
+
+const CIRCLED_NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
+function renumberRankingItems() {
+  const rows = document.querySelectorAll('[data-ranking-row]');
+  rows.forEach((row, i) => {
+    const badge = row.querySelector('.ranking-item-badge');
+    if (badge) badge.textContent = '商品' + (CIRCLED_NUMS[i] || (i + 1));
+  });
 }
 
 function removeRankingItem(ns) {
   const row = document.querySelector(`[data-ranking-row="${ns}"]`);
   if (row) row.remove();
+  renumberRankingItems();
 }
 
 function cancelSneakerRanking() {
