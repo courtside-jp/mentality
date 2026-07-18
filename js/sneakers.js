@@ -325,7 +325,10 @@ function openSnkModal(id) {
 
   const reviewHtml = s.review ? `
     <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">レビュー</div>
-    <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;white-space:pre-wrap;background:var(--surface-1);border-radius:10px;padding:14px;margin-bottom:16px;">${s.review}</div>` : '';
+    <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;">
+      ${typeof generateTOC === 'function' ? generateTOC(s.review) : ''}
+      ${typeof renderBody === 'function' ? renderBody(s.review) : `<div style="white-space:pre-wrap;">${s.review}</div>`}
+    </div>` : '';
 
   body.innerHTML = `
     ${_snkModalReturnTo ? `<button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>` : ''}
