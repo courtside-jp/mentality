@@ -342,7 +342,7 @@ async function openSnkModal(id) {
   const divider = '<div style="height:1px;background:var(--bd);margin:16px 0;"></div>';
 
   body.innerHTML = `
-    <button onclick="snkModalGoBack()" style="margin-bottom:14px;background:var(--bg3);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;">← 戻る</button>
+    <button onclick="snkModalGoBack()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
@@ -812,7 +812,7 @@ async function openSnkRankingModal(id) {
   const items = snkResolveRankingItems(r);
 
   body.innerHTML = `
-    <button onclick="closeSnkModal()" style="margin-bottom:14px;background:var(--bg3);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;">← 戻る</button>
+    <button onclick="closeSnkModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${r.mall||''}ランキング</div>
