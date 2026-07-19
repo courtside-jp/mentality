@@ -187,21 +187,21 @@ function snkSingleCardHtml(s) {
   const scoreColor = snkScoreColor(score);
   const thumb = (s.images && s.images[0]) || s.img || '';
   return `
-  <div onclick="_snkModalReturnTo=null;openSnkModal('${s.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:8px 10px;cursor:pointer;">
+  <div onclick="_snkModalReturnTo=null;openSnkModal('${s.id}')" style="background:var(--card);border:0.5px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;">
     <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
       <span style="font-size:8px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${(s.brand||'').toUpperCase()}</span>
-      <span style="font-size:9px;color:var(--text-muted);">${s.date||''}</span>
+      <span style="font-size:9px;color:var(--tx3);">${s.date||''}</span>
       ${s.badge ? `<span style="font-size:8px;font-weight:700;color:#e63946;background:rgba(230,57,70,0.08);padding:2px 6px;border-radius:4px;">${s.badge}</span>` : ''}
     </div>
     <div style="display:flex;gap:9px;">
-      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--surface-1);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><i class="ti ti-shoe" style="font-size:22px;color:var(--text-muted);"></i></div>`}
+      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;">👟</span></div>`}
       <div style="flex:1;min-width:0;">
-        <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||''}</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||''}</div>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;">
-          <span style="font-size:15px;font-weight:800;color:${scoreColor};">${score}<span style="font-size:8px;color:var(--text-muted);font-weight:500;">/100</span></span>
+          <span style="font-size:15px;font-weight:800;color:${scoreColor};">${score}<span style="font-size:8px;color:var(--tx3);font-weight:500;">/100</span></span>
           ${s.price ? `<span style="font-size:11.5px;font-weight:700;color:#C9082A;">${s.price}</span>` : ''}
         </div>
-        ${s.desc ? `<div style="font-size:10px;color:var(--text-muted);line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${s.desc}</div>` : ''}
+        ${s.desc ? `<div style="font-size:10px;color:var(--tx3);line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${s.desc}</div>` : ''}
       </div>
     </div>
   </div>`;
@@ -302,7 +302,7 @@ async function openSnkModal(id) {
   const imgGallery = imgs.length ? `
     <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
     ${imgs.length > 1 ? `<details style="margin-bottom:12px;">
-      <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;padding:6px 0;">📷 他の写真を見る（${imgs.length-1}枚）▼</summary>
+      <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">📷 他の写真を見る（${imgs.length-1}枚）▼</summary>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
         ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;">`).join('')}
       </div>
@@ -311,13 +311,13 @@ async function openSnkModal(id) {
   const shopsHtml = shops.length ? `
     <table style="width:100%;border-collapse:collapse;">
       ${shops.map(sh => `
-      <tr style="border-bottom:0.5px solid var(--border);">
+      <tr style="border-bottom:0.5px solid var(--bd);">
         <td style="padding:10px 6px;">
-          <div style="font-size:13px;font-weight:500;color:var(--text-primary);">${sh.name}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--tx);">${sh.name}</div>
           ${sh.lowest?'<span style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;">最安値</span>':''}
         </td>
         <td style="padding:10px 6px;text-align:right;padding-right:8px;">
-          <div style="font-size:16px;font-weight:500;color:var(--text-primary);">${sh.price||'確認する'}</div>
+          <div style="font-size:16px;font-weight:500;color:var(--tx);">${sh.price||'確認する'}</div>
         </td>
         <td style="padding:10px 6px;width:70px;">
           <button onclick="window.open('${sh.url}','_blank')" style="width:100%;padding:8px 10px;border-radius:7px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${sh.color||'#333'};color:${sh.textColor||'#fff'};">買う</button>
@@ -334,45 +334,45 @@ async function openSnkModal(id) {
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
 
   const reviewHtml = s.review ? `
-    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">レビュー</div>
-    <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">レビュー</div>
+    <div style="font-size:12.5px;color:var(--tx2);line-height:1.8;margin-bottom:16px;">
       ${typeof renderBody === 'function' ? renderBody(s.review) : `<div style="white-space:pre-wrap;">${s.review}</div>`}
     </div>` : '';
 
-  const divider = '<div style="height:1px;background:var(--border);margin:16px 0;"></div>';
+  const divider = '<div style="height:1px;background:var(--bd);margin:16px 0;"></div>';
 
   body.innerHTML = `
-    <button onclick="snkModalGoBack()" style="margin-bottom:14px;background:var(--surface-1);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-arrow-left"></i> 戻る</button>
+    <button onclick="snkModalGoBack()" style="margin-bottom:14px;background:var(--bg3);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;">← 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
-        <div style="font-size:17px;font-weight:500;color:var(--text-primary);">${s.model||''}</div>
+        <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
+        <div style="font-size:17px;font-weight:500;color:var(--tx);">${s.model||''}</div>
       </div>
-      <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
+      <button onclick="closeSnkModal()" style="background:var(--bg3);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);font-size:18px;">×</button>
     </div>
     ${tocHtml}
     ${imgGallery}
-    ${infoTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${infoTags.map(t => `<span style="font-size:11px;color:var(--text-secondary);background:var(--surface-1);padding:4px 10px;border-radius:12px;">${t}</span>`).join('')}${s.gymOk ? `<span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span>` : ''}</div>` : ''}
-    ${s.desc ? `<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:14px;">${s.desc}</div>` : ''}
+    ${infoTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${infoTags.map(t => `<span style="font-size:11px;color:var(--tx2);background:var(--bg3);padding:4px 10px;border-radius:12px;">${t}</span>`).join('')}${s.gymOk ? `<span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span>` : ''}</div>` : ''}
+    ${s.desc ? `<div style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:14px;">${s.desc}</div>` : ''}
     ${divider}
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px;background:var(--surface-1);border-radius:10px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px;background:var(--bg3);border-radius:10px;">
       <div style="font-size:40px;font-weight:500;color:${scoreColor};">${score}</div>
-      <div style="font-size:12px;color:var(--text-muted);">総合スコア / 100</div>
+      <div style="font-size:12px;color:var(--tx3);">総合スコア / 100</div>
     </div>
-    <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">パフォーマンス スコア</div>
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">パフォーマンス スコア</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
       ${scoreItems.map(i => `
-      <div style="background:var(--surface-1);border-radius:8px;padding:10px 12px;">
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">${i.lbl}</div>
-        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:5px;">
+      <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--tx3);margin-bottom:6px;">${i.lbl}</div>
+        <div style="height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px;">
           <div style="height:100%;background:${snkScoreColor(i.val)};border-radius:3px;width:${i.val}%"></div>
         </div>
-        <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
+        <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--tx3);">/100</span></div>
       </div>`).join('')}
     </div>
     ${s.review ? divider : ''}
     ${reviewHtml}
-    ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
+    ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
@@ -774,16 +774,16 @@ function renderSneakerRankingCard(r) {
   const thumb = r.img || (items[0] && items[0].img) || '';
   const top = items[0];
   return `
-  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:8px 10px;cursor:pointer;">
+  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--card);border:0.5px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;">
     <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
       <span style="font-size:8px;font-weight:700;color:#c9720a;background:#fff3e0;padding:2px 6px;border-radius:4px;">🏆 ランキング</span>
-      <span style="font-size:9px;color:var(--text-muted);">${r.mall||''}・${items.length}アイテム</span>
+      <span style="font-size:9px;color:var(--tx3);">${r.mall||''}・${items.length}アイテム</span>
     </div>
     <div style="display:flex;gap:9px;">
-      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--surface-1);border-radius:8px;flex-shrink:0;"></div>`}
+      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;"></div>`}
       <div style="flex:1;min-width:0;">
-        <div style="font-size:12.5px;font-weight:700;color:var(--text-primary);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title||''}</div>
-        <div style="font-size:10.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${top ? `1位：${top.brand||''} ${top.model||''}` : ''}</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title||''}</div>
+        <div style="font-size:10.5px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${top ? `1位：${top.brand||''} ${top.model||''}` : ''}</div>
       </div>
     </div>
   </div>`;
@@ -812,30 +812,30 @@ async function openSnkRankingModal(id) {
   const items = snkResolveRankingItems(r);
 
   body.innerHTML = `
-    <button onclick="closeSnkModal()" style="margin-bottom:14px;background:var(--surface-1);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;"><i class="ti ti-arrow-left"></i> 戻る</button>
+    <button onclick="closeSnkModal()" style="margin-bottom:14px;background:var(--bg3);border:none;border-radius:22px;padding:14px 26px;font-size:15px;font-weight:600;color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;">← 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${r.mall||''}ランキング</div>
-        <div style="font-size:17px;font-weight:500;color:var(--text-primary);">${r.title||''}</div>
+        <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${r.mall||''}ランキング</div>
+        <div style="font-size:17px;font-weight:500;color:var(--tx);">${r.title||''}</div>
       </div>
-      <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
+      <button onclick="closeSnkModal()" style="background:var(--bg3);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);font-size:18px;">×</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       ${items.map((it, i) => {
         const score = calcSneakerScore(it);
         const scoreColor = snkScoreColor(score);
         return `
-        <div onclick="_snkModalReturnTo={type:'ranking',id:'${r.id}'};openSnkModal('${it.id}')" style="background:var(--surface-1);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
+        <div onclick="_snkModalReturnTo={type:'ranking',id:'${r.id}'};openSnkModal('${it.id}')" style="background:var(--bg3);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
           <div style="position:relative;flex-shrink:0;">
-            ${it.img ? `<img src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--surface-2);border-radius:8px;"></div>`}
+            ${it.img ? `<img src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--card);border-radius:8px;"></div>`}
             <div style="position:absolute;top:-6px;left:-6px;background:#C9082A;color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${i+1}</div>
           </div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:10px;color:var(--text-muted);">${it.brand||''}</div>
-            <div style="font-size:13px;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.model||''}</div>
+            <div style="font-size:10px;color:var(--tx3);">${it.brand||''}</div>
+            <div style="font-size:13px;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.model||''}</div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
               <span style="font-size:11px;font-weight:700;color:${scoreColor};">総合${score}</span>
-              <span style="font-size:12px;font-weight:500;color:var(--text-primary);">${it.price||''}</span>
+              <span style="font-size:12px;font-weight:500;color:var(--tx);">${it.price||''}</span>
             </div>
           </div>
         </div>`;
