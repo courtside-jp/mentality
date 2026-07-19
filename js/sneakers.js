@@ -351,12 +351,9 @@ async function openSnkModal(id) {
 
   body.innerHTML = `
     <button onclick="snkModalGoBack()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div>
-        <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
-        <div style="font-size:17px;font-weight:500;color:var(--tx);">${s.model||''}</div>
-      </div>
-      <button onclick="closeSnkModal()" style="background:var(--bg3);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);font-size:18px;">×</button>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
+      <div style="font-size:17px;font-weight:500;color:var(--tx);">${s.model||''}</div>
     </div>
     ${tocHtml}
     ${imgGallery}
@@ -822,12 +819,9 @@ async function openSnkRankingModal(id) {
 
   body.innerHTML = `
     <button onclick="closeSnkModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div>
-        <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${r.mall||''}ランキング</div>
-        <div style="font-size:17px;font-weight:500;color:var(--tx);">${r.title||''}</div>
-      </div>
-      <button onclick="closeSnkModal()" style="background:var(--bg3);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);font-size:18px;">×</button>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${r.mall||''}ランキング</div>
+      <div style="font-size:17px;font-weight:500;color:var(--tx);">${r.title||''}</div>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       ${items.map((it, i) => {
