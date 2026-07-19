@@ -274,12 +274,20 @@ function snkScoreBar(label, val) {
   '</div>';
 }
 
-function openSnkModal(id) {
+async function openSnkModal(id) {
   const modal = document.getElementById('snkModal');
   const body = document.getElementById('snkModalBody');
   if (!modal || !body) return;
-  const s = (_allSneakers || []).find(x => x.id === id);
-  if (!s) return;
+  let s = (_allSneakers || []).find(x => x.id === id);
+  if (!s) {
+    // ホームフィードなど _allSneakers が未取得の状態から開かれた場合はFirebaseから直接取得
+    try {
+      const res = await fetch(`${FB_SNEAKERS}/${id}.json`);
+      const d = await res.json();
+      if (!d) return;
+      s = { id, ...d };
+    } catch(e) { return; }
+  }
   const score = calcSneakerScore(s);
   const scoreColor = snkScoreColor(score);
   const shops = s.shops || [];
@@ -334,7 +342,7 @@ function openSnkModal(id) {
   const divider = '<div style="height:1px;background:var(--border);margin:16px 0;"></div>';
 
   body.innerHTML = `
-    ${_snkModalReturnTo ? `<button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>` : ''}
+    <button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${s.brand||''}</div>
@@ -781,15 +789,30 @@ function renderSneakerRankingCard(r) {
   </div>`;
 }
 
-function openSnkRankingModal(id) {
+async function openSnkRankingModal(id) {
   const modal = document.getElementById('snkModal');
   const body = document.getElementById('snkModalBody');
   if (!modal || !body) return;
-  const r = (_allSneakerRankings || []).find(x => x.id === id);
-  if (!r) return;
+  let r = (_allSneakerRankings || []).find(x => x.id === id);
+  if (!r) {
+    try {
+      const res = await fetch(`${FB_SNEAKER_RANKINGS}/${id}.json`);
+      const d = await res.json();
+      if (!d) return;
+      r = { id, ...d };
+    } catch(e) { return; }
+  }
+  if (!_allSneakers.length) {
+    try {
+      const snkRes = await fetch(`${FB_SNEAKERS}.json`);
+      const snkData = await snkRes.json();
+      _allSneakers = snkData ? Object.entries(snkData).map(([sid,s]) => ({id:sid,...s})) : [];
+    } catch(e) {}
+  }
   const items = snkResolveRankingItems(r);
 
   body.innerHTML = `
+    <button onclick="closeSnkModal()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <div>
         <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${r.mall||''}ランキング</div>
