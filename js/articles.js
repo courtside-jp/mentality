@@ -395,6 +395,8 @@ function applyArticleFontSize() {
   try { size = localStorage.getItem('courtside_fontsize') || 'm'; } catch(e) {}
   const bodyDiv = document.getElementById('articleBodyDiv');
   if (bodyDiv) bodyDiv.style.fontSize = ARTICLE_FONT_SIZES[size];
+  const snkBodyDiv = document.getElementById('snkReviewBodyDiv');
+  if (snkBodyDiv) snkBodyDiv.style.fontSize = ARTICLE_FONT_SIZES[size];
   document.querySelectorAll('[data-fontsize-btn]').forEach(btn => {
     const active = btn.dataset.fontsizeBtn === size;
     btn.style.background = active ? 'var(--or)' : 'var(--bg3)';

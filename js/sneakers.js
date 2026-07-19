@@ -334,8 +334,16 @@ async function openSnkModal(id) {
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
 
   const reviewHtml = s.review ? `
-    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">レビュー</div>
-    <div style="font-size:12.5px;color:var(--tx2);line-height:1.8;margin-bottom:16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:500;color:var(--tx);">レビュー</div>
+      <div style="display:flex;align-items:center;gap:.3rem;">
+        <span style="font-size:10px;color:var(--tx3);margin-right:2px;">文字サイズ</span>
+        <button onclick="setArticleFontSize('s')" data-fontsize-btn="s" style="width:24px;height:24px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:10px;cursor:pointer;color:var(--tx2);">A</button>
+        <button onclick="setArticleFontSize('m')" data-fontsize-btn="m" style="width:24px;height:24px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:12px;cursor:pointer;color:var(--tx2);">A</button>
+        <button onclick="setArticleFontSize('l')" data-fontsize-btn="l" style="width:24px;height:24px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:14px;cursor:pointer;color:var(--tx2);">A</button>
+      </div>
+    </div>
+    <div id="snkReviewBodyDiv" style="font-size:12.5px;color:var(--tx2);line-height:1.8;margin-bottom:16px;">
       ${typeof renderBody === 'function' ? renderBody(s.review) : `<div style="white-space:pre-wrap;">${s.review}</div>`}
     </div>` : '';
 
@@ -376,6 +384,7 @@ async function openSnkModal(id) {
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  if (typeof applyArticleFontSize === 'function') applyArticleFontSize();
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
 }
