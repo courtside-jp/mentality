@@ -1075,7 +1075,7 @@ function showAdminPage(id){
   if(id==='admin-article' && typeof loadAdminArticles==='function') loadAdminArticles();
   if(id==='admin-sneaker' && typeof loadAdminSneakers==='function') loadAdminSneakers();
   if(id==='admin-item' && typeof loadAdminItems==='function') loadAdminItems();
-  if (id === 'admin-ad') loadAdminAds(); if(typeof loadAdminBanners==="function") loadAdminBanners();
+  if (id === 'admin-ad' && typeof loadAdminBanners==='function') loadAdminBanners();
 }
 function toggleAd(el){
   const isOn=el.dataset.on==='true';
