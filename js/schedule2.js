@@ -74,32 +74,7 @@ const GAMES = {
     qh:[30,32,30,30], qa:[24,24,25,24],
     note:'ミネソタ圧勝25点差', plays:[], hpl:[], apl:[]
   }],
-  '0': [
-    { id:'t0', status:'live', timeLeft:263, q:'Q3',
-      home:{ abbr:'LAL', city:'LOS ANGELES',  score:89 },
-      away:{ abbr:'GSW', city:'GOLDEN STATE', score:84 },
-      qh:[28,31,30], qa:[24,29,31],
-      note:'河村12得点6AS🔥',
-      plays:[
-        { q:'Q3', t:'4:23', txt:'<strong>河村 勇輝</strong> ドライブレイアップ！12得点目🔥', s:true, sc:'89-84' },
-        { q:'Q3', t:'5:41', txt:'<strong>カリー</strong> コーナー3P！GSW3点差に迫る',          s:true, sc:'87-84' },
-      ],
-      hpl:[
-        {num:8,  name:'河村 勇輝', pos:'PG', pts:12, ast:6,  reb:2,  pm:'+8', on:true, hot:true },
-        {num:23, name:'LeBron',    pos:'SF', pts:22, ast:8,  reb:7,  pm:'+5', on:true, hot:false},
-        {num:3,  name:'A.Davis',   pos:'C',  pts:18, ast:2,  reb:11, pm:'+3', on:true, hot:false},
-      ],
-      apl:[
-        {num:30, name:'Curry',    pos:'PG', pts:28, ast:5, reb:3, pm:'-2', on:true, hot:true },
-        {num:11, name:'Thompson', pos:'SG', pts:14, ast:1, reb:4, pm:'-4', on:true, hot:false},
-      ]
-    },
-    { id:'t1', status:'pre', startTime:'12:00',
-      home:{ abbr:'BOS', city:'BOSTON',    score:0 },
-      away:{ abbr:'NYK', city:'NEW YORK',  score:0 },
-      note:'テイタムvsブランソン', plays:[], hpl:[], apl:[]
-    },
-  ],
+  '0': [], // 今日の試合はESPN APIから取得（ダミーデータは廃止）
   '1': [{ id:'m0', status:'pre', startTime:'10:00',
     home:{ abbr:'ATL', city:'ATLANTA', score:0 },
     away:{ abbr:'ORL', city:'ORLANDO', score:0 },
@@ -713,6 +688,7 @@ async function loadESPNScoreboard() {
     }
 
     if (!events.length) {
+      GAMES['0'] = [];
       if (wrap) wrap.innerHTML = '<div style="text-align:center;color:var(--tx3);padding:1.4rem 0 2rem;"><div style="font-size:1.8rem;line-height:1;margin-bottom:.6rem;opacity:.5;">🏀</div><div style="font-size:.95rem;font-weight:700;color:var(--tx2);">本日の試合はありません</div><div style="font-size:.75rem;margin-top:.4rem;">次の試合をお待ちください</div></div>';
       return;
     }
@@ -740,8 +716,9 @@ async function loadESPNScoreboard() {
     console.log('✅ ESPN試合取得成功:', events.length, '試合', usedDate);
 
   } catch(e) {
-    console.warn('ESPN失敗:', e.message, '→ ダミーデータを表示');
-    renderGames();
+    console.warn('ESPN失敗:', e.message);
+    GAMES['0'] = [];
+    if (wrap) wrap.innerHTML = '<div style="text-align:center;color:var(--tx3);padding:1.4rem 0 2rem;"><div style="font-size:.85rem;">試合情報の取得に失敗しました。しばらくしてから再度お試しください。</div></div>';
   }
 }
 
