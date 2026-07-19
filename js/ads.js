@@ -151,18 +151,24 @@ async function loadAdminBanners() {
       <div style="font-size:11px;font-weight:700;color:#555;padding:6px 10px;background:#fff3f0;border-radius:6px;margin:10px 0 8px;">🛒 下部バー（商品広告）</div>
       ${botAds.length ? botAds.map(renderCard).join('') : '<div style="color:#999;font-size:12px;padding:8px;">なし</div>'}
     </div>
-    <!-- バナー追加フォーム -->
-    <div id="bannerForm" style="display:none;background:#f9f9f9;border:1px solid #eee;border-radius:10px;padding:14px;margin-top:12px;">
-      <input type="hidden" id="bannerEditId">
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">🖼 PR画像URL（任意）</label><input id="bannerImg" type="url" placeholder="https://...画像URL" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
-      <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="上部バナー">上部バー（動画配信）</option><option value="下部バナー">下部バー（商品広告）</option></select></div>
-      <div style="display:flex;gap:8px;">
-        <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
-        <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
+    <!-- バナー追加・編集フォーム（画面中央のモーダル表示） -->
+    <div id="bannerForm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;">
+      <div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:420px;max-height:88vh;overflow-y:auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div id="bannerFormTitle" style="font-size:15px;font-weight:700;color:#111;">広告を編集</div>
+          <button onclick="document.getElementById('bannerForm').style.display='none'" style="background:#f3f3f3;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;color:#666;">×</button>
+        </div>
+        <input type="hidden" id="bannerEditId">
+        <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">管理名</label><input id="bannerTitle" type="text" placeholder="例：Amazon バッシュ広告" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+        <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">表示テキスト</label><input id="bannerText" type="text" placeholder="例：🛒 Amazonでバッシュをチェック →" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+        <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">リンク先URL</label><input id="bannerLink" type="url" placeholder="https://..." style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+        <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ラベル</label><input id="bannerLabel" type="text" placeholder="例：Amazon / 楽天" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+        <div style="margin-bottom:8px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">🖼 PR画像URL（任意）</label><input id="bannerImg" type="url" placeholder="https://...画像URL" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"></div>
+        <div style="margin-bottom:12px;"><label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">📍 表示場所</label><select id="bannerLocation" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;box-sizing:border-box;"><option value="上部バナー">上部バー（動画配信）</option><option value="下部バナー">下部バー（商品広告）</option></select></div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="submitBanner()" style="flex:1;background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
+          <button onclick="document.getElementById('bannerForm').style.display='none'" style="flex:1;background:#f3f3f3;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer;">キャンセル</button>
+        </div>
       </div>
     </div>
   `;
@@ -192,7 +198,9 @@ function editBannerAd(id) {
       if(locEl) locEl.value = a.location || '下部バナー';
       const imgEl = document.getElementById('bannerImg');
       if(imgEl) imgEl.value = a.img || '';
-      document.getElementById('bannerForm').style.display = 'block';
+      const titleEl = document.getElementById('bannerFormTitle');
+      if(titleEl) titleEl.textContent = '広告を編集';
+      document.getElementById('bannerForm').style.display = 'flex';
     });
 }
 
@@ -202,7 +210,11 @@ function openNewBanner() {
   document.getElementById('bannerText').value = '';
   document.getElementById('bannerLink').value = '';
   document.getElementById('bannerLabel').value = '';
-  document.getElementById('bannerForm').style.display = 'block';
+  const imgEl = document.getElementById('bannerImg');
+  if (imgEl) imgEl.value = '';
+  const titleEl = document.getElementById('bannerFormTitle');
+  if (titleEl) titleEl.textContent = '新しい広告を追加';
+  document.getElementById('bannerForm').style.display = 'flex';
 }
 
 async function submitBanner() {
