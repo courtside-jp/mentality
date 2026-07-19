@@ -172,6 +172,9 @@ async function loadAdminBanners() {
       </div>
     </div>
   `;
+  // position:fixedの祖先制約(transform等)を回避するため、モーダルをbody直下に移動
+  const bf = document.getElementById('bannerForm');
+  if (bf && bf.parentElement !== document.body) document.body.appendChild(bf);
 }
 async function toggleBannerAd(id, active) {
   await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, {
