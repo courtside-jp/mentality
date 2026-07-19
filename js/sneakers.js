@@ -323,12 +323,15 @@ function openSnkModal(id) {
     s.position ? `おすすめポジション：${s.position}` : ''
   ].filter(Boolean);
 
+  const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
+
   const reviewHtml = s.review ? `
     <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">レビュー</div>
     <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;">
-      ${typeof generateTOC === 'function' ? generateTOC(s.review) : ''}
       ${typeof renderBody === 'function' ? renderBody(s.review) : `<div style="white-space:pre-wrap;">${s.review}</div>`}
     </div>` : '';
+
+  const divider = '<div style="height:1px;background:var(--border);margin:16px 0;"></div>';
 
   body.innerHTML = `
     ${_snkModalReturnTo ? `<button onclick="snkModalGoBack()" style="margin-bottom:10px;background:var(--surface-1);border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--text-primary);cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><i class="ti ti-arrow-left"></i> 戻る</button>` : ''}
@@ -339,15 +342,17 @@ function openSnkModal(id) {
       </div>
       <button onclick="closeSnkModal()" style="background:var(--surface-1);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);font-size:18px;"><i class="ti ti-x"></i></button>
     </div>
+    ${tocHtml}
     ${imgGallery}
     ${infoTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${infoTags.map(t => `<span style="font-size:11px;color:var(--text-secondary);background:var(--surface-1);padding:4px 10px;border-radius:12px;">${t}</span>`).join('')}${s.gymOk ? `<span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span>` : ''}</div>` : ''}
     ${s.desc ? `<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:14px;">${s.desc}</div>` : ''}
+    ${divider}
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:12px;background:var(--surface-1);border-radius:10px;">
       <div style="font-size:40px;font-weight:500;color:${scoreColor};">${score}</div>
       <div style="font-size:12px;color:var(--text-muted);">総合スコア / 100</div>
     </div>
     <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">パフォーマンス スコア</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
       ${scoreItems.map(i => `
       <div style="background:var(--surface-1);border-radius:8px;padding:10px 12px;">
         <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">${i.lbl}</div>
@@ -357,8 +362,9 @@ function openSnkModal(id) {
         <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--text-muted);">/100</span></div>
       </div>`).join('')}
     </div>
+    ${s.review ? divider : ''}
     ${reviewHtml}
-    ${shops.length ? `<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
+    ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
