@@ -19,7 +19,16 @@ async function loadHomeGames() {
   }
 
   const games = (typeof GAMES !== 'undefined' && GAMES['0']) ? GAMES['0'] : [];
-  if (!games.length) { wrap.innerHTML = ''; return; }
+  if (!games.length) {
+    wrap.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem .3rem;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;color:var(--tx3);letter-spacing:1px;">今日の試合</div>
+      <div onclick="goPage('schedule', document.getElementById('sn-schedule'))" style="font-size:.7rem;color:var(--or);cursor:pointer;">すべて見る ›</div>
+    </div>
+    <div style="padding:.6rem 1rem 1rem;text-align:center;color:var(--tx3);font-size:.78rem;">本日は試合なし</div>
+    `;
+    return;
+  }
 
   wrap.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem .3rem;">
