@@ -683,8 +683,8 @@ async function openSnkModal(id) {
     </table>` : '';
 
   const playerBadgeHtml = s.player ? `
-    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--tx3);white-space:nowrap;">WORN BY</div>
+    <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:12px;">
+      <div style="font-size:12px;color:var(--tx3);white-space:nowrap;">着用選手</div>
       <div style="font-size:14px;font-weight:600;color:var(--tx);">${s.player}</div>
     </div>` : '';
 
