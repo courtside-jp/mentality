@@ -284,7 +284,6 @@ function snkCollectDetail() {
   const vn = (id) => parseInt(document.getElementById(id)?.value, 10) || 0;
   return {
     basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), colorways: v('snkColorways'), wornEvidence: v('snkWornEvidence') },
-    materials: { upper: v('snkUpper'), midsole: v('snkMidsole'), outsole: v('snkOutsole'), cushionSystem: v('snkCushionSystem'), heelCounter: v('snkHeelCounter'), ankleStructure: v('snkAnkleStructure'), weight: v('snkWeightDetail'), otherTech: v('snkOtherTech') },
     perf: snkCollectPerfFields(),
     sizeFit: { standard: v('snkSizeStandard'), halfAdjust: v('snkSizeHalfAdjust'), narrowFit: v('snkNarrowFit'), wideFit: v('snkWideFit'), highInstepFit: v('snkHighInstepFit') },
     posStyle: {
@@ -305,8 +304,6 @@ function snkPopulateDetail(detail) {
   const setv = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
   const b = detail.basic || {};
   setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkColorways', b.colorways); setv('snkWornEvidence', b.wornEvidence);
-  const m = detail.materials || {};
-  setv('snkUpper', m.upper); setv('snkMidsole', m.midsole); setv('snkOutsole', m.outsole); setv('snkCushionSystem', m.cushionSystem); setv('snkHeelCounter', m.heelCounter); setv('snkAnkleStructure', m.ankleStructure); setv('snkWeightDetail', m.weight); setv('snkOtherTech', m.otherTech);
   snkPopulatePerfFields(detail.perf);
   const sf = detail.sizeFit || {};
   setv('snkSizeStandard', sf.standard); setv('snkSizeHalfAdjust', sf.halfAdjust); setv('snkNarrowFit', sf.narrowFit); setv('snkWideFit', sf.wideFit); setv('snkHighInstepFit', sf.highInstepFit);
@@ -325,7 +322,7 @@ function snkResetDetailFields() { snkPopulateDetail({}); }
 
 function buildSnkReviewText(detail) {
   if (!detail) return '';
-  const b = detail.basic || {}, m = detail.materials || {}, perf = detail.perf || {}, sf = detail.sizeFit || {};
+  const b = detail.basic || {}, perf = detail.perf || {}, sf = detail.sizeFit || {};
   const ps = detail.posStyle || {}, pos = ps.pos || {}, fn = detail.final || {};
   const lines = [];
   lines.push('■ 1. 基本情報');
@@ -334,51 +331,41 @@ function buildSnkReviewText(detail) {
   lines.push(`販売されたカラー一覧：${b.colorways || ''}`);
   lines.push(`選手が実際に試合で着用したことを確認できる情報：${b.wornEvidence || ''}`);
   lines.push('');
-  lines.push('■ 2. 搭載されている機能・素材');
-  lines.push(`アッパー素材：${m.upper || ''}`);
-  lines.push(`ミッドソール：${m.midsole || ''}`);
-  lines.push(`アウトソール：${m.outsole || ''}`);
-  lines.push(`クッションシステム：${m.cushionSystem || ''}`);
-  lines.push(`ヒールカウンター：${m.heelCounter || ''}`);
-  lines.push(`足首周辺の構造：${m.ankleStructure || ''}`);
-  lines.push(`重量：${m.weight || ''}`);
-  lines.push(`その他の特徴的な技術：${m.otherTech || ''}`);
-  lines.push('');
-  lines.push('■ 3. 機能性評価（100点満点）');
+  lines.push('■ 2. 機能性評価（100点満点）');
   (SNK_PERF_ITEMS || []).forEach(item => {
     const p = perf[item.key] || {};
     lines.push(`${item.label}：${p.score || 0}／100${p.note ? '　' + p.note : ''}`);
   });
   lines.push('');
-  lines.push('■ 4. サイズ感・フィット');
+  lines.push('■ 3. サイズ感・フィット');
   lines.push(`標準サイズでよいか：${sf.standard || ''}`);
   lines.push(`ハーフサイズアップ／ダウンが必要か：${sf.halfAdjust || ''}`);
   lines.push(`足幅が狭い人への適性：${sf.narrowFit || ''}`);
   lines.push(`足幅が広い人への適性：${sf.wideFit || ''}`);
   lines.push(`甲高の人への適性：${sf.highInstepFit || ''}`);
   lines.push('');
-  lines.push('■ 5. プレースタイル・ポジション適性');
+  lines.push('■ 4. プレースタイル・ポジション適性');
   lines.push('【ポジション適性（5段階）】');
   lines.push(`ポイントガード：${pos.PG || 0}／5　シューティングガード：${pos.SG || 0}／5　スモールフォワード：${pos.SF || 0}／5　パワーフォワード：${pos.PF || 0}／5　センター：${pos.C || 0}／5`);
   lines.push('【プレースタイルとの相性】');
   lines.push(ps.styleNotes || '');
   lines.push('');
-  lines.push('■ 6. ジム・トレーニング適性');
+  lines.push('■ 5. ジム・トレーニング適性');
   lines.push(detail.gymNotes || '');
   lines.push('');
-  lines.push('■ 7. 買うべき人');
+  lines.push('■ 6. 買うべき人');
   lines.push(detail.buyFor || '');
   lines.push('');
-  lines.push('■ 8. 見送るべき人');
+  lines.push('■ 7. 見送るべき人');
   lines.push(detail.skipFor || '');
   lines.push('');
-  lines.push('■ 9. メリット・デメリット');
+  lines.push('■ 8. メリット・デメリット');
   lines.push('【メリット】');
   (detail.pros || []).forEach((p, i) => lines.push(`${i + 1}. ${p}`));
   lines.push('【デメリット】');
   (detail.cons || []).forEach((c, i) => lines.push(`${i + 1}. ${c}`));
   lines.push('');
-  lines.push('■ 10. 最終結論');
+  lines.push('■ 9. 最終結論');
   lines.push(`総合点：${fn.total || 0}／100`);
   lines.push(`歴代シリーズの中での位置づけ：${fn.position || ''}`);
   lines.push(`現在でも購入する価値があるか：${fn.worth || ''}`);
@@ -387,7 +374,7 @@ function buildSnkReviewText(detail) {
   lines.push(`現在のバッシュと比較した場合の弱点：${fn.weakness || ''}`);
   lines.push(`一言で表すと：${fn.oneLiner || ''}`);
   lines.push('');
-  lines.push('■ 11. ソース元');
+  lines.push('■ 10. ソース元');
   (detail.sources || []).forEach(s => { lines.push(`・${s.site || ''} — ${s.content || ''}　URL：${s.url || ''}`); });
   const extra = ((document.getElementById('sneakerReview')?.value) || '').trim();
   let text = lines.join('\n');
