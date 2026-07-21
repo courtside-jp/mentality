@@ -636,11 +636,11 @@ async function openSnkModal(id) {
     ${gi > 0 ? perfGroupDivider : ''}
     <div style="margin-bottom:12px;">
       <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:6px;">${group}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
         ${SNK_PERF_ITEMS.filter(it => it.group === group).map(item => perfBarHtml(item.label, perfDetail[item.key] || 0, item.key)).join('')}
       </div>
     </div>`).join('') : `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
       ${scoreItems.map(i => perfBarHtml(i.lbl, i.val)).join('')}
     </div>`;
   const sourcesList = (s.detail && s.detail.sources) || [];
