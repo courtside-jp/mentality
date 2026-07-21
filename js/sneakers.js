@@ -245,6 +245,52 @@ function snkPopulatePerfFields(perf) {
   });
 }
 
+let _snkSourceCount = 0;
+function snkSourceBlockHtml(idx, data) {
+  data = data || {};
+  const esc = (s) => (s || '').replace(/"/g, '&quot;');
+  return `<div id="snkSourceBlock_${idx}" style="border:1px solid #eee;border-radius:8px;padding:8px;background:#fafafa;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:6px;">
+      <input id="snkSource_${idx}_site" type="text" placeholder="サイト名" value="${esc(data.site)}" style="flex:1;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+      <button type="button" onclick="removeSnkSourceBlock(${idx})" style="flex-shrink:0;padding:7px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:11px;color:#999;cursor:pointer;">削除</button>
+    </div>
+    <input id="snkSource_${idx}_content" type="text" placeholder="参照した内容" value="${esc(data.content)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+    <input id="snkSource_${idx}_url" type="text" placeholder="URL" value="${esc(data.url)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+  </div>`;
+}
+function addSnkSourceBlock(data) {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return;
+  const idx = _snkSourceCount++;
+  wrap.insertAdjacentHTML('beforeend', snkSourceBlockHtml(idx, data));
+}
+function removeSnkSourceBlock(idx) {
+  const el = document.getElementById(`snkSourceBlock_${idx}`);
+  if (el) el.remove();
+}
+function snkResetSourceBlocks(sources) {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  _snkSourceCount = 0;
+  if (sources && sources.length) { sources.forEach(s => addSnkSourceBlock(s)); }
+  else { addSnkSourceBlock(); }
+}
+function snkCollectSources() {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return [];
+  const blocks = wrap.querySelectorAll('[id^="snkSourceBlock_"]');
+  const out = [];
+  blocks.forEach(b => {
+    const idx = b.id.replace('snkSourceBlock_', '');
+    const site = (document.getElementById(`snkSource_${idx}_site`)?.value || '').trim();
+    const content = (document.getElementById(`snkSource_${idx}_content`)?.value || '').trim();
+    const url = (document.getElementById(`snkSource_${idx}_url`)?.value || '').trim();
+    if (site || content || url) out.push({site, content, url});
+  });
+  return out;
+}
+
 function snkCollectDetail() {
   const v = (id) => (document.getElementById(id)?.value || '').trim();
   const vn = (id) => parseInt(document.getElementById(id)?.value, 10) || 0;
