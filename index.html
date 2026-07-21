@@ -686,84 +686,16 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
               </div>
             </div>
               <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">プレースタイルとの相性</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">スピード重視</div>
-              <input id="snkStyleSpeed" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ドライブ主体</div>
-              <input id="snkStyleDrive" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ジャンプが多い</div>
-              <input id="snkStyleJump" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ディフェンス重視</div>
-              <input id="snkStyleDefense" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">切り返しが多い</div>
-              <input id="snkStyleCutting" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">フィジカルコンタクトが多い</div>
-              <input id="snkStyleContact" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">体重が重い選手</div>
-              <input id="snkStyleHeavy" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-                <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">クッションを重視する選手</div>
-              <input id="snkStyleCushionFocus" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              </div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">プレースタイルとの相性（スピード・ドライブ・ジャンプ・ディフェンス・切り返し・コンタクト・体重・クッション重視など）</div>
+              <textarea id="snkStyleNotes" rows="3" placeholder="例：スピード重視の選手には◯◯／体重が重い選手には◯◯" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
             </div>
             </div>
           </details>
             <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
             <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">6. ジム・トレーニング適性</summary>
-            <div style="font-size:10px;color:#aaa;margin:8px 0;">※「バスケシューズだからジムにも向いている」と単純に判断せず、ソールの高さ・安定性・クッション・重量・足首の可動域などから評価してください</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">筋力トレーニング</div>
-              <input id="snkGymStrength" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">スクワット</div>
-              <input id="snkGymSquat" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ベンチプレス</div>
-              <input id="snkGymBench" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">デッドリフト</div>
-              <input id="snkGymDeadlift" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ジャンプトレーニング</div>
-              <input id="snkGymJump" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アジリティトレーニング</div>
-              <input id="snkGymAgility" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">トレッドミル</div>
-              <input id="snkGymTreadmill" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">長距離ランニング</div>
-              <input id="snkGymRunning" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
-              <div>
-              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">普段履き</div>
-              <input id="snkGymCasual" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-            </div>
+            <div style="font-size:10px;color:#aaa;margin:8px 0;">※「バスケシューズだからジムにも向いている」と単純に判断せず、ソールの高さ・安定性・クッション・重量・足首の可動域などから評価してください（筋トレ・スクワット・ジャンプ・アジリティ・ランニング・普段履きなど）</div>
+            <div>
+              <textarea id="snkGymNotes" rows="3" placeholder="例：スクワット・ベンチプレスなど床が安定した種目は◯◯／ジャンプトレーニングには◯◯／長距離ランニングには不向き など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
             </div>
           </details>
             <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
@@ -1465,7 +1397,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=9"></script>
 <script src="js/articles.js?v=4"></script>
-<script src="js/sneakers.js?v=29"></script>
+<script src="js/sneakers.js?v=30"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>
 <script src="js/home.js?v=3"></script>

@@ -196,33 +196,18 @@ const SNK_PERF_ITEMS = [
   {key:'grip', label:'グリップ'},
   {key:'cushion', label:'クッション性'},
   {key:'bounce', label:'反発性'},
-  {key:'impact', label:'衝撃吸収性'},
-  {key:'fit', label:'フィット感'},
-  {key:'lateral', label:'横方向のサポート'},
-  {key:'ankle', label:'足首のサポート'},
   {key:'stability', label:'安定性'},
   {key:'weight', label:'軽量性'},
-  {key:'breath', label:'通気性'},
-  {key:'durability', label:'耐久性'},
   {key:'overall', label:'総合評価'}
 ];
 const SNK_DETAIL_INPUT_STYLE = 'width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;';
 
 function renderPerfFieldsHtml() {
   return SNK_PERF_ITEMS.map(item => `
-    <div style="border:1px solid #eee;border-radius:8px;padding:10px;background:#fafafa;">
-      <div style="font-size:11.5px;font-weight:800;color:#333;margin-bottom:6px;">【${item.label}】</div>
-      <div style="margin-bottom:6px;max-width:140px;">
-        <div style="font-size:9px;color:#999;margin-bottom:3px;">点数（100点満点）</div>
-        <input id="snkPerf_${item.key}_score" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <input id="snkPerf_${item.key}_pros" type="text" placeholder="高く評価されている点" style="${SNK_DETAIL_INPUT_STYLE}">
-        <input id="snkPerf_${item.key}_cons" type="text" placeholder="低く評価されている点" style="${SNK_DETAIL_INPUT_STYLE}">
-        <input id="snkPerf_${item.key}_diff" type="text" placeholder="レビューサイトごとの意見の違い" style="${SNK_DETAIL_INPUT_STYLE}">
-        <input id="snkPerf_${item.key}_user" type="text" placeholder="実際の使用者から多かった意見" style="${SNK_DETAIL_INPUT_STYLE}">
-        <input id="snkPerf_${item.key}_reason" type="text" placeholder="評価点数を付けた根拠" style="${SNK_DETAIL_INPUT_STYLE}">
-      </div>
+    <div style="display:flex;gap:8px;align-items:center;border:1px solid #eee;border-radius:8px;padding:8px 10px;background:#fafafa;">
+      <div style="font-size:11.5px;font-weight:800;color:#333;width:88px;flex-shrink:0;">${item.label}</div>
+      <input id="snkPerf_${item.key}_score" type="number" min="1" max="100" placeholder="80" style="width:64px;flex-shrink:0;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+      <input id="snkPerf_${item.key}_note" type="text" placeholder="一言コメント（任意）" style="flex:1;${SNK_DETAIL_INPUT_STYLE}">
     </div>
   `).join('');
 }
@@ -233,11 +218,7 @@ function snkCollectPerfFields() {
     out[item.key] = {
       label: item.label,
       score: parseInt(document.getElementById(`snkPerf_${item.key}_score`)?.value, 10) || 0,
-      pros: (document.getElementById(`snkPerf_${item.key}_pros`)?.value || '').trim(),
-      cons: (document.getElementById(`snkPerf_${item.key}_cons`)?.value || '').trim(),
-      siteDiff: (document.getElementById(`snkPerf_${item.key}_diff`)?.value || '').trim(),
-      userOpinion: (document.getElementById(`snkPerf_${item.key}_user`)?.value || '').trim(),
-      reason: (document.getElementById(`snkPerf_${item.key}_reason`)?.value || '').trim()
+      note: (document.getElementById(`snkPerf_${item.key}_note`)?.value || '').trim()
     };
   });
   return out;
@@ -248,7 +229,7 @@ function snkPopulatePerfFields(perf) {
   SNK_PERF_ITEMS.forEach(item => {
     const p = perf[item.key] || {};
     const set = (suffix, val) => { const el = document.getElementById(`snkPerf_${item.key}_${suffix}`); if (el) el.value = val || ''; };
-    set('score', p.score); set('pros', p.pros); set('cons', p.cons); set('diff', p.siteDiff); set('user', p.userOpinion); set('reason', p.reason);
+    set('score', p.score); set('note', p.note);
   });
 }
 
@@ -308,9 +289,9 @@ function snkCollectDetail() {
     sizeFit: { standard: v('snkSizeStandard'), halfAdjust: v('snkSizeHalfAdjust'), narrowFit: v('snkNarrowFit'), wideFit: v('snkWideFit'), highInstepFit: v('snkHighInstepFit') },
     posStyle: {
       pos: { PG: vn('snkPosPG'), SG: vn('snkPosSG'), SF: vn('snkPosSF'), PF: vn('snkPosPF'), C: vn('snkPosC') },
-      style: { speed: v('snkStyleSpeed'), drive: v('snkStyleDrive'), jump: v('snkStyleJump'), defense: v('snkStyleDefense'), cutting: v('snkStyleCutting'), contact: v('snkStyleContact'), heavy: v('snkStyleHeavy'), cushionFocus: v('snkStyleCushionFocus') }
+      styleNotes: v('snkStyleNotes')
     },
-    gym: { strength: v('snkGymStrength'), squat: v('snkGymSquat'), bench: v('snkGymBench'), deadlift: v('snkGymDeadlift'), jump: v('snkGymJump'), agility: v('snkGymAgility'), treadmill: v('snkGymTreadmill'), running: v('snkGymRunning'), casual: v('snkGymCasual') },
+    gymNotes: v('snkGymNotes'),
     buyFor: v('snkBuyFor'), skipFor: v('snkSkipFor'),
     pros: v('snkPros').split('\n').map(s => s.trim()).filter(Boolean),
     cons: v('snkCons').split('\n').map(s => s.trim()).filter(Boolean),
@@ -329,11 +310,10 @@ function snkPopulateDetail(detail) {
   snkPopulatePerfFields(detail.perf);
   const sf = detail.sizeFit || {};
   setv('snkSizeStandard', sf.standard); setv('snkSizeHalfAdjust', sf.halfAdjust); setv('snkNarrowFit', sf.narrowFit); setv('snkWideFit', sf.wideFit); setv('snkHighInstepFit', sf.highInstepFit);
-  const ps = detail.posStyle || {}; const pos = ps.pos || {}; const style = ps.style || {};
+  const ps = detail.posStyle || {}; const pos = ps.pos || {};
   setv('snkPosPG', pos.PG); setv('snkPosSG', pos.SG); setv('snkPosSF', pos.SF); setv('snkPosPF', pos.PF); setv('snkPosC', pos.C);
-  setv('snkStyleSpeed', style.speed); setv('snkStyleDrive', style.drive); setv('snkStyleJump', style.jump); setv('snkStyleDefense', style.defense); setv('snkStyleCutting', style.cutting); setv('snkStyleContact', style.contact); setv('snkStyleHeavy', style.heavy); setv('snkStyleCushionFocus', style.cushionFocus);
-  const g = detail.gym || {};
-  setv('snkGymStrength', g.strength); setv('snkGymSquat', g.squat); setv('snkGymBench', g.bench); setv('snkGymDeadlift', g.deadlift); setv('snkGymJump', g.jump); setv('snkGymAgility', g.agility); setv('snkGymTreadmill', g.treadmill); setv('snkGymRunning', g.running); setv('snkGymCasual', g.casual);
+  setv('snkStyleNotes', ps.styleNotes);
+  setv('snkGymNotes', detail.gymNotes);
   setv('snkBuyFor', detail.buyFor); setv('snkSkipFor', detail.skipFor);
   setv('snkPros', (detail.pros || []).join('\n')); setv('snkCons', (detail.cons || []).join('\n'));
   const fn = detail.final || {};
@@ -346,7 +326,7 @@ function snkResetDetailFields() { snkPopulateDetail({}); }
 function buildSnkReviewText(detail) {
   if (!detail) return '';
   const b = detail.basic || {}, m = detail.materials || {}, perf = detail.perf || {}, sf = detail.sizeFit || {};
-  const ps = detail.posStyle || {}, pos = ps.pos || {}, style = ps.style || {}, g = detail.gym || {}, fn = detail.final || {};
+  const ps = detail.posStyle || {}, pos = ps.pos || {}, fn = detail.final || {};
   const lines = [];
   lines.push('■ 1. 基本情報');
   lines.push(`日本での発売日：${b.releaseJP || ''}　／　アメリカでの発売日：${b.releaseUS || ''}`);
@@ -367,15 +347,9 @@ function buildSnkReviewText(detail) {
   lines.push('■ 3. 機能性評価（100点満点）');
   (SNK_PERF_ITEMS || []).forEach(item => {
     const p = perf[item.key] || {};
-    lines.push(`【${item.label}】`);
-    lines.push(`点数：${p.score || 0}／100`);
-    if (p.pros) lines.push(`高く評価されている点：${p.pros}`);
-    if (p.cons) lines.push(`低く評価されている点：${p.cons}`);
-    if (p.siteDiff) lines.push(`レビューサイトごとの意見の違い：${p.siteDiff}`);
-    if (p.userOpinion) lines.push(`実際の使用者から多かった意見：${p.userOpinion}`);
-    if (p.reason) lines.push(`評価点数を付けた根拠：${p.reason}`);
-    lines.push('');
+    lines.push(`${item.label}：${p.score || 0}／100${p.note ? '　' + p.note : ''}`);
   });
+  lines.push('');
   lines.push('■ 4. サイズ感・フィット');
   lines.push(`標準サイズでよいか：${sf.standard || ''}`);
   lines.push(`ハーフサイズアップ／ダウンが必要か：${sf.halfAdjust || ''}`);
@@ -387,25 +361,10 @@ function buildSnkReviewText(detail) {
   lines.push('【ポジション適性（5段階）】');
   lines.push(`ポイントガード：${pos.PG || 0}／5　シューティングガード：${pos.SG || 0}／5　スモールフォワード：${pos.SF || 0}／5　パワーフォワード：${pos.PF || 0}／5　センター：${pos.C || 0}／5`);
   lines.push('【プレースタイルとの相性】');
-  lines.push(`スピード重視：${style.speed || ''}`);
-  lines.push(`ドライブ主体：${style.drive || ''}`);
-  lines.push(`ジャンプが多い：${style.jump || ''}`);
-  lines.push(`ディフェンス重視：${style.defense || ''}`);
-  lines.push(`切り返しが多い：${style.cutting || ''}`);
-  lines.push(`フィジカルコンタクトが多い：${style.contact || ''}`);
-  lines.push(`体重が重い選手：${style.heavy || ''}`);
-  lines.push(`クッションを重視する選手：${style.cushionFocus || ''}`);
+  lines.push(ps.styleNotes || '');
   lines.push('');
   lines.push('■ 6. ジム・トレーニング適性');
-  lines.push(`筋力トレーニング：${g.strength || ''}`);
-  lines.push(`スクワット：${g.squat || ''}`);
-  lines.push(`ベンチプレス：${g.bench || ''}`);
-  lines.push(`デッドリフト：${g.deadlift || ''}`);
-  lines.push(`ジャンプトレーニング：${g.jump || ''}`);
-  lines.push(`アジリティトレーニング：${g.agility || ''}`);
-  lines.push(`トレッドミル：${g.treadmill || ''}`);
-  lines.push(`長距離ランニング：${g.running || ''}`);
-  lines.push(`普段履き：${g.casual || ''}`);
+  lines.push(detail.gymNotes || '');
   lines.push('');
   lines.push('■ 7. 買うべき人');
   lines.push(detail.buyFor || '');
