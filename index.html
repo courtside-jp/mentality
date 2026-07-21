@@ -563,10 +563,279 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">商品説明文</div>
             <textarea id="sneakerDesc" rows="3" placeholder="足幅・向いているプレースタイル・特徴などを記入（カード表示用の短い説明）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
           </div>
-          <div>
-            <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">レビュー本文（①部活生視点・②NBA層視点）</label>
-            <textarea id="sneakerReview" rows="12" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;" placeholder="テンプレートが自動入力されます"></textarea>
+          <div style="border-top:2px solid #f0f0f0;padding-top:12px;margin-top:2px;">
+            <div style="font-size:13px;font-weight:800;color:#111;margin-bottom:10px;">詳細レビュー項目</div>
+            <details open style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">1. 基本情報</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">日本での発売日</div>
+              <input id="snkReleaseJP" type="text" placeholder="例：2015年7月" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アメリカでの発売日</div>
+              <input id="snkReleaseUS" type="text" placeholder="例：2015年7月1日" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">日本での定価（税込）</div>
+              <input id="snkPriceJP" type="text" placeholder="例：¥16,500" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">販売されたカラー一覧</div>
+              <textarea id="snkColorways" rows="3" placeholder="例：ブラック／ホワイト／オレンジ　※改行区切り可" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">選手が実際に試合で着用したことを確認できる情報</div>
+              <textarea id="snkWornEvidence" rows="2" placeholder="例：2015年◯月◯日の試合で着用（出典：◯◯）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">2. 搭載されている機能・素材</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アッパー素材</div>
+              <input id="snkUpper" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ミッドソール</div>
+              <input id="snkMidsole" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アウトソール</div>
+              <input id="snkOutsole" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">クッションシステム</div>
+              <input id="snkCushionSystem" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ヒールカウンター</div>
+              <input id="snkHeelCounter" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">足首周辺の構造</div>
+              <input id="snkAnkleStructure" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">重量</div>
+              <input id="snkWeightDetail" type="text" placeholder="例：約340g（27cm/片足）" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">その他の特徴的な技術</div>
+              <textarea id="snkOtherTech" rows="2" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">3. 機能性評価（100点満点）</summary>
+            <div style="font-size:10px;color:#aaa;margin:8px 0;">※点数は推測だけでなく、複数のレビューサイトを比較した上で数値化してください</div>
+            <div id="snkPerfFieldsContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">4. サイズ感・フィット</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">標準サイズでよいか</div>
+              <input id="snkSizeStandard" type="text" placeholder="例：標準サイズでOK" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ハーフサイズアップ／ダウンが必要か</div>
+              <input id="snkSizeHalfAdjust" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">足幅が狭い人への適性</div>
+              <input id="snkNarrowFit" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">足幅が広い人への適性</div>
+              <input id="snkWideFit" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">甲高の人への適性</div>
+              <input id="snkHighInstepFit" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">5. プレースタイル・ポジション適性</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ポジション適性（1〜5段階評価）</div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;">
+                <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">PG</div>
+                <input id="snkPosPG" type="number" min="1" max="5" placeholder="3" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+                <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">SG</div>
+                <input id="snkPosSG" type="number" min="1" max="5" placeholder="3" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+                <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">SF</div>
+                <input id="snkPosSF" type="number" min="1" max="5" placeholder="3" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+                <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">PF</div>
+                <input id="snkPosPF" type="number" min="1" max="5" placeholder="3" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+                <div>
+                <div style="font-size:9px;color:#999;margin-bottom:3px;">C</div>
+                <input id="snkPosC" type="number" min="1" max="5" placeholder="3" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+              </div>
+              </div>
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">プレースタイルとの相性</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">スピード重視</div>
+              <input id="snkStyleSpeed" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ドライブ主体</div>
+              <input id="snkStyleDrive" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ジャンプが多い</div>
+              <input id="snkStyleJump" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ディフェンス重視</div>
+              <input id="snkStyleDefense" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">切り返しが多い</div>
+              <input id="snkStyleCutting" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">フィジカルコンタクトが多い</div>
+              <input id="snkStyleContact" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">体重が重い選手</div>
+              <input id="snkStyleHeavy" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+                <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">クッションを重視する選手</div>
+              <input id="snkStyleCushionFocus" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              </div>
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">6. ジム・トレーニング適性</summary>
+            <div style="font-size:10px;color:#aaa;margin:8px 0;">※「バスケシューズだからジムにも向いている」と単純に判断せず、ソールの高さ・安定性・クッション・重量・足首の可動域などから評価してください</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">筋力トレーニング</div>
+              <input id="snkGymStrength" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">スクワット</div>
+              <input id="snkGymSquat" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ベンチプレス</div>
+              <input id="snkGymBench" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">デッドリフト</div>
+              <input id="snkGymDeadlift" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">ジャンプトレーニング</div>
+              <input id="snkGymJump" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">アジリティトレーニング</div>
+              <input id="snkGymAgility" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">トレッドミル</div>
+              <input id="snkGymTreadmill" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">長距離ランニング</div>
+              <input id="snkGymRunning" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">普段履き</div>
+              <input id="snkGymCasual" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">7/8. 買うべき人・見送るべき人</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">買うべき人</div>
+              <textarea id="snkBuyFor" rows="3" placeholder="例：グリップを最優先する人／コート感覚を重視する人 など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">見送るべき人</div>
+              <textarea id="snkSkipFor" rows="3" placeholder="例：クッション性を最優先する人／膝や足裏に不安がある人 など" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">9. メリット・デメリット</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">メリット（最低5項目）</div>
+              <textarea id="snkPros" rows="5" placeholder="1行に1項目ずつ記入" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">デメリット（最低5項目）</div>
+              <textarea id="snkCons" rows="5" placeholder="1行に1項目ずつ記入" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">10. 最終結論</summary>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">総合点（100点満点）</div>
+              <input id="snkFinalTotal" type="number" placeholder="例：88" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">歴代シリーズの中での位置づけ</div>
+              <input id="snkFinalPosition" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">現在でも購入する価値があるか</div>
+              <input id="snkFinalWorth" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">中古品を購入する場合の注意点</div>
+              <input id="snkFinalUsedCaution" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">経年劣化しやすい箇所</div>
+              <input id="snkFinalWearParts" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">現在のバッシュと比較した場合の弱点</div>
+              <input id="snkFinalWeakness" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+              <div>
+              <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">一言で表すと</div>
+              <input id="snkFinalOneLiner" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+            </div>
+            </div>
+          </details>
+            <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;">
+            <summary style="font-size:12.5px;font-weight:800;color:#C9082A;cursor:pointer;">11. ソース元</summary>
+            <div style="font-size:10px;color:#aaa;margin:8px 0;">※海外の信頼できるバッシュレビューサイトを優先し、各情報の根拠となるURLを明記してください</div>
+            <div id="snkSourceBlocks" style="display:flex;flex-direction:column;gap:8px;"></div>
+            <button type="button" onclick="addSnkSourceBlock()" style="margin-top:8px;padding:7px 12px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">＋ ソースを追加</button>
+          </details>
           </div>
+          <details style="margin-bottom:10px;border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fafafa;">
+            <summary style="font-size:11px;font-weight:700;color:#999;cursor:pointer;">自由記述・追加コメント（任意／通常は上の詳細項目から自動生成されます）</summary>
+            <textarea id="sneakerReview" rows="6" style="width:100%;margin-top:8px;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;" placeholder="上の詳細項目から自動生成されます。必要であれば追記してください"></textarea>
+          </details>
           <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">画像URL（複数アングル対応・最大4枚）</div>
             <div style="display:flex;flex-direction:column;gap:6px;">
@@ -1196,7 +1465,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=9"></script>
 <script src="js/articles.js?v=4"></script>
-<script src="js/sneakers.js?v=28"></script>
+<script src="js/sneakers.js?v=29"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>
 <script src="js/home.js?v=3"></script>

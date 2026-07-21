@@ -191,6 +191,251 @@ window.SNK_REVIEW_TEMPLATE = `■ 1. 基本情報
 ・（サイト名）— （参照した内容）　URL：
 ・（サイト名）— （参照した内容）　URL：`;
 
+// ===== 詳細レビュー項目 （構造化フォーム） =====
+const SNK_PERF_ITEMS = [
+  {key:'grip', label:'グリップ'},
+  {key:'cushion', label:'クッション性'},
+  {key:'bounce', label:'反発性'},
+  {key:'impact', label:'衝撃吸収性'},
+  {key:'fit', label:'フィット感'},
+  {key:'lateral', label:'横方向のサポート'},
+  {key:'ankle', label:'足首のサポート'},
+  {key:'stability', label:'安定性'},
+  {key:'weight', label:'軽量性'},
+  {key:'breath', label:'通気性'},
+  {key:'durability', label:'耐久性'},
+  {key:'overall', label:'総合評価'}
+];
+const SNK_DETAIL_INPUT_STYLE = 'width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;';
+
+function renderPerfFieldsHtml() {
+  return SNK_PERF_ITEMS.map(item => `
+    <div style="border:1px solid #eee;border-radius:8px;padding:10px;background:#fafafa;">
+      <div style="font-size:11.5px;font-weight:800;color:#333;margin-bottom:6px;">【${item.label}】</div>
+      <div style="margin-bottom:6px;max-width:140px;">
+        <div style="font-size:9px;color:#999;margin-bottom:3px;">点数（100点満点）</div>
+        <input id="snkPerf_${item.key}_score" type="number" min="1" max="100" placeholder="80" style="width:100%;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <input id="snkPerf_${item.key}_pros" type="text" placeholder="高く評価されている点" style="${SNK_DETAIL_INPUT_STYLE}">
+        <input id="snkPerf_${item.key}_cons" type="text" placeholder="低く評価されている点" style="${SNK_DETAIL_INPUT_STYLE}">
+        <input id="snkPerf_${item.key}_diff" type="text" placeholder="レビューサイトごとの意見の違い" style="${SNK_DETAIL_INPUT_STYLE}">
+        <input id="snkPerf_${item.key}_user" type="text" placeholder="実際の使用者から多かった意見" style="${SNK_DETAIL_INPUT_STYLE}">
+        <input id="snkPerf_${item.key}_reason" type="text" placeholder="評価点数を付けた根拠" style="${SNK_DETAIL_INPUT_STYLE}">
+      </div>
+    </div>
+  `).join('');
+}
+
+function snkCollectPerfFields() {
+  const out = {};
+  SNK_PERF_ITEMS.forEach(item => {
+    out[item.key] = {
+      label: item.label,
+      score: parseInt(document.getElementById(`snkPerf_${item.key}_score`)?.value, 10) || 0,
+      pros: (document.getElementById(`snkPerf_${item.key}_pros`)?.value || '').trim(),
+      cons: (document.getElementById(`snkPerf_${item.key}_cons`)?.value || '').trim(),
+      siteDiff: (document.getElementById(`snkPerf_${item.key}_diff`)?.value || '').trim(),
+      userOpinion: (document.getElementById(`snkPerf_${item.key}_user`)?.value || '').trim(),
+      reason: (document.getElementById(`snkPerf_${item.key}_reason`)?.value || '').trim()
+    };
+  });
+  return out;
+}
+
+function snkPopulatePerfFields(perf) {
+  perf = perf || {};
+  SNK_PERF_ITEMS.forEach(item => {
+    const p = perf[item.key] || {};
+    const set = (suffix, val) => { const el = document.getElementById(`snkPerf_${item.key}_${suffix}`); if (el) el.value = val || ''; };
+    set('score', p.score); set('pros', p.pros); set('cons', p.cons); set('diff', p.siteDiff); set('user', p.userOpinion); set('reason', p.reason);
+  });
+}
+
+let _snkSourceCount = 0;
+function snkSourceBlockHtml(idx, data) {
+  data = data || {};
+  const esc = (s) => (s || '').replace(/"/g, '&quot;');
+  return `<div id="snkSourceBlock_${idx}" style="border:1px solid #eee;border-radius:8px;padding:8px;background:#fafafa;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:6px;">
+      <input id="snkSource_${idx}_site" type="text" placeholder="サイト名" value="${esc(data.site)}" style="flex:1;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+      <button type="button" onclick="removeSnkSourceBlock(${idx})" style="flex-shrink:0;padding:7px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:11px;color:#999;cursor:pointer;">削除</button>
+    </div>
+    <input id="snkSource_${idx}_content" type="text" placeholder="参照した内容" value="${esc(data.content)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+    <input id="snkSource_${idx}_url" type="text" placeholder="URL" value="${esc(data.url)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+  </div>`;
+}
+function addSnkSourceBlock(data) {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return;
+  const idx = _snkSourceCount++;
+  wrap.insertAdjacentHTML('beforeend', snkSourceBlockHtml(idx, data));
+}
+function removeSnkSourceBlock(idx) {
+  const el = document.getElementById(`snkSourceBlock_${idx}`);
+  if (el) el.remove();
+}
+function snkResetSourceBlocks(sources) {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  _snkSourceCount = 0;
+  if (sources && sources.length) { sources.forEach(s => addSnkSourceBlock(s)); }
+  else { addSnkSourceBlock(); }
+}
+function snkCollectSources() {
+  const wrap = document.getElementById('snkSourceBlocks');
+  if (!wrap) return [];
+  const blocks = wrap.querySelectorAll('[id^="snkSourceBlock_"]');
+  const out = [];
+  blocks.forEach(b => {
+    const idx = b.id.replace('snkSourceBlock_', '');
+    const site = (document.getElementById(`snkSource_${idx}_site`)?.value || '').trim();
+    const content = (document.getElementById(`snkSource_${idx}_content`)?.value || '').trim();
+    const url = (document.getElementById(`snkSource_${idx}_url`)?.value || '').trim();
+    if (site || content || url) out.push({site, content, url});
+  });
+  return out;
+}
+
+function snkCollectDetail() {
+  const v = (id) => (document.getElementById(id)?.value || '').trim();
+  const vn = (id) => parseInt(document.getElementById(id)?.value, 10) || 0;
+  return {
+    basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), colorways: v('snkColorways'), wornEvidence: v('snkWornEvidence') },
+    materials: { upper: v('snkUpper'), midsole: v('snkMidsole'), outsole: v('snkOutsole'), cushionSystem: v('snkCushionSystem'), heelCounter: v('snkHeelCounter'), ankleStructure: v('snkAnkleStructure'), weight: v('snkWeightDetail'), otherTech: v('snkOtherTech') },
+    perf: snkCollectPerfFields(),
+    sizeFit: { standard: v('snkSizeStandard'), halfAdjust: v('snkSizeHalfAdjust'), narrowFit: v('snkNarrowFit'), wideFit: v('snkWideFit'), highInstepFit: v('snkHighInstepFit') },
+    posStyle: {
+      pos: { PG: vn('snkPosPG'), SG: vn('snkPosSG'), SF: vn('snkPosSF'), PF: vn('snkPosPF'), C: vn('snkPosC') },
+      style: { speed: v('snkStyleSpeed'), drive: v('snkStyleDrive'), jump: v('snkStyleJump'), defense: v('snkStyleDefense'), cutting: v('snkStyleCutting'), contact: v('snkStyleContact'), heavy: v('snkStyleHeavy'), cushionFocus: v('snkStyleCushionFocus') }
+    },
+    gym: { strength: v('snkGymStrength'), squat: v('snkGymSquat'), bench: v('snkGymBench'), deadlift: v('snkGymDeadlift'), jump: v('snkGymJump'), agility: v('snkGymAgility'), treadmill: v('snkGymTreadmill'), running: v('snkGymRunning'), casual: v('snkGymCasual') },
+    buyFor: v('snkBuyFor'), skipFor: v('snkSkipFor'),
+    pros: v('snkPros').split('\n').map(s => s.trim()).filter(Boolean),
+    cons: v('snkCons').split('\n').map(s => s.trim()).filter(Boolean),
+    final: { total: vn('snkFinalTotal'), position: v('snkFinalPosition'), worth: v('snkFinalWorth'), usedCaution: v('snkFinalUsedCaution'), wearParts: v('snkFinalWearParts'), weakness: v('snkFinalWeakness'), oneLiner: v('snkFinalOneLiner') },
+    sources: snkCollectSources()
+  };
+}
+
+function snkPopulateDetail(detail) {
+  detail = detail || {};
+  const setv = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  const b = detail.basic || {};
+  setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkColorways', b.colorways); setv('snkWornEvidence', b.wornEvidence);
+  const m = detail.materials || {};
+  setv('snkUpper', m.upper); setv('snkMidsole', m.midsole); setv('snkOutsole', m.outsole); setv('snkCushionSystem', m.cushionSystem); setv('snkHeelCounter', m.heelCounter); setv('snkAnkleStructure', m.ankleStructure); setv('snkWeightDetail', m.weight); setv('snkOtherTech', m.otherTech);
+  snkPopulatePerfFields(detail.perf);
+  const sf = detail.sizeFit || {};
+  setv('snkSizeStandard', sf.standard); setv('snkSizeHalfAdjust', sf.halfAdjust); setv('snkNarrowFit', sf.narrowFit); setv('snkWideFit', sf.wideFit); setv('snkHighInstepFit', sf.highInstepFit);
+  const ps = detail.posStyle || {}; const pos = ps.pos || {}; const style = ps.style || {};
+  setv('snkPosPG', pos.PG); setv('snkPosSG', pos.SG); setv('snkPosSF', pos.SF); setv('snkPosPF', pos.PF); setv('snkPosC', pos.C);
+  setv('snkStyleSpeed', style.speed); setv('snkStyleDrive', style.drive); setv('snkStyleJump', style.jump); setv('snkStyleDefense', style.defense); setv('snkStyleCutting', style.cutting); setv('snkStyleContact', style.contact); setv('snkStyleHeavy', style.heavy); setv('snkStyleCushionFocus', style.cushionFocus);
+  const g = detail.gym || {};
+  setv('snkGymStrength', g.strength); setv('snkGymSquat', g.squat); setv('snkGymBench', g.bench); setv('snkGymDeadlift', g.deadlift); setv('snkGymJump', g.jump); setv('snkGymAgility', g.agility); setv('snkGymTreadmill', g.treadmill); setv('snkGymRunning', g.running); setv('snkGymCasual', g.casual);
+  setv('snkBuyFor', detail.buyFor); setv('snkSkipFor', detail.skipFor);
+  setv('snkPros', (detail.pros || []).join('\n')); setv('snkCons', (detail.cons || []).join('\n'));
+  const fn = detail.final || {};
+  setv('snkFinalTotal', fn.total); setv('snkFinalPosition', fn.position); setv('snkFinalWorth', fn.worth); setv('snkFinalUsedCaution', fn.usedCaution); setv('snkFinalWearParts', fn.wearParts); setv('snkFinalWeakness', fn.weakness); setv('snkFinalOneLiner', fn.oneLiner);
+  snkResetSourceBlocks(detail.sources);
+}
+
+function snkResetDetailFields() { snkPopulateDetail({}); }
+
+function buildSnkReviewText(detail) {
+  if (!detail) return '';
+  const b = detail.basic || {}, m = detail.materials || {}, perf = detail.perf || {}, sf = detail.sizeFit || {};
+  const ps = detail.posStyle || {}, pos = ps.pos || {}, style = ps.style || {}, g = detail.gym || {}, fn = detail.final || {};
+  const lines = [];
+  lines.push('■ 1. 基本情報');
+  lines.push(`日本での発売日：${b.releaseJP || ''}　／　アメリカでの発売日：${b.releaseUS || ''}`);
+  lines.push(`日本での定価（税込）：${b.priceJP || ''}`);
+  lines.push(`販売されたカラー一覧：${b.colorways || ''}`);
+  lines.push(`選手が実際に試合で着用したことを確認できる情報：${b.wornEvidence || ''}`);
+  lines.push('');
+  lines.push('■ 2. 搭載されている機能・素材');
+  lines.push(`アッパー素材：${m.upper || ''}`);
+  lines.push(`ミッドソール：${m.midsole || ''}`);
+  lines.push(`アウトソール：${m.outsole || ''}`);
+  lines.push(`クッションシステム：${m.cushionSystem || ''}`);
+  lines.push(`ヒールカウンター：${m.heelCounter || ''}`);
+  lines.push(`足首周辺の構造：${m.ankleStructure || ''}`);
+  lines.push(`重量：${m.weight || ''}`);
+  lines.push(`その他の特徴的な技術：${m.otherTech || ''}`);
+  lines.push('');
+  lines.push('■ 3. 機能性評価（100点満点）');
+  (SNK_PERF_ITEMS || []).forEach(item => {
+    const p = perf[item.key] || {};
+    lines.push(`【${item.label}】`);
+    lines.push(`点数：${p.score || 0}／100`);
+    if (p.pros) lines.push(`高く評価されている点：${p.pros}`);
+    if (p.cons) lines.push(`低く評価されている点：${p.cons}`);
+    if (p.siteDiff) lines.push(`レビューサイトごとの意見の違い：${p.siteDiff}`);
+    if (p.userOpinion) lines.push(`実際の使用者から多かった意見：${p.userOpinion}`);
+    if (p.reason) lines.push(`評価点数を付けた根拠：${p.reason}`);
+    lines.push('');
+  });
+  lines.push('■ 4. サイズ感・フィット');
+  lines.push(`標準サイズでよいか：${sf.standard || ''}`);
+  lines.push(`ハーフサイズアップ／ダウンが必要か：${sf.halfAdjust || ''}`);
+  lines.push(`足幅が狭い人への適性：${sf.narrowFit || ''}`);
+  lines.push(`足幅が広い人への適性：${sf.wideFit || ''}`);
+  lines.push(`甲高の人への適性：${sf.highInstepFit || ''}`);
+  lines.push('');
+  lines.push('■ 5. プレースタイル・ポジション適性');
+  lines.push('【ポジション適性（5段階）】');
+  lines.push(`ポイントガード：${pos.PG || 0}／5　シューティングガード：${pos.SG || 0}／5　スモールフォワード：${pos.SF || 0}／5　パワーフォワード：${pos.PF || 0}／5　センター：${pos.C || 0}／5`);
+  lines.push('【プレースタイルとの相性】');
+  lines.push(`スピード重視：${style.speed || ''}`);
+  lines.push(`ドライブ主体：${style.drive || ''}`);
+  lines.push(`ジャンプが多い：${style.jump || ''}`);
+  lines.push(`ディフェンス重視：${style.defense || ''}`);
+  lines.push(`切り返しが多い：${style.cutting || ''}`);
+  lines.push(`フィジカルコンタクトが多い：${style.contact || ''}`);
+  lines.push(`体重が重い選手：${style.heavy || ''}`);
+  lines.push(`クッションを重視する選手：${style.cushionFocus || ''}`);
+  lines.push('');
+  lines.push('■ 6. ジム・トレーニング適性');
+  lines.push(`筋力トレーニング：${g.strength || ''}`);
+  lines.push(`スクワット：${g.squat || ''}`);
+  lines.push(`ベンチプレス：${g.bench || ''}`);
+  lines.push(`デッドリフト：${g.deadlift || ''}`);
+  lines.push(`ジャンプトレーニング：${g.jump || ''}`);
+  lines.push(`アジリティトレーニング：${g.agility || ''}`);
+  lines.push(`トレッドミル：${g.treadmill || ''}`);
+  lines.push(`長距離ランニング：${g.running || ''}`);
+  lines.push(`普段履き：${g.casual || ''}`);
+  lines.push('');
+  lines.push('■ 7. 買うべき人');
+  lines.push(detail.buyFor || '');
+  lines.push('');
+  lines.push('■ 8. 見送るべき人');
+  lines.push(detail.skipFor || '');
+  lines.push('');
+  lines.push('■ 9. メリット・デメリット');
+  lines.push('【メリット】');
+  (detail.pros || []).forEach((p, i) => lines.push(`${i + 1}. ${p}`));
+  lines.push('【デメリット】');
+  (detail.cons || []).forEach((c, i) => lines.push(`${i + 1}. ${c}`));
+  lines.push('');
+  lines.push('■ 10. 最終結論');
+  lines.push(`総合点：${fn.total || 0}／100`);
+  lines.push(`歴代シリーズの中での位置づけ：${fn.position || ''}`);
+  lines.push(`現在でも購入する価値があるか：${fn.worth || ''}`);
+  lines.push(`中古品を購入する場合の注意点：${fn.usedCaution || ''}`);
+  lines.push(`経年劣化しやすい箇所：${fn.wearParts || ''}`);
+  lines.push(`現在のバッシュと比較した場合の弱点：${fn.weakness || ''}`);
+  lines.push(`一言で表すと：${fn.oneLiner || ''}`);
+  lines.push('');
+  lines.push('■ 11. ソース元');
+  (detail.sources || []).forEach(s => { lines.push(`・${s.site || ''} — ${s.content || ''}　URL：${s.url || ''}`); });
+  const extra = ((document.getElementById('sneakerReview')?.value) || '').trim();
+  let text = lines.join('\n');
+  if (extra) text += '\n\n■ 補足コメント\n' + extra;
+  return text;
+}
+
 // sneakers.js — バッシュ情報
 
 const FB_SNEAKERS = `${FB_URL}/sneakers`;
@@ -571,6 +816,9 @@ async function submitSneaker() {
     document.getElementById('sneakerImg4').value.trim()
   ].filter(Boolean);
 
+  const detail = snkCollectDetail();
+  const generatedReview = buildSnkReviewText(detail);
+
   const data = {
     brand: document.getElementById('sneakerBrand').value,
     model,
@@ -585,7 +833,8 @@ async function submitSneaker() {
     gymOk: document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false,
     desc: document.getElementById('sneakerDesc') ? document.getElementById('sneakerDesc').value.trim() : '',
     price: snkCheapestPriceLabel(shops),
-    review: document.getElementById('sneakerReview') ? document.getElementById('sneakerReview').value : '',
+    review: generatedReview,
+    detail,
     images,
     img: images[0] || '',
     shops,
@@ -722,13 +971,10 @@ function openNewSneaker() {
   if (shopWrap) shopWrap.innerHTML = snkShopBlocksHtml('s');
   const rv = document.getElementById('sneakerReview');
   if (rv) rv.value = '';
+  const perfContainer = document.getElementById('snkPerfFieldsContainer');
+  if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
+  snkResetDetailFields();
   document.getElementById('sneakerSubmitBtn').textContent = '\u6295\u7a3f\u3059\u308b';
-  setTimeout(() => {
-    const rv2 = document.getElementById('sneakerReview');
-    if (rv2 && !rv2.value) {
-      rv2.value = window.SNK_REVIEW_TEMPLATE || '';
-    }
-  }, 200);
 }
 
 async function editSneaker(id) {
@@ -759,8 +1005,11 @@ async function editSneaker(id) {
     shopWrap.innerHTML = snkShopBlocksHtml('s');
     snkPopulateShops('s', d.shops || []);
   }
+  const perfContainer = document.getElementById('snkPerfFieldsContainer');
+  if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
+  snkPopulateDetail(d.detail || {});
   const rv3 = document.getElementById('sneakerReview');
-  if (rv3) rv3.value = d.review || '';
+  if (rv3) rv3.value = d.detail ? '' : (d.review || '');
   if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = !!d.gymOk;
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
