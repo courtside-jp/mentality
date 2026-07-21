@@ -612,14 +612,16 @@ async function openSnkModal(id) {
     {lbl:'グリップ', val:s.traction||0},
     {lbl:'軽量性', val:s.weight||0}
   ];
+  const perfGroupDivider = '<div style="height:1px;background:var(--bd);margin:14px 0;"></div>';
   const perfBarHtml = (item, val, key) => {
     const c = snkScoreColor(val);
     const info = key ? SNK_PERF_INFO[key] : null;
     const infoId = `snkPerfInfo_${key || item}`;
-    const helpBtn = info ? `<span onclick="event.stopPropagation();const el=document.getElementById('${infoId}');if(el)el.style.display=el.style.display==='block'?'none':'block';" style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bd);color:var(--tx3);font-size:9px;cursor:pointer;margin-left:4px;flex-shrink:0;">❔</span>` : '';
+    const toggleFn = info ? `const el=document.getElementById('${infoId}');if(el)el.style.display=el.style.display==='block'?'none':'block';` : '';
+    const helpBtn = info ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--bd);color:var(--tx3);font-size:9px;flex-shrink:0;">❔</span>` : '';
     return `
       <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
-        <div style="display:flex;align-items:center;font-size:11px;color:var(--tx3);margin-bottom:6px;">${item}${helpBtn}</div>
+        <div ${info ? `onclick="${toggleFn}"` : ''} style="display:flex;align-items:center;font-size:11px;color:var(--tx3);margin-bottom:6px;${info ? 'cursor:pointer;padding:4px 0;margin:-4px 0 2px;-webkit-tap-highlight-color:transparent;' : ''}">${item}${helpBtn}</div>
         <div style="height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px;">
           <div style="height:100%;background:${c};border-radius:3px;width:${val}%"></div>
         </div>
@@ -627,7 +629,8 @@ async function openSnkModal(id) {
         ${info ? `<div id="${infoId}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd);font-size:10px;color:var(--tx3);line-height:1.6;">${info}</div>` : ''}
       </div>`;
   };
-  const perfGridHtml = perfDetail ? SNK_PERF_GROUP_ORDER.map(group => `
+  const perfGridHtml = perfDetail ? SNK_PERF_GROUP_ORDER.map((group, gi) => `
+    ${gi > 0 ? perfGroupDivider : ''}
     <div style="margin-bottom:12px;">
       <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:6px;">${group}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
