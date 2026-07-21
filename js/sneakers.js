@@ -683,10 +683,9 @@ async function openSnkModal(id) {
     </table>` : '';
 
   const playerBadgeHtml = s.player ? `
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 10px;margin-bottom:10px;background:linear-gradient(135deg, var(--bg3), transparent);border:1px solid var(--bd);border-radius:20px;">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--tx);color:var(--bg);font-size:10px;flex-shrink:0;">🏀</span>
-      <span style="font-size:10px;color:var(--tx3);">着用選手</span>
-      <span style="font-size:12.5px;font-weight:700;color:var(--tx);">${s.player}</span>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--tx3);white-space:nowrap;">WORN BY</div>
+      <div style="font-size:14px;font-weight:600;color:var(--tx);">${s.player}</div>
     </div>` : '';
 
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
@@ -715,8 +714,8 @@ async function openSnkModal(id) {
     </div>
     ${tocHtml}
     ${imgGallery}
-    ${playerBadgeHtml || s.gymOk ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${playerBadgeHtml}${s.gymOk ? `<span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;align-self:center;">ジム・トレーニング用にもおすすめ</span>` : ''}</div>` : ''}
-    ${s.desc ? `<div style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:14px;">${s.desc}</div>` : ''}
+    ${playerBadgeHtml}
+    ${s.gymOk ? `<div style="margin-bottom:10px;"><span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span></div>` : ''}
     ${divider}
     <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;margin-bottom:14px;padding:16px 18px;background:linear-gradient(135deg, ${scoreColor}20, var(--bg3) 65%);border:1px solid ${scoreColor}40;border-radius:16px;">
       <div style="position:relative;width:78px;height:78px;flex-shrink:0;border-radius:50%;background:conic-gradient(${scoreColor} ${score * 3.6}deg, var(--bd) 0deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px ${scoreColor}50;">
