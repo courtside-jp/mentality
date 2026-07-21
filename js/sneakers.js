@@ -684,9 +684,11 @@ async function openSnkModal(id) {
 
   const playerRoleLabel = s.playerRole === 'signature' ? 'シグネイチャーモデル' : '着用選手';
   const playerBadgeHtml = s.player ? `
-    <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:12px;">
-      <div style="font-size:12px;color:var(--tx3);white-space:nowrap;">${playerRoleLabel}</div>
-      <div style="font-size:14px;font-weight:600;color:var(--tx);">${s.player}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:9px 16px;border-left:3px solid ${scoreColor};background:linear-gradient(90deg, ${scoreColor}14, transparent 85%);border-radius:0 10px 10px 0;">
+      <div>
+        <div style="font-size:9.5px;font-weight:700;letter-spacing:2px;color:${scoreColor};">${playerRoleLabel}</div>
+        <div style="font-size:16px;font-weight:800;color:var(--tx);letter-spacing:0.2px;margin-top:2px;">${s.player}</div>
+      </div>
     </div>` : '';
 
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
