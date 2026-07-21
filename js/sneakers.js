@@ -210,6 +210,23 @@ const SNK_PERF_ITEMS = [
   {key:'position', label:'ポジション適性', group:'耐久・適性'}
 ];
 const SNK_PERF_GROUP_ORDER = ['性能', '快適性', '耐久・適性'];
+const SNK_PERF_INFO = {
+  grip: '床をどれだけ「噛む」かを示す指標。高いほど急停止・切り返しでも滑りにくく安心感がある。低いと踏ん張りが効かず、特に急な方向転換で滑りやすい。',
+  cushion: '着地の衝撃をどれだけ吸収してくれるかを示す指標。高いほど着地が柔らかく足への負担が少ない。低いと着地が硬く感じられ、長時間のプレーで疲労がたまりやすい。',
+  fit: '足と靴の一体感・隙間の少なさを示す指標。高いほど足がしっかりホールドされ操作性が上がる。低いと靴の中で足がズレやすく違和感が出やすい。',
+  support: '足全体を包み込みブレを抑える力を示す指標。高いほど激しい動きでも足がしっかり守られる。低いと素早い動きの中で不安定さを感じやすい。',
+  stability: '着地・切り返し時に足元がグラつかないかを示す指標。高いほど着地が安定し捻挫などのリスクが下がる。低いと不安定でぐらつきやすい。',
+  bounce: '沈み込んだクッションが弾き返してくれる力（反発力）を示す指標。高いほどジャンプや連続動作で弾む感覚を得やすい。低いと反発が弱く、沈んだままの感覚になりやすい。',
+  courtFeel: '床の感触をどれだけダイレクトに感じ取れるかを示す指標。高いほど地面を捉える感覚が強く操作性が高い。低いと足元がぼやけた感覚になりやすい。',
+  breathability: '靴の中の熱や湿気をどれだけ逃がせるかを示す指標。高いほど蒸れにくく快適。低いと汗がこもりやすく蒸れやすい。',
+  weight: '靴自体の軽さを示す指標。高いほど足運びが軽く感じられスタミナを温存しやすい。低いと重さを感じやすく、長時間の使用で疲れやすい。',
+  sizeFeel: '表記サイズ通りに履けるか、想定通りのフィットになるかを示す指標。高いほど安心して通常サイズを選びやすい。低いとサイズ選びに注意が必要（ハーフアップ／ダウンなど）。',
+  widthFit: 'さまざまな足幅の人にどれだけ対応できるかを示す指標。高いほど幅広・幅狭どちらの足にも合わせやすい。低いと特定の足幅の人には窮屈・余りを感じやすい。',
+  ankleMobility: '足首を動かしやすいかどうかを示す指標。高いほど足首が自由に動かせ違和感が少ない。低いとハイカットなどで締め付けを感じやすい。',
+  durability: '素材やソールがどれだけ長持ちするかを示す指標。高いほど激しい使用にも耐えやすい。低いと消耗が早く傷みやすい。',
+  outdoor: '屋外コートでの使用にどれだけ耐えられるかを示す指標。高いほどアスファルトなど荒い路面でも長く使える。低いと屋外使用でソールの消耗が早い。',
+  position: 'どのポジション・プレースタイルに向いているかを示す指標。高いほど幅広いポジションで扱いやすい万能型。低いと特定のポジション・プレースタイルへの向き不向きが出やすい。'
+};
 const SNK_DETAIL_INPUT_STYLE = 'width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;';
 
 function renderPerfFieldsHtml() {
@@ -321,34 +338,26 @@ function snkResetDetailFields() { snkPopulateDetail({}); }
 
 function buildSnkReviewText(detail) {
   if (!detail) return '';
-  const b = detail.basic || {}, perf = detail.perf || {};
+  const b = detail.basic || {};
   const lines = [];
   lines.push('■ 1. 基本情報');
   lines.push(`発売日（日本）：${b.releaseJP || ''}　／　発売日（世界）：${b.releaseUS || ''}`);
   lines.push(`金額（日本）：${b.priceJP || ''}　／　金額（世界）：${b.priceWorld || ''}`);
   lines.push(`販売されたカラー一覧：${b.colorways || ''}`);
   lines.push('');
-  lines.push('■ 2. 機能性');
-  SNK_PERF_GROUP_ORDER.forEach(group => {
-    lines.push(`【${group}】`);
-    SNK_PERF_ITEMS.filter(it => it.group === group).forEach(item => {
-      lines.push(`${item.label}：${perf[item.key] || 0}／100`);
-    });
-  });
-  lines.push('');
-  lines.push('■ 3. メリット・デメリット');
+  lines.push('■ 2. メリット・デメリット');
   lines.push('【メリット】');
   (detail.pros || []).forEach((p, i) => lines.push(`${i + 1}. ${p}`));
   lines.push('【デメリット】');
   (detail.cons || []).forEach((c, i) => lines.push(`${i + 1}. ${c}`));
   lines.push('');
-  lines.push('■ 4. 買うべき人');
+  lines.push('■ 3. 買うべき人');
   lines.push(detail.buyFor || '');
   lines.push('');
-  lines.push('■ 5. 見送るべき人');
+  lines.push('■ 4. 見送るべき人');
   lines.push(detail.skipFor || '');
   lines.push('');
-  lines.push('■ 6. まとめ');
+  lines.push('■ 5. まとめ');
   lines.push(detail.summary || '');
   return lines.join('\n');
 }
@@ -603,22 +612,26 @@ async function openSnkModal(id) {
     {lbl:'グリップ', val:s.traction||0},
     {lbl:'軽量性', val:s.weight||0}
   ];
-  const perfBarHtml = (item, val) => {
+  const perfBarHtml = (item, val, key) => {
     const c = snkScoreColor(val);
+    const info = key ? SNK_PERF_INFO[key] : null;
+    const infoId = `snkPerfInfo_${key || item}`;
+    const helpBtn = info ? `<span onclick="event.stopPropagation();const el=document.getElementById('${infoId}');if(el)el.style.display=el.style.display==='block'?'none':'block';" style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bd);color:var(--tx3);font-size:9px;cursor:pointer;margin-left:4px;flex-shrink:0;">❔</span>` : '';
     return `
       <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
-        <div style="font-size:11px;color:var(--tx3);margin-bottom:6px;">${item}</div>
+        <div style="display:flex;align-items:center;font-size:11px;color:var(--tx3);margin-bottom:6px;">${item}${helpBtn}</div>
         <div style="height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px;">
           <div style="height:100%;background:${c};border-radius:3px;width:${val}%"></div>
         </div>
         <div style="font-size:16px;font-weight:500;color:${c};">${val}<span style="font-size:10px;color:var(--tx3);">/100</span></div>
+        ${info ? `<div id="${infoId}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd);font-size:10px;color:var(--tx3);line-height:1.6;">${info}</div>` : ''}
       </div>`;
   };
   const perfGridHtml = perfDetail ? SNK_PERF_GROUP_ORDER.map(group => `
     <div style="margin-bottom:12px;">
       <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:6px;">${group}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        ${SNK_PERF_ITEMS.filter(it => it.group === group).map(item => perfBarHtml(item.label, perfDetail[item.key] || 0)).join('')}
+        ${SNK_PERF_ITEMS.filter(it => it.group === group).map(item => perfBarHtml(item.label, perfDetail[item.key] || 0, item.key)).join('')}
       </div>
     </div>`).join('') : `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
