@@ -682,9 +682,10 @@ async function openSnkModal(id) {
       </tr>`).join('')}
     </table>` : '';
 
+  const playerRoleLabel = s.playerRole === 'signature' ? 'シグネイチャーモデル' : '着用選手';
   const playerBadgeHtml = s.player ? `
     <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:12px;">
-      <div style="font-size:12px;color:var(--tx3);white-space:nowrap;">着用選手</div>
+      <div style="font-size:12px;color:var(--tx3);white-space:nowrap;">${playerRoleLabel}</div>
       <div style="font-size:14px;font-weight:600;color:var(--tx);">${s.player}</div>
     </div>` : '';
 
@@ -799,6 +800,7 @@ async function submitSneaker() {
     brand: document.getElementById('sneakerBrand').value,
     model,
     player: document.getElementById('sneakerPlayer').value.trim(),
+    playerRole: document.getElementById('sneakerPlayerRole') ? document.getElementById('sneakerPlayerRole').value : 'worn',
     cushion: perf.cushion || 0,
     hold: perf.support || 0,
     traction: perf.grip || 0,
@@ -927,6 +929,7 @@ function openNewSneaker() {
   document.getElementById('sneakerEditId').value = '';
   document.getElementById('sneakerModel').value = '';
   document.getElementById('sneakerPlayer').value = '';
+  if (document.getElementById('sneakerPlayerRole')) document.getElementById('sneakerPlayerRole').value = 'worn';
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = '';
   document.getElementById('sneakerImg').value = '';
@@ -952,6 +955,7 @@ async function editSneaker(id) {
   document.getElementById('sneakerBrand').value = d.brand || 'Nike';
   document.getElementById('sneakerModel').value = d.model || '';
   document.getElementById('sneakerPlayer').value = d.player || '';
+  if (document.getElementById('sneakerPlayerRole')) document.getElementById('sneakerPlayerRole').value = d.playerRole || 'worn';
   const imgs = d.images || [];
   document.getElementById('sneakerImg').value = imgs[0] || d.img || '';
   document.getElementById('sneakerImg2').value = imgs[1] || '';

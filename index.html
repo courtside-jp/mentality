@@ -519,7 +519,14 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
             <input id="sneakerModel" type="text" placeholder="例：Kobe 9 Elite" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
           <div>
-            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">着用選手</div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">選手情報の種類</div>
+            <select id="sneakerPlayerRole" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;background:#fff;">
+              <option value="worn">着用選手（このモデルを履いた選手）</option>
+              <option value="signature">シグネイチャーモデル（特定選手専用モデル）</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">選手名</div>
             <input id="sneakerPlayer" type="text" placeholder="例：ステフィン・カリー" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
           </div>
 <div>
@@ -1237,7 +1244,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=8"></script>
 <script src="js/schedule2.js?v=9"></script>
 <script src="js/articles.js?v=4"></script>
-<script src="js/sneakers.js?v=41"></script>
+<script src="js/sneakers.js?v=42"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>
 <script src="js/home.js?v=3"></script>
