@@ -193,33 +193,46 @@ window.SNK_REVIEW_TEMPLATE = `■ 1. 基本情報
 
 // ===== 詳細レビュー項目 （構造化フォーム） =====
 const SNK_PERF_ITEMS = [
-  {key:'grip', label:'グリップ'},
-  {key:'cushion', label:'クッション性'},
-  {key:'bounce', label:'反発性'},
-  {key:'stability', label:'安定性'},
-  {key:'weight', label:'軽量性'},
-  {key:'overall', label:'総合評価'}
+  {key:'grip', label:'グリップ', group:'性能'},
+  {key:'cushion', label:'クッション性', group:'性能'},
+  {key:'fit', label:'フィット感', group:'性能'},
+  {key:'support', label:'サポート性', group:'性能'},
+  {key:'stability', label:'安定性', group:'性能'},
+  {key:'bounce', label:'反発性', group:'性能'},
+  {key:'courtFeel', label:'コート感覚', group:'性能'},
+  {key:'breathability', label:'通気性', group:'快適性'},
+  {key:'weight', label:'軽量性', group:'快適性'},
+  {key:'sizeFeel', label:'サイズ感', group:'快適性'},
+  {key:'widthFit', label:'足幅適性', group:'快適性'},
+  {key:'ankleMobility', label:'足首の可動域', group:'快適性'},
+  {key:'durability', label:'耐久性', group:'耐久・適性'},
+  {key:'outdoor', label:'アウトドア適性', group:'耐久・適性'},
+  {key:'position', label:'ポジション適性', group:'耐久・適性'}
 ];
+const SNK_PERF_GROUP_ORDER = ['性能', '快適性', '耐久・適性'];
 const SNK_DETAIL_INPUT_STYLE = 'width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;';
 
 function renderPerfFieldsHtml() {
-  return SNK_PERF_ITEMS.map(item => `
-    <div style="display:flex;gap:8px;align-items:center;border:1px solid #eee;border-radius:8px;padding:8px 10px;background:#fafafa;">
-      <div style="font-size:11.5px;font-weight:800;color:#333;width:88px;flex-shrink:0;">${item.label}</div>
-      <input id="snkPerf_${item.key}_score" type="number" min="1" max="100" placeholder="80" style="width:64px;flex-shrink:0;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-      <input id="snkPerf_${item.key}_note" type="text" placeholder="一言コメント（任意）" style="flex:1;${SNK_DETAIL_INPUT_STYLE}">
-    </div>
-  `).join('');
+  return SNK_PERF_GROUP_ORDER.map(group => {
+    const items = SNK_PERF_ITEMS.filter(it => it.group === group);
+    return `
+    <div>
+      <div style="font-size:11.5px;font-weight:800;color:#333;margin-bottom:6px;">【${group}】</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${items.map(item => `
+        <div style="display:flex;align-items:center;gap:6px;border:1px solid #eee;border-radius:8px;padding:7px 9px;background:#fafafa;">
+          <div style="font-size:11px;color:#555;flex:1;">${item.label}</div>
+          <input id="snkPerf_${item.key}_score" type="number" min="1" max="100" placeholder="80" style="width:56px;flex-shrink:0;padding:6px 7px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function snkCollectPerfFields() {
   const out = {};
   SNK_PERF_ITEMS.forEach(item => {
-    out[item.key] = {
-      label: item.label,
-      score: parseInt(document.getElementById(`snkPerf_${item.key}_score`)?.value, 10) || 0,
-      note: (document.getElementById(`snkPerf_${item.key}_note`)?.value || '').trim()
-    };
+    out[item.key] = parseInt(document.getElementById(`snkPerf_${item.key}_score`)?.value, 10) || 0;
   });
   return out;
 }
@@ -227,74 +240,21 @@ function snkCollectPerfFields() {
 function snkPopulatePerfFields(perf) {
   perf = perf || {};
   SNK_PERF_ITEMS.forEach(item => {
-    const p = perf[item.key] || {};
-    const set = (suffix, val) => { const el = document.getElementById(`snkPerf_${item.key}_${suffix}`); if (el) el.value = val || ''; };
-    set('score', p.score); set('note', p.note);
+    const el = document.getElementById(`snkPerf_${item.key}_score`);
+    if (el) el.value = perf[item.key] || '';
   });
-}
-
-let _snkSourceCount = 0;
-function snkSourceBlockHtml(idx, data) {
-  data = data || {};
-  const esc = (s) => (s || '').replace(/"/g, '&quot;');
-  return `<div id="snkSourceBlock_${idx}" style="border:1px solid #eee;border-radius:8px;padding:8px;background:#fafafa;display:flex;flex-direction:column;gap:6px;">
-    <div style="display:flex;gap:6px;">
-      <input id="snkSource_${idx}_site" type="text" placeholder="サイト名" value="${esc(data.site)}" style="flex:1;padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-      <button type="button" onclick="removeSnkSourceBlock(${idx})" style="flex-shrink:0;padding:7px 10px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:11px;color:#999;cursor:pointer;">削除</button>
-    </div>
-    <input id="snkSource_${idx}_content" type="text" placeholder="参照した内容" value="${esc(data.content)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-    <input id="snkSource_${idx}_url" type="text" placeholder="URL" value="${esc(data.url)}" style="padding:7px 9px;border:1px solid #ddd;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;">
-  </div>`;
-}
-function addSnkSourceBlock(data) {
-  const wrap = document.getElementById('snkSourceBlocks');
-  if (!wrap) return;
-  const idx = _snkSourceCount++;
-  wrap.insertAdjacentHTML('beforeend', snkSourceBlockHtml(idx, data));
-}
-function removeSnkSourceBlock(idx) {
-  const el = document.getElementById(`snkSourceBlock_${idx}`);
-  if (el) el.remove();
-}
-function snkResetSourceBlocks(sources) {
-  const wrap = document.getElementById('snkSourceBlocks');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  _snkSourceCount = 0;
-  if (sources && sources.length) { sources.forEach(s => addSnkSourceBlock(s)); }
-  else { addSnkSourceBlock(); }
-}
-function snkCollectSources() {
-  const wrap = document.getElementById('snkSourceBlocks');
-  if (!wrap) return [];
-  const blocks = wrap.querySelectorAll('[id^="snkSourceBlock_"]');
-  const out = [];
-  blocks.forEach(b => {
-    const idx = b.id.replace('snkSourceBlock_', '');
-    const site = (document.getElementById(`snkSource_${idx}_site`)?.value || '').trim();
-    const content = (document.getElementById(`snkSource_${idx}_content`)?.value || '').trim();
-    const url = (document.getElementById(`snkSource_${idx}_url`)?.value || '').trim();
-    if (site || content || url) out.push({site, content, url});
-  });
-  return out;
 }
 
 function snkCollectDetail() {
   const v = (id) => (document.getElementById(id)?.value || '').trim();
   const vn = (id) => parseInt(document.getElementById(id)?.value, 10) || 0;
   return {
-    basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), colorways: v('snkColorways'), wornEvidence: v('snkWornEvidence') },
+    basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), priceWorld: v('snkPriceWorld'), colorways: v('snkColorways') },
     perf: snkCollectPerfFields(),
-    sizeFit: { standard: v('snkSizeStandard'), halfAdjust: v('snkSizeHalfAdjust'), narrowFit: v('snkNarrowFit'), wideFit: v('snkWideFit'), highInstepFit: v('snkHighInstepFit') },
-    posStyle: {
-      pos: { PG: vn('snkPosPG'), SG: vn('snkPosSG'), SF: vn('snkPosSF'), PF: vn('snkPosPF'), C: vn('snkPosC') },
-      styleNotes: v('snkStyleNotes')
-    },
-    gymNotes: v('snkGymNotes'),
     buyFor: v('snkBuyFor'), skipFor: v('snkSkipFor'),
     pros: v('snkPros').split('\n').map(s => s.trim()).filter(Boolean),
     cons: v('snkCons').split('\n').map(s => s.trim()).filter(Boolean),
-    final: { total: vn('snkFinalTotal'), position: v('snkFinalPosition'), worth: v('snkFinalWorth'), usedCaution: v('snkFinalUsedCaution'), wearParts: v('snkFinalWearParts'), weakness: v('snkFinalWeakness'), oneLiner: v('snkFinalOneLiner') },
+    summary: v('snkSummary'),
     sources: snkCollectSources()
   };
 }
@@ -303,18 +263,11 @@ function snkPopulateDetail(detail) {
   detail = detail || {};
   const setv = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
   const b = detail.basic || {};
-  setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkColorways', b.colorways); setv('snkWornEvidence', b.wornEvidence);
+  setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkPriceWorld', b.priceWorld); setv('snkColorways', b.colorways);
   snkPopulatePerfFields(detail.perf);
-  const sf = detail.sizeFit || {};
-  setv('snkSizeStandard', sf.standard); setv('snkSizeHalfAdjust', sf.halfAdjust); setv('snkNarrowFit', sf.narrowFit); setv('snkWideFit', sf.wideFit); setv('snkHighInstepFit', sf.highInstepFit);
-  const ps = detail.posStyle || {}; const pos = ps.pos || {};
-  setv('snkPosPG', pos.PG); setv('snkPosSG', pos.SG); setv('snkPosSF', pos.SF); setv('snkPosPF', pos.PF); setv('snkPosC', pos.C);
-  setv('snkStyleNotes', ps.styleNotes);
-  setv('snkGymNotes', detail.gymNotes);
   setv('snkBuyFor', detail.buyFor); setv('snkSkipFor', detail.skipFor);
   setv('snkPros', (detail.pros || []).join('\n')); setv('snkCons', (detail.cons || []).join('\n'));
-  const fn = detail.final || {};
-  setv('snkFinalTotal', fn.total); setv('snkFinalPosition', fn.position); setv('snkFinalWorth', fn.worth); setv('snkFinalUsedCaution', fn.usedCaution); setv('snkFinalWearParts', fn.wearParts); setv('snkFinalWeakness', fn.weakness); setv('snkFinalOneLiner', fn.oneLiner);
+  setv('snkSummary', detail.summary);
   snkResetSourceBlocks(detail.sources);
 }
 
@@ -322,64 +275,36 @@ function snkResetDetailFields() { snkPopulateDetail({}); }
 
 function buildSnkReviewText(detail) {
   if (!detail) return '';
-  const b = detail.basic || {}, perf = detail.perf || {}, sf = detail.sizeFit || {};
-  const ps = detail.posStyle || {}, pos = ps.pos || {}, fn = detail.final || {};
+  const b = detail.basic || {}, perf = detail.perf || {};
   const lines = [];
   lines.push('■ 1. 基本情報');
-  lines.push(`日本での発売日：${b.releaseJP || ''}　／　アメリカでの発売日：${b.releaseUS || ''}`);
-  lines.push(`日本での定価（税込）：${b.priceJP || ''}`);
+  lines.push(`発売日（日本）：${b.releaseJP || ''}　／　発売日（世界）：${b.releaseUS || ''}`);
+  lines.push(`金額（日本）：${b.priceJP || ''}　／　金額（世界）：${b.priceWorld || ''}`);
   lines.push(`販売されたカラー一覧：${b.colorways || ''}`);
-  lines.push(`選手が実際に試合で着用したことを確認できる情報：${b.wornEvidence || ''}`);
   lines.push('');
-  lines.push('■ 2. 機能性評価（100点満点）');
-  (SNK_PERF_ITEMS || []).forEach(item => {
-    const p = perf[item.key] || {};
-    lines.push(`${item.label}：${p.score || 0}／100${p.note ? '　' + p.note : ''}`);
+  lines.push('■ 2. 機能性');
+  SNK_PERF_GROUP_ORDER.forEach(group => {
+    lines.push(`【${group}】`);
+    SNK_PERF_ITEMS.filter(it => it.group === group).forEach(item => {
+      lines.push(`${item.label}：${perf[item.key] || 0}／100`);
+    });
   });
   lines.push('');
-  lines.push('■ 3. サイズ感・フィット');
-  lines.push(`標準サイズでよいか：${sf.standard || ''}`);
-  lines.push(`ハーフサイズアップ／ダウンが必要か：${sf.halfAdjust || ''}`);
-  lines.push(`足幅が狭い人への適性：${sf.narrowFit || ''}`);
-  lines.push(`足幅が広い人への適性：${sf.wideFit || ''}`);
-  lines.push(`甲高の人への適性：${sf.highInstepFit || ''}`);
-  lines.push('');
-  lines.push('■ 4. プレースタイル・ポジション適性');
-  lines.push('【ポジション適性（5段階）】');
-  lines.push(`ポイントガード：${pos.PG || 0}／5　シューティングガード：${pos.SG || 0}／5　スモールフォワード：${pos.SF || 0}／5　パワーフォワード：${pos.PF || 0}／5　センター：${pos.C || 0}／5`);
-  lines.push('【プレースタイルとの相性】');
-  lines.push(ps.styleNotes || '');
-  lines.push('');
-  lines.push('■ 5. ジム・トレーニング適性');
-  lines.push(detail.gymNotes || '');
-  lines.push('');
-  lines.push('■ 6. 買うべき人');
-  lines.push(detail.buyFor || '');
-  lines.push('');
-  lines.push('■ 7. 見送るべき人');
-  lines.push(detail.skipFor || '');
-  lines.push('');
-  lines.push('■ 8. メリット・デメリット');
+  lines.push('■ 3. メリット・デメリット');
   lines.push('【メリット】');
   (detail.pros || []).forEach((p, i) => lines.push(`${i + 1}. ${p}`));
   lines.push('【デメリット】');
   (detail.cons || []).forEach((c, i) => lines.push(`${i + 1}. ${c}`));
   lines.push('');
-  lines.push('■ 9. 最終結論');
-  lines.push(`総合点：${fn.total || 0}／100`);
-  lines.push(`歴代シリーズの中での位置づけ：${fn.position || ''}`);
-  lines.push(`現在でも購入する価値があるか：${fn.worth || ''}`);
-  lines.push(`中古品を購入する場合の注意点：${fn.usedCaution || ''}`);
-  lines.push(`経年劣化しやすい箇所：${fn.wearParts || ''}`);
-  lines.push(`現在のバッシュと比較した場合の弱点：${fn.weakness || ''}`);
-  lines.push(`一言で表すと：${fn.oneLiner || ''}`);
+  lines.push('■ 4. 買うべき人');
+  lines.push(detail.buyFor || '');
   lines.push('');
-  lines.push('■ 10. ソース元');
-  (detail.sources || []).forEach(s => { lines.push(`・${s.site || ''} — ${s.content || ''}　URL：${s.url || ''}`); });
-  const extra = ((document.getElementById('sneakerReview')?.value) || '').trim();
-  let text = lines.join('\n');
-  if (extra) text += '\n\n■ 補足コメント\n' + extra;
-  return text;
+  lines.push('■ 5. 見送るべき人');
+  lines.push(detail.skipFor || '');
+  lines.push('');
+  lines.push('■ 6. まとめ');
+  lines.push(detail.summary || '');
+  return lines.join('\n');
 }
 
 // sneakers.js — バッシュ情報
@@ -625,12 +550,46 @@ async function openSnkModal(id) {
   const scoreColor = snkScoreColor(score);
   const shops = s.shops || [];
   const imgs = s.images || [];
+  const perfDetail = (s.detail && s.detail.perf) || null;
   const scoreItems = [
     {lbl:'クッション', val:s.cushion||0},
     {lbl:'ホールド感', val:s.hold||0},
     {lbl:'グリップ', val:s.traction||0},
     {lbl:'軽量性', val:s.weight||0}
   ];
+  const perfBarHtml = (item, val) => {
+    const c = snkScoreColor(val);
+    return `
+      <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
+        <div style="font-size:11px;color:var(--tx3);margin-bottom:6px;">${item}</div>
+        <div style="height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px;">
+          <div style="height:100%;background:${c};border-radius:3px;width:${val}%"></div>
+        </div>
+        <div style="font-size:16px;font-weight:500;color:${c};">${val}<span style="font-size:10px;color:var(--tx3);">/100</span></div>
+      </div>`;
+  };
+  const perfGridHtml = perfDetail ? SNK_PERF_GROUP_ORDER.map(group => `
+    <div style="margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:6px;">${group}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${SNK_PERF_ITEMS.filter(it => it.group === group).map(item => perfBarHtml(item.label, perfDetail[item.key] || 0)).join('')}
+      </div>
+    </div>`).join('') : `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      ${scoreItems.map(i => perfBarHtml(i.lbl, i.val)).join('')}
+    </div>`;
+  const sourcesList = (s.detail && s.detail.sources) || [];
+  const sourcesHtml = sourcesList.length ? `
+    <details style="margin-top:16px;">
+      <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">🔗 参考にしたソース元を見る（${sourcesList.length}件）▼</summary>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+        ${sourcesList.map(src => `
+        <a href="${src.url||'#'}" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--bg3);border-radius:8px;text-decoration:none;">
+          <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:2px;">${src.site||''}</div>
+          <div style="font-size:11px;color:var(--tx3);">${src.content||''}</div>
+        </a>`).join('')}
+      </div>
+    </details>` : '';
 
   const imgGallery = imgs.length ? `
     <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
@@ -698,18 +657,10 @@ async function openSnkModal(id) {
       <div style="font-size:12px;color:var(--tx3);">総合スコア / 100</div>
     </div>
     <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">パフォーマンス スコア</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      ${scoreItems.map(i => `
-      <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;">
-        <div style="font-size:11px;color:var(--tx3);margin-bottom:6px;">${i.lbl}</div>
-        <div style="height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-bottom:5px;">
-          <div style="height:100%;background:${snkScoreColor(i.val)};border-radius:3px;width:${i.val}%"></div>
-        </div>
-        <div style="font-size:16px;font-weight:500;color:${snkScoreColor(i.val)};">${i.val}<span style="font-size:10px;color:var(--tx3);">/100</span></div>
-      </div>`).join('')}
-    </div>
+    ${perfGridHtml}
     ${s.review ? divider : ''}
     ${reviewHtml}
+    ${sourcesHtml}
     ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
   `;
   modal.style.display = 'block';
@@ -764,19 +715,17 @@ async function submitSneaker() {
 
   const detail = snkCollectDetail();
   const generatedReview = buildSnkReviewText(detail);
+  const perf = detail.perf || {};
 
   const data = {
     brand: document.getElementById('sneakerBrand').value,
     model,
     player: document.getElementById('sneakerPlayer').value.trim(),
-    cushion: parseInt(document.getElementById('sneakerScoreCushion').value, 10) || 0,
-    hold: parseInt(document.getElementById('sneakerScoreHold').value, 10) || 0,
-    traction: parseInt(document.getElementById('sneakerScoreTraction').value, 10) || 0,
-    weight: parseInt(document.getElementById('sneakerScoreWeight').value, 10) || 0,
+    cushion: perf.cushion || 0,
+    hold: perf.support || 0,
+    traction: perf.grip || 0,
+    weight: perf.weight || 0,
     overallScore: parseInt(document.getElementById('sneakerOverallScore')?.value, 10) || 0,
-    sizeFeel: document.getElementById('sneakerSizeFeel').value.trim(),
-    position: document.getElementById('sneakerPosition').value.trim(),
-    gymOk: document.getElementById('sneakerGymOk') ? document.getElementById('sneakerGymOk').checked : false,
     desc: document.getElementById('sneakerDesc') ? document.getElementById('sneakerDesc').value.trim() : '',
     price: snkCheapestPriceLabel(shops),
     review: generatedReview,
@@ -900,14 +849,7 @@ function openNewSneaker() {
   document.getElementById('sneakerEditId').value = '';
   document.getElementById('sneakerModel').value = '';
   document.getElementById('sneakerPlayer').value = '';
-  document.getElementById('sneakerScoreCushion').value = '';
-  document.getElementById('sneakerScoreHold').value = '';
-  document.getElementById('sneakerScoreTraction').value = '';
-  document.getElementById('sneakerScoreWeight').value = '';
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = '';
-  document.getElementById('sneakerSizeFeel').value = '';
-  document.getElementById('sneakerPosition').value = '';
-  document.getElementById('sneakerGymOk').checked = false;
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = '';
   document.getElementById('sneakerImg').value = '';
   document.getElementById('sneakerImg2').value = '';
@@ -915,8 +857,6 @@ function openNewSneaker() {
   document.getElementById('sneakerImg4').value = '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
   if (shopWrap) shopWrap.innerHTML = snkShopBlocksHtml('s');
-  const rv = document.getElementById('sneakerReview');
-  if (rv) rv.value = '';
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
   if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
   snkResetDetailFields();
@@ -934,17 +874,12 @@ async function editSneaker(id) {
   document.getElementById('sneakerBrand').value = d.brand || 'Nike';
   document.getElementById('sneakerModel').value = d.model || '';
   document.getElementById('sneakerPlayer').value = d.player || '';
-  document.getElementById('sneakerImg').value = d.img || '';
-  document.getElementById('sneakerImg2').value = d.img2 || '';
-  document.getElementById('sneakerImg3').value = d.img3 || '';
-  document.getElementById('sneakerImg4').value = d.img4 || '';
-  document.getElementById('sneakerScoreCushion').value = d.cushion || '';
-  document.getElementById('sneakerScoreHold').value = d.hold || '';
-  document.getElementById('sneakerScoreTraction').value = d.traction || '';
-  document.getElementById('sneakerScoreWeight').value = d.weight || '';
+  const imgs = d.images || [];
+  document.getElementById('sneakerImg').value = imgs[0] || d.img || '';
+  document.getElementById('sneakerImg2').value = imgs[1] || '';
+  document.getElementById('sneakerImg3').value = imgs[2] || '';
+  document.getElementById('sneakerImg4').value = imgs[3] || '';
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = d.overallScore || '';
-  document.getElementById('sneakerSizeFeel').value = d.sizeFeel || '';
-  document.getElementById('sneakerPosition').value = d.position || '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = d.desc || '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
   if (shopWrap) {
@@ -954,9 +889,6 @@ async function editSneaker(id) {
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
   if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
   snkPopulateDetail(d.detail || {});
-  const rv3 = document.getElementById('sneakerReview');
-  if (rv3) rv3.value = d.detail ? '' : (d.review || '');
-  if (document.getElementById('sneakerGymOk')) document.getElementById('sneakerGymOk').checked = !!d.gymOk;
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
 
