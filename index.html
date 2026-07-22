@@ -216,7 +216,7 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
         if(topSub) topSub.textContent = ad.subtext || '';
         if(topLabel) topLabel.textContent = ad.label || '';
         if(topBanner) {
-        topBanner.style.display = 'block';
+        topBanner.style.display = (location.hash === '#admin') ? 'none' : 'block';
         // second-navの下に配置
         const header = document.querySelector('.header');
           const headerH = header ? (header.offsetHeight || 51) : 51;
