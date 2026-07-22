@@ -106,7 +106,7 @@ function renderBody(body) {
     if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
       const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
       const label = applyInlineBold(t.replace(/<[^>]+>/g, '').trim());
-      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;color:#111;">${label}</h2>`;
+      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;padding-top:1.2em;border-top:1px solid var(--bd,#eee);color:#111;">${label}</h2>`;
     }
     // 【】→ 小見出し（控えめスタイル、目次なし）
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
