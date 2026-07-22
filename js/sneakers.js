@@ -337,21 +337,15 @@ function buildSnkReviewText(detail) {
   lines.push('■ 1. 基本情報');
   lines.push(`発売日（日本）：${b.releaseJP || ''}　／　発売日（世界）：${b.releaseUS || ''}`);
   lines.push(`金額（日本）：${b.priceJP || ''}　／　金額（世界）：${b.priceWorld || ''}`);
-  lines.push(`販売されたカラー一覧：${b.colorways || ''}`);
+  lines.push(`カラー一覧：${b.colorways || ''}`);
   lines.push('');
-  lines.push('■ 2. メリット・デメリット');
-  lines.push('【メリット】');
-  (detail.pros || []).forEach((p, i) => lines.push(`${i + 1}. ${p}`));
-  lines.push('【デメリット】');
-  (detail.cons || []).forEach((c, i) => lines.push(`${i + 1}. ${c}`));
-  lines.push('');
-  lines.push('■ 3. 買うべき人');
+  lines.push('■ 2. 買うべき人');
   lines.push(detail.buyFor || '');
   lines.push('');
-  lines.push('■ 4. 見送るべき人');
+  lines.push('■ 3. 見送るべき人');
   lines.push(detail.skipFor || '');
   lines.push('');
-  lines.push('■ 5. まとめ');
+  lines.push('■ 4. まとめ');
   lines.push(detail.summary || '');
   return lines.join('\n');
 }
@@ -693,6 +687,32 @@ async function openSnkModal(id) {
 
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
 
+  const prosArr = (s.detail && s.detail.pros) || [];
+  const consArr = (s.detail && s.detail.cons) || [];
+  const prosConsHtml = (prosArr.length || consArr.length) ? `
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">メリット・デメリット</div>
+    ${prosArr.length ? `
+    <div style="background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.22);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
+        <span style="width:18px;height:18px;border-radius:50%;background:#27ae60;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✓</span>
+        <span style="font-size:12px;font-weight:700;color:#1e8449;letter-spacing:.3px;">メリット</span>
+      </div>
+      <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+        ${prosArr.map(p => `<li style="font-size:12px;color:var(--tx2);line-height:1.6;padding-left:14px;position:relative;"><span style="position:absolute;left:0;top:0;color:#27ae60;font-weight:700;">–</span>${p}</li>`).join('')}
+      </ul>
+    </div>` : ''}
+    ${consArr.length ? `
+    <div style="background:rgba(201,8,42,0.05);border:1px solid rgba(201,8,42,0.18);border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
+        <span style="width:18px;height:18px;border-radius:50%;background:#C9082A;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✕</span>
+        <span style="font-size:12px;font-weight:700;color:#C9082A;letter-spacing:.3px;">デメリット</span>
+      </div>
+      <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
+        ${consArr.map(c => `<li style="font-size:12px;color:var(--tx2);line-height:1.6;padding-left:14px;position:relative;"><span style="position:absolute;left:0;top:0;color:#C9082A;font-weight:700;">–</span>${c}</li>`).join('')}
+      </ul>
+    </div>` : ''}
+  ` : '';
+
   const reviewHtml = s.review ? `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
       <div style="font-size:13px;font-weight:500;color:var(--tx);">レビュー</div>
@@ -740,6 +760,8 @@ async function openSnkModal(id) {
     </div>
     <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">パフォーマンス スコア</div>
     ${perfGridHtml}
+    ${(prosArr.length || consArr.length) ? divider : ''}
+    ${prosConsHtml}
     ${s.review ? divider : ''}
     ${reviewHtml}
     ${sourcesHtml}
