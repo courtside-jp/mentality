@@ -659,7 +659,7 @@ async function openSnkModal(id) {
   const imgGallery = imgs.length ? `
     <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
     ${imgs.length > 1 ? `<details style="margin-bottom:12px;">
-      <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">📷 他の写真を見る（${imgs.length-1}枚）▼</summary>
+      <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">他の写真を見る（${imgs.length-1}枚）▼</summary>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
         ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;">`).join('')}
       </div>
