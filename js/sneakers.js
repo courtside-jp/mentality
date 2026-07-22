@@ -711,12 +711,12 @@ async function openSnkModal(id) {
 
   body.innerHTML = `
     <button onclick="snkModalGoBack()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
+    ${imgGallery}
     <div style="margin-bottom:14px;">
       <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
       <div style="font-size:17px;font-weight:500;color:var(--tx);">${s.model||''}</div>
     </div>
     ${tocHtml}
-    ${imgGallery}
     ${playerBadgeHtml}
     ${s.gymOk ? `<div style="margin-bottom:10px;"><span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span></div>` : ''}
     ${divider}
