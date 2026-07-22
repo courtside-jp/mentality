@@ -1295,9 +1295,19 @@ function signOutAdmin() {
     </div>
     <span style="font-size:9px;color:#e63946;font-weight:800;border:1px solid #e63946;padding:1px 4px;border-radius:3px;white-space:nowrap;flex-shrink:0;">PR</span>
   </a>
-  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');" style="position:absolute;top:50%;right:6px;transform:translateY(-50%);background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:4px 6px;line-height:1;">x</button>
+  <button onclick="document.getElementById('fixedAdBanner').style.display='none';sessionStorage.setItem('adClosed','1');if(typeof updateMainScrollBottomPad==='function')updateMainScrollBottomPad();" style="position:absolute;top:50%;right:6px;transform:translateY(-50%);background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:4px 6px;line-height:1;">x</button>
 </div>
 <script>
+// 下部固定要素(ボトムナビ+広告バナー)にコンテンツが隠れないようmainScrollの余白を調整
+function updateMainScrollBottomPad(){
+  const ms = document.getElementById('mainScroll');
+  if(!ms) return;
+  const nav = document.querySelector('.bottom-nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  const banner = document.getElementById('fixedAdBanner');
+  const bannerH = (banner && banner.style.display !== 'none') ? banner.getBoundingClientRect().height : 0;
+  ms.style.paddingBottom = (navH + bannerH + 16) + 'px';
+}
 (function(){
   if(sessionStorage.getItem('adClosed')==='1') return;
   fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
@@ -1324,6 +1334,7 @@ function signOutAdmin() {
         banner.style.display = (location.hash === '#admin') ? 'none' : 'block';
         const nav = document.querySelector('.bottom-nav');
         if(nav) banner.style.bottom = nav.getBoundingClientRect().height + 'px';
+        updateMainScrollBottomPad();
       }
       if(banners.length>1){setInterval(()=>{idx=(idx+1)%banners.length;showAd(banners[idx]);},5000);}
     }).catch(()=>{});
@@ -1344,6 +1355,7 @@ function signOutAdmin() {
     if(fixedAd && bn && fixedAd.style.display !== 'none') {
       fixedAd.style.bottom = bn.getBoundingClientRect().height + 'px';
     }
+    if(typeof updateMainScrollBottomPad === 'function') updateMainScrollBottomPad();
     // 上部バナーをheaderの下に配置
     var topBanner = document.getElementById('topAdBanner');
     var headerEl = document.querySelector('.header');
