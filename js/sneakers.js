@@ -712,6 +712,7 @@ async function openSnkModal(id) {
   body.innerHTML = `
     <button onclick="snkModalGoBack()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>
     ${imgGallery}
+    ${imgs.length ? divider : ''}
     <div style="margin-bottom:14px;">
       <div style="font-size:10px;color:var(--tx3);margin-bottom:2px;">${s.brand||''}</div>
       <div style="font-size:17px;font-weight:500;color:var(--tx);">${s.model||''}</div>
