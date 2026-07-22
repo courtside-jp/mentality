@@ -44,6 +44,16 @@ function goPage(id, btn) {
   const realId = (id === 'ranking') ? 'schedule' : id;
   const pgEl = document.getElementById('pg-' + realId);
   if(pgEl) pgEl.classList.add('show');
+  // 管理画面では広告バナーを非表示にする
+  const fixedAd = document.getElementById('fixedAdBanner');
+  const topAd = document.getElementById('topAdBanner');
+  if (id === 'admin') {
+    if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
+    if (topAd) { topAd.dataset.wasVisible = topAd.style.display !== 'none' ? '1' : '0'; topAd.style.display = 'none'; }
+  } else {
+    if (fixedAd && fixedAd.dataset.wasVisible === '1') fixedAd.style.display = 'block';
+    if (topAd && topAd.dataset.wasVisible === '1') topAd.style.display = 'block';
+  }
   if(id === 'ranking') {
     if(typeof showSubTab === 'function') showSubTab('ranking');
     if(typeof renderStandings === 'function') renderStandings();

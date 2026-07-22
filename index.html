@@ -1241,7 +1241,7 @@ function signOutAdmin() {
 </script>
 <script src="js/utils.js?v=1"></script>
 <script src="js/data.js?v=2"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/app.js?v=9"></script>
 <script src="js/schedule2.js?v=9"></script>
 <script src="js/articles.js?v=4"></script>
 <script src="js/sneakers.js?v=43"></script>
@@ -1321,7 +1321,7 @@ function signOutAdmin() {
       let idx=Math.floor(Math.random()*banners.length);
       showAd(banners[idx]);
       if(banner) {
-        banner.style.display='block';
+        banner.style.display = (location.hash === '#admin') ? 'none' : 'block';
         const nav = document.querySelector('.bottom-nav');
         if(nav) banner.style.bottom = nav.getBoundingClientRect().height + 'px';
       }
