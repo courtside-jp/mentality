@@ -636,8 +636,14 @@ async function openSnkModal(id) {
       </div>
     </details>` : '';
 
+  const imgCredit = s.imageCredit || null;
+  const imgCreditHtml = (imgCredit && (imgCredit.label || imgCredit.url)) ? `
+    <div style="font-size:10px;color:var(--tx3);text-align:right;margin:0 0 12px;">
+      画像提供: ${imgCredit.url ? `<a href="${imgCredit.url}" target="_blank" rel="noopener" style="color:var(--tx3);text-decoration:underline;">${imgCredit.label || imgCredit.url}</a>` : (imgCredit.label || '')}
+    </div>` : '';
   const imgGallery = imgs.length ? `
-    <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;">
+    <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:8px;">
+    ${imgCreditHtml}
     ${imgs.length > 1 ? `<details style="margin-bottom:12px;">
       <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">他の写真を見る（${imgs.length-1}枚）▼</summary>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
@@ -920,6 +926,10 @@ async function submitSneaker() {
   const generatedReview = buildSnkReviewText(detail);
   const perf = detail.perf || {};
 
+  const imgCreditLabel = document.getElementById('sneakerImgCreditLabel') ? document.getElementById('sneakerImgCreditLabel').value.trim() : '';
+  const imgCreditUrl = document.getElementById('sneakerImgCreditUrl') ? document.getElementById('sneakerImgCreditUrl').value.trim() : '';
+  const imageCredit = (imgCreditLabel || imgCreditUrl) ? { label: imgCreditLabel, url: imgCreditUrl } : null;
+
   const data = {
     brand: document.getElementById('sneakerBrand').value,
     model,
@@ -936,6 +946,7 @@ async function submitSneaker() {
     detail,
     images,
     img: images[0] || '',
+    imageCredit,
     shops,
     date: new Date().toISOString().slice(0,10),
     ts: id ? undefined : Date.now()
@@ -1060,6 +1071,8 @@ function openNewSneaker() {
   document.getElementById('sneakerImg2').value = '';
   document.getElementById('sneakerImg3').value = '';
   document.getElementById('sneakerImg4').value = '';
+  if (document.getElementById('sneakerImgCreditLabel')) document.getElementById('sneakerImgCreditLabel').value = '';
+  if (document.getElementById('sneakerImgCreditUrl')) document.getElementById('sneakerImgCreditUrl').value = '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
   if (shopWrap) shopWrap.innerHTML = snkShopBlocksHtml('s');
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
@@ -1085,6 +1098,9 @@ async function editSneaker(id) {
   document.getElementById('sneakerImg2').value = imgs[1] || '';
   document.getElementById('sneakerImg3').value = imgs[2] || '';
   document.getElementById('sneakerImg4').value = imgs[3] || '';
+  const ic = d.imageCredit || {};
+  if (document.getElementById('sneakerImgCreditLabel')) document.getElementById('sneakerImgCreditLabel').value = ic.label || '';
+  if (document.getElementById('sneakerImgCreditUrl')) document.getElementById('sneakerImgCreditUrl').value = ic.url || '';
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = d.overallScore || '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = d.desc || '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
