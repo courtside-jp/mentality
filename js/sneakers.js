@@ -766,7 +766,7 @@ async function openSnkModal(id) {
   const buyForHtml = snkDetail.buyFor ? `
     <div id="snkSectionBuyFor" style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
-        <span style="font-size:14px;">👍</span>
+        <span style="width:18px;height:18px;border-radius:50%;background:#27ae60;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✓</span>
         <span style="font-size:12px;font-weight:700;color:#1e8449;letter-spacing:.3px;">買うべき人</span>
       </div>
       <div style="font-size:12.5px;color:var(--tx2);line-height:1.75;">${snkDetail.buyFor}</div>
@@ -774,7 +774,7 @@ async function openSnkModal(id) {
   const skipForHtml = snkDetail.skipFor ? `
     <div id="snkSectionSkipFor" style="background:rgba(255,140,0,0.07);border:1px solid rgba(255,140,0,0.22);border-radius:12px;padding:14px 16px;margin-bottom:14px;">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
-        <span style="font-size:14px;">🤔</span>
+        <span style="width:18px;height:18px;border-radius:50%;background:#e07b00;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">!</span>
         <span style="font-size:12px;font-weight:700;color:#c26a00;letter-spacing:.3px;">見送るべき人</span>
       </div>
       <div style="font-size:12.5px;color:var(--tx2);line-height:1.75;">${snkDetail.skipFor}</div>
