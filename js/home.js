@@ -91,7 +91,7 @@ function renderHomeFeed(list) {
   if (!list.length) { wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ投稿がありません</div>'; return; }
 
   wrap.innerHTML = list.map(p => {
-    const title = p.title || p.name || '';
+    const title = p.title || p.name || (p._type === 'sneaker' ? [p.brand, p.model].filter(Boolean).join(' ') : '');
     const img   = p.img || '';
     const onclickFn = p._type === 'article' ? `openArticle('${p.id}')`
                      : p._type === 'sneaker' ? `openSnkModal('${p.id}')`
