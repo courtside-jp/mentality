@@ -480,7 +480,8 @@ function snkShopBlocksHtml(ns) {
       </div>
       <div id="${ns}-fields-${p.key}" style="display:none;grid-template-columns:2fr 1fr;gap:6px;">
         <input type="text" id="${ns}-url-${p.key}" placeholder="購入URL" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
-        <input type="text" id="${ns}-price-${p.key}" placeholder="最低価格 例:9790" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+        <input type="text" id="${ns}-price-${p.key}" placeholder="価格 例:9790 または ¥9,790〜15,000" style="padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
+        <input type="text" id="${ns}-note-${p.key}" placeholder="価格の補足（例：廃盤のため個体差で価格差が大きい）" style="grid-column:1/3;padding:7px 9px;border:1px solid #eee;border-radius:6px;font-size:11px;box-sizing:border-box;">
       </div>
     </div>
   `).join('');
@@ -500,8 +501,10 @@ function snkCollectShops(ns) {
     if (!enableEl || !enableEl.checked) return;
     const url = (document.getElementById(`${ns}-url-${p.key}`)?.value || '').trim();
     const priceRaw = (document.getElementById(`${ns}-price-${p.key}`)?.value || '').trim();
+    const note = (document.getElementById(`${ns}-note-${p.key}`)?.value || '').trim();
     if (!url) return;
-    const priceNum = parseInt(priceRaw.replace(/[^0-9]/g, ''), 10);
+    const priceFirstPart = priceRaw.split(/[〜~\-]/)[0];
+    const priceNum = parseInt(priceFirstPart.replace(/[^0-9]/g, ''), 10);
     shops.push({
       key: p.key,
       name: p.label,
@@ -509,6 +512,7 @@ function snkCollectShops(ns) {
       solid: p.solid,
       url,
       price: priceRaw ? (priceRaw.startsWith('¥') ? priceRaw : '¥' + priceRaw.replace(/[^0-9]/g, '')) : '',
+      note,
       _priceNum: isNaN(priceNum) ? null : priceNum
     });
   });
@@ -530,20 +534,24 @@ function snkPopulateShops(ns, shops) {
     const enableEl = document.getElementById(`${ns}-enable-${p.key}`);
     const urlEl = document.getElementById(`${ns}-url-${p.key}`);
     const priceEl = document.getElementById(`${ns}-price-${p.key}`);
+    const noteEl = document.getElementById(`${ns}-note-${p.key}`);
     if (enableEl) enableEl.checked = false;
     if (urlEl) urlEl.value = '';
     if (priceEl) priceEl.value = '';
+    if (noteEl) noteEl.value = '';
     if (document.getElementById(`${ns}-fields-${p.key}`)) document.getElementById(`${ns}-fields-${p.key}`).style.display = 'none';
   });
   (shops || []).forEach(sh => {
-    const match = SNK_PLATFORMS.find(p => p.label === sh.name);
+    const match = SNK_PLATFORMS.find(p => p.key === sh.key) || SNK_PLATFORMS.find(p => p.label === sh.name);
     if (!match) return;
     const enableEl = document.getElementById(`${ns}-enable-${match.key}`);
     if (enableEl) enableEl.checked = true;
     const urlEl = document.getElementById(`${ns}-url-${match.key}`);
     if (urlEl) urlEl.value = sh.url || '';
     const priceEl = document.getElementById(`${ns}-price-${match.key}`);
-    if (priceEl) priceEl.value = (sh.price || '').replace(/[^0-9]/g, '');
+    if (priceEl) priceEl.value = sh.price || '';
+    const noteEl = document.getElementById(`${ns}-note-${match.key}`);
+    if (noteEl) noteEl.value = sh.note || '';
     snkToggleShop(ns, match.key);
   });
 }
@@ -804,6 +812,7 @@ async function openSnkModal(id) {
             ${sh.lowest?`<span style="font-size:9px;font-weight:700;color:#fff;background:${solid};padding:2px 6px;border-radius:5px;letter-spacing:.3px;">最安値</span>`:''}
           </div>
           <div style="font-size:16.5px;font-weight:800;color:var(--tx);">${sh.price||'価格を確認'}</div>
+          ${sh.note ? `<div style="font-size:10.5px;color:var(--tx3);margin-top:2px;line-height:1.5;">${sh.note}</div>` : ''}
         </div>
         <button onclick="window.open('${sh.url}','_blank')" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;background:${solid};color:#fff;letter-spacing:.3px;">購入する</button>
       </div>`;
