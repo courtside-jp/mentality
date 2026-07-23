@@ -464,11 +464,11 @@ const BRANDS = {
 // 媒体ごとの購入リンク＋価格ブロック（1つだけ紹介／複数紹介 共通）
 // ============================================================
 const SNK_PLATFORMS = [
-  { key: 'amazon',   label: 'Amazon',           icon: '🛒', color: '#fff3e0', border: '#ffd9a0' },
-  { key: 'rakuten',  label: '楽天',              icon: '🛍️', color: '#ffece8', border: '#ffc2b3' },
-  { key: 'stockx',   label: 'StockX',            icon: '📈', color: '#e8f0ff', border: '#b3cdff' },
-  { key: 'snkrdunk', label: 'スニーカーダンク',    icon: '👟', color: '#eef8ec', border: '#bfe6b8' },
-  { key: 'ebay',     label: 'eBay',              icon: '🌐', color: '#f3eefc', border: '#d3bff5' }
+  { key: 'amazon',   label: 'Amazon',           icon: '🛒', color: '#fff3e0', border: '#ffd9a0', solid: '#FF9900' },
+  { key: 'rakuten',  label: '楽天',              icon: '🛍️', color: '#ffece8', border: '#ffc2b3', solid: '#BF0000' },
+  { key: 'stockx',   label: 'StockX',            icon: '📈', color: '#e8f0ff', border: '#b3cdff', solid: '#0d5dff' },
+  { key: 'snkrdunk', label: 'スニーカーダンク',    icon: '👟', color: '#eef8ec', border: '#bfe6b8', solid: '#00a86b' },
+  { key: 'ebay',     label: 'eBay',              icon: '🌐', color: '#f3eefc', border: '#d3bff5', solid: '#6a2fc9' }
 ];
 
 function snkShopBlocksHtml(ns) {
@@ -503,8 +503,10 @@ function snkCollectShops(ns) {
     if (!url) return;
     const priceNum = parseInt(priceRaw.replace(/[^0-9]/g, ''), 10);
     shops.push({
+      key: p.key,
       name: p.label,
       icon: p.icon,
+      solid: p.solid,
       url,
       price: priceRaw ? (priceRaw.startsWith('¥') ? priceRaw : '¥' + priceRaw.replace(/[^0-9]/g, '')) : '',
       _priceNum: isNaN(priceNum) ? null : priceNum
@@ -787,21 +789,25 @@ async function openSnkModal(id) {
   ` : '';
 
   const shopsHtml = shops.length ? `
-    <table style="width:100%;border-collapse:collapse;">
-      ${shops.map(sh => `
-      <tr style="border-bottom:0.5px solid var(--bd);">
-        <td style="padding:10px 6px;">
-          <div style="font-size:13px;font-weight:500;color:var(--tx);">${sh.name}</div>
-          ${sh.lowest?'<span style="font-size:9px;color:#bf6000;background:#fff3e0;padding:1px 5px;border-radius:3px;">最安値</span>':''}
-        </td>
-        <td style="padding:10px 6px;text-align:right;padding-right:8px;">
-          <div style="font-size:16px;font-weight:500;color:var(--tx);">${sh.price||'確認する'}</div>
-        </td>
-        <td style="padding:10px 6px;width:70px;">
-          <button onclick="window.open('${sh.url}','_blank')" style="width:100%;padding:8px 10px;border-radius:7px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${sh.color||'#333'};color:${sh.textColor||'#fff'};">買う</button>
-        </td>
-      </tr>`).join('')}
-    </table>` : '';
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${shops.map(sh => {
+        const plat = SNK_PLATFORMS.find(p => p.key === sh.key) || SNK_PLATFORMS.find(p => p.label === sh.name) || {};
+        const solid = sh.solid || plat.solid || '#333';
+        const tint = plat.color || '#f2f2f2';
+        return `
+      <div style="display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;${sh.lowest?`box-shadow:0 0 0 1.5px ${solid}55;`:''}">
+        <div style="width:38px;height:38px;border-radius:11px;background:${tint};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${sh.icon||plat.icon||'🛒'}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <span style="font-size:12.5px;font-weight:700;color:var(--tx);">${sh.name}</span>
+            ${sh.lowest?`<span style="font-size:9px;font-weight:700;color:#fff;background:${solid};padding:2px 6px;border-radius:5px;letter-spacing:.3px;">最安値</span>`:''}
+          </div>
+          <div style="font-size:16.5px;font-weight:800;color:var(--tx);">${sh.price||'価格を確認'}</div>
+        </div>
+        <button onclick="window.open('${sh.url}','_blank')" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;background:${solid};color:#fff;letter-spacing:.3px;">購入する</button>
+      </div>`;
+      }).join('')}
+    </div>` : '';
 
   const playerRoleLabel = s.playerRole === 'signature' ? 'シグネイチャーモデル' : '着用選手';
   const playerBadgeHtml = s.player ? `
