@@ -331,17 +331,9 @@ function snkPopulateDetail(detail) {
 function snkResetDetailFields() { snkPopulateDetail({}); }
 
 function buildSnkReviewText(detail) {
-  if (!detail) return '';
-  const lines = [];
-  lines.push('■ 1. 買うべき人');
-  lines.push(detail.buyFor || '');
-  lines.push('');
-  lines.push('■ 2. 見送るべき人');
-  lines.push(detail.skipFor || '');
-  lines.push('');
-  lines.push('■ 3. まとめ');
-  lines.push(detail.summary || '');
-  return lines.join('\n');
+  // 基本情報・メリデメ・買うべき人・見送るべき人・まとめは全て構造化データとして
+  // openSnkModal側でカードUI描画するため、テキスト本文は使用しない
+  return '';
 }
 
 // sneakers.js — バッシュ情報
@@ -722,6 +714,10 @@ async function openSnkModal(id) {
   const snkTocItems = [];
   if (basic.releaseJP || basic.releaseUS || basic.priceJP || basic.priceWorld || basic.colorways) snkTocItems.push({ label: '基本情報', id: 'snkSectionBasic' });
   if (prosArr.length || consArr.length) snkTocItems.push({ label: 'メリット・デメリット', id: 'snkSectionProsCons' });
+  const snkDetail = s.detail || {};
+  if (snkDetail.buyFor) snkTocItems.push({ label: '買うべき人', id: 'snkSectionBuyFor' });
+  if (snkDetail.skipFor) snkTocItems.push({ label: '見送るべき人', id: 'snkSectionSkipFor' });
+  if (snkDetail.summary) snkTocItems.push({ label: 'まとめ', id: 'snkSectionSummary' });
   if (s.review) {
     let hi = 0;
     s.review.split('\n').forEach(line => {
@@ -766,6 +762,29 @@ async function openSnkModal(id) {
       </ul>
     </div>` : ''}
   ` : '';
+
+  const buyForHtml = snkDetail.buyFor ? `
+    <div id="snkSectionBuyFor" style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+        <span style="font-size:14px;">👍</span>
+        <span style="font-size:12px;font-weight:700;color:#1e8449;letter-spacing:.3px;">買うべき人</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--tx2);line-height:1.75;">${snkDetail.buyFor}</div>
+    </div>` : '';
+  const skipForHtml = snkDetail.skipFor ? `
+    <div id="snkSectionSkipFor" style="background:rgba(255,140,0,0.07);border:1px solid rgba(255,140,0,0.22);border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+        <span style="font-size:14px;">🤔</span>
+        <span style="font-size:12px;font-weight:700;color:#c26a00;letter-spacing:.3px;">見送るべき人</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--tx2);line-height:1.75;">${snkDetail.skipFor}</div>
+    </div>` : '';
+  const summaryHtml = snkDetail.summary ? `
+    <div id="snkSectionSummary" style="position:relative;background:linear-gradient(135deg, ${scoreColor}12, var(--bg3) 70%);border:1px solid ${scoreColor}35;border-radius:14px;padding:18px 18px 16px 22px;margin-bottom:14px;overflow:hidden;">
+      <div style="position:absolute;top:2px;left:10px;font-size:36px;font-weight:900;color:${scoreColor}35;line-height:1;font-family:Georgia,serif;">"</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${scoreColor};margin-bottom:8px;">まとめ</div>
+      <div style="font-size:13px;color:var(--tx);line-height:1.85;font-weight:500;">${snkDetail.summary}</div>
+    </div>` : '';
 
   const reviewHtml = s.review ? `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -817,6 +836,11 @@ async function openSnkModal(id) {
     ${perfGridHtml}
     ${(prosArr.length || consArr.length) ? divider : ''}
     ${prosConsHtml}
+    ${(snkDetail.buyFor || snkDetail.skipFor) ? divider : ''}
+    ${buyForHtml}
+    ${skipForHtml}
+    ${snkDetail.summary ? divider : ''}
+    ${summaryHtml}
     ${s.review ? divider : ''}
     ${reviewHtml}
     ${sourcesHtml}
