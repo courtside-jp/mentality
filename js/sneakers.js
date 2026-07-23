@@ -703,8 +703,12 @@ async function openSnkModal(id) {
       ${colorwayChips.length ? `
       <div>
         <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:8px;">カラー一覧</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          ${colorwayChips.map(c => `<span style="font-size:11px;color:var(--tx2);background:var(--bg);border:1px solid var(--bd);padding:4px 11px;border-radius:12px;">${c}</span>`).join('')}
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          ${colorwayChips.map(c => `
+          <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--bd);border-radius:9px;padding:7px 12px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:${scoreColor};flex-shrink:0;"></span>
+            <span style="font-size:11.5px;color:var(--tx2);line-height:1.4;">${c}</span>
+          </div>`).join('')}
         </div>
       </div>` : ''}
     </div>` : '';
