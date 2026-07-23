@@ -465,7 +465,7 @@ const BRANDS = {
 // ============================================================
 const SNK_PLATFORMS = [
   { key: 'amazon',   label: 'Amazon',           icon: '🛒', color: '#fff3e0', border: '#ffd9a0', solid: '#FF9900' },
-  { key: 'rakuten',  label: '楽天',              icon: '🛍️', color: '#ffece8', border: '#ffc2b3', solid: '#BF0000' },
+  { key: 'rakuten',  label: '楽天',              icon: '🛍️', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Rakuten_Global_Brand_Logo.svg/330px-Rakuten_Global_Brand_Logo.svg.png', color: '#ffece8', border: '#ffc2b3', solid: '#BF0000' },
   { key: 'stockx',   label: 'StockX',            icon: '📈', color: '#e8f0ff', border: '#b3cdff', solid: '#0d5dff' },
   { key: 'snkrdunk', label: 'スニーカーダンク',    icon: '👟', color: '#eef8ec', border: '#bfe6b8', solid: '#00a86b' },
   { key: 'ebay',     label: 'eBay',              icon: '🌐', color: '#f3eefc', border: '#d3bff5', solid: '#6a2fc9' }
@@ -794,9 +794,10 @@ async function openSnkModal(id) {
         const plat = SNK_PLATFORMS.find(p => p.key === sh.key) || SNK_PLATFORMS.find(p => p.label === sh.name) || {};
         const solid = sh.solid || plat.solid || '#333';
         const tint = plat.color || '#f2f2f2';
+        const logo = sh.logo || plat.logo;
         return `
       <div style="display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;${sh.lowest?`box-shadow:0 0 0 1.5px ${solid}55;`:''}">
-        <div style="width:38px;height:38px;border-radius:11px;background:${tint};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">${sh.icon||plat.icon||'🛒'}</div>
+        <div style="width:44px;height:38px;border-radius:11px;background:${logo?'#fff':tint};border:${logo?'1px solid var(--bd)':'none'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;padding:${logo?'6px 5px':'0'};">${logo?`<img src="${logo}" alt="${sh.name}" style="max-width:100%;max-height:100%;object-fit:contain;">`:(sh.icon||plat.icon||'🛒')}</div>
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
             <span style="font-size:12.5px;font-weight:700;color:var(--tx);">${sh.name}</span>
