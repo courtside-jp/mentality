@@ -705,10 +705,10 @@ async function openSnkModal(id) {
       </div>
     </details>` : '';
 
-  const imgCredit = s.imageCredit || null;
-  const imgCreditHtml = (imgCredit && (imgCredit.label || imgCredit.url)) ? `
-    <div style="font-size:10px;color:var(--tx3);text-align:right;margin:0 0 12px;">
-      画像提供: ${imgCredit.url ? `<a href="${imgCredit.url}" target="_blank" rel="noopener" style="color:var(--tx3);text-decoration:underline;">${imgCredit.label || imgCredit.url}</a>` : (imgCredit.label || '')}
+  const imgCreditList = Array.isArray(s.imageCredit) ? s.imageCredit : (s.imageCredit ? [s.imageCredit] : []);
+  const imgCreditHtml = imgCreditList.filter(c => c && (c.label || c.url)).length ? `
+    <div style="font-size:10px;color:var(--tx3);text-align:right;margin:0 0 12px;line-height:1.6;">
+      ${imgCreditList.filter(c => c && (c.label || c.url)).map(c => `画像提供: ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener" style="color:var(--tx3);text-decoration:underline;">${c.label || c.url}</a>` : (c.label || '')}`).join('<br>')}
     </div>` : '';
   const imgGallery = imgs.length ? `
     <img src="${imgs[0]}" style="width:100%;height:280px;object-fit:contain;background:var(--bg3);border-radius:10px;margin-bottom:8px;">
