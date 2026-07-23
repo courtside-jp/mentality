@@ -1030,7 +1030,7 @@ async function openSnkModal(id) {
     ${sourcesHtml}
     ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
     <div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">
-      <a href="${'https://twitter.com/intent/tweet?text=' + encodeURIComponent((s.model||'') + ' #COURTSIDE #NBA #スニーカー https://courtside-jp.github.io/mentality/?sneaker=' + s.id)}" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X このバッシュをシェア</a>
+      <a href="${'https://twitter.com/intent/tweet?text=' + encodeURIComponent(((s.brand?s.brand+' ':'')+(s.model||'')) + ' #COURTSIDE #NBA #スニーカー https://courtside-jp.github.io/mentality/sneakers/' + s.id + '.html')}" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X このバッシュをシェア</a>
     </div>
   `;
   modal.style.display = 'block';
