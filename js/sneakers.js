@@ -687,7 +687,7 @@ async function openSnkModal(id) {
           <div style="font-size:12.5px;color:var(--tx);font-weight:600;">${basic.releaseUS || '－'}</div>
         </div>
       </div>` : ''}
-      ${(basic.releaseJP || basic.releaseUS) && (basic.priceJP || basic.priceWorld) ? '<div style="height:1px;background:var(--bd);"></div>' : ''}
+      ${(basic.releaseJP || basic.releaseUS) && (basic.priceJP || basic.priceWorld) ? '<div style="height:1px;background:rgba(0,0,0,0.1);"></div>' : ''}
       ${(basic.priceJP || basic.priceWorld) ? `
       <div style="display:flex;gap:16px;">
         <div style="flex:1;min-width:0;">
@@ -699,7 +699,7 @@ async function openSnkModal(id) {
           <div style="font-size:15px;color:${scoreColor};font-weight:800;">${basic.priceWorld || '－'}</div>
         </div>
       </div>` : ''}
-      ${((basic.priceJP || basic.priceWorld) && colorwayChips.length) ? '<div style="height:1px;background:var(--bd);"></div>' : ''}
+      ${((basic.priceJP || basic.priceWorld) && colorwayChips.length) ? '<div style="height:1px;background:rgba(0,0,0,0.1);"></div>' : ''}
       ${colorwayChips.length ? `
       <div>
         <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:8px;">カラー一覧</div>
