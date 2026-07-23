@@ -682,7 +682,7 @@ async function openSnkModal(id) {
   const basic = (s.detail && s.detail.basic) || {};
   const colorwayChips = (basic.colorways || '').split(/[／,\n]/).map(c => c.trim()).filter(Boolean);
   const basicInfoHtml = (basic.releaseJP || basic.releaseUS || basic.priceJP || basic.priceWorld || basic.colorways) ? `
-    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">基本情報</div>
+    <div id="snkSectionBasic" style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">基本情報</div>
     <div style="background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:14px;display:flex;flex-direction:column;gap:14px;">
       ${(basic.releaseJP || basic.releaseUS) ? `
       <div style="display:flex;gap:16px;">
@@ -717,12 +717,34 @@ async function openSnkModal(id) {
       </div>` : ''}
     </div>` : '';
 
-  const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
-
   const prosArr = (s.detail && s.detail.pros) || [];
   const consArr = (s.detail && s.detail.cons) || [];
+  const snkTocItems = [];
+  if (basic.releaseJP || basic.releaseUS || basic.priceJP || basic.priceWorld || basic.colorways) snkTocItems.push({ label: '基本情報', id: 'snkSectionBasic' });
+  if (prosArr.length || consArr.length) snkTocItems.push({ label: 'メリット・デメリット', id: 'snkSectionProsCons' });
+  if (s.review) {
+    let hi = 0;
+    s.review.split('\n').forEach(line => {
+      const t = line.trim();
+      const p = t.replace(/<[^>]+>/g, '').trim();
+      if (p && (p.charCodeAt(0) === 9632 || p.charCodeAt(0) === 9642)) {
+        snkTocItems.push({ label: p.replace(/^[\u25a0\u25aa]\s*/, '').trim(), id: `toc-${hi}` });
+        hi++;
+      }
+    });
+  }
+  const tocHtml = snkTocItems.length >= 2 ? `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
+    <summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">
+      目次 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
+    </summary>
+    <div style="padding:4px 16px 14px;">
+      <ol style="margin:0;padding-left:20px;">
+        ${snkTocItems.map(it => `<li style="margin:3px 0;"><a href="#${it.id}" onclick="event.preventDefault();const el=document.getElementById('${it.id}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">${it.label}</a></li>`).join('')}
+      </ol>
+    </div>
+  </details>` : '';
   const prosConsHtml = (prosArr.length || consArr.length) ? `
-    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">メリット・デメリット</div>
+    <div id="snkSectionProsCons" style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">メリット・デメリット</div>
     ${prosArr.length ? `
     <div style="background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.22);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
