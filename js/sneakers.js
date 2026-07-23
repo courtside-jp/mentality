@@ -770,10 +770,19 @@ async function openSnkModal(id) {
     ${creditHtml}`;
   };
   const productGalleryHtml = buildImgSectionHtml('バッシュの写真', imgs, s.imageCredit, 'snkGalleryScroll_product');
-  const wornGalleryHtml = buildImgSectionHtml('実際の着用', wornImgs, s.wornImageCredit, 'snkGalleryScroll_worn');
-  const imgGallery = (imgs.length || wornImgs.length) ? `
+  const otherWearersArr = (s.otherWearers || '').split(/[／,\n]/).map(x => x.trim()).filter(Boolean);
+  const otherWearersHtml = otherWearersArr.length ? `
+    <div style="font-size:11px;color:var(--tx3);margin:-2px 0 12px;line-height:1.7;">
+      他にもこのモデルを着用した選手: ${otherWearersArr.join('、')}
+    </div>` : '';
+  const wornGalleryHtml = `
+    ${(!wornImgs.length && otherWearersArr.length) ? '<div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px;">実際の着用</div>' : ''}
+    ${buildImgSectionHtml('実際の着用', wornImgs, s.wornImageCredit, 'snkGalleryScroll_worn')}
+    ${otherWearersHtml}`;
+  const hasWornSection = wornImgs.length || otherWearersArr.length;
+  const imgGallery = (imgs.length || hasWornSection) ? `
     ${productGalleryHtml}
-    ${(imgs.length && wornImgs.length) ? '<div style="height:1px;background:rgba(0,0,0,0.1);margin:4px 0 16px;"></div>' : ''}
+    ${(imgs.length && hasWornSection) ? '<div style="height:1px;background:rgba(0,0,0,0.1);margin:4px 0 16px;"></div>' : ''}
     ${wornGalleryHtml}
   ` : '';
 
@@ -1086,6 +1095,7 @@ async function submitSneaker() {
   const wornCreditLabel = document.getElementById('sneakerWornImgCreditLabel') ? document.getElementById('sneakerWornImgCreditLabel').value.trim() : '';
   const wornCreditUrl = document.getElementById('sneakerWornImgCreditUrl') ? document.getElementById('sneakerWornImgCreditUrl').value.trim() : '';
   const wornImageCredit = (wornCreditLabel || wornCreditUrl) ? { label: wornCreditLabel, url: wornCreditUrl } : null;
+  const otherWearers = document.getElementById('sneakerOtherWearers') ? document.getElementById('sneakerOtherWearers').value.trim() : '';
 
   const data = {
     brand: document.getElementById('sneakerBrand').value,
@@ -1106,6 +1116,7 @@ async function submitSneaker() {
     imageCredit,
     wornImages,
     wornImageCredit,
+    otherWearers,
     shops,
     date: new Date().toISOString().slice(0,10),
     ts: id ? undefined : Date.now()
@@ -1233,6 +1244,7 @@ function openNewSneaker() {
   snkResetWornImgBlocks([]);
   if (document.getElementById('sneakerWornImgCreditLabel')) document.getElementById('sneakerWornImgCreditLabel').value = '';
   if (document.getElementById('sneakerWornImgCreditUrl')) document.getElementById('sneakerWornImgCreditUrl').value = '';
+  if (document.getElementById('sneakerOtherWearers')) document.getElementById('sneakerOtherWearers').value = '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
   if (shopWrap) shopWrap.innerHTML = snkShopBlocksHtml('s');
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
@@ -1264,6 +1276,7 @@ async function editSneaker(id) {
   const wic = (!Array.isArray(d.wornImageCredit) && d.wornImageCredit) || {};
   if (document.getElementById('sneakerWornImgCreditLabel')) document.getElementById('sneakerWornImgCreditLabel').value = wic.label || '';
   if (document.getElementById('sneakerWornImgCreditUrl')) document.getElementById('sneakerWornImgCreditUrl').value = wic.url || '';
+  if (document.getElementById('sneakerOtherWearers')) document.getElementById('sneakerOtherWearers').value = d.otherWearers || '';
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = d.overallScore || '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = d.desc || '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
