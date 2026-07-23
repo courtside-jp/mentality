@@ -813,8 +813,7 @@ async function openSnkModal(id) {
     ${tocHtml}
     ${playerBadgeHtml}
     ${s.gymOk ? `<div style="margin-bottom:10px;"><span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span></div>` : ''}
-    ${basicInfoHtml}
-    ${divider}
+    ${basicInfoHtml || divider}
     <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;margin-bottom:14px;padding:16px 18px;background:linear-gradient(135deg, ${scoreColor}20, var(--bg3) 65%);border:1px solid ${scoreColor}40;border-radius:16px;">
       <div style="position:relative;width:78px;height:78px;flex-shrink:0;border-radius:50%;background:conic-gradient(${scoreColor} ${score * 3.6}deg, var(--bd) 0deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px ${scoreColor}50;">
         <div style="width:66px;height:66px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;">
