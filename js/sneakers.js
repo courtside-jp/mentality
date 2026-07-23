@@ -860,7 +860,12 @@ function snkScrollToSection(id) {
   const modalRect = modal.getBoundingClientRect();
   const stickyHeaderH = 56; // モーダル上部の固定黒バー(× バッシュ詳細)の高さぶん余白を空ける
   const targetTop = modal.scrollTop + (elRect.top - modalRect.top) - stickyHeaderH;
-  modal.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  const clamped = Math.max(0, targetTop);
+  if (typeof modal.scrollTo === 'function') {
+    try { modal.scrollTo({ top: clamped, behavior: 'smooth' }); } catch(e) { modal.scrollTop = clamped; }
+  }
+  // smooth スクロールが効かない環境向けのフォールバック（少し遅らせて直接反映）
+  setTimeout(() => { if (Math.abs(modal.scrollTop - clamped) > 40) modal.scrollTop = clamped; }, 350);
 }
 function closeSnkModal() {
   const modal = document.getElementById('snkModal');
