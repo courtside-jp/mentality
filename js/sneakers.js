@@ -578,6 +578,13 @@ async function loadSneakers() {
       return;
     }
     renderSneakerFeed(_allSneakers, _allSneakerRankings);
+    if (window._directSneakerId) {
+      const targetId = window._directSneakerId;
+      window._directSneakerId = null;
+      if (_allSneakers.find(s => s.id === targetId)) {
+        setTimeout(() => { _snkModalReturnTo = null; openSnkModal(targetId); }, 300);
+      }
+    }
   } catch(e) {
     wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
   }
@@ -1022,6 +1029,9 @@ async function openSnkModal(id) {
     ${reviewHtml}
     ${sourcesHtml}
     ${shops.length ? `${divider}<div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">価格比較・購入</div>${shopsHtml}` : ''}
+    <div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">
+      <a href="${'https://twitter.com/intent/tweet?text=' + encodeURIComponent((s.model||'') + ' #COURTSIDE #NBA #スニーカー https://courtside-jp.github.io/mentality/?sneaker=' + s.id)}" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X このバッシュをシェア</a>
+    </div>
   `;
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
@@ -1533,3 +1543,21 @@ async function openSnkRankingModal(id) {
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
 }
+
+// URLパラメータでバッシュ詳細を直接開く
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const sneakerId = params.get('sneaker');
+  if (!sneakerId) return;
+  window._directSneakerId = sneakerId;
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const btn = document.getElementById('sn-sneakers');
+      if (btn && typeof goPage === 'function') {
+        goPage('sneakers', btn);
+      } else if (btn) {
+        btn.click();
+      }
+    }, 800);
+  });
+})();
