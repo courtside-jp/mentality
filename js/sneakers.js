@@ -416,7 +416,7 @@ function snkCollectDetail() {
   const v = (id) => (document.getElementById(id)?.value || '').trim();
   const vn = (id) => parseInt(document.getElementById(id)?.value, 10) || 0;
   return {
-    basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), priceWorld: v('snkPriceWorld'), colorways: v('snkColorways') },
+    basic: { releaseJP: v('snkReleaseJP'), releaseUS: v('snkReleaseUS'), priceJP: v('snkPriceJP'), priceWorld: v('snkPriceWorld'), colorways: v('snkColorways'), position: v('snkPosition'), positionReason: v('snkPositionReason') },
     perf: snkCollectPerfFields(),
     buyFor: v('snkBuyFor'), skipFor: v('snkSkipFor'),
     pros: v('snkPros').split('\n').map(s => s.trim()).filter(Boolean),
@@ -430,7 +430,7 @@ function snkPopulateDetail(detail) {
   detail = detail || {};
   const setv = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
   const b = detail.basic || {};
-  setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkPriceWorld', b.priceWorld); setv('snkColorways', b.colorways);
+  setv('snkReleaseJP', b.releaseJP); setv('snkReleaseUS', b.releaseUS); setv('snkPriceJP', b.priceJP); setv('snkPriceWorld', b.priceWorld); setv('snkColorways', b.colorways); setv('snkPosition', b.position); setv('snkPositionReason', b.positionReason);
   snkPopulatePerfFields(detail.perf);
   setv('snkBuyFor', detail.buyFor); setv('snkSkipFor', detail.skipFor);
   setv('snkPros', (detail.pros || []).join('\n')); setv('snkCons', (detail.cons || []).join('\n'));
@@ -845,10 +845,24 @@ async function openSnkModal(id) {
       </div>` : ''}
     </div>` : '';
 
+  const positionArr = (basic.position || '').split(/[／,\n]/).map(p => p.trim()).filter(Boolean);
+  const positionHtml = (positionArr.length || basic.positionReason) ? `
+    <div id="snkSectionPosition" style="background:${scoreColor}10;border:1px solid ${scoreColor}30;border-radius:12px;padding:14px 16px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
+        <span style="width:18px;height:18px;border-radius:50%;background:${scoreColor};color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">P</span>
+        <span style="font-size:12px;font-weight:700;color:${scoreColor};letter-spacing:.3px;">適しているポジション</span>
+      </div>
+      ${positionArr.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;${basic.positionReason ? 'margin-bottom:10px;' : ''}">
+        ${positionArr.map(p => `<span style="font-size:11.5px;font-weight:700;color:${scoreColor};background:var(--bg);border:1px solid ${scoreColor}40;padding:5px 12px;border-radius:12px;">${p}</span>`).join('')}
+      </div>` : ''}
+      ${basic.positionReason ? `<div style="font-size:12.5px;color:var(--tx2);line-height:1.75;">${basic.positionReason}</div>` : ''}
+    </div>` : '';
+
   const prosArr = (s.detail && s.detail.pros) || [];
   const consArr = (s.detail && s.detail.cons) || [];
   const snkTocItems = [];
   if (basic.releaseJP || basic.releaseUS || basic.priceJP || basic.priceWorld || basic.colorways) snkTocItems.push({ label: '基本情報', id: 'snkSectionBasic' });
+  if (positionArr.length || basic.positionReason) snkTocItems.push({ label: '適しているポジション', id: 'snkSectionPosition' });
   if (prosArr.length || consArr.length) snkTocItems.push({ label: 'メリット・デメリット', id: 'snkSectionProsCons' });
   const snkDetail = s.detail || {};
   if (snkDetail.buyFor) snkTocItems.push({ label: '買うべき人', id: 'snkSectionBuyFor' });
@@ -951,6 +965,7 @@ async function openSnkModal(id) {
     ${s.gymOk ? `<div style="margin-bottom:10px;"><span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span></div>` : ''}
     ${basicInfoHtml ? divider : ''}
     ${basicInfoHtml}
+    ${positionHtml}
     ${divider}
     <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;margin-bottom:14px;padding:16px 18px;background:linear-gradient(135deg, ${scoreColor}20, var(--bg3) 65%);border:1px solid ${scoreColor}40;border-radius:16px;">
       <div style="position:relative;width:78px;height:78px;flex-shrink:0;border-radius:50%;background:conic-gradient(${scoreColor} ${score * 3.6}deg, var(--bd) 0deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px ${scoreColor}50;">
