@@ -755,22 +755,22 @@ async function openSnkModal(id) {
       ${filtered.map(c => `画像提供: ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener" style="color:var(--tx3);text-decoration:underline;">${c.label || c.url}</a>` : (c.label || '')}`).join('<br>')}
     </div>`;
   };
-  const buildImgSectionHtml = (title, arr, credit) => {
+  const buildImgSectionHtml = (title, arr, credit, scrollId) => {
     if (!arr.length) return '';
     const creditHtml = buildImgCreditHtml(credit);
+    const dotsId = `${scrollId}_dots`;
     return `
     <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px;">${title}</div>
-    <img src="${arr[0]}" style="width:100%;height:280px;object-fit:contain;background:var(--bg3);border-radius:10px;margin-bottom:8px;">
-    ${creditHtml}
-    ${arr.length > 1 ? `<details style="margin-bottom:12px;">
-      <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">他の写真を見る（${arr.length-1}枚）▼</summary>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
-        ${arr.slice(1).map(img => `<img src="${img}" style="width:100%;height:110px;object-fit:contain;background:var(--bg3);border-radius:6px;">`).join('')}
-      </div>
-    </details>` : ''}`;
+    <div id="${scrollId}" onscroll="snkUpdateGalleryDots('${scrollId}','${dotsId}')" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:0;border-radius:10px;margin-bottom:8px;">
+      ${arr.map(img => `<img src="${img}" style="scroll-snap-align:center;flex:0 0 100%;width:100%;height:280px;object-fit:contain;background:var(--bg3);border-radius:10px;">`).join('')}
+    </div>
+    ${arr.length > 1 ? `<div id="${dotsId}" style="display:flex;justify-content:center;gap:6px;margin-bottom:8px;">
+      ${arr.map((_,i) => `<span data-color="${scoreColor}" style="width:${i===0?'14px':'6px'};height:6px;border-radius:3px;background:${i===0?scoreColor:'var(--bd)'};transition:width .2s,background .2s;"></span>`).join('')}
+    </div>` : ''}
+    ${creditHtml}`;
   };
-  const productGalleryHtml = buildImgSectionHtml('バッシュの写真', imgs, s.imageCredit);
-  const wornGalleryHtml = buildImgSectionHtml('実際の着用', wornImgs, s.wornImageCredit);
+  const productGalleryHtml = buildImgSectionHtml('バッシュの写真', imgs, s.imageCredit, 'snkGalleryScroll_product');
+  const wornGalleryHtml = buildImgSectionHtml('実際の着用', wornImgs, s.wornImageCredit, 'snkGalleryScroll_worn');
   const imgGallery = (imgs.length || wornImgs.length) ? `
     ${productGalleryHtml}
     ${(imgs.length && wornImgs.length) ? '<div style="height:1px;background:rgba(0,0,0,0.1);margin:4px 0 16px;"></div>' : ''}
@@ -1004,6 +1004,19 @@ async function openSnkModal(id) {
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
 }
+function snkUpdateGalleryDots(scrollId, dotsId) {
+  const scroller = document.getElementById(scrollId);
+  const dots = document.getElementById(dotsId);
+  if (!scroller || !dots) return;
+  const w = scroller.clientWidth || 1;
+  const idx = Math.round(scroller.scrollLeft / w);
+  Array.from(dots.children).forEach((dot, i) => {
+    const active = i === idx;
+    dot.style.width = active ? '14px' : '6px';
+    dot.style.background = active ? dot.dataset.color : 'var(--bd)';
+  });
+}
+
 function snkScrollToSection(id) {
   const el = document.getElementById(id);
   const modal = document.getElementById('snkModal');
