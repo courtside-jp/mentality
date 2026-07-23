@@ -332,20 +332,14 @@ function snkResetDetailFields() { snkPopulateDetail({}); }
 
 function buildSnkReviewText(detail) {
   if (!detail) return '';
-  const b = detail.basic || {};
   const lines = [];
-  lines.push('■ 1. 基本情報');
-  lines.push(`発売日（日本）：${b.releaseJP || ''}　／　発売日（世界）：${b.releaseUS || ''}`);
-  lines.push(`金額（日本）：${b.priceJP || ''}　／　金額（世界）：${b.priceWorld || ''}`);
-  lines.push(`カラー一覧：${b.colorways || ''}`);
-  lines.push('');
-  lines.push('■ 2. 買うべき人');
+  lines.push('■ 1. 買うべき人');
   lines.push(detail.buyFor || '');
   lines.push('');
-  lines.push('■ 3. 見送るべき人');
+  lines.push('■ 2. 見送るべき人');
   lines.push(detail.skipFor || '');
   lines.push('');
-  lines.push('■ 4. まとめ');
+  lines.push('■ 3. まとめ');
   lines.push(detail.summary || '');
   return lines.join('\n');
 }
@@ -685,6 +679,44 @@ async function openSnkModal(id) {
       </div>
     </div>` : '';
 
+  const basic = (s.detail && s.detail.basic) || {};
+  const colorwayChips = (basic.colorways || '').split(/[／,\n]/).map(c => c.trim()).filter(Boolean);
+  const basicInfoHtml = (basic.releaseJP || basic.releaseUS || basic.priceJP || basic.priceWorld || basic.colorways) ? `
+    <div style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:10px;">基本情報</div>
+    <div style="background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:14px;display:flex;flex-direction:column;gap:14px;">
+      ${(basic.releaseJP || basic.releaseUS) ? `
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:4px;">発売日（日本）</div>
+          <div style="font-size:12.5px;color:var(--tx);font-weight:600;">${basic.releaseJP || '－'}</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:4px;">発売日（世界）</div>
+          <div style="font-size:12.5px;color:var(--tx);font-weight:600;">${basic.releaseUS || '－'}</div>
+        </div>
+      </div>` : ''}
+      ${(basic.releaseJP || basic.releaseUS) && (basic.priceJP || basic.priceWorld) ? '<div style="height:1px;background:var(--bd);"></div>' : ''}
+      ${(basic.priceJP || basic.priceWorld) ? `
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:4px;">金額（日本）</div>
+          <div style="font-size:15px;color:${scoreColor};font-weight:800;">${basic.priceJP || '－'}</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:4px;">金額（世界）</div>
+          <div style="font-size:15px;color:${scoreColor};font-weight:800;">${basic.priceWorld || '－'}</div>
+        </div>
+      </div>` : ''}
+      ${((basic.priceJP || basic.priceWorld) && colorwayChips.length) ? '<div style="height:1px;background:var(--bd);"></div>' : ''}
+      ${colorwayChips.length ? `
+      <div>
+        <div style="font-size:9.5px;color:var(--tx3);letter-spacing:.5px;margin-bottom:8px;">カラー一覧</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${colorwayChips.map(c => `<span style="font-size:11px;color:var(--tx2);background:var(--bg);border:1px solid var(--bd);padding:4px 11px;border-radius:12px;">${c}</span>`).join('')}
+        </div>
+      </div>` : ''}
+    </div>` : '';
+
   const tocHtml = (s.review && typeof generateTOC === 'function') ? generateTOC(s.review) : '';
 
   const prosArr = (s.detail && s.detail.pros) || [];
@@ -740,6 +772,7 @@ async function openSnkModal(id) {
     ${tocHtml}
     ${playerBadgeHtml}
     ${s.gymOk ? `<div style="margin-bottom:10px;"><span style="font-size:11px;color:#27ae60;background:rgba(39,174,96,0.08);padding:4px 10px;border-radius:12px;">ジム・トレーニング用にもおすすめ</span></div>` : ''}
+    ${basicInfoHtml}
     ${divider}
     <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;margin-bottom:14px;padding:16px 18px;background:linear-gradient(135deg, ${scoreColor}20, var(--bg3) 65%);border:1px solid ${scoreColor}40;border-radius:16px;">
       <div style="position:relative;width:78px;height:78px;flex-shrink:0;border-radius:50%;background:conic-gradient(${scoreColor} ${score * 3.6}deg, var(--bd) 0deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px ${scoreColor}50;">
