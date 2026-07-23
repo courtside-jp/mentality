@@ -735,7 +735,7 @@ async function openSnkModal(id) {
     </summary>
     <div style="padding:4px 16px 14px;">
       <ol style="margin:0;padding-left:20px;">
-        ${snkTocItems.map(it => `<li style="margin:3px 0;"><a href="#${it.id}" onclick="event.preventDefault();const el=document.getElementById('${it.id}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">${it.label}</a></li>`).join('')}
+        ${snkTocItems.map(it => `<li style="margin:3px 0;"><a href="#${it.id}" onclick="event.preventDefault();snkScrollToSection('${it.id}');" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">${it.label}</a></li>`).join('')}
       </ol>
     </div>
   </details>` : '';
@@ -851,6 +851,16 @@ async function openSnkModal(id) {
   if (typeof applyArticleFontSize === 'function') applyArticleFontSize();
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
+}
+function snkScrollToSection(id) {
+  const el = document.getElementById(id);
+  const modal = document.getElementById('snkModal');
+  if (!el || !modal) return;
+  const elRect = el.getBoundingClientRect();
+  const modalRect = modal.getBoundingClientRect();
+  const stickyHeaderH = 56; // モーダル上部の固定黒バー(× バッシュ詳細)の高さぶん余白を空ける
+  const targetTop = modal.scrollTop + (elRect.top - modalRect.top) - stickyHeaderH;
+  modal.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
 }
 function closeSnkModal() {
   const modal = document.getElementById('snkModal');
