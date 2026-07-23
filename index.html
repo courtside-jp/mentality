@@ -621,31 +621,10 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                 <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
               </label>
             </div>
-            <details style="margin-top:8px;border:1px solid #eee;border-radius:8px;padding:8px 10px;background:#fafafa;">
-              <summary style="font-size:11px;font-weight:700;color:#666;cursor:pointer;">他の角度からの写真を追加（任意）▼</summary>
-              <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <input id="sneakerImg2" type="text" placeholder="サイド/別アングル画像2 https://..." style="flex:1;width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-                  <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#fff;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
-                    <span class="snkUploadLabel">📷 アップロード</span>
-                    <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg2')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
-                  </label>
-                </div>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <input id="sneakerImg3" type="text" placeholder="背面/ソール画像3 https://..." style="flex:1;width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-                  <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#fff;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
-                    <span class="snkUploadLabel">📷 アップロード</span>
-                    <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg3')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
-                  </label>
-                </div>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <input id="sneakerImg4" type="text" placeholder="着用イメージ画像4 https://..." style="flex:1;width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
-                  <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#fff;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
-                    <span class="snkUploadLabel">📷 アップロード</span>
-                    <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'sneakerImg4')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
-                  </label>
-                </div>
-              </div>
+            <details open style="margin-top:8px;border:1px solid #eee;border-radius:8px;padding:8px 10px;background:#fafafa;">
+              <summary style="font-size:11px;font-weight:700;color:#666;cursor:pointer;">他の角度からの写真を追加（任意・何枚でも）▼</summary>
+              <div id="snkImgBlocks" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
+              <button type="button" onclick="addSnkImgBlock()" style="margin-top:8px;padding:7px 12px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">＋ 写真を追加</button>
             </details>
             <div style="margin-top:10px;display:flex;gap:6px;">
               <input id="sneakerImgCreditLabel" type="text" placeholder="画像引用元 例: Amazon.co.jp" style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
@@ -1248,7 +1227,7 @@ function signOutAdmin() {
 <script src="js/app.js?v=9"></script>
 <script src="js/schedule2.js?v=9"></script>
 <script src="js/articles.js?v=5"></script>
-<script src="js/sneakers.js?v=60"></script>
+<script src="js/sneakers.js?v=61"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>
 <script src="js/home.js?v=3"></script>

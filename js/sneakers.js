@@ -257,6 +257,75 @@ function snkPopulatePerfFields(perf) {
 }
 
 let _snkSourceCount = 0;
+let _snkImgCount = 0;
+
+async function uploadSneakerImage(input, fieldId) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const field = document.getElementById(fieldId);
+  const label = input.parentElement.querySelector('.snkUploadLabel');
+  const originalLabel = label ? label.textContent : '';
+  if (label) label.textContent = 'アップロード中...';
+  try {
+    const form = new FormData();
+    form.append('image', file);
+    const res = await fetch('https://api.imgbb.com/1/upload?key=7a3e4b2c1d5f6e8a9b0c3d4e5f6a7b8c', {
+      method: 'POST', body: form
+    });
+    const data = await res.json();
+    if (data && data.data && data.data.url) {
+      field.value = data.data.url;
+    } else {
+      alert('アップロードに失敗しました');
+    }
+  } catch (e) {
+    alert('アップロードに失敗しました: ' + e.message);
+  } finally {
+    if (label) label.textContent = originalLabel;
+    input.value = '';
+  }
+}
+
+function snkImgBlockHtml(idx, url) {
+  const esc = (s) => (s || '').replace(/"/g, '&quot;');
+  return `<div id="snkImgBlock_${idx}" style="display:flex;gap:6px;align-items:center;">
+    <input id="snkImg_${idx}" type="text" placeholder="追加写真URL https://..." value="${esc(url)}" style="flex:1;width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+    <label style="position:relative;flex-shrink:0;display:inline-block;padding:9px 10px;background:#fff;border:1px solid #eee;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">
+      <span class="snkUploadLabel">📷 アップロード</span>
+      <input type="file" accept="image/*" onchange="uploadSneakerImage(this,'snkImg_${idx}')" style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+    </label>
+    <button type="button" onclick="removeSnkImgBlock(${idx})" style="flex-shrink:0;padding:9px 10px;background:#fff;border:1px solid #eee;border-radius:8px;font-size:11px;color:#999;cursor:pointer;">削除</button>
+  </div>`;
+}
+function addSnkImgBlock(url) {
+  const wrap = document.getElementById('snkImgBlocks');
+  if (!wrap) return;
+  const idx = _snkImgCount++;
+  wrap.insertAdjacentHTML('beforeend', snkImgBlockHtml(idx, url));
+}
+function removeSnkImgBlock(idx) {
+  const el = document.getElementById(`snkImgBlock_${idx}`);
+  if (el) el.remove();
+}
+function snkResetImgBlocks(images) {
+  const wrap = document.getElementById('snkImgBlocks');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  _snkImgCount = 0;
+  if (images && images.length) { images.forEach(u => addSnkImgBlock(u)); }
+}
+function snkCollectExtraImages() {
+  const wrap = document.getElementById('snkImgBlocks');
+  if (!wrap) return [];
+  const blocks = wrap.querySelectorAll('[id^="snkImgBlock_"]');
+  const out = [];
+  blocks.forEach(b => {
+    const idx = b.id.replace('snkImgBlock_', '');
+    const url = (document.getElementById(`snkImg_${idx}`)?.value || '').trim();
+    if (url) out.push(url);
+  });
+  return out;
+}
 function snkSourceBlockHtml(idx, data) {
   data = data || {};
   const esc = (s) => (s || '').replace(/"/g, '&quot;');
@@ -642,12 +711,12 @@ async function openSnkModal(id) {
       画像提供: ${imgCredit.url ? `<a href="${imgCredit.url}" target="_blank" rel="noopener" style="color:var(--tx3);text-decoration:underline;">${imgCredit.label || imgCredit.url}</a>` : (imgCredit.label || '')}
     </div>` : '';
   const imgGallery = imgs.length ? `
-    <img src="${imgs[0]}" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:8px;">
+    <img src="${imgs[0]}" style="width:100%;height:280px;object-fit:contain;background:var(--bg3);border-radius:10px;margin-bottom:8px;">
     ${imgCreditHtml}
     ${imgs.length > 1 ? `<details style="margin-bottom:12px;">
       <summary style="font-size:12px;color:var(--tx3);cursor:pointer;padding:6px 0;">他の写真を見る（${imgs.length-1}枚）▼</summary>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">
-        ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:90px;object-fit:cover;border-radius:6px;">`).join('')}
+        ${imgs.slice(1).map(img => `<img src="${img}" style="width:100%;height:110px;object-fit:contain;background:var(--bg3);border-radius:6px;">`).join('')}
       </div>
     </details>` : ''}` : '';
 
@@ -917,9 +986,7 @@ async function submitSneaker() {
 
   const images = [
     document.getElementById('sneakerImg').value.trim(),
-    document.getElementById('sneakerImg2').value.trim(),
-    document.getElementById('sneakerImg3').value.trim(),
-    document.getElementById('sneakerImg4').value.trim()
+    ...snkCollectExtraImages()
   ].filter(Boolean);
 
   const detail = snkCollectDetail();
@@ -1068,9 +1135,7 @@ function openNewSneaker() {
   if (document.getElementById('sneakerOverallScore')) document.getElementById('sneakerOverallScore').value = '';
   if (document.getElementById('sneakerDesc')) document.getElementById('sneakerDesc').value = '';
   document.getElementById('sneakerImg').value = '';
-  document.getElementById('sneakerImg2').value = '';
-  document.getElementById('sneakerImg3').value = '';
-  document.getElementById('sneakerImg4').value = '';
+  snkResetImgBlocks([]);
   if (document.getElementById('sneakerImgCreditLabel')) document.getElementById('sneakerImgCreditLabel').value = '';
   if (document.getElementById('sneakerImgCreditUrl')) document.getElementById('sneakerImgCreditUrl').value = '';
   const shopWrap = document.getElementById('sneakerShopBlocks');
@@ -1095,9 +1160,7 @@ async function editSneaker(id) {
   if (document.getElementById('sneakerPlayerRole')) document.getElementById('sneakerPlayerRole').value = d.playerRole || 'worn';
   const imgs = d.images || [];
   document.getElementById('sneakerImg').value = imgs[0] || d.img || '';
-  document.getElementById('sneakerImg2').value = imgs[1] || '';
-  document.getElementById('sneakerImg3').value = imgs[2] || '';
-  document.getElementById('sneakerImg4').value = imgs[3] || '';
+  snkResetImgBlocks(imgs.slice(1));
   const ic = d.imageCredit || {};
   if (document.getElementById('sneakerImgCreditLabel')) document.getElementById('sneakerImgCreditLabel').value = ic.label || '';
   if (document.getElementById('sneakerImgCreditUrl')) document.getElementById('sneakerImgCreditUrl').value = ic.url || '';
