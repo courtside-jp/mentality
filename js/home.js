@@ -77,7 +77,10 @@ async function loadHomeFeed() {
     const items    = itmData ? Object.entries(itmData).map(([id, s]) => ({ ...s, id, _type: 'item' })) : [];
     const rankings = rankData ? Object.entries(rankData).map(([id, r]) => ({ ...r, id, _type: 'ranking', img: r.img || (r.items && r.items[0] && r.items[0].img) || '' })) : [];
 
-    _homeFeedCache = [...articles, ...sneakers, ...items, ...rankings].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
+    const now = Date.now();
+    _homeFeedCache = [...articles, ...sneakers, ...items, ...rankings]
+      .filter(p => !p.publishAt || p.publishAt <= now)
+      .sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 5);
 
     renderHomeFeed(_homeFeedCache);
   } catch (e) {

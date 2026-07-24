@@ -571,7 +571,9 @@ async function loadSneakers() {
   try {
     const res = await fetch(FB_SNEAKERS + '.json');
     const data = await res.json();
-    _allSneakers = data ? Object.entries(data).map(([id,s]) => ({id,...s})).sort((a,b) => b.ts - a.ts) : [];
+    _allSneakers = data ? Object.entries(data).map(([id,s]) => ({id,...s}))
+      .filter(s => { const p = s.publishAt; return !p || p <= Date.now(); })
+      .sort((a,b) => b.ts - a.ts) : [];
     await loadSneakerRankings();
     if (!_allSneakers.length && !_allSneakerRankings.length) {
       wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ情報がありません</div>';
@@ -1145,7 +1147,12 @@ async function submitSneaker() {
     otherWearers,
     shops,
     date: new Date().toISOString().slice(0,10),
-    ts: id ? undefined : Date.now()
+    ts: id ? undefined : Date.now(),
+    publishAt: (function(){
+      const el = document.getElementById('sneakerPublishAt');
+      if (!el || !el.value) return null;
+      return new Date(el.value).getTime();
+    })()
   };
   Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
 
@@ -1203,7 +1210,7 @@ async function loadAdminSneakers() {
           <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${s.brand||''}</div>
           <div style="font-size:9px;color:#999;">${s.date||''}</div>
         </div>
-        <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:4px;">${s.model||s.name||'無題'}</div>
+        <div style="font-size:13px;font-weight:700;color:#000;margin-bottom:4px;">${s.model||s.name||'無題'}${s.publishAt && s.publishAt > Date.now() ? '<span style="background:#f59e0b;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:700;">予約中</span>' : ''}</div>
         <div style="font-size:11px;color:#666;margin-bottom:8px;">${s.player||''} ${s.price ? '· ' + s.price : ''}</div>
         <div style="display:flex;gap:6px;">
           <button onclick="editSneaker('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
@@ -1276,6 +1283,7 @@ function openNewSneaker() {
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
   if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
   snkResetDetailFields();
+  if (document.getElementById('sneakerPublishAt')) document.getElementById('sneakerPublishAt').value = '';
   document.getElementById('sneakerSubmitBtn').textContent = '\u6295\u7a3f\u3059\u308b';
 }
 
@@ -1313,6 +1321,15 @@ async function editSneaker(id) {
   const perfContainer = document.getElementById('snkPerfFieldsContainer');
   if (perfContainer) perfContainer.innerHTML = renderPerfFieldsHtml();
   snkPopulateDetail(d.detail || {});
+  if (document.getElementById('sneakerPublishAt')) {
+    if (d.publishAt) {
+      const dt = new Date(d.publishAt);
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('sneakerPublishAt').value = `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+    } else {
+      document.getElementById('sneakerPublishAt').value = '';
+    }
+  }
   document.getElementById('sneakerSubmitBtn').textContent = '上書き保存';
 }
 

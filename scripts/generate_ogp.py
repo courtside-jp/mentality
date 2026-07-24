@@ -155,6 +155,9 @@ if sneakers:
     for sneaker_id, s in sneakers.items():
         if not isinstance(s, dict):
             continue
+        publish_at = s.get('publishAt')
+        if publish_at and publish_at > datetime.now().timestamp() * 1000:
+            continue  # 予約投稿はまだ公開しない
 
         brand = s.get('brand', '')
         model = s.get('model', '')
