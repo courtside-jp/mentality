@@ -780,14 +780,14 @@ async function openSnkModal(id) {
     const dotsId = `${scrollId}_dots`;
     return `
     <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px;">${title}</div>
-    <div id="${scrollId}" onscroll="snkUpdateGalleryDots('${scrollId}','${dotsId}')" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:0;border-radius:10px;margin-bottom:8px;">
+    <div id="${scrollId}" onscroll="snkUpdateGalleryDots('${scrollId}','${dotsId}')" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:0;border-radius:10px;margin:0 auto 8px;max-width:520px;">
       ${arr.map(img => `
       <div style="position:relative;flex:0 0 100%;width:100%;height:280px;scroll-snap-align:center;border-radius:10px;overflow:hidden;background:var(--bg3);">
-        <img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(24px) brightness(0.85);transform:scale(1.2);">
+        <img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(30px) brightness(0.8) saturate(1.3);transform:scale(1.3);">
         <img src="${img}" style="position:relative;width:100%;height:100%;object-fit:contain;">
       </div>`).join('')}
     </div>
-    ${arr.length > 1 ? `<div id="${dotsId}" style="display:flex;justify-content:center;gap:6px;margin-bottom:8px;">
+    ${arr.length > 1 ? `<div id="${dotsId}" style="display:flex;justify-content:center;gap:6px;margin:0 auto 8px;max-width:520px;">
       ${arr.map((_,i) => `<span data-color="${scoreColor}" style="width:${i===0?'14px':'6px'};height:6px;border-radius:3px;background:${i===0?scoreColor:'var(--bd)'};transition:width .2s,background .2s;"></span>`).join('')}
     </div>` : ''}
     ${creditHtml}`;
