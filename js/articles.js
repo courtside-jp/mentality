@@ -459,21 +459,18 @@ async function openArticle(id) {
     renderRelatedArticles(id, window.__currentArticle.category);
   }
   applyArticleFontSize();
-  // X埋め込みを処理
+  // X埋め込みを処理（記事本文中の実際の .twitter-tweet を再スキャンして描画）
   setTimeout(function() {
-    document.querySelectorAll('.tweet-embed').forEach(function(el) {
-      const url = el.dataset.url;
-      if (!url) return;
-      el.innerHTML = '<blockquote class="twitter-tweet"><a href="' + url + '"></a></blockquote>';
-      if (typeof twttr !== 'undefined' && twttr.widgets) {
-        twttr.widgets.load(el);
-      } else {
-        var s = document.createElement('script');
-        s.src = 'https://platform.twitter.com/widgets.js';
-        s.onload = function() { twttr.widgets.load(el); };
-        document.body.appendChild(s);
-      }
-    });
+    const bodyDiv = document.getElementById('articleBodyDiv');
+    if (typeof twttr !== 'undefined' && twttr.widgets) {
+      twttr.widgets.load(bodyDiv);
+    } else {
+      var s = document.createElement('script');
+      s.src = 'https://platform.twitter.com/widgets.js';
+      s.onload = function() { if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load(bodyDiv); };
+      document.body.appendChild(s);
+    }
+    if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
   }, 300);
 }
 
