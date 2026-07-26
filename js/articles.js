@@ -82,6 +82,15 @@ async function renderRelatedArticles(currentId, category) {
 // ============================================================
 // 本文レンダリング（URL自動判別）
 // ============================================================
+function showProductImage(url) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
+  overlay.onclick = function() { overlay.remove(); };
+  overlay.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);">' +
+    '<div style="position:absolute;top:18px;right:20px;color:#fff;font-size:1.8rem;cursor:pointer;">&times;</div>';
+  document.body.appendChild(overlay);
+}
+
 function applyInlineBold(text) {
   return text.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:800;">$1</strong>');
 }
@@ -114,7 +123,7 @@ function renderBody(body) {
         ? '<a href="' + scAmazon + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">Amazon' + (scAmazonPrice ? '<br>' + scAmazonPrice : '') + '</a>'
         : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>取扱なし</span>';
       return '<div style="display:flex;gap:.7rem;align-items:center;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem;margin:.7rem 0;">' +
-        '<img src="' + scImg + '" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">' +
+        '<img src="' + scImg + '" onclick="showProductImage(\'' + scImg + '\')" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;cursor:pointer;" onerror="this.style.display=\'none\'">' +
         '<div style="flex:1;min-width:0;">' +
         '<div style="font-size:.78rem;font-weight:700;color:var(--tx);margin-bottom:.45rem;line-height:1.4;">' + scName + '</div>' +
         '<div style="display:flex;gap:.4rem;">' + rakutenBtn + amazonBtn + '</div>' +
