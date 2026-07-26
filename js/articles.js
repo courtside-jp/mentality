@@ -106,10 +106,22 @@ function renderBody(body) {
     if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
     if (t.includes('twitter.com') || t.includes('x.com')) return '<div style="margin:.8rem 0;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
     if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
-    const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]/);
+    const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
     if (productMatch) {
-      const [, pName, pPrice, pUrl] = productMatch;
-      return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
+      const [, pName, pPrice, pUrl, pImg] = productMatch;
+      const iconHtml = pImg
+        ? '<img src="' + pImg + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">'
+        : '<div style="font-size:1.5rem;">🛒</div>';
+      return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;">' + iconHtml + '<div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する</div></div></a>';
+    }
+    const quoteMatch = t.match(/\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]/);
+    if (quoteMatch) {
+      const [, qText, qName, qSource, qUrl] = quoteMatch;
+      return '<div style="margin:1rem 0;padding:1rem 1.1rem;background:var(--bg3);border-left:4px solid var(--accent,#e63946);border-radius:0 10px 10px 0;">' +
+        '<div style="font-size:.92rem;font-style:italic;color:var(--tx);line-height:1.75;">' + applyInlineBold(qText) + '</div>' +
+        (qName ? '<div style="margin-top:.5rem;font-size:.75rem;font-weight:700;color:var(--tx2);">— ' + qName + '</div>' : '') +
+        (qUrl ? '<a href="' + qUrl + '" target="_blank" style="display:inline-block;margin-top:.4rem;font-size:.65rem;color:var(--tx3);text-decoration:underline;">引用元：' + (qSource || 'リンク') + '</a>' : (qSource ? '<div style="margin-top:.4rem;font-size:.65rem;color:var(--tx3);">引用元：' + qSource + '</div>' : '')) +
+        '</div>';
     }
     const shopcardMatch = t.match(/\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]/);
     if (shopcardMatch) {
@@ -823,6 +835,17 @@ function insertShopCard() {
   insertNodeAtCursor(chip);
 }
 
+function insertQuoteBlock() {
+  const text = prompt('引用するコメント本文を入力してください');
+  if (!text) return;
+  const name = prompt('発言者名を入力してください（例：ビクター・ウェンバンヤマ）') || '';
+  const source = prompt('引用元メディア名を入力してください（例：2Kジャパン公式サイト）') || '';
+  const url = prompt('引用元のURLを入力してください（任意）') || '';
+  const card = `[quote text="${text}" name="${name}" source="${source}" url="${url}"]`;
+  const chip = createEmbedChip('quote', card, `${source || '引用'}：${text.slice(0, 20)}...`);
+  insertNodeAtCursor(chip);
+}
+
 // 下書き保存
 const FB_DRAFTS = `${FB_URL}/drafts`;
 
@@ -1161,6 +1184,7 @@ function createEmbedChip(kind, rawLine, displayHtml) {
     tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
     product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
     shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
     link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
@@ -1175,9 +1199,13 @@ function tryBuildEmbedChip(line) {
   if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
     if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
   }
-  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]$/);
   if (productMatch) {
     return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
+  if (quoteChipMatch) {
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
   }
   const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
   if (shopcardMatch) {
@@ -1333,6 +1361,7 @@ function createEmbedChip(kind, rawLine, displayHtml) {
     tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
     product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
     shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
     link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
@@ -1347,9 +1376,13 @@ function tryBuildEmbedChip(line) {
   if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
     if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
   }
-  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]$/);
   if (productMatch) {
     return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
+  if (quoteChipMatch) {
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
   }
   const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
   if (shopcardMatch) {
