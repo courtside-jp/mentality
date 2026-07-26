@@ -412,6 +412,13 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
             </div>
             <div id="adminImgPreview" style="display:none;margin-top:6px;"><img id="adminImgPreviewImg" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;"></div>
           </div>
+          <div id="adminArticleUrlWrap" style="display:none;">
+            <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">記事URL</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input id="adminArticleUrl" type="text" readonly style="flex:1;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;background:#f5f5f5;color:#666;">
+              <button type="button" onclick="copyAdminArticleUrl()" style="padding:9px 12px;background:#f0f0f0;border:1px solid #eee;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap;">コピー</button>
+            </div>
+          </div>
           <div>
             <div style="font-size:10px;color:#999;margin-bottom:4px;font-weight:700;">本文</div>
             <div style="border:1px solid #eee;border-radius:8px;">
@@ -1253,7 +1260,7 @@ function signOutAdmin() {
 <script src="js/data.js?v=2"></script>
 <script src="js/app.js?v=9"></script>
 <script src="js/schedule2.js?v=9"></script>
-<script src="js/articles.js?v=11"></script>
+<script src="js/articles.js?v=12"></script>
 <script src="js/sneakers.js?v=75"></script>
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>

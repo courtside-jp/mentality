@@ -43,6 +43,29 @@ function msToDatetimeLocal(ms) {
   const off = dt.getTimezoneOffset() * 60000;
   return new Date(dt.getTime() - off).toISOString().slice(0, 16);
 }
+function articlePublicUrl(id) {
+  return `https://courtside-jp.github.io/mentality/articles/${id}.html`;
+}
+function showAdminArticleUrl(id) {
+  const wrap = document.getElementById('adminArticleUrlWrap');
+  const input = document.getElementById('adminArticleUrl');
+  if (!wrap || !input) return;
+  if (!id) { wrap.style.display = 'none'; input.value = ''; return; }
+  wrap.style.display = 'block';
+  input.value = articlePublicUrl(id);
+}
+function copyAdminArticleUrl() {
+  const el = document.getElementById('adminArticleUrl');
+  if (!el || !el.value) return;
+  const done = () => { el.select(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(el.value).then(() => { alert('URLをコピーしました'); }).catch(() => {
+      el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+    });
+  } else {
+    el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+  }
+}
 
 // ============================================================
 // 関連記事（記事下に表示、回遊率アップ用）
@@ -568,20 +591,34 @@ async function submitArticle() {
   const paEl = document.getElementById('adminPublishAt'); if(paEl) paEl.value = '';
       const btn = document.getElementById('adminSubmitBtn');
       if (btn) btn.textContent = '投稿する';
+      document.getElementById('adminTitle').value = '';
+      setAdminBodyValue('');
+      document.getElementById('adminImg').value = '';
+      if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      showAdminArticleUrl(null);
+      closeAdminModal();
+      loadArticles();
+      loadAdminArticles();
     } else {
-      await fetch(FB_ARTICLES + '.json', {
+      const createRes = await fetch(FB_ARTICLES + '.json', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, body, img, category, affiliateLink, ts: Date.now() })
+        body: JSON.stringify({ title, body, img, category, affiliateLink, ts: Date.now(), archived: true })
       });
-      alert('投稿しました！');
+      const createData = await createRes.json();
+      document.getElementById('adminTitle').value = '';
+      setAdminBodyValue('');
+      document.getElementById('adminImg').value = '';
+      if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      if (createData && createData.name) {
+        showAdminArticleUrl(createData.name);
+        alert('下書き（アーカイブ）として投稿しました。このままURLをコピーできます。公開する場合は記事一覧の「公開に戻す」または編集画面の公開日時から設定してください。');
+      } else {
+        alert('投稿しました！');
+      }
+      loadArticles();
+      loadAdminArticles();
     }
-    document.getElementById('adminTitle').value = '';
-    setAdminBodyValue('');
-    document.getElementById('adminImg').value = '';
-    if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
-    closeAdminModal();
-    loadArticles();
   } catch(e) {
     alert('投稿に失敗しました');
   } finally {
@@ -995,6 +1032,7 @@ async function editArticle(id) {
   if (editId) editId.value = id;
   const paEl1 = document.getElementById('adminPublishAt');
   if (paEl1) paEl1.value = msToDatetimeLocal(a.publishAt);
+  showAdminArticleUrl(id);
   updatePreview();
   document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
   const submitBtn = document.getElementById('adminSubmitBtn');
@@ -1040,6 +1078,8 @@ function openNewArticle() {
   setAdminBodyValue('');
   document.getElementById('adminImg').value = '';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+  const paEl = document.getElementById('adminPublishAt'); if (paEl) paEl.value = '';
+  showAdminArticleUrl(null);
   document.getElementById('adminSubmitBtn').textContent = '投稿する';
   _bodyUndoStack = [];
 }
@@ -1075,6 +1115,7 @@ async function editArticle(id) {
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
   const paEl2 = document.getElementById('adminPublishAt');
   if (paEl2) paEl2.value = msToDatetimeLocal(d.publishAt);
+  showAdminArticleUrl(id);
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
   _bodyUndoStack = [];
 }
