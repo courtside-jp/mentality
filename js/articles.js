@@ -807,6 +807,22 @@ function insertProductLink() {
   insertNodeAtCursor(chip);
 }
 
+function insertShopCard() {
+  const name = prompt('商品名を入力してください');
+  if (!name) return;
+  const img = prompt('商品画像のURLを入力してください（任意）') || '';
+  const rakuten = prompt('楽天の購入URLを入力してください（取り扱いがなければ空欄でOK）') || '';
+  const rakutenPrice = rakuten ? (prompt('楽天の価格を入力してください（例：15,180円）') || '') : '';
+  const amazon = prompt('AmazonのURLを入力してください（取り扱いがなければ空欄でOK）') || '';
+  const amazonPrice = amazon ? (prompt('Amazonの価格を入力してください（例：15,180円）') || '') : '';
+  const card = `[shopcard name="${name}" img="${img}" rakuten="${rakuten}" rakutenPrice="${rakutenPrice}" amazon="${amazon}" amazonPrice="${amazonPrice}"]`;
+  const shops = [];
+  if (rakuten) shops.push('楽天');
+  if (amazon) shops.push('Amazon');
+  const chip = createEmbedChip('shopcard', card, `${name} ${shops.length ? '[' + shops.join('/') + ']' : ''}`);
+  insertNodeAtCursor(chip);
+}
+
 // 下書き保存
 const FB_DRAFTS = `${FB_URL}/drafts`;
 
@@ -1142,9 +1158,10 @@ function createEmbedChip(kind, rawLine, displayHtml) {
   div.setAttribute('contenteditable', 'false');
   div.dataset.embedLine = rawLine;
   const colors = {
-    tweet:   {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
-    product: {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
-    link:    {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
   div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
@@ -1161,6 +1178,13 @@ function tryBuildEmbedChip(line) {
   const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
   if (productMatch) {
     return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
+  if (shopcardMatch) {
+    const shops = [];
+    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
+    return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
   }
   const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
   if (linkMatch) {
@@ -1306,9 +1330,10 @@ function createEmbedChip(kind, rawLine, displayHtml) {
   div.setAttribute('contenteditable', 'false');
   div.dataset.embedLine = rawLine;
   const colors = {
-    tweet:   {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
-    product: {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
-    link:    {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
   div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
@@ -1325,6 +1350,13 @@ function tryBuildEmbedChip(line) {
   const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"\]$/);
   if (productMatch) {
     return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
+  if (shopcardMatch) {
+    const shops = [];
+    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
+    return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
   }
   const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
   if (linkMatch) {
