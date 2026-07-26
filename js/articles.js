@@ -102,6 +102,24 @@ function renderBody(body) {
       const [, pName, pPrice, pUrl] = productMatch;
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;"><div style="font-size:1.5rem;">🛒</div><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する →</div></div></a>';
     }
+    const shopcardMatch = t.match(/\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]/);
+    if (shopcardMatch) {
+      const [, scName, scImg, scRakuten, scRakutenPrice, scAmazon, scAmazonPrice] = shopcardMatch;
+      const activeStyle = 'background:#e63946;color:#fff;';
+      const inactiveStyle = 'background:var(--bg2,#eee);color:var(--tx3);cursor:default;';
+      const rakutenBtn = scRakuten
+        ? '<a href="' + scRakuten + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">楽天' + (scRakutenPrice ? '<br>' + scRakutenPrice : '') + '</a>'
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">楽天<br>取扱なし</span>';
+      const amazonBtn = scAmazon
+        ? '<a href="' + scAmazon + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">Amazon' + (scAmazonPrice ? '<br>' + scAmazonPrice : '') + '</a>'
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>取扱なし</span>';
+      return '<div style="display:flex;gap:.7rem;align-items:center;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem;margin:.7rem 0;">' +
+        '<img src="' + scImg + '" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">' +
+        '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:.78rem;font-weight:700;color:var(--tx);margin-bottom:.45rem;line-height:1.4;">' + scName + '</div>' +
+        '<div style="display:flex;gap:.4rem;">' + rakutenBtn + amazonBtn + '</div>' +
+        '</div></div>';
+    }
     // ■ → 大見出し（目次対応・赤い目立つスタイル）
     if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
       const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
