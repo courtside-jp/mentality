@@ -37,6 +37,12 @@ function generateTOC(body) {
 
 const FB_ARTICLES = `${FB_URL}/articles`;
 const ADMIN_PASSWORD = 'kobe0824';
+function msToDatetimeLocal(ms) {
+  if (!ms) return '';
+  const dt = new Date(ms);
+  const off = dt.getTimezoneOffset() * 60000;
+  return new Date(dt.getTime() - off).toISOString().slice(0, 16);
+}
 
 // ============================================================
 // 関連記事（記事下に表示、回遊率アップ用）
@@ -549,6 +555,7 @@ async function submitArticle() {
         body: JSON.stringify({
           title, body, img, category, affiliateLink,
           ts: Date.now(),
+          archived: false,
           publishAt: (function(){
             const el = document.getElementById('adminPublishAt');
             if (!el || !el.value) return null;
@@ -986,6 +993,8 @@ async function editArticle(id) {
   if (cat) cat.value = a.category || 'NBA';
   const editId = document.getElementById('adminEditId');
   if (editId) editId.value = id;
+  const paEl1 = document.getElementById('adminPublishAt');
+  if (paEl1) paEl1.value = msToDatetimeLocal(a.publishAt);
   updatePreview();
   document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
   const submitBtn = document.getElementById('adminSubmitBtn');
@@ -1062,7 +1071,10 @@ async function editArticle(id) {
   document.getElementById('adminTitle').value = d.title || '';
   setAdminBodyValue(d.body || '');
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
+  if (document.getElementById('adminImg')) document.getElementById('adminImg').value = d.img || '';
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
+  const paEl2 = document.getElementById('adminPublishAt');
+  if (paEl2) paEl2.value = msToDatetimeLocal(d.publishAt);
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
   _bodyUndoStack = [];
 }
