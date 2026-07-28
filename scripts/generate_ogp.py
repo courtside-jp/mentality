@@ -116,7 +116,7 @@ if articles:
         title_esc = html.escape(title)
         desc_esc = html.escape(desc)
         body_html = render_body_html(body)
-        article_url = f'{SITE_URL}/?article={article_id}'
+        article_url = f'{SITE_URL}/articles/{article_id}.html'
 
         html_out = f'''<!DOCTYPE html>
 <html lang="ja">
