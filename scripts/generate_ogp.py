@@ -136,6 +136,7 @@ if articles:
 <meta name="twitter:title" content="{title_esc}">
 <meta name="twitter:description" content="{desc_esc}">
 <meta name="twitter:image" content="{img}">
+<script>(function(){{var u=navigator.userAgent||'';if(!/bot|crawl|spider|facebookexternalhit|Twitterbot|Slackbot|LinkedInBot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Applebot|Baiduspider|Yandex|Pinterest|SkypeUriPreview/i.test(u)){{try{{location.replace('{article_url}');}}catch(e){{}}}}}})();</script>
 <style>
 body{{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;max-width:680px;margin:0 auto;padding:20px 16px 60px;line-height:1.85;color:#222;}}
 .back{{color:#e63946;text-decoration:none;font-size:.85rem;font-weight:700;}}
@@ -220,6 +221,7 @@ if sneakers:
 <meta name="twitter:title" content="{title_esc}">
 <meta name="twitter:description" content="{desc_esc}">
 <meta name="twitter:image" content="{img}">
+<script>(function(){{var u=navigator.userAgent||'';if(!/bot|crawl|spider|facebookexternalhit|Twitterbot|Slackbot|LinkedInBot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Applebot|Baiduspider|Yandex|Pinterest|SkypeUriPreview/i.test(u)){{try{{location.replace('{sneaker_url}');}}catch(e){{}}}}}})();</script>
 <style>
 body{{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;max-width:680px;margin:0 auto;padding:20px 16px 60px;line-height:1.85;color:#222;}}
 .back{{color:#e63946;text-decoration:none;font-size:.85rem;font-weight:700;}}
