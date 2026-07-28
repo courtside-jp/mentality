@@ -24,12 +24,11 @@ def localize_image(entity_id, img_url):
         if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp'):
             ext = 'jpg'
         local_rel_path = f'assets/thumbnails/{entity_id}.{ext}'
-        if not os.path.exists(local_rel_path):
-            resp = requests.get(img_url, timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
-            resp.raise_for_status()
-            with open(local_rel_path, 'wb') as imgf:
-                imgf.write(resp.content)
-            print(f'画像を自前ホスト化: {entity_id} -> {local_rel_path}')
+        resp = requests.get(img_url, timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
+        resp.raise_for_status()
+        with open(local_rel_path, 'wb') as imgf:
+            imgf.write(resp.content)
+        print(f'画像を自前ホスト化: {entity_id} -> {local_rel_path}')
         return f'{SITE_URL}/{local_rel_path}'
     except Exception as e:
         print(f'画像の自前ホスト化に失敗（元URLを使用）: {entity_id} - {e}')
