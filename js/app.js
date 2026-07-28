@@ -208,7 +208,7 @@ async function loadTopBanner() {
     if (!wrap) return;
     wrap.style.display = 'block';
     wrap.innerHTML = `<a href="${ad.url}" target="_blank" style="display:flex;align-items:center;gap:.6rem;text-decoration:none;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:.5rem .8rem;">
-      ${ad.img ? `<img src="${ad.img}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="font-size:1.2rem;">📺</div>'}
+      ${ad.img ? `<img loading="lazy" decoding="async" src="${ad.img}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="font-size:1.2rem;">📺</div>'}
       <div style="flex:1;min-width:0;">
         <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div>
       </div>

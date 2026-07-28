@@ -209,7 +209,7 @@ async function renderPlayerCards(players) {
     return `<div onclick="openPlayerDetail('${name.replace(/'/g,"\\'")}','${team}','${espnId}')"
       style="background:var(--card);border:1px solid ${isJP ? 'rgba(255,90,0,.3)' : 'var(--bd)'};border-radius:8px;padding:.55rem .7rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;">
       <div style="width:44px;height:34px;border-radius:6px;overflow:hidden;background:var(--bg3);flex-shrink:0;">
-        ${photoUrl ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
+        ${photoUrl ? `<img loading="lazy" decoding="async" src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:.78rem;font-weight:700;color:var(--tx);margin-bottom:.06rem;">${jaName}${isJP ? ' 🇯🇵' : ''}</div>
@@ -223,7 +223,7 @@ async function renderPlayerCards(players) {
       </div>
       <div style="color:var(--tx3);font-size:.7rem;">›</div>
     </div>`;
-  }).join('') + (playersAds[0] ? `<a href="${playersAds[0].url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${playersAds[0].img ? `<img src="${playersAds[0].img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);">${playersAds[0].title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>` : '');
+  }).join('') + (playersAds[0] ? `<a href="${playersAds[0].url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${playersAds[0].img ? `<img loading="lazy" decoding="async" src="${playersAds[0].img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);">${playersAds[0].title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>` : '');
 }
 
 // ============================================================
@@ -261,7 +261,7 @@ async function openPlayerDetail(name, team) {
       <div style="display:flex;align-items:center;gap:.6rem;">
         <button onclick="closePlayerDetail()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:.25rem .5rem;border-radius:10px;font-size:.7rem;cursor:pointer;flex-shrink:0;">← 戻る</button>
         <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.1);flex-shrink:0;">
-          ${photoUrl ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
+          ${photoUrl ? `<img loading="lazy" decoding="async" src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:.55rem;color:rgba(255,255,255,.6);">${jaName}</div>

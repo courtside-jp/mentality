@@ -610,7 +610,7 @@ function snkSingleCardHtml(s) {
       ${s.badge ? `<span style="font-size:8px;font-weight:700;color:#e63946;background:rgba(230,57,70,0.08);padding:2px 6px;border-radius:4px;">${s.badge}</span>` : ''}
     </div>
     <div style="display:flex;gap:9px;">
-      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;">👟</span></div>`}
+      ${thumb ? `<img loading="lazy" decoding="async" src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;">👟</span></div>`}
       <div style="flex:1;min-width:0;">
         <div style="font-size:12.5px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||''}</div>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;">
@@ -783,8 +783,8 @@ async function openSnkModal(id) {
     <div id="${scrollId}" onscroll="snkUpdateGalleryDots('${scrollId}','${dotsId}')" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:0;border-radius:10px;margin:0 auto 8px;max-width:520px;">
       ${arr.map(img => `
       <div style="position:relative;flex:0 0 100%;width:100%;height:280px;scroll-snap-align:center;border-radius:10px;overflow:hidden;background:var(--bg3);">
-        <img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:blur(28px) brightness(0.8) saturate(1.3);transform:scale(1.9);">
-        <img src="${img}" style="position:relative;width:100%;height:100%;object-fit:contain;">
+        <img loading="lazy" decoding="async" src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:blur(28px) brightness(0.8) saturate(1.3);transform:scale(1.9);">
+        <img loading="lazy" decoding="async" src="${img}" style="position:relative;width:100%;height:100%;object-fit:contain;">
       </div>`).join('')}
     </div>
     ${arr.length > 1 ? `<div id="${dotsId}" style="display:flex;justify-content:center;gap:6px;margin:0 auto 8px;max-width:520px;">
@@ -818,7 +818,7 @@ async function openSnkModal(id) {
         const logo = sh.logo || plat.logo;
         return `
       <div style="display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;${sh.lowest?`box-shadow:0 0 0 1.5px ${solid}55;`:''}">
-        <div style="width:44px;height:38px;border-radius:11px;background:${logo?'#fff':tint};border:${logo?'1px solid var(--bd)':'none'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;padding:${logo?'6px 5px':'0'};">${logo?`<img src="${logo}" alt="${sh.name}" style="max-width:100%;max-height:100%;object-fit:contain;">`:(sh.icon||plat.icon||'🛒')}</div>
+        <div style="width:44px;height:38px;border-radius:11px;background:${logo?'#fff':tint};border:${logo?'1px solid var(--bd)':'none'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;padding:${logo?'6px 5px':'0'};">${logo?`<img loading="lazy" decoding="async" src="${logo}" alt="${sh.name}" style="max-width:100%;max-height:100%;object-fit:contain;">`:(sh.icon||plat.icon||'🛒')}</div>
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
             <span style="font-size:12.5px;font-weight:700;color:var(--tx);">${sh.name}</span>
@@ -1372,7 +1372,7 @@ function renderRankingPickerList() {
     const picked = _rankingSelectedIds.includes(s.id);
     return `
     <div style="display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px;${picked ? 'opacity:0.4;' : ''}">
-      ${s.img ? `<img src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : `<div style="width:36px;height:36px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>`}
+      ${s.img ? `<img loading="lazy" decoding="async" src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : `<div style="width:36px;height:36px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>`}
       <div style="flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
         <span style="color:#999;">${s.brand||''}</span> ${s.model||''}
       </div>
@@ -1420,7 +1420,7 @@ function renderRankingSelectedList() {
     return `
     <div style="display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:8px;">
       <span class="ranking-item-badge" style="font-size:12px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:3px 8px;border-radius:10px;flex-shrink:0;">商品${CIRCLED_NUMS[i] || (i + 1)}</span>
-      ${s.img ? `<img src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : ''}
+      ${s.img ? `<img loading="lazy" decoding="async" src="${s.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : ''}
       <div style="flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
         <span style="color:#999;">${s.brand||''}</span> ${s.model||''}
       </div>
@@ -1500,7 +1500,7 @@ function renderSneakerRankingCard(r) {
       <span style="font-size:9px;color:var(--tx3);">${r.mall||''}・${items.length}アイテム</span>
     </div>
     <div style="display:flex;gap:9px;">
-      ${thumb ? `<img src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;"></div>`}
+      ${thumb ? `<img loading="lazy" decoding="async" src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;"></div>`}
       <div style="flex:1;min-width:0;">
         <div style="font-size:12.5px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title||''}</div>
         <div style="font-size:10.5px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${top ? `1位：${top.brand||''} ${top.model||''}` : ''}</div>
@@ -1544,7 +1544,7 @@ async function openSnkRankingModal(id) {
         return `
         <div onclick="_snkModalReturnTo={type:'ranking',id:'${r.id}'};openSnkModal('${it.id}')" style="background:var(--bg3);border-radius:10px;padding:12px;display:flex;gap:10px;cursor:pointer;">
           <div style="position:relative;flex-shrink:0;">
-            ${it.img ? `<img src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--card);border-radius:8px;"></div>`}
+            ${it.img ? `<img loading="lazy" decoding="async" src="${it.img}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;background:var(--card);border-radius:8px;"></div>`}
             <div style="position:absolute;top:-6px;left:-6px;background:#C9082A;color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${i+1}</div>
           </div>
           <div style="flex:1;min-width:0;">

@@ -95,7 +95,7 @@ async function renderRelatedArticles(currentId, category) {
       '<div style="display:flex;flex-direction:column;gap:.6rem;">' +
       picked.map(a => `
         <div onclick="openArticle('${a.id}')" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:.5rem;">
-          ${a.img ? `<img src="${a.img}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;" onerror="this.style.display='none'">` : ''}
+          ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;" onerror="this.style.display='none'">` : ''}
           <div style="min-width:0;">
             <div style="font-size:.55rem;color:var(--or);font-weight:700;margin-bottom:.2rem;">${a.category||'NBA'}</div>
             <div style="font-size:.78rem;color:var(--tx);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${a.title||''}</div>
@@ -115,7 +115,7 @@ function showProductImage(url) {
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
   overlay.onclick = function() { overlay.remove(); };
-  overlay.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);">' +
+  overlay.innerHTML = '<img loading="lazy" decoding="async" src="' + url + '" style="max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);">' +
     '<div style="position:absolute;top:18px;right:20px;color:#fff;font-size:1.8rem;cursor:pointer;">&times;</div>';
   document.body.appendChild(overlay);
 }
@@ -134,12 +134,12 @@ function renderBody(body) {
     if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
     if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
     if (t.includes('twitter.com') || t.includes('x.com')) return '<div style="margin:.8rem 0;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
-    if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
+    if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
     const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
     if (productMatch) {
       const [, pName, pPrice, pUrl, pImg] = productMatch;
       const iconHtml = pImg
-        ? '<img src="' + pImg + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">'
+        ? '<img loading="lazy" decoding="async" src="' + pImg + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">'
         : '<div style="font-size:1.5rem;">🛒</div>';
       return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;">' + iconHtml + '<div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する</div></div></a>';
     }
@@ -164,7 +164,7 @@ function renderBody(body) {
         ? '<a href="' + scAmazon + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">Amazon' + (scAmazonPrice ? '<br>' + scAmazonPrice : '') + '</a>'
         : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>取扱なし</span>';
       return '<div style="display:flex;gap:.7rem;align-items:center;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem;margin:.7rem 0;">' +
-        '<img src="' + scImg + '" onclick="showProductImage(\'' + scImg + '\')" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;cursor:pointer;" onerror="this.style.display=\'none\'">' +
+        '<img loading="lazy" decoding="async" src="' + scImg + '" onclick="showProductImage(\'' + scImg + '\')" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;cursor:pointer;" onerror="this.style.display=\'none\'">' +
         '<div style="flex:1;min-width:0;">' +
         '<div style="font-size:.78rem;font-weight:700;color:var(--tx);margin-bottom:.45rem;line-height:1.4;">' + scName + '</div>' +
         '<div style="display:flex;gap:.4rem;">' + rakutenBtn + amazonBtn + '</div>' +
@@ -213,7 +213,7 @@ async function insertArticleLink() {
         ${articles.map(a => `
           <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
             style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
-            ${a.img ? `<img src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
             <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
           </div>`).join('')}
       </div>
@@ -223,7 +223,7 @@ async function insertArticleLink() {
 
 function doInsertArticleLink(id, title, img) {
   const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
-    (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    (img ? `<img loading="lazy" decoding="async" src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
     `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
   insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
@@ -234,7 +234,7 @@ function insertTextLink() {
   if (!url) return;
   const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
   if (isImage) {
-    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
     showLinkModal(url);
   }
@@ -261,7 +261,7 @@ async function insertBodyImage(input) {
       if (data.success) url = data.data.url;
     } catch(e) {}
     
-    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
     label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
@@ -293,7 +293,7 @@ async function insertArticleLink() {
         ${articles.map(a => `
           <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
             style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
-            ${a.img ? `<img src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
             <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
           </div>`).join('')}
       </div>
@@ -303,7 +303,7 @@ async function insertArticleLink() {
 
 function doInsertArticleLink(id, title, img) {
   const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
-    (img ? `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    (img ? `<img loading="lazy" decoding="async" src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
     `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
   insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
@@ -314,7 +314,7 @@ function insertTextLink() {
   if (!url) return;
   const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
   if (isImage) {
-    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
     showLinkModal(url);
   }
@@ -341,7 +341,7 @@ async function insertBodyImage(input) {
       if (data.success) url = data.data.url;
     } catch(e) {}
     
-    insertHtmlAtCursor(`<div><img src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
     label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
@@ -512,7 +512,7 @@ async function openArticle(id) {
     }
     body.innerHTML = '<div style="padding:1rem;">' +
       '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>' +
-      (a.img ? '<img src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
+      (a.img ? '<img loading="lazy" decoding="async" src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
       '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;">' +
       '<span style="font-size:.58rem;background:var(--or);color:#fff;padding:.15rem .5rem;border-radius:6px;">' + (a.category||'NBA') + '</span>' +
       '<span style="font-size:.58rem;color:var(--tx3);">' + new Date(a.ts).toLocaleDateString('ja-JP') + '</span>' +

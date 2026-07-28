@@ -213,7 +213,7 @@ async function loadESPNLeaders(stat, mode) {
       const ad = await ar.json() || {};
       statsAds = ['stats_1','stats_2'].map(k => ad[k]).filter(a => a && a.url && a.enabled !== false);
     } catch(e) {}
-    const statsAdHTML = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.3rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.6rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img src="${ad.img}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.7rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
+    const statsAdHTML = (ad) => `<a href="${ad.url}" target="_blank" style="display:block;text-decoration:none;margin:.3rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.6rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${ad.img ? `<img loading="lazy" decoding="async" src="${ad.img}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.7rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ad.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
 
     const midIdx = Math.floor(rows.length / 2);
     list.innerHTML = rows.map((row, i) => {
@@ -242,7 +242,7 @@ async function loadESPNLeaders(stat, mode) {
         <div class="lc-rank r${rank <= 3 ? rank : ''}">${medal}</div>
         <div style="width:42px;height:32px;flex-shrink:0;border-radius:5px;overflow:hidden;background:var(--bg3);">
           ${photoUrl
-            ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">`
+            ? `<img loading="lazy" decoding="async" src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">`
             : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--tx3);">${name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>`
           }
         </div>
@@ -326,7 +326,7 @@ async function renderPlayerModal(inner, name, team, photoUrl, espnId) {
       <button onclick="closePlayerModal()" style="position:fixed;top:80px;right:12px;z-index:400;background:#FF5A00;border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);">✕</button>
       <div style="display:flex;gap:.8rem;align-items:flex-end;">
         <div style="width:80px;height:64px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.1);flex-shrink:0;">
-          ${photoUrl ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
+          ${photoUrl ? `<img loading="lazy" decoding="async" src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
         </div>
         <div>
           <div style="font-size:.65rem;color:rgba(255,255,255,.6);">${jaName}</div>
@@ -491,7 +491,7 @@ async function renderStandings() {
       const cls   = badge === 'po' ? 'sw-row po' : badge === 'pi' ? 'sw-row pi' : 'sw-row';
       const cdnId = TEAM_CDN_IDS[abbr] || '';
       const logo  = cdnId
-        ? `<img src="${NBA_CDN_LOGO(cdnId)}" style="width:22px;height:22px;object-fit:contain;" onerror="this.style.display='none'">`
+        ? `<img loading="lazy" decoding="async" src="${NBA_CDN_LOGO(cdnId)}" style="width:22px;height:22px;object-fit:contain;" onerror="this.style.display='none'">`
         : `<span style="font-size:.9rem;">🏀</span>`;
       const pctDisp = typeof pct === 'number' ? pct.toFixed(3).replace(/^0/, '') : '-';
       const gbDisp  = gb === 0 ? '-' : (typeof gb === 'number' ? gb.toFixed(1) : gb);
@@ -526,7 +526,7 @@ async function renderStandings() {
       const ad = await ar.json() || {};
       const slot = ad['stats_2'];
       if (slot && slot.url) {
-        wrap.innerHTML += `<a href="${slot.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${slot.img ? `<img src="${slot.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);">${slot.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
+        wrap.innerHTML += `<a href="${slot.url}" target="_blank" style="display:block;text-decoration:none;margin:.5rem 0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.7rem .8rem;"><div style="display:flex;align-items:center;gap:.5rem;">${slot.img ? `<img loading="lazy" decoding="async" src="${slot.img}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">` : ''}<div style="flex:1;min-width:0;"><span style="font-size:.5rem;background:rgba(255,90,0,.15);color:var(--or);padding:.1rem .4rem;border-radius:10px;font-weight:700;">PR</span><div style="font-size:.72rem;font-weight:700;color:var(--tx);">${slot.title}</div></div><div style="color:var(--tx3);font-size:.8rem;">›</div></div></a>`;
       }
     } catch(e) {}
     console.log('✅ ESPN順位表取得成功');
@@ -551,7 +551,7 @@ function _renderDummyStandings() {
   data.forEach((t, i) => {
     const cls   = t.badge === 'po' ? 'sw-row po' : t.badge === 'pi' ? 'sw-row pi' : 'sw-row';
     const cdnId = TEAM_CDN_IDS[t.abbr] || '';
-    const logo  = cdnId ? `<img src="${NBA_CDN_LOGO(cdnId)}" style="width:22px;height:22px;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:.9rem;\\'>${t.logo}</span>'">` : `<span style="font-size:.9rem;">${t.logo}</span>`;
+    const logo  = cdnId ? `<img loading="lazy" decoding="async" src="${NBA_CDN_LOGO(cdnId)}" style="width:22px;height:22px;object-fit:contain;" onerror="this.outerHTML='<span style=\\'font-size:.9rem;\\'>${t.logo}</span>'">` : `<span style="font-size:.9rem;">${t.logo}</span>`;
     h += `<div class="${cls}">
       <div class="sw-rk">${t.r}</div>
       <div class="sw-tm"><div class="sw-logo">${logo}</div><div class="sw-abbr">${t.abbr}${t.badge ? ` <span class="sw-badge b${t.badge}">${t.badge.toUpperCase()}</span>` : ''}</div></div>

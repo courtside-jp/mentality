@@ -47,7 +47,7 @@ function renderItems(list) {
 
   wrap.innerHTML = list.map(s => `
     <div onclick="openItemModal('${s.id}')" style="background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:.8rem;overflow:hidden;cursor:pointer;">
-      ${s.img ? `<img src="${s.img}" style="width:100%;height:200px;object-fit:cover;" onerror="this.style.display='none'">` : '<div style="width:100%;height:160px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;">👕</div>'}
+      ${s.img ? `<img loading="lazy" decoding="async" src="${s.img}" style="width:100%;height:200px;object-fit:cover;" onerror="this.style.display='none'">` : '<div style="width:100%;height:160px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;">👕</div>'}
       <div style="padding:.8rem;">
         <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;">
           ${s.isNew ? '<span style="font-size:.55rem;background:#ff5a00;color:#fff;padding:.1rem .5rem;border-radius:10px;font-weight:700;">NEW</span>' : ''}
@@ -138,7 +138,7 @@ async function openItemModal(id) {
   if (!s) return;
 
   body.innerHTML =
-    (s.img ? '<img src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
+    (s.img ? '<img loading="lazy" decoding="async" src="' + s.img + '" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">' : '') +
     '<div style="font-family:Bebas Neue,sans-serif;font-size:11px;color:#C9082A;letter-spacing:1px;">' + (ITEM_BRANDS[s.brand]||s.brand||'') + '</div>' +
     '<div style="font-size:20px;font-weight:700;margin:4px 0 8px;">' + (s.name||'') + '</div>' +
     (s.player ? '<div style="font-size:13px;color:#666;margin-bottom:8px;">関連選手: ' + s.player + '</div>' : '') +
