@@ -7,6 +7,33 @@ JST = timezone(timedelta(hours=9))
 
 os.makedirs('articles', exist_ok=True)
 os.makedirs('sneakers', exist_ok=True)
+os.makedirs('assets/thumbnails', exist_ok=True)
+
+
+def localize_image(entity_id, img_url):
+    """外部ホストの画像をリポジトリ内（assets/thumbnails/）にダウンロードして保存し、
+    自前ホストのURLを返す。既に自前ドメインの画像や無効なURLはそのまま返す。
+    ダウンロードに失敗した場合も元のURLを返す（フェイルセーフ）。
+    """
+    if not img_url or not img_url.startswith('http'):
+        return img_url
+    if img_url.startswith(SITE_URL):
+        return img_url
+    try:
+        ext = img_url.split('?')[0].rsplit('.', 1)[-1].lower()
+        if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp'):
+            ext = 'jpg'
+        local_rel_path = f'assets/thumbnails/{entity_id}.{ext}'
+        if not os.path.exists(local_rel_path):
+            resp = requests.get(img_url, timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
+            resp.raise_for_status()
+            with open(local_rel_path, 'wb') as imgf:
+                imgf.write(resp.content)
+            print(f'画像を自前ホスト化: {entity_id} -> {local_rel_path}')
+        return f'{SITE_URL}/{local_rel_path}'
+    except Exception as e:
+        print(f'画像の自前ホスト化に失敗（元URLを使用）: {entity_id} - {e}')
+        return img_url
 
 
 def apply_inline_bold(escaped_text):
@@ -79,6 +106,7 @@ if articles:
 
         title = a.get('title', 'COURTSIDE')
         img = a.get('img') or f'{SITE_URL}/assets/ogp.png'
+        img = localize_image(article_id, img)
         body = a.get('body', '')
         category = a.get('category', 'NBA')
         affiliate_link = a.get('affiliateLink', '')
@@ -163,6 +191,7 @@ if sneakers:
         model = s.get('model', '')
         title = f'{brand} {model}'.strip() or 'COURTSIDE バッシュ詳細'
         img = (s.get('images') or [None])[0] or s.get('img') or f'{SITE_URL}/assets/ogp.png'
+        img = localize_image(sneaker_id, img)
         desc = (s.get('desc') or (s.get('detail') or {}).get('summary') or f'{title} のレビュー・スコア・購入情報をCOURTSIDEでチェック。')
         desc = re.sub(r'<[^>]+>', '', desc)[:110].replace('\n', ' ').strip()
         player = s.get('player', '')
