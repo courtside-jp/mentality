@@ -1036,6 +1036,14 @@ async function editArticle(id) {
   document.getElementById('adminTitle').value = a.title || '';
   document.getElementById('adminBody').value = a.body || '';
   document.getElementById('adminImg').value = a.img || '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) {
+      if (a.img) { _pi.src = a.img; _p.style.display = 'block'; }
+      else { _pi.src = ''; _p.style.display = 'none'; }
+    }
+  }
   const cat = document.getElementById('adminCategory');
   if (cat) cat.value = a.category || 'NBA';
   const editId = document.getElementById('adminEditId');
@@ -1087,6 +1095,11 @@ function openNewArticle() {
   document.getElementById('adminTitle').value = '';
   setAdminBodyValue('');
   document.getElementById('adminImg').value = '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) { _pi.src = ''; _p.style.display = 'none'; }
+  }
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
   const paEl = document.getElementById('adminPublishAt'); if (paEl) paEl.value = '';
   showAdminArticleUrl(null);
@@ -1122,6 +1135,14 @@ async function editArticle(id) {
   setAdminBodyValue(d.body || '');
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
   if (document.getElementById('adminImg')) document.getElementById('adminImg').value = d.img || '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) {
+      if (d.img) { _pi.src = d.img; _p.style.display = 'block'; }
+      else { _pi.src = ''; _p.style.display = 'none'; }
+    }
+  }
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
   const paEl2 = document.getElementById('adminPublishAt');
   if (paEl2) paEl2.value = msToDatetimeLocal(d.publishAt);
