@@ -175,6 +175,19 @@ img{{max-width:100%;border-radius:10px;display:block;margin:.8em 0;}}
 else:
     print('記事なし')
 
+# ==================== 孤立ページの自動削除 ====================
+# Firebase側で記事が削除された後も、生成済みの静的ページ（articles/*.html）が
+# リポジトリに残り続けると、canonical URLの仕様が古いまま放置されるなど
+# 気づかれにくい形で壊れたページとして残ってしまう。
+# ここで「現在Firebaseに存在する記事IDに対応しない静的ページ」を自動的に削除する。
+import glob as _cleanup_glob
+_valid_article_ids = set(articles.keys()) if articles else set()
+for _existing_path in _cleanup_glob.glob('articles/*.html'):
+    _existing_id = os.path.basename(_existing_path)[:-len('.html')]
+    if _existing_id not in _valid_article_ids:
+        os.remove(_existing_path)
+        print(f'孤立ページを削除（Firebase上に記事なし）: {_existing_path}')
+
 # ==================== 自動検証（回帰防止） ====================
 # 過去に「canonicalとリダイレクト先URLの取り違え」で全記事が無限リロードループに陥る
 # 障害が発生したことがあるため、生成後の全記事ページを機械的にチェックする。
