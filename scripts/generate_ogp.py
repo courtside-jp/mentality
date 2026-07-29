@@ -175,6 +175,51 @@ img{{max-width:100%;border-radius:10px;display:block;margin:.8em 0;}}
 else:
     print('記事なし')
 
+# ==================== 自動検証（回帰防止） ====================
+# 過去に「canonicalとリダイレクト先URLの取り違え」で全記事が無限リロードループに陥る
+# 障害が発生したことがあるため、生成後の全記事ページを機械的にチェックする。
+# ここで異常を検知した場合はワークフローを失敗させ、壊れたページを公開しない。
+import glob as _glob
+
+_validation_errors = []
+for _path in sorted(_glob.glob('articles/*.html')):
+    with open(_path, encoding='utf-8') as _f:
+        _page = _f.read()
+
+    _canon_m = re.search(r'<link rel="canonical" href="([^"]+)">', _page)
+    _redirect_m = re.search(r"location\.replace\('([^']+)'\)", _page)
+    _img_m = re.search(r'<meta property="og:image" content="([^"]+)">', _page)
+
+    _canon_url = _canon_m.group(1) if _canon_m else None
+    _redirect_url = _redirect_m.group(1) if _redirect_m else None
+    _img_url = _img_m.group(1) if _img_m else None
+
+    if not _canon_url:
+        _validation_errors.append(f'{_path}: canonical URLが見つかりません')
+    if not _redirect_url:
+        _validation_errors.append(f'{_path}: リダイレクトスクリプトが見つかりません')
+    if _canon_url and _redirect_url and _canon_url == _redirect_url:
+        _validation_errors.append(
+            f'{_path}: canonical URLとリダイレクト先URLが同一です（{_canon_url}）。'
+            f'このままだと人間の訪問者が無限リロードループに陥ります。'
+        )
+    if not _img_url or not _img_url.startswith('http'):
+        _validation_errors.append(f'{_path}: og:imageが不正または未設定です（{_img_url}）')
+    _expected_canon = f'{SITE_URL}/{_path}'
+    if _canon_url and _canon_url != _expected_canon:
+        _validation_errors.append(
+            f'{_path}: canonical URLが想定と異なります（期待={_expected_canon} 実際={_canon_url}）'
+        )
+
+if _validation_errors:
+    print('=== 検証エラー: 生成された記事ページに問題が見つかりました ===')
+    for _e in _validation_errors:
+        print(f'  - {_e}')
+    raise SystemExit(f'{len(_validation_errors)}件の検証エラーのため処理を中断しました')
+else:
+    print(f'検証OK: {article_count}記事のページに異常なし')
+
+
 # ==================== バッシュ（sneakers）====================
 res = requests.get(f'{FB_URL}/sneakers.json')
 sneakers = res.json()
