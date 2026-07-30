@@ -603,17 +603,17 @@ window.handleSearch = async function (val) {
 
   await _fixedLoadSearchData();
 
-  const q = val.trim();
+  const q = val.trim().toLowerCase();
   const rowStyle = 'display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;';
   const iconStyle = 'width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;';
 
   const articleItems = _fixedSearchArticles
-    .filter(a => (a.title || '').includes(q) || (a.category || '').includes(q))
+    .filter(a => (a.title || '').toLowerCase().includes(q) || (a.category || '').toLowerCase().includes(q))
     .slice(0, 15)
     .map(a => `<div onclick="closeSearch();openArticle('${a.id}')" style="${rowStyle}"><div style="${iconStyle}">記事</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${a.title}</div><div style="font-size:11px;color:#666;">${a.category || ''}</div></div></div>`);
 
   const sneakerItems = _fixedSearchSneakers
-    .filter(s => (s.model || '').includes(q) || (s.player || '').includes(q) || (s.brand || '').includes(q))
+    .filter(s => (s.model || '').toLowerCase().includes(q) || (s.player || '').toLowerCase().includes(q) || (s.brand || '').toLowerCase().includes(q))
     .slice(0, 10)
     .map(s => `<div onclick="closeSearch();openSnkModal('${s.id}')" style="${rowStyle}"><div style="${iconStyle}">バッシュ</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${s.model}</div><div style="font-size:11px;color:#666;">${s.player || s.brand || ''}</div></div></div>`);
 
