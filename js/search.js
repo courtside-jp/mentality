@@ -553,3 +553,73 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch(e) {}
 });
 
+
+
+// ==================== 検索機能修正 (2026-07-30) ====================
+// 元のhandleSearch()はダミーの固定リスト（5件程度のサンプルデータ）のみを
+// 検索対象としており、実際のFirebase記事データと連動していなかったため、
+// 「レブロン」等、実際には該当記事が存在するキーワードで検索しても
+// 「検索結果なし」と表示される不具合があった。
+// index.html側の元関数はそのまま残し、この関数でwindow.handleSearchを
+// 上書きし、実際のarticles / sneakersデータを検索対象にする。
+let _fixedSearchArticles = null;
+let _fixedSearchSneakers = null;
+
+async function _fixedLoadSearchData() {
+  if (_fixedSearchArticles === null) {
+    try {
+      const r = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/articles.json');
+      const data = (await r.json()) || {};
+      _fixedSearchArticles = Object.keys(data)
+        .map(id => ({ id, ...data[id] }))
+        .filter(a => !a.archived && a.title);
+    } catch (e) {
+      _fixedSearchArticles = [];
+    }
+  }
+  if (_fixedSearchSneakers === null) {
+    try {
+      const r = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/sneakers.json');
+      const data = (await r.json()) || {};
+      _fixedSearchSneakers = Object.keys(data)
+        .map(id => ({ id, ...data[id] }))
+        .filter(s => !s.archived && s.model);
+    } catch (e) {
+      _fixedSearchSneakers = [];
+    }
+  }
+}
+
+window.handleSearch = async function (val) {
+  if (val === 'kobe0824') {
+    closeSearch();
+    goPage('admin');
+    showAdminPage((typeof firebase !== 'undefined' && firebase.auth().currentUser) ? 'admin-menu' : 'admin-login');
+    return;
+  }
+  const results = document.getElementById('search-results');
+  if (!results) return;
+  if (val.length === 0) { results.innerHTML = ''; return; }
+
+  await _fixedLoadSearchData();
+
+  const q = val.trim();
+  const rowStyle = 'display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;cursor:pointer;';
+  const iconStyle = 'width:36px;height:36px;border-radius:8px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;font-weight:700;';
+
+  const articleItems = _fixedSearchArticles
+    .filter(a => (a.title || '').includes(q) || (a.category || '').includes(q))
+    .slice(0, 15)
+    .map(a => `<div onclick="closeSearch();openArticle('${a.id}')" style="${rowStyle}"><div style="${iconStyle}">記事</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${a.title}</div><div style="font-size:11px;color:#666;">${a.category || ''}</div></div></div>`);
+
+  const sneakerItems = _fixedSearchSneakers
+    .filter(s => (s.model || '').includes(q) || (s.player || '').includes(q) || (s.brand || '').includes(q))
+    .slice(0, 10)
+    .map(s => `<div onclick="closeSearch();openSnkModal('${s.id}')" style="${rowStyle}"><div style="${iconStyle}">バッシュ</div><div><div style="font-size:13px;font-weight:700;color:#fff;">${s.model}</div><div style="font-size:11px;color:#666;">${s.player || s.brand || ''}</div></div></div>`);
+
+  const items = [...articleItems, ...sneakerItems];
+
+  results.innerHTML = items.length
+    ? items.join('')
+    : `<div style="text-align:center;color:#555;padding:40px 0;font-size:13px;">「${q}」の検索結果なし</div>`;
+};
