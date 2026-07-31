@@ -20,14 +20,23 @@ def localize_image(entity_id, img_url):
     if img_url.startswith(SITE_URL):
         return img_url
     try:
-        ext = img_url.split('?')[0].rsplit('.', 1)[-1].lower()
-        if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp'):
-            ext = 'jpg'
-        local_rel_path = f'assets/thumbnails/{entity_id}.{ext}'
+        local_rel_path = f'assets/thumbnails/{entity_id}.jpg'
         resp = requests.get(img_url, timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
         resp.raise_for_status()
-        with open(local_rel_path, 'wb') as imgf:
-            imgf.write(resp.content)
+        try:
+            from PIL import Image
+            import io
+            im = Image.open(io.BytesIO(resp.content)).convert('RGB')
+            im.thumbnail((1200, 1200))
+            im.save(local_rel_path, 'JPEG', quality=85, optimize=True)
+        except Exception as pil_e:
+            print(f'PIL圧縮に失敗（元画像をそのまま保存）: {entity_id} - {pil_e}')
+            ext = img_url.split('?')[0].rsplit('.', 1)[-1].lower()
+            if ext not in ('jpg', 'jpeg', 'png', 'gif', 'webp'):
+                ext = 'jpg'
+            local_rel_path = f'assets/thumbnails/{entity_id}.{ext}'
+            with open(local_rel_path, 'wb') as imgf:
+                imgf.write(resp.content)
         print(f'画像を自前ホスト化: {entity_id} -> {local_rel_path}')
         return f'{SITE_URL}/{local_rel_path}'
     except Exception as e:
