@@ -21,8 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
-
+        run: pip install requests pillow
       - name: Generate OGP HTML files
         run: python scripts/generate_ogp.py
 
