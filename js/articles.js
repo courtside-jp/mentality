@@ -127,7 +127,7 @@ function applyInlineBold(text) {
 function renderBody(body) {
   if (!body) return '';
   const lines = body.split('\n');
-  return lines.map(line => {
+  const html = lines.map(line => {
     const t = line.trim();
     const yt = t.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
@@ -182,6 +182,36 @@ function renderBody(body) {
     }
     return t ? '<p style="margin:.4rem 0;">' + applyInlineBold(t) + '</p>' : '';
   }).join('');
+  return wrapCollapsibleSections(html);
+
+  function wrapCollapsibleSections(html) {
+    const collapsibleTitles = ['出典', '画像クレジット'];
+    const h2Regex = /<h2 id="toc-\d+"[^>]*>([\s\S]*?)<\/h2>/g;
+    const matches = [...html.matchAll(h2Regex)];
+    if (!matches.length) return html;
+    let result = '';
+    let cursor = 0;
+    for (let i = 0; i < matches.length; i++) {
+      const m = matches[i];
+      const labelText = m[1].replace(/<[^>]+>/g, '').trim().replace(/^[\u25a0\u25aa]\s*/, '');
+      const sectionStart = m.index;
+      const sectionContentStart = m.index + m[0].length;
+      const sectionEnd = (i + 1 < matches.length) ? matches[i + 1].index : html.length;
+      if (collapsibleTitles.includes(labelText)) {
+        result += html.slice(cursor, sectionStart);
+        const bodyHtml = html.slice(sectionContentStart, sectionEnd);
+        result += '<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:1.4em 0 .5em;overflow:hidden;">' +
+          '<summary style="padding:12px 16px;cursor:pointer;font-size:.95rem;font-weight:800;color:#555;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">' +
+          labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>' +
+          '</summary>' +
+          '<div style="padding:4px 16px 14px;">' + bodyHtml + '</div>' +
+          '</details>';
+        cursor = sectionEnd;
+      }
+    }
+    result += html.slice(cursor);
+    return result;
+  }
 }
 
 // ============================================================
