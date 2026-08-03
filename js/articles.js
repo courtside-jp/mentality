@@ -199,7 +199,8 @@ function renderBody(body) {
       const sectionEnd = (i + 1 < matches.length) ? matches[i + 1].index : html.length;
       if (collapsibleTitles.includes(labelText)) {
         result += html.slice(cursor, sectionStart);
-        const bodyHtml = html.slice(sectionContentStart, sectionEnd);
+        let bodyHtml = html.slice(sectionContentStart, sectionEnd);
+        bodyHtml = bodyHtml.replace(/<h3 style="[^"]*">/g, '<h3 style="font-size:.8rem;font-weight:400;color:#888;margin:.5em 0;padding:0;background:none;border-left:none;border-radius:0;">');
         result += '<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:1.4em 0 .5em;overflow:hidden;">' +
           '<summary style="padding:12px 16px;cursor:pointer;font-size:.95rem;font-weight:800;color:#555;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">' +
           labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>' +
