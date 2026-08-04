@@ -27,7 +27,17 @@ def localize_image(entity_id, img_url):
             from PIL import Image
             import io
             im = Image.open(io.BytesIO(resp.content)).convert('RGB')
-            im.thumbnail((1200, 1200))
+            target_ratio = 2.5  # サムネイルは5:2比率に統一
+            w, h = im.size
+            if w / h > target_ratio:
+                new_w = int(h * target_ratio)
+                left = (w - new_w) // 2
+                im = im.crop((left, 0, left + new_w, h))
+            else:
+                new_h = int(w / target_ratio)
+                top = min(int(h * 0.08), h - new_h)
+                im = im.crop((0, top, w, top + new_h))
+            im.thumbnail((1200, 480))
             im.save(local_rel_path, 'JPEG', quality=85, optimize=True)
         except Exception as pil_e:
             print(f'PIL圧縮に失敗（元画像をそのまま保存）: {entity_id} - {pil_e}')
