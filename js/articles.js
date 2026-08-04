@@ -616,12 +616,19 @@ function closeAdminModal() {
 
 async function submitArticle() {
   const title    = document.getElementById('adminTitle').value.trim();
-  const body     = getAdminBodyValue().trim();
+  const sourceTextEl = document.getElementById('adminSourceText');
+  const imageCreditEl = document.getElementById('adminImageCredit');
+  const sourceText = sourceTextEl ? sourceTextEl.value.trim() : '';
+  const imageCredit = imageCreditEl ? imageCreditEl.value.trim() : '';
+  const rawBody = getAdminBodyValue().trim();
+  const { cleanBody } = extractArticleMetaSections(rawBody);
+  const body = (cleanBody + buildArticleMetaSections(sourceText, imageCredit)).trim();
   const img      = document.getElementById('adminImg').value.trim();
   const category = document.getElementById('adminCategory').value;
   const affiliateLink = document.getElementById('adminAffiliateLink') ? document.getElementById('adminAffiliateLink').value.trim() : '';
 
-  if (!title || !body) { alert('タイトルと本文は必須です'); return; }
+  if (!title || !cleanBody) { alert('タイトルと本文は必須です'); return; }
+  if (!sourceText || !imageCredit) { alert('ソース元と画像クレジットは必須です'); return; }
 
   const btn = document.getElementById('adminSubmitBtn');
   btn.textContent = '投稿中...';
@@ -653,6 +660,8 @@ async function submitArticle() {
       setAdminBodyValue('');
       document.getElementById('adminImg').value = '';
       if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      if (sourceTextEl) sourceTextEl.value = '';
+      if (imageCreditEl) imageCreditEl.value = '';
       showAdminArticleUrl(null);
       closeAdminModal();
       loadArticles();
@@ -668,6 +677,8 @@ async function submitArticle() {
       setAdminBodyValue('');
       document.getElementById('adminImg').value = '';
       if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      if (sourceTextEl) sourceTextEl.value = '';
+      if (imageCreditEl) imageCreditEl.value = '';
       if (createData && createData.name) {
         showAdminArticleUrl(createData.name);
         alert('下書き（アーカイブ）として投稿しました。このままURLをコピーできます。公開する場合は記事一覧の「公開に戻す」または編集画面の公開日時から設定してください。');
@@ -685,9 +696,6 @@ async function submitArticle() {
   }
 }
 
-// ============================================================
-// エディタ補助関数
-// ============================================================
 function insertToBody(type) {
   const textarea = document.getElementById('adminBody');
   const prompts = {
@@ -948,20 +956,49 @@ function insertQuoteBlock() {
   insertNodeAtCursor(chip);
 }
 
-function insertSourceSection() {
-  const raw = prompt('ソース元のURL・出典を入力してください（複数ある場合は改行で区切ってください）');
-  if (!raw) return;
-  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-  if (!lines.length) return;
-  const html = '<div>■ソース元</div>' + lines.map(l => '<div>' + l + '</div>').join('') + '<div><br></div>';
-  insertHtmlAtCursor(html);
+function extractArticleMetaSections(body) {
+  const lines = (body || '').split('\n');
+  const sourceLines = [];
+  let imageCredit = '';
+  const keep = [];
+  let i = 0;
+  while (i < lines.length) {
+    const t = lines[i].trim();
+    if (t === '■ソース元') {
+      i++;
+      while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+        sourceLines.push(lines[i].trim());
+        i++;
+      }
+      if (i < lines.length && lines[i].trim() === '') i++;
+      continue;
+    }
+    if (t === '■画像クレジット') {
+      i++;
+      if (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+        imageCredit = lines[i].trim();
+        i++;
+      }
+      if (i < lines.length && lines[i].trim() === '') i++;
+      continue;
+    }
+    keep.push(lines[i]);
+    i++;
+  }
+  while (keep.length && keep[keep.length - 1].trim() === '') keep.pop();
+  return { cleanBody: keep.join('\n'), sourceText: sourceLines.join('\n'), imageCredit };
 }
 
-function insertImageCreditSection() {
-  const text = prompt('画像クレジットを入力してください（例：撮影者名「タイトル」(Wikimedia Commons, CC BY-SA 4.0) URL）');
-  if (!text) return;
-  const html = '<div>■画像クレジット</div><div>' + text + '</div><div><br></div>';
-  insertHtmlAtCursor(html);
+function buildArticleMetaSections(sourceText, imageCredit) {
+  const sourceLines = (sourceText || '').split('\n').map(l => l.trim()).filter(Boolean);
+  let out = '';
+  if (sourceLines.length) {
+    out += '\n\n■ソース元\n' + sourceLines.join('\n');
+  }
+  if (imageCredit && imageCredit.trim()) {
+    out += '\n\n■画像クレジット\n' + imageCredit.trim();
+  }
+  return out;
 }
 
 // 下書き保存
@@ -1158,6 +1195,8 @@ function openNewArticle() {
   document.getElementById('adminEditId').value = '';
   document.getElementById('adminTitle').value = '';
   setAdminBodyValue('');
+  if (document.getElementById('adminSourceText')) document.getElementById('adminSourceText').value = '';
+  if (document.getElementById('adminImageCredit')) document.getElementById('adminImageCredit').value = '';
   document.getElementById('adminImg').value = '';
   {
     const _p = document.getElementById('adminImgPreview');
@@ -1196,7 +1235,10 @@ async function editArticle(id) {
   document.getElementById('articleForm').style.display = 'block';
   document.getElementById('adminEditId').value = id;
   document.getElementById('adminTitle').value = d.title || '';
-  setAdminBodyValue(d.body || '');
+  const meta = extractArticleMetaSections(d.body || '');
+  setAdminBodyValue(meta.cleanBody);
+  if (document.getElementById('adminSourceText')) document.getElementById('adminSourceText').value = meta.sourceText || '';
+  if (document.getElementById('adminImageCredit')) document.getElementById('adminImageCredit').value = meta.imageCredit || '';
   document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
   if (document.getElementById('adminImg')) document.getElementById('adminImg').value = d.img || '';
   {
@@ -1214,76 +1256,6 @@ async function editArticle(id) {
   document.getElementById('adminSubmitBtn').textContent = '上書き保存';
   _bodyUndoStack = [];
 }
-
-// ============================================================
-// X投稿用OGP画像生成・ダウンロード
-// ============================================================
-async function downloadOgpImage(btn) {
-  const id = btn.dataset.id;
-  const imgUrl = btn.dataset.img;
-  const title = btn.dataset.title.replace(/&quot;/g, '"');
-
-  const canvas = document.createElement('canvas');
-  canvas.width = 1200;
-  canvas.height = 630;
-  const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#0a1628';
-  ctx.fillRect(0, 0, 1200, 630);
-
-  if (imgUrl && imgUrl.trim()) {
-    try {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = imgUrl.trim(); });
-      ctx.globalAlpha = 0.5;
-      ctx.drawImage(img, 0, 0, 1200, 630);
-      ctx.globalAlpha = 1.0;
-    } catch(e) {}
-  }
-
-  const grad = ctx.createLinearGradient(0, 200, 0, 630);
-  grad.addColorStop(0, 'rgba(10,22,40,0)');
-  grad.addColorStop(1, 'rgba(10,22,40,0.95)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1200, 630);
-
-  ctx.fillStyle = '#C9082A';
-  ctx.fillRect(0, 0, 10, 630);
-
-  ctx.fillStyle = '#C9082A';
-  ctx.font = 'bold 36px Arial';
-  ctx.fillText('COURTSIDE', 40, 70);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 52px sans-serif';
-  const maxW = 1100;
-  if (ctx.measureText(title).width > maxW) {
-    const mid = Math.floor(title.length / 2);
-    ctx.fillText(title.slice(0, mid), 40, 460);
-    ctx.fillText(title.slice(mid), 40, 540);
-  } else {
-    ctx.fillText(title, 40, 510);
-  }
-
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '26px Arial';
-  ctx.fillText('courtside-jp.github.io/mentality', 40, 595);
-
-  const link = document.createElement('a');
-  link.download = 'courtside_' + id + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-}
-
-// ============================================================
-// contenteditable版 本文エディタ用ヘルパー
-// ============================================================
-// ============================================================
-// 本文編集の「元に戻す」機能（エクセルのUndoのようなもの）
-// ============================================================
-let _bodyUndoStack = [];
-let _bodyUndoTimer = null;
 
 function snapshotBodyHistory() {
   const el = document.getElementById('adminBody');
