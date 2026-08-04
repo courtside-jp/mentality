@@ -598,26 +598,34 @@ function snkScoreColor(score) {
   if (score >= 90) return '#27ae60';
   return '#e63946';
 }
+function snkGetLowestPriceStr(s) {
+  if (!s.shops || !s.shops.length) return '';
+  const lowestShop = s.shops.find(sh => sh.lowest) || s.shops[0];
+  const full = lowestShop.price || '';
+  const m = full.match(/[\d,]+/);
+  return m ? ('¥' + m[0] + '〜') : full;
+}
 function snkSingleCardHtml(s) {
   const score = calcSneakerScore(s);
   const scoreColor = snkScoreColor(score);
   const thumb = (s.images && s.images[0]) || s.img || '';
+  const lowest = snkGetLowestPriceStr(s);
+  const name = s.model || s.desc || '';
   return `
-  <div onclick="_snkModalReturnTo=null;openSnkModal('${s.id}')" style="background:var(--card);border:0.5px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;">
-    <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
-      <span style="font-size:8px;font-weight:700;color:#C9082A;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${(s.brand||'').toUpperCase()}</span>
-      <span style="font-size:9px;color:var(--tx3);">${s.date||''}</span>
-      ${s.badge ? `<span style="font-size:8px;font-weight:700;color:#e63946;background:rgba(230,57,70,0.08);padding:2px 6px;border-radius:4px;">${s.badge}</span>` : ''}
+  <div onclick="_snkModalReturnTo=null;openSnkModal('${s.id}')" style="background:var(--card);border:0.5px solid var(--bd);border-radius:10px;overflow:hidden;cursor:pointer;">
+    <div style="position:relative;width:100%;aspect-ratio:1/1;background:#f2f2f2;">
+      ${thumb ? `<img loading="lazy" decoding="async" src="${thumb}" style="width:100%;height:100%;object-fit:cover;display:block;">` : ''}
+      ${s.badge ? `<div style="position:absolute;top:6px;left:6px;background:#e63946;color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;">${s.badge}</div>` : ''}
+      <button onclick="event.stopPropagation();this.classList.toggle('fav');const p=this.querySelector('svg');const on=this.classList.contains('fav');p.setAttribute('fill',on?'#e63946':'none');p.setAttribute('stroke',on?'#e63946':'#999')" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(0,0,0,0.15);cursor:pointer;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </button>
     </div>
-    <div style="display:flex;gap:9px;">
-      ${thumb ? `<img loading="lazy" decoding="async" src="${thumb}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;">` : `<div style="width:54px;height:54px;background:var(--bg3);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:22px;">👟</span></div>`}
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12.5px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.model||''}</div>
-        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px;">
-          <span style="font-size:15px;font-weight:800;color:${scoreColor};">${score}<span style="font-size:8px;color:var(--tx3);font-weight:500;">/100</span></span>
-          ${s.price ? `<span style="font-size:11.5px;font-weight:700;color:#C9082A;">${s.price}</span>` : ''}
-        </div>
-        ${s.desc ? `<div style="font-size:10px;color:var(--tx3);line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;">${s.desc}</div>` : ''}
+    <div style="padding:6px 7px 8px;">
+      <div style="font-size:8px;font-weight:700;color:#C9082A;letter-spacing:.3px;">${(s.brand||'').toUpperCase()}</div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin:2px 0 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:10.5px;font-weight:800;color:${scoreColor};">${score}<span style="font-size:8px;font-weight:600;color:var(--tx3);">/100</span></span>
+        ${lowest ? `<span style="font-size:10px;font-weight:800;color:var(--tx);">${lowest}</span>` : ''}
       </div>
     </div>
   </div>`;
@@ -630,7 +638,7 @@ function renderSneakers(list) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
     return;
   }
-  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:8px;padding:0;';
+  wrap.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0;';
   wrap.innerHTML = list.map(snkSingleCardHtml).join('');
 }
 
@@ -644,7 +652,7 @@ function renderSneakerFeed(list, rankings) {
     wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#999;font-size:13px;">バッシュがまだ登録されていません</div>';
     return;
   }
-  wrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:8px;padding:0;';
+  wrap.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0;';
   wrap.innerHTML = merged.map(e => e.html).join('');
 }
 function filterSneakers(btn, brand) {
@@ -1494,7 +1502,7 @@ function renderSneakerRankingCard(r) {
   const thumb = r.img || (items[0] && items[0].img) || '';
   const top = items[0];
   return `
-  <div onclick="openSnkRankingModal('${r.id}')" style="background:var(--card);border:0.5px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;">
+  <div onclick="openSnkRankingModal('${r.id}')" style="grid-column:1/-1;background:var(--card);border:0.5px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;">
     <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
       <span style="font-size:8px;font-weight:700;color:#c9720a;background:#fff3e0;padding:2px 6px;border-radius:4px;">🏆 ランキング</span>
       <span style="font-size:9px;color:var(--tx3);">${r.mall||''}・${items.length}アイテム</span>
