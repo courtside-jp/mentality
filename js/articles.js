@@ -948,6 +948,22 @@ function insertQuoteBlock() {
   insertNodeAtCursor(chip);
 }
 
+function insertSourceSection() {
+  const raw = prompt('ソース元のURL・出典を入力してください（複数ある場合は改行で区切ってください）');
+  if (!raw) return;
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!lines.length) return;
+  const html = '<div>■ソース元</div>' + lines.map(l => '<div>' + l + '</div>').join('') + '<div><br></div>';
+  insertHtmlAtCursor(html);
+}
+
+function insertImageCreditSection() {
+  const text = prompt('画像クレジットを入力してください（例：撮影者名「タイトル」(Wikimedia Commons, CC BY-SA 4.0) URL）');
+  if (!text) return;
+  const html = '<div>■画像クレジット</div><div>' + text + '</div><div><br></div>';
+  insertHtmlAtCursor(html);
+}
+
 // 下書き保存
 const FB_DRAFTS = `${FB_URL}/drafts`;
 
