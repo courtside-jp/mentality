@@ -434,7 +434,7 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                   <button type="button" onclick="insertSnsEmbed()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:6px;font-size:11px;cursor:pointer;color:#2a5cd8;">📱 ツイート表示</button>
                   <button type="button" onclick="insertProductLink()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#fff3e0;border:1px solid #ffd9a0;border-radius:6px;font-size:11px;cursor:pointer;color:#c9720a;font-weight:700;">🛒 商品リンク</button>
                   <button type="button" onclick="insertShopCard()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#e8f5e9;border:1px solid #b8e0bb;border-radius:6px;font-size:11px;cursor:pointer;color:#2e7d32;font-weight:700;">🛍️ 商品比較カード</button>
-                  <button type="button" onclick="insertQuoteBlock()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#fdeeee;border:1px solid #f3c6c6;border-radius:6px;font-size:11px;cursor:pointer;color:#c9302c;font-weight:700;">💬 引用コメント</button><button type="button" onclick="insertSourceSection()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#f0f0f0;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;color:#555;font-weight:700;">🔖 ソース元</button><button type="button" onclick="insertImageCreditSection()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#f0f0f0;border:1px solid #ddd;border-radius:6px;font-size:11px;cursor:pointer;color:#555;font-weight:700;">🖼️ 画像クレジット</button>
+                  <button type="button" onclick="insertQuoteBlock()" style="display:flex;align-items:center;gap:3px;padding:5px 10px;background:#fdeeee;border:1px solid #f3c6c6;border-radius:6px;font-size:11px;cursor:pointer;color:#c9302c;font-weight:700;">💬 引用コメント</button>
                 </div>
                 <div style="font-size:9px;color:#999;font-weight:700;margin-bottom:5px;letter-spacing:.5px;">書式</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
@@ -485,6 +485,14 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                 <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">アフィリエイトリンク（任意）</label>
                 <input id="adminAffiliateLink" type="text" placeholder="https://amzn.to/... または 楽天/eBayのリンク" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
                 <div style="font-size:10px;color:#bbb;margin-top:3px;">記事末尾に「商品を見る」ボタンとして自動で表示されます</div>
+              </div>
+          <div>
+                <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ソース元（必須・複数ある場合は改行で区切ってください）</label>
+                <textarea id="adminSourceText" rows="3" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
+              </div>
+          <div>
+                <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">画像クレジット（必須）</label>
+                <input id="adminImageCredit" type="text" placeholder="例：撮影者名「タイトル」(Wikimedia Commons, CC BY-SA 4.0) URL" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
               </div>
           <div>
                 <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">公開日時（空白 = 今すぐ公開 / 未来の日時 = 予約投稿）</label>
