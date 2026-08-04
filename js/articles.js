@@ -133,7 +133,7 @@ function renderBody(body) {
     if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
     if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
     if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
-    if (t.includes('twitter.com') || t.includes('x.com')) return '<div class="tweet-embed-safe" style="margin:.8rem 0;max-height:700px;overflow-y:auto;-webkit-overflow-scrolling:touch;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
+    if ((t.includes('twitter.com') || t.includes('x.com')) && !t.startsWith('[quote')) return '<div class="tweet-embed-safe" style="margin:.8rem 0;max-height:700px;overflow-y:auto;-webkit-overflow-scrolling:touch;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
     if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
     const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
     if (productMatch) {
