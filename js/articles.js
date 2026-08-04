@@ -458,7 +458,26 @@ async function loadArticles() {
       }
     }
 
-    wrap.innerHTML = articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
+    window._allArticlesCache = articles;
+    renderArticleList();
+  } catch(e) {
+    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
+  }
+}
+
+function setArticleSortMode(mode) {
+  window._articleSortMode = mode;
+  renderArticleList();
+}
+
+function renderArticleList() {
+  const wrap = document.getElementById('articlesWrap');
+  if (!wrap || !window._allArticlesCache) return;
+  const mode = window._articleSortMode || 'newest';
+  const articles = window._allArticlesCache.slice().sort((a,b) => mode === 'oldest' ? a.ts - b.ts : b.ts - a.ts);
+  const sortBtn = (key, label) => '<button onclick="setArticleSortMode(\'' + key + '\')" style="padding:.35rem .8rem;border-radius:20px;border:1px solid var(--bd);background:' + (mode===key?'var(--tx)':'var(--card)') + ';color:' + (mode===key?'#fff':'var(--tx)') + ';font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;">' + label + '</button>';
+  const sortBar = '<div style="display:flex;gap:.4rem;margin-bottom:.6rem;">' + sortBtn('newest','新着順') + sortBtn('oldest','古い順') + '</div>';
+  wrap.innerHTML = sortBar + articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
       '<div style="width:100%;height:160px;border-radius:8px;margin-bottom:.6rem;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;">' +
       (a.img ? '<img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;font-family:Bebas Neue,sans-serif;font-size:28px;color:#C9082A;letter-spacing:2px;">COURTSIDE</div>') +
       '</div>' +
@@ -470,9 +489,6 @@ async function loadArticles() {
       '<div style="font-size:.7rem;color:var(--tx3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + a.body + '</div>' +
       '</div>'
     ).join('');
-  } catch(e) {
-    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
-  }
 }
 
 // ============================================================
