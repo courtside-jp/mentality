@@ -185,7 +185,7 @@ function renderBody(body) {
   return wrapCollapsibleSections(html);
 
   function wrapCollapsibleSections(html) {
-    const collapsibleTitles = ['出典', '画像クレジット'];
+    const collapsibleTitles = ['出典', 'ソース元', '画像クレジット'];
     const h2Regex = /<h2 id="toc-\d+"[^>]*>([\s\S]*?)<\/h2>/g;
     const matches = [...html.matchAll(h2Regex)];
     if (!matches.length) return html;
