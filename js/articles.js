@@ -1,11 +1,11 @@
 function isHeadingLine(t) {
-  // タグを除去してチェック
+  // ã¿ã°ãé¤å»ãã¦ãã§ãã¯
   const plain = t.replace(/<[^>]+>/g, '').trim();
   if (!plain) return false;
   const c = plain.charCodeAt(0);
-  return c === 9632 || c === 9642; // ■ or ▪
+  return c === 9632 || c === 9642; // â  or âª
 }
-// === 目次生成 ===
+// === ç®æ¬¡çæ ===
 function generateTOC(body) {
   if (!body) return '';
   function _isH(t) { const p = t.replace(/<[^>]+>/g,'').trim(); return p && (p.charCodeAt(0) === 9632 || p.charCodeAt(0) === 9642); }
@@ -25,15 +25,15 @@ function generateTOC(body) {
   const uid = 'toc-' + Math.random().toString(36).slice(2,7);
   return `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
     <summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">
-      \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
+      \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">â¼</span>
     </summary>
-    <div style="padding:4px 16px 14px;">
+    <div style="padding:2px 12px 10px;font-size:.82rem;">
       <ol style="margin:0;padding-left:20px;">${items}</ol>
     </div>
   </details>`;
 }
 
-// articles.js — 記事投稿・一覧・詳細
+// articles.js â è¨äºæç¨¿ã»ä¸è¦§ã»è©³ç´°
 
 const FB_ARTICLES = `${FB_URL}/articles`;
 const ADMIN_PASSWORD = 'kobe0824';
@@ -59,16 +59,16 @@ function copyAdminArticleUrl() {
   if (!el || !el.value) return;
   const done = () => { el.select(); };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(el.value).then(() => { alert('URLをコピーしました'); }).catch(() => {
-      el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+    navigator.clipboard.writeText(el.value).then(() => { alert('URLãã³ãã¼ãã¾ãã'); }).catch(() => {
+      el.select(); document.execCommand('copy'); alert('URLãã³ãã¼ãã¾ãã');
     });
   } else {
-    el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+    el.select(); document.execCommand('copy'); alert('URLãã³ãã¼ãã¾ãã');
   }
 }
 
 // ============================================================
-// 関連記事（記事下に表示、回遊率アップ用）
+// é¢é£è¨äºï¼è¨äºä¸ã«è¡¨ç¤ºãåéçã¢ããç¨ï¼
 // ============================================================
 async function renderRelatedArticles(currentId, category) {
   const wrap = document.getElementById('relatedArticlesWrap');
@@ -84,14 +84,14 @@ async function renderRelatedArticles(currentId, category) {
       .filter(a => a.status !== 'archived')
       .filter(a => !a.publishAt || a.publishAt <= now);
 
-    // 同じカテゴリを優先し、足りない分は新着で補う
+    // åãã«ãã´ãªãåªåããè¶³ããªãåã¯æ°çã§è£ã
     const sameCategory = list.filter(a => a.category === category).sort((a,b) => (b.ts||0) - (a.ts||0));
     const others = list.filter(a => a.category !== category).sort((a,b) => (b.ts||0) - (a.ts||0));
     const picked = [...sameCategory, ...others].slice(0, 4);
 
     if (!picked.length) { wrap.innerHTML = ''; return; }
 
-    wrap.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.85rem;font-weight:700;color:var(--tx);letter-spacing:1px;margin-bottom:.6rem;">関連記事</div>' +
+    wrap.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.85rem;font-weight:700;color:var(--tx);letter-spacing:1px;margin-bottom:.6rem;">é¢é£è¨äº</div>' +
       '<div style="display:flex;flex-direction:column;gap:.6rem;">' +
       picked.map(a => `
         <div onclick="openArticle('${a.id}')" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:.5rem;">
@@ -109,7 +109,7 @@ async function renderRelatedArticles(currentId, category) {
 }
 
 // ============================================================
-// 本文レンダリング（URL自動判別）
+// æ¬æã¬ã³ããªã³ã°ï¼URLèªåå¤å¥ï¼
 // ============================================================
 function showProductImage(url) {
   const overlay = document.createElement('div');
@@ -131,8 +131,8 @@ function renderBody(body) {
     const t = line.trim();
     const yt = t.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
-    if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
-    if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
+    if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTokåç»</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
+    if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagramæç¨¿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
     if ((t.includes('twitter.com') || t.includes('x.com')) && !t.startsWith('[quote')) return '<div class="tweet-embed-safe" style="margin:.8rem 0;max-height:700px;overflow-y:auto;-webkit-overflow-scrolling:touch;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
     if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
     const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
@@ -140,16 +140,16 @@ function renderBody(body) {
       const [, pName, pPrice, pUrl, pImg] = productMatch;
       const iconHtml = pImg
         ? '<img loading="lazy" decoding="async" src="' + pImg + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">'
-        : '<div style="font-size:1.5rem;">🛒</div>';
-      return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;">' + iconHtml + '<div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する</div></div></a>';
+        : '<div style="font-size:1.5rem;">ð</div>';
+      return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;">' + iconHtml + '<div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">è³¼å¥ãã</div></div></a>';
     }
     const quoteMatch = t.match(/\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]/);
     if (quoteMatch) {
       const [, qText, qName, qSource, qUrl] = quoteMatch;
       return '<div style="margin:1rem 0;padding:1rem 1.1rem;background:var(--bg3);border-left:4px solid var(--accent,#e63946);border-radius:0 10px 10px 0;">' +
         '<div style="font-size:.92rem;font-style:italic;color:var(--tx);line-height:1.75;">' + applyInlineBold(qText) + '</div>' +
-        (qName ? '<div style="margin-top:.5rem;font-size:.75rem;font-weight:700;color:var(--tx2);">— ' + qName + '</div>' : '') +
-        (qUrl ? '<a href="' + qUrl + '" target="_blank" style="display:inline-block;margin-top:.4rem;font-size:.65rem;color:var(--tx3);text-decoration:underline;">引用元：' + (qSource || 'リンク') + '</a>' : (qSource ? '<div style="margin-top:.4rem;font-size:.65rem;color:var(--tx3);">引用元：' + qSource + '</div>' : '')) +
+        (qName ? '<div style="margin-top:.5rem;font-size:.75rem;font-weight:700;color:var(--tx2);">â ' + qName + '</div>' : '') +
+        (qUrl ? '<a href="' + qUrl + '" target="_blank" style="display:inline-block;margin-top:.4rem;font-size:.65rem;color:var(--tx3);text-decoration:underline;">å¼ç¨åï¼' + (qSource || 'ãªã³ã¯') + '</a>' : (qSource ? '<div style="margin-top:.4rem;font-size:.65rem;color:var(--tx3);">å¼ç¨åï¼' + qSource + '</div>' : '')) +
         '</div>';
     }
     const shopcardMatch = t.match(/\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]/);
@@ -158,11 +158,11 @@ function renderBody(body) {
       const activeStyle = 'background:#e63946;color:#fff;';
       const inactiveStyle = 'background:var(--bg2,#eee);color:var(--tx3);cursor:default;';
       const rakutenBtn = scRakuten
-        ? '<a href="' + scRakuten + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">楽天' + (scRakutenPrice ? '<br>' + scRakutenPrice : '') + '</a>'
-        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">楽天<br>取扱なし</span>';
+        ? '<a href="' + scRakuten + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">æ¥½å¤©' + (scRakutenPrice ? '<br>' + scRakutenPrice : '') + '</a>'
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">æ¥½å¤©<br>åæ±ãªã</span>';
       const amazonBtn = scAmazon
         ? '<a href="' + scAmazon + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">Amazon' + (scAmazonPrice ? '<br>' + scAmazonPrice : '') + '</a>'
-        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>取扱なし</span>';
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>åæ±ãªã</span>';
       return '<div style="display:flex;gap:.7rem;align-items:center;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem;margin:.7rem 0;">' +
         '<img loading="lazy" decoding="async" src="' + scImg + '" onclick="showProductImage(\'' + scImg + '\')" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;cursor:pointer;" onerror="this.style.display=\'none\'">' +
         '<div style="flex:1;min-width:0;">' +
@@ -170,13 +170,13 @@ function renderBody(body) {
         '<div style="display:flex;gap:.4rem;">' + rakutenBtn + amazonBtn + '</div>' +
         '</div></div>';
     }
-    // ■ → 大見出し（目次対応・赤い目立つスタイル）
+    // â  â å¤§è¦åºãï¼ç®æ¬¡å¯¾å¿ã»èµ¤ãç®ç«ã¤ã¹ã¿ã¤ã«ï¼
     if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
       const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
       const label = applyInlineBold(t.replace(/<[^>]+>/g, '').trim());
       return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;padding-top:1.2em;border-top:1px solid var(--bd,#eee);color:#111;">${label}</h2>`;
     }
-    // 【】→ 小見出し（控えめスタイル、目次なし）
+    // ããâ å°è¦åºãï¼æ§ããã¹ã¿ã¤ã«ãç®æ¬¡ãªãï¼
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
       return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${applyInlineBold(t)}</h3>`;
     }
@@ -185,7 +185,7 @@ function renderBody(body) {
   return wrapCollapsibleSections(html);
 
   function wrapCollapsibleSections(html) {
-    const collapsibleTitles = ['出典', 'ソース元', '画像クレジット'];
+    const collapsibleTitles = ['åºå¸', 'ã½ã¼ã¹å', 'ç»åã¯ã¬ã¸ãã'];
     const h2Regex = /<h2 id="toc-\d+"[^>]*>([\s\S]*?)<\/h2>/g;
     const matches = [...html.matchAll(h2Regex)];
     if (!matches.length) return html;
@@ -201,9 +201,9 @@ function renderBody(body) {
         result += html.slice(cursor, sectionStart);
         let bodyHtml = html.slice(sectionContentStart, sectionEnd);
         bodyHtml = bodyHtml.replace(/<h3 style="[^"]*">/g, '<h3 style="font-size:.8rem;font-weight:400;color:#888;margin:.5em 0;padding:0;background:none;border-left:none;border-radius:0;">');
-        result += '<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:1.4em 0 .5em;overflow:hidden;">' +
-          '<summary style="padding:12px 16px;cursor:pointer;font-size:.95rem;font-weight:800;color:#555;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">' +
-          labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>' +
+        result += '<details style="background:#f8f8f8;border:1px solid #eee;border-radius:8px;margin:.8em 0 .4em;overflow:hidden;">' +
+          '<summary style="padding:7px 12px;cursor:pointer;font-size:.78rem;font-weight:700;color:#666;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">' +
+          labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">â¼</span>' +
           '</summary>' +
           '<div style="padding:4px 16px 14px;">' + bodyHtml + '</div>' +
           '</details>';
@@ -216,11 +216,11 @@ function renderBody(body) {
 }
 
 // ============================================================
-// 画像アップロード（ImgBB）
+// ç»åã¢ããã­ã¼ãï¼ImgBBï¼
 // ============================================================
-// 記事リンク挿入
+// è¨äºãªã³ã¯æ¿å¥
 async function insertArticleLink() {
-  // Firebaseから記事一覧を取得して選択モーダルを表示
+  // Firebaseããè¨äºä¸è¦§ãåå¾ãã¦é¸æã¢ã¼ãã«ãè¡¨ç¤º
   const res = await fetch(FB_ARTICLES + '.json');
   const data = await res.json();
   if (!data) return;
@@ -237,8 +237,8 @@ async function insertArticleLink() {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
       <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
-        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+        <span style="color:#fff;font-weight:700;font-size:14px;">è¨äºãé¸æ</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">Ã</span>
       </div>
       <div style="padding:8px;">
         ${articles.map(a => `
@@ -259,11 +259,11 @@ function doInsertArticleLink(id, title, img) {
   insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
 
-// URLリンク挿入
+// URLãªã³ã¯æ¿å¥
 function insertTextLink() {
-  const url = prompt('URLを入力:');
+  const url = prompt('URLãå¥å:');
   if (!url) return;
-  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
+  const isImage = confirm('ç»åã¨ãã¦è¡¨ç¤ºãã¾ããï¼\n\nOK â ç»åè¡¨ç¤º\nã­ã£ã³ã»ã« â ãªã³ã¯ã¨ãã¦æ¿å¥');
   if (isImage) {
     insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
@@ -275,7 +275,7 @@ async function insertBodyImage(input) {
   const file = input.files[0];
   if (!file) return;
   const label = input.parentElement;
-  label.textContent = '⏳ アップロード中...';
+  label.textContent = 'â³ ã¢ããã­ã¼ãä¸­...';
   
   const reader = new FileReader();
   reader.onload = async (ev) => {
@@ -294,14 +294,14 @@ async function insertBodyImage(input) {
     
     insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
-    label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
+    label.innerHTML = 'ð· ç»åæ¿å¥<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
   reader.readAsDataURL(file);
 }
 
-// 記事リンク挿入
+// è¨äºãªã³ã¯æ¿å¥
 async function insertArticleLink() {
-  // Firebaseから記事一覧を取得して選択モーダルを表示
+  // Firebaseããè¨äºä¸è¦§ãåå¾ãã¦é¸æã¢ã¼ãã«ãè¡¨ç¤º
   const res = await fetch(FB_ARTICLES + '.json');
   const data = await res.json();
   if (!data) return;
@@ -317,8 +317,8 @@ async function insertArticleLink() {
   overlay.innerHTML = `
     <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
       <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
-        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+        <span style="color:#fff;font-weight:700;font-size:14px;">è¨äºãé¸æ</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">Ã</span>
       </div>
       <div style="padding:8px;">
         ${articles.map(a => `
@@ -339,11 +339,11 @@ function doInsertArticleLink(id, title, img) {
   insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
 }
 
-// URLリンク挿入
+// URLãªã³ã¯æ¿å¥
 function insertTextLink() {
-  const url = prompt('URLを入力:');
+  const url = prompt('URLãå¥å:');
   if (!url) return;
-  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
+  const isImage = confirm('ç»åã¨ãã¦è¡¨ç¤ºãã¾ããï¼\n\nOK â ç»åè¡¨ç¤º\nã­ã£ã³ã»ã« â ãªã³ã¯ã¨ãã¦æ¿å¥');
   if (isImage) {
     insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
   } else {
@@ -355,7 +355,7 @@ async function insertBodyImage(input) {
   const file = input.files[0];
   if (!file) return;
   const label = input.parentElement;
-  label.textContent = '⏳ アップロード中...';
+  label.textContent = 'â³ ã¢ããã­ã¼ãä¸­...';
   
   const reader = new FileReader();
   reader.onload = async (ev) => {
@@ -374,7 +374,7 @@ async function insertBodyImage(input) {
     
     insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
     
-    label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
+    label.innerHTML = 'ð· ç»åæ¿å¥<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
   };
   reader.readAsDataURL(file);
 }
@@ -384,7 +384,7 @@ async function uploadArticleImage(input) {
   if (!file) return;
   
   const btn = input.parentElement;
-  btn.textContent = '⏳ アップロード中...';
+  btn.textContent = 'â³ ã¢ããã­ã¼ãä¸­...';
   
   try {
     const base64 = await new Promise((res, rej) => {
@@ -409,12 +409,12 @@ async function uploadArticleImage(input) {
       const img = document.getElementById('adminImgPreviewImg');
       img.src = url;
       preview.style.display = 'block';
-      btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+      btn.innerHTML = 'ð· ç»åé¸æ<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
     } else {
-      throw new Error('アップロード失敗');
+      throw new Error('ã¢ããã­ã¼ãå¤±æ');
     }
   } catch(e) {
-    // ImgBBが失敗したらbase64をそのまま使う
+    // ImgBBãå¤±æãããbase64ããã®ã¾ã¾ä½¿ã
     const reader = new FileReader();
     reader.onload = (ev) => {
       const url = ev.target.result;
@@ -425,30 +425,30 @@ async function uploadArticleImage(input) {
       preview.style.display = 'block';
     };
     reader.readAsDataURL(file);
-    btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+    btn.innerHTML = 'ð· ç»åé¸æ<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
   }
 }
 
 // ============================================================
-// 記事一覧を表示
+// è¨äºä¸è¦§ãè¡¨ç¤º
 // ============================================================
 async function loadArticles() {
   const wrap = document.getElementById('articlesWrap');
   if (!wrap) return;
-  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">記事を取得中...</div>';
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">è¨äºãåå¾ä¸­...</div>';
 
   try {
     const res = await fetch(FB_ARTICLES + '.json');
     const data = await res.json();
 
     if (!data) {
-      wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ記事がありません</div>';
+      wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">ã¾ã è¨äºãããã¾ãã</div>';
       return;
     }
 
     const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts)
     .filter(a => { const p = a.publishAt; return !p || p <= Date.now(); });
-    console.log('記事数:', articles.length, articles.map(a=>a.title));
+    console.log('è¨äºæ°:', articles.length, articles.map(a=>a.title));
     if (window._directArticleId) {
       const target = articles.find(a => a.id === window._directArticleId);
       if (target) {
@@ -461,7 +461,7 @@ async function loadArticles() {
     window._allArticlesCache = articles;
     renderArticleList();
   } catch(e) {
-    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
+    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">åå¾ã«å¤±æãã¾ãã</div>';
   }
 }
 
@@ -476,7 +476,7 @@ function renderArticleList() {
   const mode = window._articleSortMode || 'newest';
   const articles = window._allArticlesCache.slice().sort((a,b) => mode === 'oldest' ? a.ts - b.ts : b.ts - a.ts);
   const sortBtn = (key, label) => '<button onclick="setArticleSortMode(\'' + key + '\')" style="padding:.35rem .8rem;border-radius:20px;border:1px solid var(--bd);background:' + (mode===key?'var(--tx)':'var(--card)') + ';color:' + (mode===key?'#fff':'var(--tx)') + ';font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;">' + label + '</button>';
-  const sortBar = '<div style="display:flex;gap:.4rem;margin-bottom:.6rem;">' + sortBtn('newest','新着順') + sortBtn('oldest','古い順') + '</div>';
+  const sortBar = '<div style="display:flex;gap:.4rem;margin-bottom:.6rem;">' + sortBtn('newest','æ°çé ') + sortBtn('oldest','å¤ãé ') + '</div>';
   wrap.innerHTML = sortBar + articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
       '<div style="width:100%;height:160px;border-radius:8px;margin-bottom:.6rem;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;">' +
       (a.img ? '<img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;font-family:Bebas Neue,sans-serif;font-size:28px;color:#C9082A;letter-spacing:2px;">COURTSIDE</div>') +
@@ -492,10 +492,10 @@ function renderArticleList() {
 }
 
 // ============================================================
-// 記事詳細モーダル
+// è¨äºè©³ç´°ã¢ã¼ãã«
 // ============================================================
 // ============================================================
-// 記事の文字サイズ切り替え（読者の好みに合わせて選べる）
+// è¨äºã®æå­ãµã¤ãºåãæ¿ãï¼èª­èã®å¥½ã¿ã«åããã¦é¸ã¹ãï¼
 // ============================================================
 const ARTICLE_FONT_SIZES = { s: '.82rem', m: '.95rem', l: '1.1rem' };
 
@@ -535,19 +535,19 @@ async function openArticle(id) {
   const fixedAd = document.getElementById('fixedAdBanner');
   if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
   modal.scrollTop = 0;
-  body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">読み込み中...</div>';
+  body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">èª­ã¿è¾¼ã¿ä¸­...</div>';
 
   try {
     const res = await fetch(FB_ARTICLES + '/' + id + '.json');
     const a = await res.json();
     window.__currentArticle = a;
-    // SEO: 記事タイトルを動的にセット（フェッチ直後の最新データで更新）
+    // SEO: è¨äºã¿ã¤ãã«ãåçã«ã»ããï¼ãã§ããç´å¾ã®ææ°ãã¼ã¿ã§æ´æ°ï¼
     if (a && a.title) {
       document.title = a.title + ' | COURTSIDE';
       const md = document.querySelector('meta[name="description"]');
-      if (md) md.setAttribute('content', a.title + ' - COURTSIDE NBA専門メディア。' + (a.desc || ''));
+      if (md) md.setAttribute('content', a.title + ' - COURTSIDE NBAå°éã¡ãã£ã¢ã' + (a.desc || ''));
     }
-    // GA4: SPA内の記事閲覧を仮想ページビューとして計測（個別記事のPVを可視化するため）
+    // GA4: SPAåã®è¨äºé²è¦§ãä»®æ³ãã¼ã¸ãã¥ã¼ã¨ãã¦è¨æ¸¬ï¼åå¥è¨äºã®PVãå¯è¦åããããï¼
     if (typeof gtag === 'function' && a && a.title) {
       const articleUrl = 'https://courtside-jp.github.io/mentality/articles/' + id + '.html';
       gtag('event', 'page_view', {
@@ -558,7 +558,7 @@ async function openArticle(id) {
       });
     }
     body.innerHTML = '<div style="padding:1rem;">' +
-      '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>' +
+      '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">â æ»ã</button>' +
       (a.img ? '<img loading="lazy" decoding="async" src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
       '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;">' +
       '<span style="font-size:.58rem;background:var(--or);color:#fff;padding:.15rem .5rem;border-radius:6px;">' + (a.category||'NBA') + '</span>' +
@@ -566,25 +566,25 @@ async function openArticle(id) {
       '</div>' +
       '<div style="font-size:1rem;font-weight:700;color:var(--tx);line-height:1.5;margin-bottom:.6rem;">' + a.title + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:flex-end;gap:.3rem;margin-bottom:.6rem;">' +
-      '<span style="font-size:.65rem;color:var(--tx3);margin-right:.2rem;">文字サイズ</span>' +
+      '<span style="font-size:.65rem;color:var(--tx3);margin-right:.2rem;">æå­ãµã¤ãº</span>' +
       '<button onclick="setArticleFontSize(\'s\')" data-fontsize-btn="s" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.65rem;cursor:pointer;color:var(--tx2);">A</button>' +
       '<button onclick="setArticleFontSize(\'m\')" data-fontsize-btn="m" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.8rem;cursor:pointer;color:var(--tx2);">A</button>' +
       '<button onclick="setArticleFontSize(\'l\')" data-fontsize-btn="l" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.95rem;cursor:pointer;color:var(--tx2);">A</button>' +
       '</div>' +
       '<div id="articleBodyDiv" style="font-size:.95rem;color:var(--tx2);line-height:1.85;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
-      (a.affiliateLink ? '<a href="' + a.affiliateLink + '" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.2rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;"><span style="font-size:1.2rem;">🛒</span><span style="color:var(--or);font-weight:700;font-size:.85rem;">商品を見る</span></a>' : '') +
+      (a.affiliateLink ? '<a href="' + a.affiliateLink + '" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.2rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;"><span style="font-size:1.2rem;">ð</span><span style="color:var(--or);font-weight:700;font-size:.85rem;">ååãè¦ã</span></a>' : '') +
       '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
-      '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/articles/' + id + '.html') + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
+      '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/articles/' + id + '.html') + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X ãã®è¨äºãã·ã§ã¢</a></div>' +
       '<div id="relatedArticlesWrap" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--bd);"></div>' +
       '</div>';
   } catch(e) {
-    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
+    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">åå¾ã«å¤±æãã¾ãã</div>';
   }
   if (window.__currentArticle) {
     renderRelatedArticles(id, window.__currentArticle.category);
   }
   applyArticleFontSize();
-  // X埋め込みを処理（記事本文中の実際の .twitter-tweet を再スキャンして描画）
+  // Xåãè¾¼ã¿ãå¦çï¼è¨äºæ¬æä¸­ã®å®éã® .twitter-tweet ãåã¹ã­ã£ã³ãã¦æç»ï¼
   setTimeout(function() {
     const bodyDiv = document.getElementById('articleBodyDiv');
     if (typeof twttr !== 'undefined' && twttr.widgets) {
@@ -594,18 +594,18 @@ async function openArticle(id) {
       s.src = 'https://platform.twitter.com/widgets.js';
       s.onload = function() { if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load(bodyDiv); };
       document.body.appendChild(s);
-      setTimeout(function() { document.querySelectorAll('.tweet-embed-safe').forEach(function(el) { if (!el.querySelector('iframe')) { var a = el.querySelector('blockquote.twitter-tweet a'); var href = a ? a.href : ''; if (href) { el.style.maxHeight = 'none'; el.innerHTML = '<a href="' + href + '" target="_blank" rel="noopener" style="display:block;padding:12px;border:1px solid #444;border-radius:8px;color:#1d9bf0;text-decoration:none;">Xでこの投稿を見る →</a>'; } } }); }, 5000);
+      setTimeout(function() { document.querySelectorAll('.tweet-embed-safe').forEach(function(el) { if (!el.querySelector('iframe')) { var a = el.querySelector('blockquote.twitter-tweet a'); var href = a ? a.href : ''; if (href) { el.style.maxHeight = 'none'; el.innerHTML = '<a href="' + href + '" target="_blank" rel="noopener" style="display:block;padding:12px;border:1px solid #444;border-radius:8px;color:#1d9bf0;text-decoration:none;">Xã§ãã®æç¨¿ãè¦ã â</a>'; } } }); }, 5000);
     }
     if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
   }, 300);
 }
 
 // ============================================================
-// 管理者ページ
+// ç®¡çèãã¼ã¸
 // ============================================================
 function openAdminPage() {
-  const pw = prompt('パスワードを入力してください');
-  if (pw !== ADMIN_PASSWORD) { alert('パスワードが違います'); return; }
+  const pw = prompt('ãã¹ã¯ã¼ããå¥åãã¦ãã ãã');
+  if (pw !== ADMIN_PASSWORD) { alert('ãã¹ã¯ã¼ããéãã¾ã'); return; }
   const m = document.getElementById('adminSelectModal'); if (m) m.style.display = 'block';
 }
 
@@ -627,11 +627,11 @@ async function submitArticle() {
   const category = document.getElementById('adminCategory').value;
   const affiliateLink = document.getElementById('adminAffiliateLink') ? document.getElementById('adminAffiliateLink').value.trim() : '';
 
-  if (!title || !cleanBody) { alert('タイトルと本文は必須です'); return; }
-  if (!sourceText || !imageCredit) { alert('ソース元と画像クレジットは必須です'); return; }
+  if (!title || !cleanBody) { alert('ã¿ã¤ãã«ã¨æ¬æã¯å¿é ã§ã'); return; }
+  if (!sourceText || !imageCredit) { alert('ã½ã¼ã¹åã¨ç»åã¯ã¬ã¸ããã¯å¿é ã§ã'); return; }
 
   const btn = document.getElementById('adminSubmitBtn');
-  btn.textContent = '投稿中...';
+  btn.textContent = 'æç¨¿ä¸­...';
   btn.disabled = true;
 
   const editId = document.getElementById('adminEditId')?.value;
@@ -651,11 +651,11 @@ async function submitArticle() {
           })()
         })
       });
-      alert('更新しました！');
+      alert('æ´æ°ãã¾ããï¼');
       document.getElementById('adminEditId').value = '';
   const paEl = document.getElementById('adminPublishAt'); if(paEl) paEl.value = '';
       const btn = document.getElementById('adminSubmitBtn');
-      if (btn) btn.textContent = '投稿する';
+      if (btn) btn.textContent = 'æç¨¿ãã';
       document.getElementById('adminTitle').value = '';
       setAdminBodyValue('');
       document.getElementById('adminImg').value = '';
@@ -681,17 +681,17 @@ async function submitArticle() {
       if (imageCreditEl) imageCreditEl.value = '';
       if (createData && createData.name) {
         showAdminArticleUrl(createData.name);
-        alert('下書き（アーカイブ）として投稿しました。このままURLをコピーできます。公開する場合は記事一覧の「公開に戻す」または編集画面の公開日時から設定してください。');
+        alert('ä¸æ¸ãï¼ã¢ã¼ã«ã¤ãï¼ã¨ãã¦æç¨¿ãã¾ããããã®ã¾ã¾URLãã³ãã¼ã§ãã¾ããå¬éããå ´åã¯è¨äºä¸è¦§ã®ãå¬éã«æ»ããã¾ãã¯ç·¨éç»é¢ã®å¬éæ¥æããè¨­å®ãã¦ãã ããã');
       } else {
-        alert('投稿しました！');
+        alert('æç¨¿ãã¾ããï¼');
       }
       loadArticles();
       loadAdminArticles();
     }
   } catch(e) {
-    alert('投稿に失敗しました');
+    alert('æç¨¿ã«å¤±æãã¾ãã');
   } finally {
-    btn.textContent = '投稿する';
+    btn.textContent = 'æç¨¿ãã';
     btn.disabled = false;
   }
 }
@@ -700,16 +700,16 @@ function insertToBody(type) {
   const textarea = document.getElementById('adminBody');
   const prompts = {
     image: null,
-    youtube: 'YouTubeのURLを入力してください',
-    tiktok: 'TikTokのURLを入力してください',
-    instagram: 'InstagramのURLを入力してください',
-    twitter: 'X(Twitter)のURLを入力してください',
+    youtube: 'YouTubeã®URLãå¥åãã¦ãã ãã',
+    tiktok: 'TikTokã®URLãå¥åãã¦ãã ãã',
+    instagram: 'Instagramã®URLãå¥åãã¦ãã ãã',
+    twitter: 'X(Twitter)ã®URLãå¥åãã¦ãã ãã',
     quote: null,
   };
   if (type === 'quote') {
-    const source = prompt('引用元を入力してください（例：@StephenCurry30 / X）');
+    const source = prompt('å¼ç¨åãå¥åãã¦ãã ããï¼ä¾ï¼@StephenCurry30 / Xï¼');
     if (!source) return;
-    const template = '\n[画像をここに挿入]\n引用元：' + source + '\n';
+    const template = '\n[ç»åãããã«æ¿å¥]\nå¼ç¨åï¼' + source + '\n';
     const pos = textarea.selectionStart;
     const before = textarea.value.substring(0, pos);
     const after = textarea.value.substring(pos);
@@ -729,7 +729,7 @@ function insertToBody(type) {
       formData.append('key', '6b317240ded356635338f7ce9c45ec05');
       try {
         const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
-        if (btn) btn.textContent = 'アップロード中...';
+        if (btn) btn.textContent = 'ã¢ããã­ã¼ãä¸­...';
         const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) {
@@ -740,13 +740,13 @@ function insertToBody(type) {
           textarea.value = before + '\n' + imgUrl + '\n' + after;
           updatePreview();
         } else {
-          alert('アップロードに失敗しました');
+          alert('ã¢ããã­ã¼ãã«å¤±æãã¾ãã');
         }
       } catch(e) {
-        alert('エラーが発生しました');
+        alert('ã¨ã©ã¼ãçºçãã¾ãã');
       } finally {
         const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
-        if (btn) btn.textContent = '画像';
+        if (btn) btn.textContent = 'ç»å';
       }
     };
     input.click();
@@ -765,14 +765,14 @@ function updatePreview() {
   const body = document.getElementById('adminBody').value;
   const preview = document.getElementById('adminPreview');
   if (preview) preview.innerHTML = renderBody(body);
-  // X埋め込みを再レンダリング
+  // Xåãè¾¼ã¿ãåã¬ã³ããªã³ã°
   if (typeof twttr !== 'undefined' && twttr.widgets) {
     twttr.widgets.load();
   }
 }
 
 // ============================================================
-// 広告管理
+// åºåç®¡ç
 // ============================================================
 const FB_ADS = `${FB_URL}/ads`;
 
@@ -785,8 +785,8 @@ async function loadAds() {
 
 function openAdManager(skipAuth) {
   if (!skipAuth) {
-    const pw = prompt('パスワードを入力してください');
-    if (pw !== ADMIN_PASSWORD) { alert('パスワードが違います'); return; }
+    const pw = prompt('ãã¹ã¯ã¼ããå¥åãã¦ãã ãã');
+    if (pw !== ADMIN_PASSWORD) { alert('ãã¹ã¯ã¼ããéãã¾ã'); return; }
   }
   const modal = document.getElementById('adManagerModal');
   if (modal) { modal.style.display = 'block'; renderAdManager(); }
@@ -800,7 +800,7 @@ function closeAdManager() {
 async function renderAdManager() {
   const wrap = document.getElementById('adManagerList');
   if (!wrap) return;
-  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">読み込み中...</div>';
+  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">èª­ã¿è¾¼ã¿ä¸­...</div>';
   try {
     const res = await fetch(FB_URL + '/adslots.json');
     const slots = await res.json() || {};
@@ -815,14 +815,14 @@ async function renderAdManager() {
             </div>
           </label>
         </div>
-        <input id="ad_title_${slotId}" type="text" placeholder="タイトル" value="${slot.title||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
-        <input id="ad_url_${slotId}" type="text" placeholder="リンクURL" value="${slot.url||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
-        <input id="ad_img_${slotId}" type="text" placeholder="画像URL（任意）" value="${slot.img||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.5rem;">
-        <button onclick="saveSlot('${slotId}')" style="width:100%;padding:.5rem;background:var(--or);border:none;color:#fff;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">保存する</button>
+        <input id="ad_title_${slotId}" type="text" placeholder="ã¿ã¤ãã«" value="${slot.title||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
+        <input id="ad_url_${slotId}" type="text" placeholder="ãªã³ã¯URL" value="${slot.url||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
+        <input id="ad_img_${slotId}" type="text" placeholder="ç»åURLï¼ä»»æï¼" value="${slot.img||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.5rem;">
+        <button onclick="saveSlot('${slotId}')" style="width:100%;padding:.5rem;background:var(--or);border:none;color:#fff;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">ä¿å­ãã</button>
       </div>
     `).join('');
   } catch(e) {
-    wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
+    wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">åå¾å¤±æ</div>';
   }
 }
 
@@ -835,7 +835,7 @@ async function saveSlot(slotId) {
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ title, url, img })
   });
-  alert('保存しました！');
+  alert('ä¿å­ãã¾ããï¼');
 }
 
 
@@ -848,10 +848,10 @@ async function submitAd() {
   const icon  = document.getElementById('adIcon').value.trim();
   const color = document.getElementById('adColor').value;
 
-  const places = []; if (document.getElementById('adPlaceSchedule')?.checked) places.push('schedule'); if (document.getElementById('adPlaceNews')?.checked) places.push('news'); if (document.getElementById('adPlaceArticles')?.checked) places.push('articles'); if (document.getElementById('adPlacePlayers')?.checked) places.push('players'); if (!title || !url) { alert('タイトルとURLは必須です'); return; }
+  const places = []; if (document.getElementById('adPlaceSchedule')?.checked) places.push('schedule'); if (document.getElementById('adPlaceNews')?.checked) places.push('news'); if (document.getElementById('adPlaceArticles')?.checked) places.push('articles'); if (document.getElementById('adPlacePlayers')?.checked) places.push('players'); if (!title || !url) { alert('ã¿ã¤ãã«ã¨URLã¯å¿é ã§ã'); return; }
 
   const btn = document.getElementById('adSubmitBtn');
-  btn.textContent = '保存中...'; btn.disabled = true;
+  btn.textContent = 'ä¿å­ä¸­...'; btn.disabled = true;
 
   await fetch(FB_ADS + '.json', {
     method: 'POST',
@@ -859,45 +859,45 @@ async function submitAd() {
     body: JSON.stringify({ title, desc, price, tag, url, icon, color, places, ts: Date.now() })
   });
 
-  alert('広告を追加しました！');
+  alert('åºåãè¿½å ãã¾ããï¼');
   document.getElementById('adTitle').value = '';
   document.getElementById('adDesc').value = '';
   document.getElementById('adPrice').value = '';
   document.getElementById('adTag').value = '';
   document.getElementById('adUrl').value = '';
   document.getElementById('adIcon').value = '';
-  btn.textContent = '追加する'; btn.disabled = false;
+  btn.textContent = 'è¿½å ãã'; btn.disabled = false;
   renderAdManager();
 }
 
 async function deleteAd(id) {
-  if (!confirm('この広告を削除しますか？')) return;
+  if (!confirm('ãã®åºåãåé¤ãã¾ããï¼')) return;
   await fetch(`${FB_ADS}/${id}.json`, { method: 'DELETE' });
   renderAdManager();
 }
-// cache bust 2026年 5月29日 金曜日 15時10分29秒 JST
+// cache bust 2026å¹´ 5æ29æ¥ éææ¥ 15æ10å29ç§ JST
 
-// 管理者用記事一覧
+// ç®¡çèç¨è¨äºä¸è¦§
 async function loadAdminArticles() {
   const wrap = document.getElementById('adminArticleList');
   if (!wrap) return;
-  wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">読み込み中...</div>';
+  wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">èª­ã¿è¾¼ã¿ä¸­...</div>';
   try {
     const res = await fetch(FB_ARTICLES + '.json');
     const data = await res.json();
-    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">記事がありません</div>'; return; }
+    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">è¨äºãããã¾ãã</div>'; return; }
     const articles = Object.entries(data).map(([id,a]) => ({id,...a})).sort((a,b) => b.ts - a.ts);
     wrap.innerHTML = articles.map(a => `
       <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}${a.publishAt && a.publishAt > Date.now() ? '<span style="background:#f59e0b;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:700;">予約中</span>' : ''}</div>
-          <div style="font-size:.58rem;color:var(--tx3);">${a.category||'NBA'} · ${new Date(a.ts).toLocaleDateString('ja-JP')}</div>
+          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}${a.publishAt && a.publishAt > Date.now() ? '<span style="background:#f59e0b;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:700;">äºç´ä¸­</span>' : ''}</div>
+          <div style="font-size:.58rem;color:var(--tx3);">${a.category||'NBA'} Â· ${new Date(a.ts).toLocaleDateString('ja-JP')}</div>
         </div>
-        <button onclick="editArticle('${a.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;margin-right:.3rem;">編集</button><button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
+        <button onclick="editArticle('${a.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;margin-right:.3rem;">ç·¨é</button><button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">åé¤</button>
       </div>
     `).join('');
   } catch(e) {
-    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">取得失敗</div>';
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">åå¾å¤±æ</div>';
   }
 }
 
@@ -911,18 +911,18 @@ async function archiveArticle(id, archive) {
 }
 
 async function deleteArticle(id) {
-  if (!confirm('この記事を削除しますか？')) return;
+  if (!confirm('ãã®è¨äºãåé¤ãã¾ããï¼')) return;
   await fetch(`${FB_ARTICLES}/${id}.json`, { method: 'DELETE' });
   loadAdminArticles();
   loadArticles();
 }
 
-// 商品リンク挿入
+// ååãªã³ã¯æ¿å¥
 function insertProductLink() {
-  const name  = prompt('商品名を入力してください');
+  const name  = prompt('åååãå¥åãã¦ãã ãã');
   if (!name) return;
-  const price = prompt('価格を入力してください（例：¥22,000）') || '';
-  const url   = prompt('購入URLを入力してください');
+  const price = prompt('ä¾¡æ ¼ãå¥åãã¦ãã ããï¼ä¾ï¼Â¥22,000ï¼') || '';
+  const url   = prompt('è³¼å¥URLãå¥åãã¦ãã ãã');
   if (!url) return;
   const card = `[product name="${name}" price="${price}" url="${url}"]`;
   const chip = createEmbedChip('product', card, `${name} ${price ? '(' + price + ')' : ''}`);
@@ -930,29 +930,29 @@ function insertProductLink() {
 }
 
 function insertShopCard() {
-  const name = prompt('商品名を入力してください');
+  const name = prompt('åååãå¥åãã¦ãã ãã');
   if (!name) return;
-  const img = prompt('商品画像のURLを入力してください（任意）') || '';
-  const rakuten = prompt('楽天の購入URLを入力してください（取り扱いがなければ空欄でOK）') || '';
-  const rakutenPrice = rakuten ? (prompt('楽天の価格を入力してください（例：15,180円）') || '') : '';
-  const amazon = prompt('AmazonのURLを入力してください（取り扱いがなければ空欄でOK）') || '';
-  const amazonPrice = amazon ? (prompt('Amazonの価格を入力してください（例：15,180円）') || '') : '';
+  const img = prompt('ååç»åã®URLãå¥åãã¦ãã ããï¼ä»»æï¼') || '';
+  const rakuten = prompt('æ¥½å¤©ã®è³¼å¥URLãå¥åãã¦ãã ããï¼åãæ±ãããªããã°ç©ºæ¬ã§OKï¼') || '';
+  const rakutenPrice = rakuten ? (prompt('æ¥½å¤©ã®ä¾¡æ ¼ãå¥åãã¦ãã ããï¼ä¾ï¼15,180åï¼') || '') : '';
+  const amazon = prompt('Amazonã®URLãå¥åãã¦ãã ããï¼åãæ±ãããªããã°ç©ºæ¬ã§OKï¼') || '';
+  const amazonPrice = amazon ? (prompt('Amazonã®ä¾¡æ ¼ãå¥åãã¦ãã ããï¼ä¾ï¼15,180åï¼') || '') : '';
   const card = `[shopcard name="${name}" img="${img}" rakuten="${rakuten}" rakutenPrice="${rakutenPrice}" amazon="${amazon}" amazonPrice="${amazonPrice}"]`;
   const shops = [];
-  if (rakuten) shops.push('楽天');
+  if (rakuten) shops.push('æ¥½å¤©');
   if (amazon) shops.push('Amazon');
   const chip = createEmbedChip('shopcard', card, `${name} ${shops.length ? '[' + shops.join('/') + ']' : ''}`);
   insertNodeAtCursor(chip);
 }
 
 function insertQuoteBlock() {
-  const text = prompt('引用するコメント本文を入力してください');
+  const text = prompt('å¼ç¨ããã³ã¡ã³ãæ¬æãå¥åãã¦ãã ãã');
   if (!text) return;
-  const name = prompt('発言者名を入力してください（例：ビクター・ウェンバンヤマ）') || '';
-  const source = prompt('引用元メディア名を入力してください（例：2Kジャパン公式サイト）') || '';
-  const url = prompt('引用元のURLを入力してください（任意）') || '';
+  const name = prompt('çºè¨èåãå¥åãã¦ãã ããï¼ä¾ï¼ãã¯ã¿ã¼ã»ã¦ã§ã³ãã³ã¤ãï¼') || '';
+  const source = prompt('å¼ç¨åã¡ãã£ã¢åãå¥åãã¦ãã ããï¼ä¾ï¼2Kã¸ã£ãã³å¬å¼ãµã¤ãï¼') || '';
+  const url = prompt('å¼ç¨åã®URLãå¥åãã¦ãã ããï¼ä»»æï¼') || '';
   const card = `[quote text="${text}" name="${name}" source="${source}" url="${url}"]`;
-  const chip = createEmbedChip('quote', card, `${source || '引用'}：${text.slice(0, 20)}...`);
+  const chip = createEmbedChip('quote', card, `${source || 'å¼ç¨'}ï¼${text.slice(0, 20)}...`);
   insertNodeAtCursor(chip);
 }
 
@@ -964,18 +964,18 @@ function extractArticleMetaSections(body) {
   let i = 0;
   while (i < lines.length) {
     const t = lines[i].trim();
-    if (t === '■ソース元') {
+    if (t === 'â ã½ã¼ã¹å') {
       i++;
-      while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+      while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('â ')) {
         sourceLines.push(lines[i].trim());
         i++;
       }
       if (i < lines.length && lines[i].trim() === '') i++;
       continue;
     }
-    if (t === '■画像クレジット') {
+    if (t === 'â ç»åã¯ã¬ã¸ãã') {
       i++;
-      if (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+      if (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('â ')) {
         imageCredit = lines[i].trim();
         i++;
       }
@@ -993,15 +993,15 @@ function buildArticleMetaSections(sourceText, imageCredit) {
   const sourceLines = (sourceText || '').split('\n').map(l => l.trim()).filter(Boolean);
   let out = '';
   if (sourceLines.length) {
-    out += '\n\n■ソース元\n' + sourceLines.join('\n');
+    out += '\n\nâ ã½ã¼ã¹å\n' + sourceLines.join('\n');
   }
   if (imageCredit && imageCredit.trim()) {
-    out += '\n\n■画像クレジット\n' + imageCredit.trim();
+    out += '\n\nâ ç»åã¯ã¬ã¸ãã\n' + imageCredit.trim();
   }
   return out;
 }
 
-// 下書き保存
+// ä¸æ¸ãä¿å­
 const FB_DRAFTS = `${FB_URL}/drafts`;
 
 async function saveDraft() {
@@ -1010,7 +1010,7 @@ async function saveDraft() {
   const category = document.getElementById('adminCategory').value;
   const thumb    = document.getElementById('adminThumb')?.value.trim() || '';
 
-  if (!title && !body) { alert('タイトルか本文を入力してください'); return; }
+  if (!title && !body) { alert('ã¿ã¤ãã«ãæ¬æãå¥åãã¦ãã ãã'); return; }
 
   await fetch(FB_DRAFTS + '.json', {
     method: 'POST',
@@ -1018,7 +1018,7 @@ async function saveDraft() {
     body: JSON.stringify({ title, body, category, thumb, ts: Date.now() })
   });
 
-  alert('下書きを保存しました！');
+  alert('ä¸æ¸ããä¿å­ãã¾ããï¼');
   loadDrafts();
 }
 
@@ -1028,20 +1028,20 @@ async function loadDrafts() {
   try {
     const res = await fetch(FB_DRAFTS + '.json');
     const data = await res.json();
-    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">下書きがありません</div>'; return; }
+    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">ä¸æ¸ããããã¾ãã</div>'; return; }
     const drafts = Object.entries(data).map(([id,d]) => ({id,...d})).sort((a,b) => b.ts - a.ts);
     wrap.innerHTML = drafts.map(d => `
       <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d.title || '無題'}</div>
+          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d.title || 'ç¡é¡'}</div>
           <div style="font-size:.58rem;color:var(--tx3);">${new Date(d.ts).toLocaleDateString('ja-JP')}</div>
         </div>
-        <button onclick="loadDraft('${d.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">編集</button>
-        <button onclick="deleteDraft('${d.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">削除</button>
+        <button onclick="loadDraft('${d.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">ç·¨é</button>
+        <button onclick="deleteDraft('${d.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">åé¤</button>
       </div>
     `).join('');
   } catch(e) {
-    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">取得失敗</div>';
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">åå¾å¤±æ</div>';
   }
 }
 
@@ -1054,11 +1054,11 @@ async function loadDraft(id) {
   document.getElementById('adminCategory').value = d.category || 'NBA';
   document.getElementById('adminThumb').value    = d.thumb || '';
   updatePreview();
-  alert('下書きを読み込みました！編集後に投稿するか再保存してください。');
+  alert('ä¸æ¸ããèª­ã¿è¾¼ã¿ã¾ããï¼ç·¨éå¾ã«æç¨¿ãããåä¿å­ãã¦ãã ããã');
 }
 
 async function deleteDraft(id) {
-  if (!confirm('この下書きを削除しますか？')) return;
+  if (!confirm('ãã®ä¸æ¸ããåé¤ãã¾ããï¼')) return;
   await fetch(`${FB_DRAFTS}/${id}.json`, { method: 'DELETE' });
   loadDrafts();
 }
@@ -1079,7 +1079,7 @@ async function uploadThumbImage() {
     const file = e.target.files[0];
     if (!file) return;
     const btn = document.getElementById('adminImgUploadBtn');
-    btn.textContent = 'アップロード中...';
+    btn.textContent = 'ã¢ããã­ã¼ãä¸­...';
     const formData = new FormData();
     formData.append('image', file);
     formData.append('key', '6b317240ded356635338f7ce9c45ec05');
@@ -1089,12 +1089,12 @@ async function uploadThumbImage() {
       if (data.success) {
         document.getElementById('adminImg').value = data.data.url;
       } else {
-        alert('アップロードに失敗しました');
+        alert('ã¢ããã­ã¼ãã«å¤±æãã¾ãã');
       }
     } catch(e) {
-      alert('エラーが発生しました');
+      alert('ã¨ã©ã¼ãçºçãã¾ãã');
     } finally {
-      btn.textContent = '画像を選ぶ';
+      btn.textContent = 'ç»åãé¸ã¶';
     }
   };
   input.click();
@@ -1112,7 +1112,7 @@ function resetArticleForm() {
   if (editId) editId.value = '';
 }
 
-// URLパラメータで記事を直接開く
+// URLãã©ã¡ã¼ã¿ã§è¨äºãç´æ¥éã
 (function() {
   const params = new URLSearchParams(window.location.search);
   const articleId = params.get('article');
@@ -1155,38 +1155,38 @@ async function editArticle(id) {
   updatePreview();
   document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
   const submitBtn = document.getElementById('adminSubmitBtn');
-  if (submitBtn) submitBtn.textContent = '上書き保存';
+  if (submitBtn) submitBtn.textContent = 'ä¸æ¸ãä¿å­';
   const preview = document.getElementById('articlePreview');
   if (preview) preview.innerHTML = '';
   updatePreview();
 }
 
-// 管理画面：記事一覧読み込み
+// ç®¡çç»é¢ï¼è¨äºä¸è¦§èª­ã¿è¾¼ã¿
 async function loadAdminArticles() {
   const list = document.getElementById('adminArticleList');
   if (!list) return;
-  list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">読み込み中...</div>';
+  list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">èª­ã¿è¾¼ã¿ä¸­...</div>';
   try {
     const res = await fetch(FB_ARTICLES + '.json?orderBy="$key"&limitToLast=200');
     const data = await res.json();
-    if (!data) { list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">記事なし</div>'; return; }
+    if (!data) { list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">è¨äºãªã</div>'; return; }
     const articles = Object.entries(data).reverse();
     list.innerHTML = articles.map(([id, a]) => `
       <div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 14px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-          <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${a.category||'未分類'}</div>
+          <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${a.category||'æªåé¡'}</div>
           <div style="font-size:9px;color:#999;">${a.date||''}</div>
         </div>
-        <div style="font-size:13px;font-weight:700;color:#000;line-height:1.4;margin-bottom:8px;">${a.title||'無題'}</div>
+        <div style="font-size:13px;font-weight:700;color:#000;line-height:1.4;margin-bottom:8px;">${a.title||'ç¡é¡'}</div>
         <div style="display:flex;gap:6px;">
-          <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
-          <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? '公開に戻す' : 'アーカイブ'}</button>
-          <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
+          <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">ç·¨é</button>
+          <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? 'å¬éã«æ»ã' : 'ã¢ã¼ã«ã¤ã'}</button>
+          <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">åé¤</button>
         </div>
       </div>
     `).join('');
   } catch(e) {
-    list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">取得失敗</div>';
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">åå¾å¤±æ</div>';
   }
 }
 
@@ -1206,7 +1206,7 @@ function openNewArticle() {
   if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
   const paEl = document.getElementById('adminPublishAt'); if (paEl) paEl.value = '';
   showAdminArticleUrl(null);
-  document.getElementById('adminSubmitBtn').textContent = '投稿する';
+  document.getElementById('adminSubmitBtn').textContent = 'æç¨¿ãã';
   _bodyUndoStack = [];
 }
 
@@ -1224,7 +1224,7 @@ async function archiveArticle(id, archive) {
 }
 
 async function deleteArticle(id) {
-  if (!confirm('削除しますか？')) return;
+  if (!confirm('åé¤ãã¾ããï¼')) return;
   await fetch(FB_ARTICLES + '/' + id + '.json', {method: 'DELETE'});
   loadAdminArticles();
 }
@@ -1239,7 +1239,7 @@ async function editArticle(id) {
   setAdminBodyValue(meta.cleanBody);
   if (document.getElementById('adminSourceText')) document.getElementById('adminSourceText').value = meta.sourceText || '';
   if (document.getElementById('adminImageCredit')) document.getElementById('adminImageCredit').value = meta.imageCredit || '';
-  document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
+  document.getElementById('adminCategory').value = d.category || 'NBAãã¡ã¤ãã«';
   if (document.getElementById('adminImg')) document.getElementById('adminImg').value = d.img || '';
   {
     const _p = document.getElementById('adminImgPreview');
@@ -1253,7 +1253,7 @@ async function editArticle(id) {
   const paEl2 = document.getElementById('adminPublishAt');
   if (paEl2) paEl2.value = msToDatetimeLocal(d.publishAt);
   showAdminArticleUrl(id);
-  document.getElementById('adminSubmitBtn').textContent = '上書き保存';
+  document.getElementById('adminSubmitBtn').textContent = 'ä¸æ¸ãä¿å­';
   _bodyUndoStack = [];
 }
 
@@ -1294,25 +1294,25 @@ function getAdminBodyValue() {
   return lines.join('\n');
 }
 
-// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
-// 枠付きの目立つブロックとして表示するためのチップを作る
+// åãè¾¼ã¿ç³»ï¼ãã¤ã¼ã/ååãªã³ã¯/ãªã³ã¯ï¼ãç·¨éã¨ãªã¢åã§
+// æ ä»ãã®ç®ç«ã¤ãã­ãã¯ã¨ãã¦è¡¨ç¤ºããããã®ããããä½ã
 function createEmbedChip(kind, rawLine, displayHtml) {
   const div = document.createElement('div');
   div.setAttribute('contenteditable', 'false');
   div.dataset.embedLine = rawLine;
   const colors = {
-    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
-    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
-    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
-    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
-    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'ð±', label:'ãã¤ã¼ã'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'ð', label:'ååãªã³ã¯'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'ðï¸', label:'ååæ¯è¼ã«ã¼ã'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'ð¬', label:'å¼ç¨ã³ã¡ã³ã'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'ð', label:'ãªã³ã¯'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
   div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
   return div;
 }
 
-// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+// æ¬æã®1è¡ãåãè¾¼ã¿ç³»ã®ãã¿ã¼ã³ã«ä¸è´ãããèª¿ã¹ãä¸è´ããã°ãããè¦ç´ ãè¿ã
 function tryBuildEmbedChip(line) {
   const t = line.trim();
   if (!t) return null;
@@ -1325,12 +1325,12 @@ function tryBuildEmbedChip(line) {
   }
   const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
   if (quoteChipMatch) {
-    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || 'å¼ç¨'}ï¼${quoteChipMatch[1].slice(0, 20)}...`);
   }
   const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
   if (shopcardMatch) {
     const shops = [];
-    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[3]) shops.push('æ¥½å¤©' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
     if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
     return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
   }
@@ -1356,7 +1356,7 @@ function setAdminBodyValue(text) {
   });
 }
 
-// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+// ã«ã¼ã½ã«ãä»ã©ã®ãè¡ï¼#adminBodyã®ç´ä¸ã®è¦ç´ ï¼ãã®ä¸­ã«ããããæ¢ã
 function getCurrentTopLevelLine() {
   const el = document.getElementById('adminBody');
   const sel = window.getSelection();
@@ -1364,7 +1364,7 @@ function getCurrentTopLevelLine() {
   let node = sel.getRangeAt(0).commonAncestorContainer;
   if (!el.contains(node)) return null;
   while (node && node.parentElement !== el) node = node.parentElement;
-  return node; // el直下の要素、またはnull
+  return node; // elç´ä¸ã®è¦ç´ ãã¾ãã¯null
 }
 
 function insertNodeAtCursor(node) {
@@ -1375,7 +1375,7 @@ function insertNodeAtCursor(node) {
   const spacer = document.createElement('div');
   spacer.innerHTML = '<br>';
   if (currentLine && currentLine.parentElement === el) {
-    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    // ç¾å¨ã®è¡ã®"å¤å´"ï¼ç´å¾ï¼ã«æ¿å¥ãããè¡ã®éä¸­ãå£ããªãã
     currentLine.after(node, spacer);
   } else {
     el.appendChild(node);
@@ -1420,12 +1420,12 @@ function getSelectedText() {
 }
 
 // ============================================================
-// ツールバー挿入関数
+// ãã¼ã«ãã¼æ¿å¥é¢æ°
 // ============================================================
 function insertBodyTag(type) {
   if (type === 'bold') {
     const sel = window.getSelection();
-    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    if (!sel.rangeCount || sel.isCollapsed) { alert('å¤ªå­ã«ãããé¨åãé¸æãã¦ãã ãã'); return; }
     snapshotBodyHistory();
     document.getElementById('adminBody').focus();
     document.execCommand('styleWithCSS', false, true);
@@ -1437,23 +1437,23 @@ function insertBodyTag(type) {
   let insert = '';
   switch(type) {
     case 'h2':
-      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || 'è¦åºã'}</div><div><br></div>`;
       break;
     case 'h3':
-      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || 'å°è¦åºã'}</div><div><br></div>`;
       break;
     case 'hr':
       insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
       break;
     case 'quote':
-      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || 'å¼ç¨ãã­ã¹ã'}</div><div><br></div>`;
       break;
   }
   insertHtmlAtCursor(insert);
 }
 
 // ============================================================
-// contenteditable版 本文エディタ用ヘルパー
+// contenteditableç æ¬æã¨ãã£ã¿ç¨ãã«ãã¼
 // ============================================================
 function getAdminBodyValue() {
   const el = document.getElementById('adminBody');
@@ -1471,25 +1471,25 @@ function getAdminBodyValue() {
   return lines.join('\n');
 }
 
-// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
-// 枠付きの目立つブロックとして表示するためのチップを作る
+// åãè¾¼ã¿ç³»ï¼ãã¤ã¼ã/ååãªã³ã¯/ãªã³ã¯ï¼ãç·¨éã¨ãªã¢åã§
+// æ ä»ãã®ç®ç«ã¤ãã­ãã¯ã¨ãã¦è¡¨ç¤ºããããã®ããããä½ã
 function createEmbedChip(kind, rawLine, displayHtml) {
   const div = document.createElement('div');
   div.setAttribute('contenteditable', 'false');
   div.dataset.embedLine = rawLine;
   const colors = {
-    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
-    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
-    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
-    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
-    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'ð±', label:'ãã¤ã¼ã'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'ð', label:'ååãªã³ã¯'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'ðï¸', label:'ååæ¯è¼ã«ã¼ã'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'ð¬', label:'å¼ç¨ã³ã¡ã³ã'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'ð', label:'ãªã³ã¯'}
   }[kind];
   div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
   div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
   return div;
 }
 
-// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+// æ¬æã®1è¡ãåãè¾¼ã¿ç³»ã®ãã¿ã¼ã³ã«ä¸è´ãããèª¿ã¹ãä¸è´ããã°ãããè¦ç´ ãè¿ã
 function tryBuildEmbedChip(line) {
   const t = line.trim();
   if (!t) return null;
@@ -1502,12 +1502,12 @@ function tryBuildEmbedChip(line) {
   }
   const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
   if (quoteChipMatch) {
-    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || 'å¼ç¨'}ï¼${quoteChipMatch[1].slice(0, 20)}...`);
   }
   const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
   if (shopcardMatch) {
     const shops = [];
-    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[3]) shops.push('æ¥½å¤©' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
     if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
     return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
   }
@@ -1533,7 +1533,7 @@ function setAdminBodyValue(text) {
   });
 }
 
-// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+// ã«ã¼ã½ã«ãä»ã©ã®ãè¡ï¼#adminBodyã®ç´ä¸ã®è¦ç´ ï¼ãã®ä¸­ã«ããããæ¢ã
 function getCurrentTopLevelLine() {
   const el = document.getElementById('adminBody');
   const sel = window.getSelection();
@@ -1541,7 +1541,7 @@ function getCurrentTopLevelLine() {
   let node = sel.getRangeAt(0).commonAncestorContainer;
   if (!el.contains(node)) return null;
   while (node && node.parentElement !== el) node = node.parentElement;
-  return node; // el直下の要素、またはnull
+  return node; // elç´ä¸ã®è¦ç´ ãã¾ãã¯null
 }
 
 function insertNodeAtCursor(node) {
@@ -1552,7 +1552,7 @@ function insertNodeAtCursor(node) {
   const spacer = document.createElement('div');
   spacer.innerHTML = '<br>';
   if (currentLine && currentLine.parentElement === el) {
-    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    // ç¾å¨ã®è¡ã®"å¤å´"ï¼ç´å¾ï¼ã«æ¿å¥ãããè¡ã®éä¸­ãå£ããªãã
     currentLine.after(node, spacer);
   } else {
     el.appendChild(node);
@@ -1597,12 +1597,12 @@ function getSelectedText() {
 }
 
 // ============================================================
-// ツールバー挿入関数
+// ãã¼ã«ãã¼æ¿å¥é¢æ°
 // ============================================================
 function insertBodyTag(type) {
   if (type === 'bold') {
     const sel = window.getSelection();
-    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    if (!sel.rangeCount || sel.isCollapsed) { alert('å¤ªå­ã«ãããé¨åãé¸æãã¦ãã ãã'); return; }
     snapshotBodyHistory();
     document.getElementById('adminBody').focus();
     document.execCommand('styleWithCSS', false, true);
@@ -1614,23 +1614,23 @@ function insertBodyTag(type) {
   let insert = '';
   switch(type) {
     case 'h2':
-      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || 'è¦åºã'}</div><div><br></div>`;
       break;
     case 'h3':
-      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || 'å°è¦åºã'}</div><div><br></div>`;
       break;
     case 'hr':
       insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
       break;
     case 'quote':
-      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || 'å¼ç¨ãã­ã¹ã'}</div><div><br></div>`;
       break;
   }
   insertHtmlAtCursor(insert);
 }
 
 // ============================================================
-// 本文タブ切り替え
+// æ¬æã¿ãåãæ¿ã
 // ============================================================
 function switchBodyTab(tab) {
   const ta = document.getElementById('adminBody');
@@ -1660,12 +1660,12 @@ function updateBodyPreview() {
   const preview = document.getElementById('adminBodyPreview');
   if (!preview) return;
   const val = getAdminBodyValue();
-  preview.innerHTML = val ? renderBody(val) : '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+  preview.innerHTML = val ? renderBody(val) : '<span style="color:#ccc;">ãã¬ãã¥ã¼ãããã«è¡¨ç¤ºããã¾ã</span>';
   if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load();
   if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
 }
 
-// SNS埋め込み挿入（X / Instagram / TikTok 自動判別）
+// SNSåãè¾¼ã¿æ¿å¥ï¼X / Instagram / TikTok èªåå¤å¥ï¼
 let _snsEmbedTA = null;
 let _savedBodyRange = null;
 function saveBodyCursorRange() {
@@ -1719,9 +1719,9 @@ function insertSnsEmbed() {
   urlInput.oninput = () => {
     const v = urlInput.value;
     let platform = '';
-    if (v.includes('twitter.com') || v.includes('x.com')) platform = '✓ X (Twitter) の投稿として認識しました';
-    else if (v.includes('instagram.com')) platform = '✓ Instagram の投稿として認識しました';
-    else if (v.includes('tiktok.com')) platform = '✓ TikTok の投稿として認識しました';
+    if (v.includes('twitter.com') || v.includes('x.com')) platform = 'â X (Twitter) ã®æç¨¿ã¨ãã¦èªè­ãã¾ãã';
+    else if (v.includes('instagram.com')) platform = 'â Instagram ã®æç¨¿ã¨ãã¦èªè­ãã¾ãã';
+    else if (v.includes('tiktok.com')) platform = 'â TikTok ã®æç¨¿ã¨ãã¦èªè­ãã¾ãã';
     detected.textContent = platform;
   };
   urlInput.focus();
@@ -1733,7 +1733,7 @@ function confirmSnsEmbed() {
   const url = document.getElementById('snsEmbedUrl').value.trim();
   if (!url) return;
   if (!url.includes('twitter.com') && !url.includes('x.com') && !url.includes('instagram.com') && !url.includes('tiktok.com')) {
-    alert('X (Twitter) / Instagram / TikTokのURLを入力してください');
+    alert('X (Twitter) / Instagram / TikTokã®URLãå¥åãã¦ãã ãã');
     return;
   }
   const chip = createEmbedChip('tweet', url, url);
@@ -1742,7 +1742,7 @@ function confirmSnsEmbed() {
 }
 
 // ============================================================
-// リンク挿入モーダル
+// ãªã³ã¯æ¿å¥ã¢ã¼ãã«
 // ============================================================
 function showLinkModal(url) {
   saveBodyCursorRange();
