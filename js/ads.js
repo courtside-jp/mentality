@@ -120,6 +120,19 @@
 async function loadAdminBanners() {
   const wrap = document.getElementById('adminAdList');
   if (!wrap) return;
+  const settingsRes = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/adSettings.json');
+  const settings = (await settingsRes.json()) || {};
+  window._adSettings = settings;
+  const topBarOn = settings.topBarEnabled !== false;
+  const botBarOn = settings.bottomBarEnabled !== false;
+  function toggleSwitch(section, on) {
+    return `<div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:10px;color:#999;">${on ? '表示中' : '非表示'}</span>
+      <div onclick="toggleAdBarSetting('${section}',${on})" style="width:34px;height:19px;border-radius:10px;background:${on ? '#e63946' : '#ccc'};position:relative;cursor:pointer;transition:background .2s;">
+        <div style="width:15px;height:15px;border-radius:50%;background:#fff;position:absolute;top:2px;${on ? 'left:17px' : 'left:2px'};transition:left .2s;"></div>
+      </div>
+    </div>`;
+  }
   const res = await fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json');
   const data = await res.json();
   if (!data) { wrap.innerHTML = '<div style="color:#999;font-size:12px;padding:10px;">広告なし</div>'; return; }
@@ -146,9 +159,15 @@ async function loadAdminBanners() {
 
   wrap.innerHTML = `
     <div style="margin-top:14px;">
-      <div style="font-size:11px;font-weight:700;color:#555;padding:6px 10px;background:#f0f4ff;border-radius:6px;margin-bottom:8px;">📺 上部バー（動画配信）</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#f0f4ff;border-radius:6px;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;color:#555;">📺 上部バー（動画配信）</div>
+        ${toggleSwitch('top', topBarOn)}
+      </div>
       ${topAds.length ? topAds.map(renderCard).join('') : '<div style="color:#999;font-size:12px;padding:8px;">なし</div>'}
-      <div style="font-size:11px;font-weight:700;color:#555;padding:6px 10px;background:#fff3f0;border-radius:6px;margin:10px 0 8px;">🛒 下部バー（商品広告）</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#fff3f0;border-radius:6px;margin:10px 0 8px;">
+        <div style="font-size:11px;font-weight:700;color:#555;">🛒 下部バー（商品広告）</div>
+        ${toggleSwitch('bottom', botBarOn)}
+      </div>
       ${botAds.length ? botAds.map(renderCard).join('') : '<div style="color:#999;font-size:12px;padding:8px;">なし</div>'}
     </div>
     <!-- バナー追加・編集フォーム（画面中央のモーダル表示） -->
@@ -176,6 +195,14 @@ async function loadAdminBanners() {
   const bf = document.getElementById('bannerForm');
   if (bf && bf.parentElement !== document.body) document.body.appendChild(bf);
 }
+async function toggleAdBarSetting(section, currentOn) {
+  const key = section === 'top' ? 'topBarEnabled' : 'bottomBarEnabled';
+  await fetch('https://mentality-nba-default-rtdb.firebaseio.com/adSettings.json', {
+    method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ [key]: !currentOn })
+  });
+  loadAdminBanners();
+}
+
 async function toggleBannerAd(id, active) {
   await fetch(`https://mentality-nba-default-rtdb.firebaseio.com/ads/${id}.json`, {
     method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ active })
