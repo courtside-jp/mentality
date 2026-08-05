@@ -26,7 +26,6 @@ function goPage(id, btn) {
     articles: '記事一覧 | COURTSIDE',
     sneakers: 'バッシュ・レビュー | COURTSIDE',
     items: 'NBAアパレル・アイテム | COURTSIDE',
-    players: 'NBA選手情報 | COURTSIDE',
     schedule: 'NBA試合日程・結果 | COURTSIDE'
   };
   document.title = pageTitles[id] || 'COURTSIDE - NBA速報・まとめ';
@@ -35,7 +34,6 @@ function goPage(id, btn) {
     articles: 'NBA速報・まとめ記事一覧。1分で読めるNBA専門記事を毎日更新。河村勇輝・八村塁・カリーなど最新情報。',
     sneakers: 'NBAバッシュ・スニーカーレビュー一覧。クッション性・トラクションなど機能スコアで比較。',
     items: 'NBAアパレル・バスケグッズ情報。Nike・adidas・On Running最新アイテム。',
-    players: 'NBA選手スタッツ・プロフィール一覧。現役選手の最新成績・年俸情報。'
   };
   if (metaDesc && descMap[id]) metaDesc.setAttribute('content', descMap[id]);
   // 全ページを非表示
@@ -59,7 +57,6 @@ function goPage(id, btn) {
     if(typeof renderStandings === 'function') renderStandings();
     if(typeof initStats === 'function') initStats();
   }
-  if(id === 'players' && typeof initPlayers === 'function') initPlayers();
   // ボトムナビのアクティブ状態を更新
   document.querySelectorAll('.bnav-item').forEach(n => n.classList.remove('active'));
   const activeNav = document.querySelector('.bnav-item[data-page="'+id+'"]');
