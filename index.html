@@ -182,7 +182,6 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
   <button class="sn" id="sn-articles" onclick="goPage('articles',this)">記事</button>
   <button class="sn" id="sn-sneakers" onclick="goPage('sneakers',this)">バッシュ</button>
   <button class="sn" id="sn-items" onclick="goPage('items',this)">アイテム</button>
-  <button class="sn" id="sn-players" onclick="goPage('players',this)">選手</button>
 </nav>
 
 <div class="content-wrap" id="mainScroll" style="padding-top:96px;">
@@ -320,10 +319,6 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
         </div>
         <div id="itemsWrap" style="padding:8px;"></div>
 <div id="adBannerItem" style="padding:0 12px;"></div>
-</div>
-<div id="pg-players" class="pg">
-  <div id="playerFilter" style="display:flex;overflow-x:auto;scrollbar-width:none;padding:10px 12px;gap:6px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0px;z-index:98;"></div>
-<div id="playerGrid"></div>
 </div>
 
 <div id="pg-admin" class="pg" style="background:#fff;min-height:100vh;">
@@ -889,21 +884,6 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
     <div class="bnav-label">アイテム</div>
     <div class="bnav-dot"></div>
   </div>
-  <div class="bnav-item" data-page="players" onclick="goPage('players',null,this)">
-    <div class="bnav-label">選手</div>
-    <div class="bnav-dot"></div>
-  </div>
-</div>
-
-<!-- 選手詳細モーダル -->
-<div id="playerDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:200;overflow-y:auto;">
-  <div style="background:#fff;min-height:100vh;">
-    <div style="background:#000;padding:12px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">
-      <div onclick="document.getElementById('playerDetailModal').style.display='none'" style="color:#fff;cursor:pointer;font-size:20px;">×</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;">選手詳細</div>
-    </div>
-    <div id="playerDetailBody" style="padding:1rem;"></div>
-  </div>
 </div>
 
 <!-- バッシュ詳細モーダル -->
@@ -1188,7 +1168,7 @@ if(_articleId) window._directArticleId = _articleId;
 <script>
 window.addEventListener('load', function() {
   var hash = location.hash.replace('#','') || 'home';
-  var valid = ['home','schedule','ranking','articles','sneakers','items','players'];
+  var valid = ['home','schedule','ranking','articles','sneakers','items'];
   var page = valid.indexOf(hash) >= 0 ? hash : 'home';
   if(typeof goPage === 'function') {
     goPage(page);
@@ -1278,7 +1258,6 @@ function signOutAdmin() {
 <script src="js/items.js?v=3"></script>
   <script src="js/ads.js?v=4"></script>
 <script src="js/home.js?v=6"></script>
-<script src="js/players3.js?v=1"></script>
 <script src="js/stats.js?v=2"></script>
 <script src="js/search.js?v=1"></script>
 
@@ -1376,7 +1355,7 @@ function updateMainScrollBottomPad(){
 // モーダルとナビをbody直下に確実に配置
 (function(){
   function fixAll() {
-    ['articleModal','snkModal','search-modal','playerDetailModal','snsEmbedModal','linkInsertModal'].forEach(function(id){
+    ['articleModal','snkModal','search-modal','snsEmbedModal','linkInsertModal'].forEach(function(id){
       var el = document.getElementById(id);
       if(el && el.parentElement !== document.body) document.body.appendChild(el);
     });
