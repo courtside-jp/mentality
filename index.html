@@ -201,8 +201,13 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
 </div>
 <script>
 (function(){
-  fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
+  fetch('https://mentality-nba-default-rtdb.firebaseio.com/adSettings.json')
     .then(r=>r.json())
+    .then(settings=>{
+      window._adSettings = settings || {};
+      if (window._adSettings.topBarEnabled === false) return;
+      return fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json').then(r=>r.json());
+    })
     .then(data=>{
       if(!data) return;
       const banners = Object.values(data).filter(a=>a.location==='上部バナー'&&a.active);
@@ -1332,8 +1337,13 @@ function updateMainScrollBottomPad(){
 }
 (function(){
   if(sessionStorage.getItem('adClosed')==='1') return;
-  fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json')
+  fetch('https://mentality-nba-default-rtdb.firebaseio.com/adSettings.json')
     .then(r=>r.json())
+    .then(settings=>{
+      window._adSettings = settings || {};
+      if (window._adSettings.bottomBarEnabled === false) return;
+      return fetch('https://mentality-nba-default-rtdb.firebaseio.com/ads.json').then(r=>r.json());
+    })
     .then(data=>{
       if(!data) return;
       const banners=Object.values(data).filter(a=>a.type==='banner'&&a.active&&a.location==='下部バナー');
