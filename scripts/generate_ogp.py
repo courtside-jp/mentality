@@ -137,7 +137,7 @@ def render_body_html(body):
             )
             continue
 
-        if re.search(r'\.(jpg|jpeg|png|gif|webp)(\?.*)?$', t, re.IGNORECASE):
+        if re.match(r'^https?://\S+\.(jpg|jpeg|png|gif|webp)(\?.*)?$', t, re.IGNORECASE):
             out.append(
                 f'<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="{html.escape(t)}" '
                 f'style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>'
@@ -417,20 +417,20 @@ for _path in sorted(_glob.glob('articles/*.html')):
     _expected_canon = f'{SITE_URL}/{_path}'
     if _canon_url and _canon_url != _expected_canon:
         _validation_errors.append(
-            f'{_path}: canonical URLが想定と異なります（期待={{_expected_canon}} 実際={{_canon_url}}）'
+            f'{_path}: canonical URLが想定と異なります（期待={_expected_canon} 実際={_canon_url}）'
         )
     if not _img_url or not _img_url.startswith('http'):
-        _validation_errors.append(f'{_path}: og:imageが不正または未設定です（{{_img_url}}）')
+        _validation_errors.append(f'{_path}: og:imageが不正または未設定です（{_img_url}）')
     if not _h1_m or not _h1_m.group(1).strip():
         _validation_errors.append(f'{_path}: 記事タイトル(h1)が見つかりません（本文が空の可能性）')
 
 if _validation_errors:
     print('=== 検証エラー: 生成された記事ページに問題が見つかりました ===')
     for _e in _validation_errors:
-        print(f'  - {{_e}}')
-    raise SystemExit(f'{{len(_validation_errors)}}件の検証エラーのため処理を中断しました')
+        print(f'  - {_e}')
+    raise SystemExit(f'{len(_validation_errors)}件の検証エラーのため処理を中断しました')
 else:
-    print(f'検証OK: {{article_count}}記事のページに異常なし')
+    print(f'検証OK: {article_count}記事のページに異常なし')
 
 
 # ==================== バッシュ（sneakers）====================
