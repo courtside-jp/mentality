@@ -534,76 +534,7 @@ function closeArticleModal() {
 }
 
 async function openArticle(id) {
-  const modal = document.getElementById('articleModal');
-  const body = document.getElementById('articleModalBody');
-  if (!modal || !body) return;
-  modal.style.display = 'block';
-  const fixedAd = document.getElementById('fixedAdBanner');
-  if (fixedAd) { fixedAd.dataset.wasVisible = fixedAd.style.display !== 'none' ? '1' : '0'; fixedAd.style.display = 'none'; }
-  modal.scrollTop = 0;
-  body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">読み込み中...</div>';
-
-  try {
-    const res = await fetch(FB_ARTICLES + '/' + id + '.json');
-    const a = await res.json();
-    window.__currentArticle = a;
-    // SEO: 記事タイトルを動的にセット（フェッチ直後の最新データで更新）
-    if (a && a.title) {
-      document.title = a.title + ' | COURTSIDE';
-      const md = document.querySelector('meta[name="description"]');
-      if (md) md.setAttribute('content', a.title + ' - COURTSIDE NBA専門メディア。' + (a.desc || ''));
-    }
-    // GA4: SPA内の記事閲覧を仮想ページビューとして計測（個別記事のPVを可視化するため）
-    if (typeof gtag === 'function' && a && a.title) {
-      const articleUrl = 'https://courtside-jp.github.io/mentality/articles/' + id + '.html';
-      gtag('event', 'page_view', {
-        page_title: a.title + ' | COURTSIDE',
-        page_location: articleUrl,
-        page_path: '/mentality/articles/' + id + '.html',
-        content_category: a.category || 'NBA'
-      });
-    }
-    body.innerHTML = '<div style="padding:1rem;">' +
-      '<button onclick="closeArticleModal()" style="display:block;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer;margin-bottom:1.2rem;">← 戻る</button>' +
-      (a.img ? '<img loading="lazy" decoding="async" src="' + a.img + '" style="width:100%;border-radius:10px;margin-bottom:1rem;" onerror="this.style.display=\'none\'">' : '') +
-      '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.5rem;">' +
-      '<span style="font-size:.58rem;background:var(--or);color:#fff;padding:.15rem .5rem;border-radius:6px;">' + (a.category||'NBA') + '</span>' +
-      '<span style="font-size:.58rem;color:var(--tx3);">' + new Date(a.ts).toLocaleDateString('ja-JP') + '</span>' +
-      '</div>' +
-      '<div style="font-size:1rem;font-weight:700;color:var(--tx);line-height:1.5;margin-bottom:.6rem;">' + a.title + '</div>' +
-      '<div style="display:flex;align-items:center;justify-content:flex-end;gap:.3rem;margin-bottom:.6rem;">' +
-      '<span style="font-size:.65rem;color:var(--tx3);margin-right:.2rem;">文字サイズ</span>' +
-      '<button onclick="setArticleFontSize(\'s\')" data-fontsize-btn="s" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.65rem;cursor:pointer;color:var(--tx2);">A</button>' +
-      '<button onclick="setArticleFontSize(\'m\')" data-fontsize-btn="m" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.8rem;cursor:pointer;color:var(--tx2);">A</button>' +
-      '<button onclick="setArticleFontSize(\'l\')" data-fontsize-btn="l" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--bg3);font-size:.95rem;cursor:pointer;color:var(--tx2);">A</button>' +
-      '</div>' +
-      '<div id="articleBodyDiv" style="font-size:.95rem;color:var(--tx2);line-height:1.85;">' + generateTOC(a.body) + renderBody(a.body) + '</div>' +
-      (a.affiliateLink ? '<a href="' + a.affiliateLink + '" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;gap:.5rem;text-decoration:none;margin-top:1.2rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;"><span style="font-size:1.2rem;">🛒</span><span style="color:var(--or);font-weight:700;font-size:.85rem;">商品を見る</span></a>' : '') +
-      '<div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--bd);text-align:center;">' +
-      '<a href="' + 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(a.title + ' #COURTSIDE #NBA https://courtside-jp.github.io/mentality/articles/' + id + '.html') + '" target="_blank" style="display:inline-flex;align-items:center;gap:.4rem;background:#000;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;">X この記事をシェア</a></div>' +
-      '<div id="relatedArticlesWrap" style="margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--bd);"></div>' +
-      '</div>';
-  } catch(e) {
-    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
-  }
-  if (window.__currentArticle) {
-    renderRelatedArticles(id, window.__currentArticle.category);
-  }
-  applyArticleFontSize();
-  // X埋め込みを処理（記事本文中の実際の .twitter-tweet を再スキャンして描画）
-  setTimeout(function() {
-    const bodyDiv = document.getElementById('articleBodyDiv');
-    if (typeof twttr !== 'undefined' && twttr.widgets) {
-      twttr.widgets.load(bodyDiv);
-    } else {
-      var s = document.createElement('script');
-      s.src = 'https://platform.twitter.com/widgets.js';
-      s.onload = function() { if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load(bodyDiv); };
-      document.body.appendChild(s);
-      setTimeout(function() { document.querySelectorAll('.tweet-embed-safe').forEach(function(el) { if (!el.querySelector('iframe')) { var a = el.querySelector('blockquote.twitter-tweet a'); var href = a ? a.href : ''; if (href) { el.style.maxHeight = 'none'; el.innerHTML = '<a href="' + href + '" target="_blank" rel="noopener" style="display:block;padding:12px;border:1px solid #444;border-radius:8px;color:#1d9bf0;text-decoration:none;">Xでこの投稿を見る →</a>'; } } }); }, 5000);
-    }
-    if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
-  }, 300);
+  location.href = 'https://courtside-jp.github.io/mentality/articles/' + id + '.html';
 }
 
 // ============================================================
