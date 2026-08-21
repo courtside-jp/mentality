@@ -489,12 +489,67 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
               </div>
           <div>
                 <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">ソース元（必須・複数ある場合は改行で区切ってください）</label>
+                <div style="display:flex;gap:6px;margin-bottom:6px;">
+                  <select id="adminSourceNamePreset" style="flex:1;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                    <option value="">ソース名を選択...</option>
+                    <option value="ESPN">ESPN</option>
+                    <option value="NBA.com">NBA.com</option>
+                    <option value="CBS Sports">CBS Sports</option>
+                    <option value="Yahoo Sports">Yahoo Sports</option>
+                    <option value="Sports Illustrated">Sports Illustrated</option>
+                    <option value="Bleacher Report">Bleacher Report</option>
+                    <option value="The Athletic">The Athletic</option>
+                    <option value="Basketball-Reference">Basketball-Reference</option>
+                    <option value="Wikipedia">Wikipedia</option>
+                    <option value="Yahoo!ニュース">Yahoo!ニュース</option>
+                    <option value="__custom__">その他（自由入力）</option>
+                  </select>
+                  <input id="adminSourceUrlInput" type="text" placeholder="URLを貼り付け" style="flex:2;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
+                  <button type="button" onclick="addAdminSourceLine()" style="padding:8px 14px;background:#111;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">＋ 追加</button>
+                </div>
                 <textarea id="adminSourceText" rows="3" placeholder="https://..." style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
               </div>
           <div>
                 <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">画像クレジット（必須）</label>
+                <select id="adminImageCreditPreset" onchange="applyAdminImageCreditPreset()" style="width:100%;padding:8px 10px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;margin-bottom:6px;">
+                  <option value="">テンプレートを選択...</option>
+                  <option value="Wikimedia Commons (CC BY-SA 4.0)">Wikimedia Commons (CC BY-SA 4.0)</option>
+                  <option value="Wikimedia Commons (CC BY-SA 2.0)">Wikimedia Commons (CC BY-SA 2.0)</option>
+                  <option value="Wikimedia Commons (CC0 / Public Domain)">Wikimedia Commons (CC0 / Public Domain)</option>
+                  <option value="Getty Images">Getty Images</option>
+                  <option value="AP Photo">AP Photo</option>
+                  <option value="NBA.com公式">NBA.com公式</option>
+                  <option value="__custom__">その他（自由入力）</option>
+                </select>
                 <input id="adminImageCredit" type="text" placeholder="例：撮影者名「タイトル」(Wikimedia Commons, CC BY-SA 4.0) URL" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
               </div>
+              <script>
+              function addAdminSourceLine(){
+                var sel=document.getElementById('adminSourceNamePreset');
+                var urlInput=document.getElementById('adminSourceUrlInput');
+                var ta=document.getElementById('adminSourceText');
+                if(!sel||!urlInput||!ta) return;
+                var name=sel.value;
+                if(!name){ alert('ソース名を選択してください'); return; }
+                if(name==='__custom__'){ name=prompt('ソース名を入力してください')||''; if(!name) return; }
+                var url=urlInput.value.trim();
+                var line=url?(name+': '+url):name;
+                ta.value=ta.value?(ta.value.replace(/\n+$/,'')+'\n'+line):line;
+                urlInput.value='';
+                sel.value='';
+              }
+              function applyAdminImageCreditPreset(){
+                var sel=document.getElementById('adminImageCreditPreset');
+                var input=document.getElementById('adminImageCredit');
+                if(!sel||!input) return;
+                var val=sel.value;
+                if(!val) return;
+                if(val==='__custom__'){ sel.value=''; input.focus(); return; }
+                input.value=val+' ';
+                sel.value='';
+                input.focus();
+              }
+              </script>
           <div>
                 <label style="font-size:10px;color:#999;font-weight:700;display:block;margin-bottom:4px;">公開日時（空白 = 今すぐ公開 / 未来の日時 = 予約投稿）</label>
                 <input id="adminPublishAt" type="datetime-local" style="width:100%;padding:9px 12px;border:1px solid #eee;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;">
