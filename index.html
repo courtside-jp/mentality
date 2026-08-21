@@ -1001,7 +1001,7 @@ function showBox(team,el){
 function openSearch(){document.getElementById('search-modal').style.display='block';setTimeout(()=>document.getElementById('search-input').focus(),100);}
 function closeSearch(){document.getElementById('search-modal').style.display='none';document.getElementById('search-input').value='';}
 function handleSearch(val){
-  if(val==='kobe0824'){closeSearch();goPage('admin');showAdminPage((typeof firebase!=='undefined' && firebase.auth().currentUser) ? 'admin-menu' : 'admin-login');return;}
+  if(val==='kobe0824'){closeSearch();goPage('admin');showAdminPage('admin-menu');return;}
   const results=document.getElementById('search-results');
   if(val.length===0){results.innerHTML='';return;}
   const items=[{type:'選手',name:'ビクター・ウェンバンヤマ',sub:'スパーズ·C/F'},{type:'選手',name:'ジェイレン・ブランソン',sub:'ニックス·PG'},{type:'記事',name:'NBAファイナル2026開幕',sub:'8時間前'},{type:'チーム',name:'サンアントニオ・スパーズ',sub:'ウェスタン1位'}].filter(i=>i.name.includes(val)||i.sub.includes(val));
