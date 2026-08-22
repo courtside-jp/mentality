@@ -140,6 +140,1710 @@ function renderBody(body) {
     if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
     if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
     if ((t.includes('twitter.com') || t.includes('x.com')) && !t.startsWith('[quote')) return '<div class="tweet-embed-safe" style="margin:.8rem 0;max-height:700px;overflow-y:auto;-webkit-overflow-scrolling:touch;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
+    if (t.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
+    const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
+    if (productMatch) {
+      const [, pName, pPrice, pUrl, pImg] = productMatch;
+      const iconHtml = pImg
+        ? '<img loading="lazy" decoding="async" src="' + pImg + '" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;" onerror="this.style.display=\'none\'">'
+        : '<div style="font-size:1.5rem;">🛒</div>';
+      return '<a href="' + pUrl + '" target="_blank" style="display:block;text-decoration:none;margin:.8rem 0;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.8rem;"><div style="display:flex;align-items:center;gap:.6rem;">' + iconHtml + '<div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;color:var(--tx);margin-bottom:.2rem;">' + pName + '</div>' + (pPrice ? '<div style="font-size:.85rem;font-weight:700;color:var(--or);">' + pPrice + '</div>' : '') + '</div><div style="background:var(--or);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.72rem;font-weight:700;flex-shrink:0;">購入する</div></div></a>';
+    }
+    const quoteMatch = t.match(/\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]/);
+    if (quoteMatch) {
+      const [, qText, qName, qSource, qUrl] = quoteMatch;
+      return '<div style="margin:1rem 0;padding:1rem 1.1rem;background:var(--bg3);border-left:4px solid var(--accent,#e63946);border-radius:0 10px 10px 0;">' +
+        '<div style="font-size:.92rem;font-style:italic;color:var(--tx);line-height:1.75;">' + applyInlineBold(qText) + '</div>' +
+        (qName ? '<div style="margin-top:.5rem;font-size:.75rem;font-weight:700;color:var(--tx2);">— ' + qName + '</div>' : '') +
+        (qUrl ? '<a href="' + qUrl + '" target="_blank" style="display:inline-block;margin-top:.4rem;font-size:.65rem;color:var(--tx3);text-decoration:underline;">引用元：' + (qSource || 'リンク') + '</a>' : (qSource ? '<div style="margin-top:.4rem;font-size:.65rem;color:var(--tx3);">引用元：' + qSource + '</div>' : '')) +
+        '</div>';
+    }
+    const shopcardMatch = t.match(/\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]/);
+    if (shopcardMatch) {
+      const [, scName, scImg, scRakuten, scRakutenPrice, scAmazon, scAmazonPrice] = shopcardMatch;
+      const activeStyle = 'background:#e63946;color:#fff;';
+      const inactiveStyle = 'background:var(--bg2,#eee);color:var(--tx3);cursor:default;';
+      const rakutenBtn = scRakuten
+        ? '<a href="' + scRakuten + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">楽天' + (scRakutenPrice ? '<br>' + scRakutenPrice : '') + '</a>'
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">楽天<br>取扱なし</span>';
+      const amazonBtn = scAmazon
+        ? '<a href="' + scAmazon + '" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + activeStyle + '">Amazon' + (scAmazonPrice ? '<br>' + scAmazonPrice : '') + '</a>'
+        : '<span style="flex:1;text-align:center;padding:.5rem .3rem;border-radius:9px;font-size:.68rem;font-weight:700;line-height:1.5;' + inactiveStyle + '">Amazon<br>取扱なし</span>';
+      return '<div style="display:flex;gap:.7rem;align-items:center;background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:.7rem;margin:.7rem 0;">' +
+        '<img loading="lazy" decoding="async" src="' + scImg + '" onclick="showProductImage(\'' + scImg + '\')" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#fff;cursor:pointer;" onerror="this.style.display=\'none\'">' +
+        '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:.78rem;font-weight:700;color:var(--tx);margin-bottom:.45rem;line-height:1.4;">' + scName + '</div>' +
+        '<div style="display:flex;gap:.4rem;">' + rakutenBtn + amazonBtn + '</div>' +
+        '</div></div>';
+    }
+    // ■ → 大見出し（目次対応・赤い目立つスタイル）
+    if (t && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(t)) {
+      const hIdx = (() => { let cnt = 0; for (let i = 0; i < lines.indexOf(line); i++) { const lt = lines[i].trim(); if (lt && (function(x){const p=x.replace(/<[^>]+>/g,'').trim();return p&&(p.charCodeAt(0)===9632||p.charCodeAt(0)===9642);})(lt)) cnt++; } return cnt; })();
+      const label = applyInlineBold(t.replace(/<[^>]+>/g, '').trim());
+      return `<h2 id="toc-${hIdx}" style="font-size:1rem;font-weight:800;margin:1.6em 0 .4em;padding-top:1.2em;border-top:1px solid var(--bd,#eee);color:#111;">${label}</h2>`;
+    }
+    // 【】→ 小見出し（控えめスタイル、目次なし）
+    if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
+      return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${applyInlineBold(t)}</h3>`;
+    }
+    return t ? '<p style="margin:.4rem 0;">' + applyInlineBold(t) + '</p>' : '';
+  }).join('');
+  return wrapCollapsibleSections(html);
+
+  function wrapCollapsibleSections(html) {
+    const collapsibleTitles = ['出典', 'ソース元', '画像クレジット'];
+    const h2Regex = /<h2 id="toc-\d+"[^>]*>([\s\S]*?)<\/h2>/g;
+    const matches = [...html.matchAll(h2Regex)];
+    if (!matches.length) return html;
+    let result = '';
+    let cursor = 0;
+    for (let i = 0; i < matches.length; i++) {
+      const m = matches[i];
+      const labelText = m[1].replace(/<[^>]+>/g, '').trim().replace(/^[\u25a0\u25aa]\s*/, '');
+      const sectionStart = m.index;
+      const sectionContentStart = m.index + m[0].length;
+      const sectionEnd = (i + 1 < matches.length) ? matches[i + 1].index : html.length;
+      if (collapsibleTitles.includes(labelText)) {
+        result += html.slice(cursor, sectionStart);
+        let bodyHtml = html.slice(sectionContentStart, sectionEnd);
+        bodyHtml = bodyHtml.replace(/<h3 style="[^"]*">/g, '<h3 style="font-size:.8rem;font-weight:400;color:#888;margin:.5em 0;padding:0;background:none;border-left:none;border-radius:0;">');
+        result += '<details style="background:none;border:none;border-radius:0;margin:.6em 0;overflow:hidden;">' +
+          '<summary style="padding:2px 0;cursor:pointer;font-size:.7rem;font-weight:600;color:#777;list-style:none;display:flex;align-items:center;gap:4px;user-select:none;line-height:1.3;">' +
+          labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>' +
+          '</summary>' +
+          '<div style="padding:4px 16px 14px;">' + bodyHtml + '</div>' +
+          '</details>';
+        cursor = sectionEnd;
+      }
+    }
+    result += html.slice(cursor);
+    return result;
+  }
+}
+
+// ============================================================
+// 画像アップロード（ImgBB）
+// ============================================================
+// 記事リンク挿入
+async function insertArticleLink() {
+  // Firebaseから記事一覧を取得して選択モーダルを表示
+  const res = await fetch(FB_ARTICLES + '.json');
+  const data = await res.json();
+  if (!data) return;
+  
+  const articles = Object.entries(data)
+    .map(([id, a]) => ({id, ...a}))
+    .filter(a => a.status !== 'archived')
+    .sort((a, b) => (b.ts||0) - (a.ts||0))
+    .filter(a => { const p = a.publishAt; return !p || p <= Date.now(); })
+    .slice(0, 20);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;overflow-y:auto;padding:16px;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+      </div>
+      <div style="padding:8px;">
+        ${articles.map(a => `
+          <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
+            style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
+            ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function doInsertArticleLink(id, title, img) {
+  const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+    (img ? `<img loading="lazy" decoding="async" src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
+  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
+}
+
+// URLリンク挿入
+function insertTextLink() {
+  const url = prompt('URLを入力:');
+  if (!url) return;
+  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
+  if (isImage) {
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+  } else {
+    showLinkModal(url);
+  }
+}
+
+async function insertBodyImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = input.parentElement;
+  label.textContent = '⏳ アップロード中...';
+  
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const base64 = ev.target.result.split(',')[1];
+    let url = ev.target.result; // fallback: base64
+    
+    try {
+      const form = new FormData();
+      form.append('image', base64);
+      const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
+        method: 'POST', body: form
+      });
+      const data = await resp.json();
+      if (data.success) url = data.data.url;
+    } catch(e) {}
+    
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    
+    label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
+  };
+  reader.readAsDataURL(file);
+}
+
+// 記事リンク挿入
+async function insertArticleLink() {
+  // Firebaseから記事一覧を取得して選択モーダルを表示
+  const res = await fetch(FB_ARTICLES + '.json');
+  const data = await res.json();
+  if (!data) return;
+  
+  const articles = Object.entries(data)
+    .map(([id, a]) => ({id, ...a}))
+    .filter(a => a.status !== 'archived')
+    .sort((a, b) => (b.ts||0) - (a.ts||0))
+    .slice(0, 20);
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;overflow-y:auto;padding:16px;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:12px;max-width:480px;margin:0 auto;overflow:hidden;">
+      <div style="background:#000;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:14px;">記事を選択</span>
+        <span onclick="this.closest('div[style*=fixed]').remove()" style="color:#fff;cursor:pointer;font-size:20px;">×</span>
+      </div>
+      <div style="padding:8px;">
+        ${articles.map(a => `
+          <div onclick="doInsertArticleLink('${a.id}','${(a.title||'').replace(/'/g,'')}','${a.img||''}');this.closest('div[style*=fixed]').remove();"
+            style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;">
+            ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:60px;height:45px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '<div style="width:60px;height:45px;background:#f0f0f0;border-radius:6px;flex-shrink:0;"></div>'}
+            <div style="font-size:12px;font-weight:700;color:#000;">${a.title||''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function doInsertArticleLink(id, title, img) {
+  const card = `<div class="article-link-card" data-id="${id}" style="display:flex;gap:10px;padding:10px;border:1px solid #eee;border-radius:8px;margin:8px 0;cursor:pointer;" onclick="openArticle('${id}')">` +
+    (img ? `<img loading="lazy" decoding="async" src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;">` : '') +
+    `<div style="font-size:12px;font-weight:700;">${title}</div></div>`;
+  insertHtmlAtCursor('<div>' + card + '</div><div><br></div>');
+}
+
+// URLリンク挿入
+function insertTextLink() {
+  const url = prompt('URLを入力:');
+  if (!url) return;
+  const isImage = confirm('画像として表示しますか？\n\nOK → 画像表示\nキャンセル → リンクとして挿入');
+  if (isImage) {
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+  } else {
+    showLinkModal(url);
+  }
+}
+
+async function insertBodyImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = input.parentElement;
+  label.textContent = '⏳ アップロード中...';
+  
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const base64 = ev.target.result.split(',')[1];
+    let url = ev.target.result; // fallback: base64
+    
+    try {
+      const form = new FormData();
+      form.append('image', base64);
+      const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
+        method: 'POST', body: form
+      });
+      const data = await resp.json();
+      if (data.success) url = data.data.url;
+    } catch(e) {}
+    
+    insertHtmlAtCursor(`<div><img loading="lazy" decoding="async" src="${url}" style="width:100%;border-radius:8px;margin:8px 0;"></div><div><br></div>`);
+    
+    label.innerHTML = '📷 画像挿入<input type="file" accept="image/*" onchange="insertBodyImage(this)" style="display:none;">';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadArticleImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const btn = input.parentElement;
+  btn.textContent = '⏳ アップロード中...';
+  
+  try {
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    
+    const form = new FormData();
+    form.append('image', base64);
+    
+    const resp = await fetch('https://api.imgbb.com/1/upload?key=6b317240ded356635338f7ce9c45ec05', {
+      method: 'POST', body: form
+    });
+    const data = await resp.json();
+    
+    if (data.success) {
+      const url = data.data.url;
+      document.getElementById('adminImg').value = url;
+      const preview = document.getElementById('adminImgPreview');
+      const img = document.getElementById('adminImgPreviewImg');
+      img.src = url;
+      preview.style.display = 'block';
+      btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+    } else {
+      throw new Error('アップロード失敗');
+    }
+  } catch(e) {
+    // ImgBBが失敗したらbase64をそのまま使う
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target.result;
+      document.getElementById('adminImg').value = url;
+      const preview = document.getElementById('adminImgPreview');
+      const img = document.getElementById('adminImgPreviewImg');
+      img.src = url;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    btn.innerHTML = '📷 画像選択<input type="file" accept="image/*" onchange="uploadArticleImage(this)" style="display:none;">';
+  }
+}
+
+// ============================================================
+// 記事一覧を表示
+// ============================================================
+async function loadArticles() {
+  const wrap = document.getElementById('articlesWrap');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);font-size:.75rem;">記事を取得中...</div>';
+
+  try {
+    const res = await fetch(FB_ARTICLES + '.json');
+    const data = await res.json();
+
+    if (!data) {
+      wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">まだ記事がありません</div>';
+      return;
+    }
+
+    const articles = Object.entries(data).map(([id, a]) => ({id, ...a})).filter(a => !a.archived).sort((a,b) => b.ts - a.ts)
+    .filter(a => { const p = a.publishAt; return !p || p <= Date.now(); });
+    console.log('記事数:', articles.length, articles.map(a=>a.title));
+    if (window._directArticleId) {
+      const target = articles.find(a => a.id === window._directArticleId);
+      if (target) {
+        window._directArticleId = null;
+        setTimeout(() => openArticle(target.id), 300);
+        return;
+      }
+    }
+
+    window._allArticlesCache = articles;
+    renderArticleList();
+  } catch(e) {
+    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--tx3);">取得に失敗しました</div>';
+  }
+}
+
+function setArticleSortMode(mode) {
+  window._articleSortMode = mode;
+  renderArticleList();
+}
+
+function renderArticleList() {
+  const wrap = document.getElementById('articlesWrap');
+  if (!wrap || !window._allArticlesCache) return;
+  const mode = window._articleSortMode || 'newest';
+  const articles = window._allArticlesCache.slice().sort((a,b) => mode === 'oldest' ? a.ts - b.ts : b.ts - a.ts);
+  const sortBtn = (key, label) => '<button onclick="setArticleSortMode(\'' + key + '\')" style="padding:.35rem .8rem;border-radius:20px;border:1px solid var(--bd);background:' + (mode===key?'var(--tx)':'var(--card)') + ';color:' + (mode===key?'#fff':'var(--tx)') + ';font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;">' + label + '</button>';
+  const sortBar = '<div style="display:flex;gap:.4rem;margin-bottom:.6rem;">' + sortBtn('newest','新着順') + sortBtn('oldest','古い順') + '</div>';
+  wrap.innerHTML = sortBar + articles.map(a => '<div onclick="openArticle(\'' + a.id + '\')" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.8rem;margin-bottom:.6rem;cursor:pointer;">' +
+      '<div style="width:100%;height:160px;border-radius:8px;margin-bottom:.6rem;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;">' +
+      (a.img ? '<img src="' + a.img + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;font-family:Bebas Neue,sans-serif;font-size:28px;color:#C9082A;letter-spacing:2px;">COURTSIDE</div>') +
+      '</div>' +
+      '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.35rem;">' +
+      '<span style="font-size:.55rem;background:var(--or);color:#fff;padding:.1rem .4rem;border-radius:6px;">' + (a.category||'NBA') + '</span>' +
+      '<span style="font-size:.55rem;color:var(--tx3);">' + new Date(a.ts).toLocaleDateString('ja-JP') + '</span>' +
+      '</div>' +
+      '<div style="font-size:.85rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;line-height:1.4;">' + a.title + '</div>' +
+      '<div style="font-size:.7rem;color:var(--tx3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + a.body + '</div>' +
+      '</div>'
+    ).join('');
+}
+
+// ============================================================
+// 記事詳細モーダル
+// ============================================================
+// ============================================================
+// 記事の文字サイズ切り替え（読者の好みに合わせて選べる）
+// ============================================================
+const ARTICLE_FONT_SIZES = { s: '.82rem', m: '.95rem', l: '1.1rem' };
+
+function setArticleFontSize(size) {
+  if (!ARTICLE_FONT_SIZES[size]) return;
+  try { localStorage.setItem('courtside_fontsize', size); } catch(e) {}
+  applyArticleFontSize();
+}
+
+function applyArticleFontSize() {
+  let size = 'm';
+  try { size = localStorage.getItem('courtside_fontsize') || 'm'; } catch(e) {}
+  const bodyDiv = document.getElementById('articleBodyDiv');
+  if (bodyDiv) bodyDiv.style.fontSize = ARTICLE_FONT_SIZES[size];
+  const snkBodyDiv = document.getElementById('snkReviewBodyDiv');
+  if (snkBodyDiv) snkBodyDiv.style.fontSize = ARTICLE_FONT_SIZES[size];
+  document.querySelectorAll('[data-fontsize-btn]').forEach(btn => {
+    const active = btn.dataset.fontsizeBtn === size;
+    btn.style.background = active ? 'var(--or)' : 'var(--bg3)';
+    btn.style.color = active ? '#fff' : 'var(--tx2)';
+    btn.style.borderColor = active ? 'var(--or)' : 'var(--bd)';
+  });
+}
+
+function closeArticleModal() {
+  const modal = document.getElementById('articleModal');
+  if (modal) modal.style.display = 'none';
+  const fixedAd = document.getElementById('fixedAdBanner');
+  if (fixedAd && fixedAd.dataset.wasVisible === '1') fixedAd.style.display = 'block';
+}
+
+async function openArticle(id) {
+  location.href = 'https://courtside-jp.github.io/mentality/articles/' + id + '.html';
+}
+
+// ============================================================
+// 管理者ページ
+// ============================================================
+function openAdminPage() {
+  const pw = prompt('パスワードを入力してください');
+  if (pw !== ADMIN_PASSWORD) { alert('パスワードが違います'); return; }
+  const m = document.getElementById('adminSelectModal'); if (m) m.style.display = 'block';
+}
+
+function closeAdminModal() {
+  const modal = document.getElementById('adminModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function submitArticle() {
+  const title    = document.getElementById('adminTitle').value.trim();
+  const sourceTextEl = document.getElementById('adminSourceText');
+  const imageCreditEl = document.getElementById('adminImageCredit');
+  const sourceText = sourceTextEl ? sourceTextEl.value.trim() : '';
+  const imageCredit = imageCreditEl ? imageCreditEl.value.trim() : '';
+  const rawBody = getAdminBodyValue().trim();
+  const { cleanBody } = extractArticleMetaSections(rawBody);
+  const body = (cleanBody + buildArticleMetaSections(sourceText, imageCredit)).trim();
+  const img      = document.getElementById('adminImg').value.trim();
+  const category = document.getElementById('adminCategory').value;
+  const affiliateLink = document.getElementById('adminAffiliateLink') ? document.getElementById('adminAffiliateLink').value.trim() : '';
+
+  if (!title || !cleanBody) { alert('タイトルと本文は必須です'); return; }
+  if (!sourceText || !imageCredit) { alert('ソース元と画像クレジットは必須です'); return; }
+
+  const btn = document.getElementById('adminSubmitBtn');
+  btn.textContent = '投稿中...';
+  btn.disabled = true;
+
+  const editId = document.getElementById('adminEditId')?.value;
+  try {
+    if (editId) {
+      await fetch(`${FB_ARTICLES}/${editId}.json`, {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          title, body, img, category, affiliateLink,
+          ts: Date.now(),
+          archived: false,
+          publishAt: (function(){
+            const el = document.getElementById('adminPublishAt');
+            if (!el || !el.value) return null;
+            return new Date(el.value).getTime();
+          })()
+        })
+      });
+      alert('更新しました！');
+      document.getElementById('adminEditId').value = '';
+  const paEl = document.getElementById('adminPublishAt'); if(paEl) paEl.value = '';
+      const btn = document.getElementById('adminSubmitBtn');
+      if (btn) btn.textContent = '投稿する';
+      document.getElementById('adminTitle').value = '';
+      setAdminBodyValue('');
+      document.getElementById('adminImg').value = '';
+      if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      if (sourceTextEl) sourceTextEl.value = '';
+      if (imageCreditEl) imageCreditEl.value = '';
+      showAdminArticleUrl(null);
+      closeAdminModal();
+      loadArticles();
+      loadAdminArticles();
+    } else {
+      const createRes = await fetch(FB_ARTICLES + '.json', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, body, img, category, affiliateLink, ts: Date.now(), archived: true })
+      });
+      const createData = await createRes.json();
+      document.getElementById('adminTitle').value = '';
+      setAdminBodyValue('');
+      document.getElementById('adminImg').value = '';
+      if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+      if (sourceTextEl) sourceTextEl.value = '';
+      if (imageCreditEl) imageCreditEl.value = '';
+      if (createData && createData.name) {
+        showAdminArticleUrl(createData.name);
+        alert('下書き（アーカイブ）として投稿しました。このままURLをコピーできます。公開する場合は記事一覧の「公開に戻す」または編集画面の公開日時から設定してください。');
+      } else {
+        alert('投稿しました！');
+      }
+      loadArticles();
+      loadAdminArticles();
+    }
+  } catch(e) {
+    alert('投稿に失敗しました');
+  } finally {
+    btn.textContent = '投稿する';
+    btn.disabled = false;
+  }
+}
+
+function insertToBody(type) {
+  const textarea = document.getElementById('adminBody');
+  const prompts = {
+    image: null,
+    youtube: 'YouTubeのURLを入力してください',
+    tiktok: 'TikTokのURLを入力してください',
+    instagram: 'InstagramのURLを入力してください',
+    twitter: 'X(Twitter)のURLを入力してください',
+    quote: null,
+  };
+  if (type === 'quote') {
+    const source = prompt('引用元を入力してください（例：@StephenCurry30 / X）');
+    if (!source) return;
+    const template = '\n[画像をここに挿入]\n引用元：' + source + '\n';
+    const pos = textarea.selectionStart;
+    const before = textarea.value.substring(0, pos);
+    const after = textarea.value.substring(pos);
+    textarea.value = before + template + after;
+    updatePreview();
+    return;
+  }
+  if (type === 'image') {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('key', '6b317240ded356635338f7ce9c45ec05');
+      try {
+        const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
+        if (btn) btn.textContent = 'アップロード中...';
+        const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          const imgUrl = data.data.url;
+          const pos = textarea.selectionStart;
+          const before = textarea.value.substring(0, pos);
+          const after = textarea.value.substring(pos);
+          textarea.value = before + '\n' + imgUrl + '\n' + after;
+          updatePreview();
+        } else {
+          alert('アップロードに失敗しました');
+        }
+      } catch(e) {
+        alert('エラーが発生しました');
+      } finally {
+        const btn = document.querySelector('[onclick*="insertToBody(\'image\')"]');
+        if (btn) btn.textContent = '画像';
+      }
+    };
+    input.click();
+    return;
+  }
+  const url = prompt(prompts[type]);
+  if (!url) return;
+  const pos = textarea.selectionStart;
+  const before = textarea.value.substring(0, pos);
+  const after = textarea.value.substring(pos);
+  textarea.value = before + '\n' + url + '\n' + after;
+  updatePreview();
+}
+
+function updatePreview() {
+  const body = document.getElementById('adminBody').value;
+  const preview = document.getElementById('adminPreview');
+  if (preview) preview.innerHTML = renderBody(body);
+  // X埋め込みを再レンダリング
+  if (typeof twttr !== 'undefined' && twttr.widgets) {
+    twttr.widgets.load();
+  }
+}
+
+// ============================================================
+// 広告管理
+// ============================================================
+const FB_ADS = `${FB_URL}/ads`;
+
+async function loadAds() {
+  const res = await fetch(FB_ADS + '.json');
+  const data = await res.json();
+  if (!data) return [];
+  return Object.entries(data).map(([id, a]) => ({id, ...a}));
+}
+
+function openAdManager(skipAuth) {
+  if (!skipAuth) {
+    const pw = prompt('パスワードを入力してください');
+    if (pw !== ADMIN_PASSWORD) { alert('パスワードが違います'); return; }
+  }
+  const modal = document.getElementById('adManagerModal');
+  if (modal) { modal.style.display = 'block'; renderAdManager(); }
+}
+
+function closeAdManager() {
+  const modal = document.getElementById('adManagerModal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function renderAdManager() {
+  const wrap = document.getElementById('adManagerList');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);font-size:.75rem;">読み込み中...</div>';
+  try {
+    const res = await fetch(FB_URL + '/adslots.json');
+    const slots = await res.json() || {};
+    wrap.innerHTML = Object.entries(slots).map(([slotId, slot]) => `
+      <div style="background:var(--bg3);border-radius:10px;padding:.8rem;margin-bottom:.7rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+          <div style="font-size:.72rem;font-weight:700;color:var(--or);">${slot.label}</div>
+          <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;">
+            <span style="font-size:.65rem;color:var(--tx3);">${slot.enabled === false ? 'OFF' : 'ON'}</span>
+            <div onclick="toggleSlot('${slotId}', ${slot.enabled === false})" style="width:36px;height:20px;border-radius:10px;background:${slot.enabled === false ? 'var(--bd)' : 'var(--or)'};position:relative;cursor:pointer;transition:background .2s;">
+              <div style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;${slot.enabled === false ? 'left:2px' : 'left:18px'};transition:left .2s;"></div>
+            </div>
+          </label>
+        </div>
+        <input id="ad_title_${slotId}" type="text" placeholder="タイトル" value="${slot.title||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
+        <input id="ad_url_${slotId}" type="text" placeholder="リンクURL" value="${slot.url||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.4rem;">
+        <input id="ad_img_${slotId}" type="text" placeholder="画像URL（任意）" value="${slot.img||''}" style="width:100%;padding:.4rem;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:.75rem;box-sizing:border-box;margin-bottom:.5rem;">
+        <button onclick="saveSlot('${slotId}')" style="width:100%;padding:.5rem;background:var(--or);border:none;color:#fff;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;">保存する</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
+
+async function saveSlot(slotId) {
+  const title = document.getElementById('ad_title_' + slotId).value.trim();
+  const url   = document.getElementById('ad_url_' + slotId).value.trim();
+  const img   = document.getElementById('ad_img_' + slotId).value.trim();
+  await fetch(FB_URL + '/adslots/' + slotId + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ title, url, img })
+  });
+  alert('保存しました！');
+}
+
+
+async function submitAd() {
+  const title = document.getElementById('adTitle').value.trim();
+  const desc  = document.getElementById('adDesc').value.trim();
+  const price = document.getElementById('adPrice').value.trim();
+  const tag   = document.getElementById('adTag').value.trim();
+  const url   = document.getElementById('adUrl').value.trim();
+  const icon  = document.getElementById('adIcon').value.trim();
+  const color = document.getElementById('adColor').value;
+
+  const places = []; if (document.getElementById('adPlaceSchedule')?.checked) places.push('schedule'); if (document.getElementById('adPlaceNews')?.checked) places.push('news'); if (document.getElementById('adPlaceArticles')?.checked) places.push('articles'); if (document.getElementById('adPlacePlayers')?.checked) places.push('players'); if (!title || !url) { alert('タイトルとURLは必須です'); return; }
+
+  const btn = document.getElementById('adSubmitBtn');
+  btn.textContent = '保存中...'; btn.disabled = true;
+
+  await fetch(FB_ADS + '.json', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ title, desc, price, tag, url, icon, color, places, ts: Date.now() })
+  });
+
+  alert('広告を追加しました！');
+  document.getElementById('adTitle').value = '';
+  document.getElementById('adDesc').value = '';
+  document.getElementById('adPrice').value = '';
+  document.getElementById('adTag').value = '';
+  document.getElementById('adUrl').value = '';
+  document.getElementById('adIcon').value = '';
+  btn.textContent = '追加する'; btn.disabled = false;
+  renderAdManager();
+}
+
+async function deleteAd(id) {
+  if (!confirm('この広告を削除しますか？')) return;
+  await fetch(`${FB_ADS}/${id}.json`, { method: 'DELETE' });
+  renderAdManager();
+}
+// cache bust 2026年 5月29日 金曜日 15時10分29秒 JST
+
+// 管理者用記事一覧
+async function loadAdminArticles() {
+  const wrap = document.getElementById('adminArticleList');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">読み込み中...</div>';
+  try {
+    const res = await fetch(FB_ARTICLES + '.json');
+    const data = await res.json();
+    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">記事がありません</div>'; return; }
+    const articles = Object.entries(data).map(([id,a]) => ({id,...a})).sort((a,b) => b.ts - a.ts);
+    wrap.innerHTML = articles.map(a => `
+      <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}${a.publishAt && a.publishAt > Date.now() ? '<span style="background:#f59e0b;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:700;">予約中</span>' : ''}</div>
+          <div style="font-size:.58rem;color:var(--tx3);">${a.category||'NBA'} · ${new Date(a.ts).toLocaleDateString('ja-JP')}</div>
+        </div>
+        <button onclick="editArticle('${a.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;margin-right:.3rem;">編集</button><button onclick="deleteArticle('${a.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;flex-shrink:0;">削除</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
+
+async function archiveArticle(id, archive) {
+  await fetch(FB_ARTICLES + '/' + id + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ archived: archive })
+  });
+  loadAdminArticles();
+}
+
+async function deleteArticle(id) {
+  if (!confirm('この記事を削除しますか？')) return;
+  await fetch(`${FB_ARTICLES}/${id}.json`, { method: 'DELETE' });
+  loadAdminArticles();
+  loadArticles();
+}
+
+// 商品リンク挿入
+function insertProductLink() {
+  const name  = prompt('商品名を入力してください');
+  if (!name) return;
+  const price = prompt('価格を入力してください（例：¥22,000）') || '';
+  const url   = prompt('購入URLを入力してください');
+  if (!url) return;
+  const card = `[product name="${name}" price="${price}" url="${url}"]`;
+  const chip = createEmbedChip('product', card, `${name} ${price ? '(' + price + ')' : ''}`);
+  insertNodeAtCursor(chip);
+}
+
+function insertShopCard() {
+  const name = prompt('商品名を入力してください');
+  if (!name) return;
+  const img = prompt('商品画像のURLを入力してください（任意）') || '';
+  const rakuten = prompt('楽天の購入URLを入力してください（取り扱いがなければ空欄でOK）') || '';
+  const rakutenPrice = rakuten ? (prompt('楽天の価格を入力してください（例：15,180円）') || '') : '';
+  const amazon = prompt('AmazonのURLを入力してください（取り扱いがなければ空欄でOK）') || '';
+  const amazonPrice = amazon ? (prompt('Amazonの価格を入力してください（例：15,180円）') || '') : '';
+  const card = `[shopcard name="${name}" img="${img}" rakuten="${rakuten}" rakutenPrice="${rakutenPrice}" amazon="${amazon}" amazonPrice="${amazonPrice}"]`;
+  const shops = [];
+  if (rakuten) shops.push('楽天');
+  if (amazon) shops.push('Amazon');
+  const chip = createEmbedChip('shopcard', card, `${name} ${shops.length ? '[' + shops.join('/') + ']' : ''}`);
+  insertNodeAtCursor(chip);
+}
+
+function insertQuoteBlock() {
+  const text = prompt('引用するコメント本文を入力してください');
+  if (!text) return;
+  const name = prompt('発言者名を入力してください（例：ビクター・ウェンバンヤマ）') || '';
+  const source = prompt('引用元メディア名を入力してください（例：2Kジャパン公式サイト）') || '';
+  const url = prompt('引用元のURLを入力してください（任意）') || '';
+  const card = `[quote text="${text}" name="${name}" source="${source}" url="${url}"]`;
+  const chip = createEmbedChip('quote', card, `${source || '引用'}：${text.slice(0, 20)}...`);
+  insertNodeAtCursor(chip);
+}
+
+function extractArticleMetaSections(body) {
+  const lines = (body || '').split('\n');
+  const sourceLines = [];
+  let imageCredit = '';
+  const keep = [];
+  let i = 0;
+  while (i < lines.length) {
+    const t = lines[i].trim();
+    if (t === '■ソース元') {
+      i++;
+      while (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+        sourceLines.push(lines[i].trim());
+        i++;
+      }
+      if (i < lines.length && lines[i].trim() === '') i++;
+      continue;
+    }
+    if (t === '■画像クレジット') {
+      i++;
+      if (i < lines.length && lines[i].trim() !== '' && !lines[i].trim().startsWith('■')) {
+        imageCredit = lines[i].trim();
+        i++;
+      }
+      if (i < lines.length && lines[i].trim() === '') i++;
+      continue;
+    }
+    keep.push(lines[i]);
+    i++;
+  }
+  while (keep.length && keep[keep.length - 1].trim() === '') keep.pop();
+  return { cleanBody: keep.join('\n'), sourceText: sourceLines.join('\n'), imageCredit };
+}
+
+function buildArticleMetaSections(sourceText, imageCredit) {
+  const sourceLines = (sourceText || '').split('\n').map(l => l.trim()).filter(Boolean);
+  let out = '';
+  if (sourceLines.length) {
+    out += '\n\n■ソース元\n' + sourceLines.join('\n');
+  }
+  if (imageCredit && imageCredit.trim()) {
+    out += '\n\n■画像クレジット\n' + imageCredit.trim();
+  }
+  return out;
+}
+
+// 下書き保存
+const FB_DRAFTS = `${FB_URL}/drafts`;
+
+async function saveDraft() {
+  const title    = document.getElementById('adminTitle').value.trim();
+  const body     = document.getElementById('adminBody').value.trim();
+  const category = document.getElementById('adminCategory').value;
+  const thumb    = document.getElementById('adminThumb')?.value.trim() || '';
+
+  if (!title && !body) { alert('タイトルか本文を入力してください'); return; }
+
+  await fetch(FB_DRAFTS + '.json', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ title, body, category, thumb, ts: Date.now() })
+  });
+
+  alert('下書きを保存しました！');
+  loadDrafts();
+}
+
+async function loadDrafts() {
+  const wrap = document.getElementById('draftList');
+  if (!wrap) return;
+  try {
+    const res = await fetch(FB_DRAFTS + '.json');
+    const data = await res.json();
+    if (!data) { wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">下書きがありません</div>'; return; }
+    const drafts = Object.entries(data).map(([id,d]) => ({id,...d})).sort((a,b) => b.ts - a.ts);
+    wrap.innerHTML = drafts.map(d => `
+      <div style="background:var(--bg3);border-radius:8px;padding:.6rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.72rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d.title || '無題'}</div>
+          <div style="font-size:.58rem;color:var(--tx3);">${new Date(d.ts).toLocaleDateString('ja-JP')}</div>
+        </div>
+        <button onclick="loadDraft('${d.id}')" style="background:rgba(0,150,255,.15);border:none;color:#0096ff;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">編集</button>
+        <button onclick="deleteDraft('${d.id}')" style="background:rgba(255,50,50,.15);border:none;color:#ff5555;padding:.3rem .5rem;border-radius:6px;font-size:.65rem;cursor:pointer;">削除</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="font-size:.7rem;color:var(--tx3);">取得失敗</div>';
+  }
+}
+
+async function loadDraft(id) {
+  const res = await fetch(`${FB_DRAFTS}/${id}.json`);
+  const d = await res.json();
+  if (!d) return;
+  document.getElementById('adminTitle').value    = d.title || '';
+  document.getElementById('adminBody').value     = d.body || '';
+  document.getElementById('adminCategory').value = d.category || 'NBA';
+  document.getElementById('adminThumb').value    = d.thumb || '';
+  updatePreview();
+  alert('下書きを読み込みました！編集後に投稿するか再保存してください。');
+}
+
+async function deleteDraft(id) {
+  if (!confirm('この下書きを削除しますか？')) return;
+  await fetch(`${FB_DRAFTS}/${id}.json`, { method: 'DELETE' });
+  loadDrafts();
+}
+// draft fix v2
+
+async function toggleSlot(slotId, currentlyOff) {
+  await fetch(FB_URL + '/adslots/' + slotId + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ enabled: currentlyOff })
+  });
+  renderAdManager();
+}
+
+async function uploadThumbImage() {
+  const input = document.getElementById('adminImgFile');
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const btn = document.getElementById('adminImgUploadBtn');
+    btn.textContent = 'アップロード中...';
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('key', '6b317240ded356635338f7ce9c45ec05');
+    try {
+      const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('adminImg').value = data.data.url;
+      } else {
+        alert('アップロードに失敗しました');
+      }
+    } catch(e) {
+      alert('エラーが発生しました');
+    } finally {
+      btn.textContent = '画像を選ぶ';
+    }
+  };
+  input.click();
+}
+
+function resetArticleForm() {
+  document.getElementById('adminTitle').value = '';
+  document.getElementById('adminBody').value = '';
+  document.getElementById('adminImg').value = '';
+  const cat = document.getElementById('adminCategory');
+  if (cat) cat.value = 'NBA';
+  const preview = document.getElementById('articlePreview');
+  if (preview) preview.innerHTML = '';
+  const editId = document.getElementById('adminEditId');
+  if (editId) editId.value = '';
+}
+
+// URLパラメータで記事を直接開く
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const articleId = params.get('article');
+  if (!articleId) return;
+  window._directArticleId = articleId;
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const btn = document.getElementById('sn-articles');
+      if (btn && typeof goPage === 'function') {
+        goPage('articles', btn);
+      } else if (btn) {
+        btn.click();
+      }
+    }, 800);
+  });
+})();
+
+async function editArticle(id) {
+  const res = await fetch(`${FB_ARTICLES}/${id}.json`);
+  const a = await res.json();
+  if (!a) return;
+  document.getElementById('adminTitle').value = a.title || '';
+  document.getElementById('adminBody').value = a.body || '';
+  document.getElementById('adminImg').value = a.img || '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) {
+      if (a.img) { _pi.src = a.img; _p.style.display = 'block'; }
+      else { _pi.src = ''; _p.style.display = 'none'; }
+    }
+  }
+  const cat = document.getElementById('adminCategory');
+  if (cat) cat.value = a.category || 'NBA';
+  const editId = document.getElementById('adminEditId');
+  if (editId) editId.value = id;
+  const paEl1 = document.getElementById('adminPublishAt');
+  if (paEl1) paEl1.value = msToDatetimeLocal(a.publishAt);
+  showAdminArticleUrl(id);
+  updatePreview();
+  document.getElementById('adminTitle').scrollIntoView({behavior:'smooth'});
+  const submitBtn = document.getElementById('adminSubmitBtn');
+  if (submitBtn) submitBtn.textContent = '上書き保存';
+  const preview = document.getElementById('articlePreview');
+  if (preview) preview.innerHTML = '';
+  updatePreview();
+}
+
+// 管理画面：記事一覧読み込み
+async function loadAdminArticles() {
+  const list = document.getElementById('adminArticleList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;font-size:12px;">読み込み中...</div>';
+  try {
+    const res = await fetch(FB_ARTICLES + '.json?orderBy="$key"&limitToLast=200');
+    const data = await res.json();
+    if (!data) { list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">記事なし</div>'; return; }
+    const articles = Object.entries(data).reverse();
+    list.innerHTML = articles.map(([id, a]) => `
+      <div style="background:#fff;border-bottom:1px solid #f0f0f0;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="font-size:9px;color:#C9082A;font-weight:700;background:rgba(201,8,42,0.08);padding:2px 6px;border-radius:4px;">${a.category||'未分類'}</div>
+          <div style="font-size:9px;color:#999;">${a.date||''}</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:#000;line-height:1.4;margin-bottom:8px;">${a.title||'無題'}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="editArticle('${id}')" style="flex:1;padding:6px;background:#f5f5f5;border:1px solid #eee;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">編集</button>
+          <button onclick="archiveArticle('${id}', ${a.archived ? 'false' : 'true'})" style="flex:1;padding:6px;background:${a.archived ? 'rgba(0,150,0,0.08)' : 'rgba(100,100,100,0.08)'};border:1px solid ${a.archived ? 'rgba(0,150,0,0.2)' : '#ddd'};border-radius:6px;font-size:11px;font-weight:700;color:${a.archived ? 'green' : '#666'};cursor:pointer;">${a.archived ? '公開に戻す' : 'アーカイブ'}</button>
+          <button onclick="deleteArticle('${id}')" style="flex:1;padding:6px;background:rgba(201,8,42,0.08);border:1px solid rgba(201,8,42,0.2);border-radius:6px;font-size:11px;font-weight:700;color:#C9082A;cursor:pointer;">削除</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:#999;">取得失敗</div>';
+  }
+}
+
+function openNewArticle() {
+  document.getElementById('articleForm').style.display = 'block';
+  document.getElementById('adminEditId').value = '';
+  document.getElementById('adminTitle').value = '';
+  setAdminBodyValue('');
+  if (document.getElementById('adminSourceText')) document.getElementById('adminSourceText').value = '';
+  if (document.getElementById('adminImageCredit')) document.getElementById('adminImageCredit').value = '';
+  document.getElementById('adminImg').value = '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) { _pi.src = ''; _p.style.display = 'none'; }
+  }
+  if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = '';
+  const paEl = document.getElementById('adminPublishAt'); if (paEl) paEl.value = '';
+  showAdminArticleUrl(null);
+  document.getElementById('adminSubmitBtn').textContent = '投稿する';
+  _bodyUndoStack = [];
+}
+
+function cancelArticleEdit() {
+  document.getElementById('articleForm').style.display = 'none';
+}
+
+async function archiveArticle(id, archive) {
+  await fetch(FB_ARTICLES + '/' + id + '.json', {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ archived: archive })
+  });
+  loadAdminArticles();
+}
+
+async function deleteArticle(id) {
+  if (!confirm('削除しますか？')) return;
+  await fetch(FB_ARTICLES + '/' + id + '.json', {method: 'DELETE'});
+  loadAdminArticles();
+}
+
+async function editArticle(id) {
+  const res = await fetch(FB_ARTICLES + '/' + id + '.json');
+  const d = await res.json();
+  document.getElementById('articleForm').style.display = 'block';
+  document.getElementById('adminEditId').value = id;
+  document.getElementById('adminTitle').value = d.title || '';
+  const meta = extractArticleMetaSections(d.body || '');
+  setAdminBodyValue(meta.cleanBody);
+  if (document.getElementById('adminSourceText')) document.getElementById('adminSourceText').value = meta.sourceText || '';
+  if (document.getElementById('adminImageCredit')) document.getElementById('adminImageCredit').value = meta.imageCredit || '';
+  document.getElementById('adminCategory').value = d.category || 'NBAファイナル';
+  if (document.getElementById('adminImg')) document.getElementById('adminImg').value = d.img || '';
+  {
+    const _p = document.getElementById('adminImgPreview');
+    const _pi = document.getElementById('adminImgPreviewImg');
+    if (_p && _pi) {
+      if (d.img) { _pi.src = d.img; _p.style.display = 'block'; }
+      else { _pi.src = ''; _p.style.display = 'none'; }
+    }
+  }
+  if (document.getElementById('adminAffiliateLink')) document.getElementById('adminAffiliateLink').value = d.affiliateLink || '';
+  const paEl2 = document.getElementById('adminPublishAt');
+  if (paEl2) paEl2.value = msToDatetimeLocal(d.publishAt);
+  showAdminArticleUrl(id);
+  document.getElementById('adminSubmitBtn').textContent = '上書き保存';
+  _bodyUndoStack = [];
+}
+
+function snapshotBodyHistory() {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  const current = el.innerHTML;
+  if (_bodyUndoStack.length && _bodyUndoStack[_bodyUndoStack.length - 1] === current) return;
+  _bodyUndoStack.push(current);
+  if (_bodyUndoStack.length > 30) _bodyUndoStack.shift();
+}
+
+function snapshotBodyHistoryDebounced() {
+  clearTimeout(_bodyUndoTimer);
+  _bodyUndoTimer = setTimeout(snapshotBodyHistory, 600);
+}
+
+function undoBodyEdit() {
+  const el = document.getElementById('adminBody');
+  if (!el || !_bodyUndoStack.length) return;
+  el.innerHTML = _bodyUndoStack.pop();
+  updateBodyPreview();
+}
+
+function getAdminBodyValue() {
+  const el = document.getElementById('adminBody');
+  if (!el) return '';
+  const lines = [];
+  el.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      if (node.textContent.trim()) lines.push(node.textContent);
+      return;
+    }
+    if (node.tagName === 'BR') { lines.push(''); return; }
+    if (node.dataset && node.dataset.embedLine !== undefined) { lines.push(node.dataset.embedLine); return; }
+    lines.push(node.innerHTML.replace(/^<br>$/i, ''));
+  });
+  return lines.join('\n');
+}
+
+// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
+// 枠付きの目立つブロックとして表示するためのチップを作る
+function createEmbedChip(kind, rawLine, displayHtml) {
+  const div = document.createElement('div');
+  div.setAttribute('contenteditable', 'false');
+  div.dataset.embedLine = rawLine;
+  const colors = {
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+  }[kind];
+  div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
+  div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
+  return div;
+}
+
+// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+function tryBuildEmbedChip(line) {
+  const t = line.trim();
+  if (!t) return null;
+  if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
+    if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
+  }
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]$/);
+  if (productMatch) {
+    return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
+  if (quoteChipMatch) {
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
+  }
+  const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
+  if (shopcardMatch) {
+    const shops = [];
+    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
+    return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
+  }
+  const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
+  if (linkMatch) {
+    return createEmbedChip('link', t, linkMatch[2] || linkMatch[1]);
+  }
+  return null;
+}
+
+function setAdminBodyValue(text) {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  if (!text) { el.innerHTML = '<br>'; return; }
+  const lines = text.split('\n');
+  el.innerHTML = '';
+  lines.forEach(l => {
+    const chip = tryBuildEmbedChip(l);
+    if (chip) { el.appendChild(chip); return; }
+    const div = document.createElement('div');
+    div.innerHTML = l || '<br>';
+    el.appendChild(div);
+  });
+}
+
+// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+function getCurrentTopLevelLine() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  let node = sel.getRangeAt(0).commonAncestorContainer;
+  if (!el.contains(node)) return null;
+  while (node && node.parentElement !== el) node = node.parentElement;
+  return node; // el直下の要素、またはnull
+}
+
+function insertNodeAtCursor(node) {
+  snapshotBodyHistory();
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const currentLine = getCurrentTopLevelLine();
+  const spacer = document.createElement('div');
+  spacer.innerHTML = '<br>';
+  if (currentLine && currentLine.parentElement === el) {
+    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    currentLine.after(node, spacer);
+  } else {
+    el.appendChild(node);
+    el.appendChild(spacer);
+  }
+  const range = document.createRange();
+  range.setStartAfter(spacer);
+  range.setEndAfter(spacer);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
+}
+
+function insertHtmlAtCursor(html) {
+  snapshotBodyHistory();
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  const nodes = [...wrap.childNodes];
+  if (!nodes.length) return;
+  const currentLine = getCurrentTopLevelLine();
+  if (currentLine && currentLine.parentElement === el) {
+    currentLine.after(...nodes);
+  } else {
+    nodes.forEach(n => el.appendChild(n));
+  }
+  const lastNode = nodes[nodes.length - 1];
+  const range = document.createRange();
+  range.setStartAfter(lastNode);
+  range.setEndAfter(lastNode);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
+}
+
+function getSelectedText() {
+  const sel = window.getSelection();
+  return sel.rangeCount ? sel.toString() : '';
+}
+
+// ============================================================
+// ツールバー挿入関数
+// ============================================================
+function insertBodyTag(type) {
+  if (type === 'bold') {
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    snapshotBodyHistory();
+    document.getElementById('adminBody').focus();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand('bold');
+    updateBodyPreview();
+    return;
+  }
+  const selected = getSelectedText();
+  let insert = '';
+  switch(type) {
+    case 'h2':
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
+      break;
+    case 'h3':
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
+      break;
+    case 'hr':
+      insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
+      break;
+    case 'quote':
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
+      break;
+  }
+  insertHtmlAtCursor(insert);
+}
+
+// ============================================================
+// contenteditable版 本文エディタ用ヘルパー
+// ============================================================
+function getAdminBodyValue() {
+  const el = document.getElementById('adminBody');
+  if (!el) return '';
+  const lines = [];
+  el.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      if (node.textContent.trim()) lines.push(node.textContent);
+      return;
+    }
+    if (node.tagName === 'BR') { lines.push(''); return; }
+    if (node.dataset && node.dataset.embedLine !== undefined) { lines.push(node.dataset.embedLine); return; }
+    lines.push(node.innerHTML.replace(/^<br>$/i, ''));
+  });
+  return lines.join('\n');
+}
+
+// 埋め込み系（ツイート/商品リンク/リンク）を編集エリア内で
+// 枠付きの目立つブロックとして表示するためのチップを作る
+function createEmbedChip(kind, rawLine, displayHtml) {
+  const div = document.createElement('div');
+  div.setAttribute('contenteditable', 'false');
+  div.dataset.embedLine = rawLine;
+  const colors = {
+    tweet:    {bg:'#eef4ff', border:'#cfe0ff', icon:'📱', label:'ツイート'},
+    product:  {bg:'#fff3e0', border:'#ffd9a0', icon:'🛒', label:'商品リンク'},
+    shopcard: {bg:'#e8f5e9', border:'#b8e0bb', icon:'🛍️', label:'商品比較カード'},
+    quote:    {bg:'#fdeeee', border:'#f3c6c6', icon:'💬', label:'引用コメント'},
+    link:     {bg:'#f3f3f3', border:'#ddd',    icon:'🔗', label:'リンク'}
+  }[kind];
+  div.style.cssText = `margin:8px 0;padding:8px 10px;background:${colors.bg};border:1px solid ${colors.border};border-radius:8px;font-size:11px;color:#555;display:flex;align-items:flex-start;gap:6px;`;
+  div.innerHTML = `<span style="flex-shrink:0;">${colors.icon}</span><div style="min-width:0;overflow:hidden;"><div style="font-size:9px;font-weight:700;color:#999;margin-bottom:2px;">${colors.label}</div><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayHtml}</div></div>`;
+  return div;
+}
+
+// 本文の1行が埋め込み系のパターンに一致するか調べ、一致すればチップ要素を返す
+function tryBuildEmbedChip(line) {
+  const t = line.trim();
+  if (!t) return null;
+  if (t.includes('twitter.com') || t.includes('x.com') || t.includes('instagram.com') || t.includes('tiktok.com')) {
+    if (/^https?:\/\//.test(t)) return createEmbedChip('tweet', t, t);
+  }
+  const productMatch = t.match(/^\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]$/);
+  if (productMatch) {
+    return createEmbedChip('product', t, `${productMatch[1]} ${productMatch[2] ? '(' + productMatch[2] + ')' : ''}`);
+  }
+  const quoteChipMatch = t.match(/^\[quote text="([^"]*)" name="([^"]*)" source="([^"]*)" url="([^"]*)"\]$/);
+  if (quoteChipMatch) {
+    return createEmbedChip('quote', t, `${quoteChipMatch[2] || '引用'}：${quoteChipMatch[1].slice(0, 20)}...`);
+  }
+  const shopcardMatch = t.match(/^\[shopcard name="([^"]*)" img="([^"]*)" rakuten="([^"]*)" rakutenPrice="([^"]*)" amazon="([^"]*)" amazonPrice="([^"]*)"\]$/);
+  if (shopcardMatch) {
+    const shops = [];
+    if (shopcardMatch[3]) shops.push('楽天' + (shopcardMatch[4] ? '(' + shopcardMatch[4] + ')' : ''));
+    if (shopcardMatch[5]) shops.push('Amazon' + (shopcardMatch[6] ? '(' + shopcardMatch[6] + ')' : ''));
+    return createEmbedChip('shopcard', t, `${shopcardMatch[1]} ${shops.length ? '[' + shops.join(' / ') + ']' : ''}`);
+  }
+  const linkMatch = t.match(/^<a href="([^"]*)"[^>]*>([^<]*)<\/a>$/);
+  if (linkMatch) {
+    return createEmbedChip('link', t, linkMatch[2] || linkMatch[1]);
+  }
+  return null;
+}
+
+function setAdminBodyValue(text) {
+  const el = document.getElementById('adminBody');
+  if (!el) return;
+  if (!text) { el.innerHTML = '<br>'; return; }
+  const lines = text.split('\n');
+  el.innerHTML = '';
+  lines.forEach(l => {
+    const chip = tryBuildEmbedChip(l);
+    if (chip) { el.appendChild(chip); return; }
+    const div = document.createElement('div');
+    div.innerHTML = l || '<br>';
+    el.appendChild(div);
+  });
+}
+
+// カーソルが今どの「行（#adminBodyの直下の要素）」の中にいるかを探す
+function getCurrentTopLevelLine() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return null;
+  let node = sel.getRangeAt(0).commonAncestorContainer;
+  if (!el.contains(node)) return null;
+  while (node && node.parentElement !== el) node = node.parentElement;
+  return node; // el直下の要素、またはnull
+}
+
+function insertNodeAtCursor(node) {
+  snapshotBodyHistory();
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const currentLine = getCurrentTopLevelLine();
+  const spacer = document.createElement('div');
+  spacer.innerHTML = '<br>';
+  if (currentLine && currentLine.parentElement === el) {
+    // 現在の行の"外側"（直後）に挿入する。行の途中を壊さない。
+    currentLine.after(node, spacer);
+  } else {
+    el.appendChild(node);
+    el.appendChild(spacer);
+  }
+  const range = document.createRange();
+  range.setStartAfter(spacer);
+  range.setEndAfter(spacer);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
+}
+
+function insertHtmlAtCursor(html) {
+  snapshotBodyHistory();
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  const nodes = [...wrap.childNodes];
+  if (!nodes.length) return;
+  const currentLine = getCurrentTopLevelLine();
+  if (currentLine && currentLine.parentElement === el) {
+    currentLine.after(...nodes);
+  } else {
+    nodes.forEach(n => el.appendChild(n));
+  }
+  const lastNode = nodes[nodes.length - 1];
+  const range = document.createRange();
+  range.setStartAfter(lastNode);
+  range.setEndAfter(lastNode);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  updateBodyPreview();
+}
+
+function getSelectedText() {
+  const sel = window.getSelection();
+  return sel.rangeCount ? sel.toString() : '';
+}
+
+// ============================================================
+// ツールバー挿入関数
+// ============================================================
+function insertBodyTag(type) {
+  if (type === 'bold') {
+    const sel = window.getSelection();
+    if (!sel.rangeCount || sel.isCollapsed) { alert('太字にしたい部分を選択してください'); return; }
+    snapshotBodyHistory();
+    document.getElementById('adminBody').focus();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand('bold');
+    updateBodyPreview();
+    return;
+  }
+  const selected = getSelectedText();
+  let insert = '';
+  switch(type) {
+    case 'h2':
+      insert = `<div style="font-size:1.1rem;font-weight:700;margin:1rem 0 .5rem;border-left:4px solid #C9082A;padding-left:8px;">${selected || '見出し'}</div><div><br></div>`;
+      break;
+    case 'h3':
+      insert = `<div style="font-size:.95rem;font-weight:700;margin:.8rem 0 .4rem;">${selected || '小見出し'}</div><div><br></div>`;
+      break;
+    case 'hr':
+      insert = `<div><hr style="border:none;border-top:2px solid #ccc;margin:1.2rem 0;"></div><div><br></div>`;
+      break;
+    case 'quote':
+      insert = `<div style="border-left:4px solid #C9082A;padding:.5rem 1rem;margin:.8rem 0;background:#f9f9f9;font-size:.85rem;color:#555;">${selected || '引用テキスト'}</div><div><br></div>`;
+      break;
+  }
+  insertHtmlAtCursor(insert);
+}
+
+// ============================================================
+// 本文タブ切り替え
+// ============================================================
+function switchBodyTab(tab) {
+  const ta = document.getElementById('adminBody');
+  const preview = document.getElementById('adminBodyPreview');
+  const editBtn = document.getElementById('bodyTabEdit');
+  const previewBtn = document.getElementById('bodyTabPreview');
+
+  if (tab === 'edit') {
+    ta.style.display = '';
+    preview.style.display = 'none';
+    editBtn.style.background = '#C9082A';
+    editBtn.style.color = '#fff';
+    previewBtn.style.background = 'transparent';
+    previewBtn.style.color = '#999';
+  } else {
+    updateBodyPreview();
+    ta.style.display = 'none';
+    preview.style.display = '';
+    previewBtn.style.background = '#C9082A';
+    previewBtn.style.color = '#fff';
+    editBtn.style.background = 'transparent';
+    editBtn.style.color = '#999';
+  }
+}
+
+function updateBodyPreview() {
+  const preview = document.getElementById('adminBodyPreview');
+  if (!preview) return;
+  const val = getAdminBodyValue();
+  preview.innerHTML = val ? renderBody(val) : '<span style="color:#ccc;">プレビューがここに表示されます</span>';
+  if (typeof twttr !== 'undefined' && twttr.widgets) twttr.widgets.load();
+  if (typeof window.instgrm !== 'undefined' && window.instgrm.Embeds) window.instgrm.Embeds.process();
+}
+
+// SNS埋め込み挿入（X / Instagram / TikTok 自動判別）
+let _snsEmbedTA = null;
+let _savedBodyRange = null;
+function saveBodyCursorRange() {
+  const el = document.getElementById('adminBody');
+  const sel = window.getSelection();
+  if (sel.rangeCount && el.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    _savedBodyRange = sel.getRangeAt(0).cloneRange();
+  } else {
+    _savedBodyRange = null;
+  }
+}
+function insertHtmlAtSavedRange(html) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  if (_savedBodyRange) {
+    sel.addRange(_savedBodyRange);
+  } else {
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    r.collapse(false);
+    sel.addRange(r);
+  }
+  insertHtmlAtCursor(html);
+}
+
+function insertNodeAtSavedRange(node) {
+  const el = document.getElementById('adminBody');
+  el.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  if (_savedBodyRange) {
+    sel.addRange(_savedBodyRange);
+  } else {
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    r.collapse(false);
+    sel.addRange(r);
+  }
+  insertNodeAtCursor(node);
+}
+
+function insertSnsEmbed() {
+  saveBodyCursorRange();
+  const urlInput = document.getElementById('snsEmbedUrl');
+  const detected = document.getElementById('snsEmbedDetected');
+  urlInput.value = '';
+  detected.textContent = '';
+  document.getElementById('snsEmbedModal').style.display = 'flex';
+  urlInput.oninput = () => {
+    const v = urlInput.value;
+    let platform = '';
+    if (v.includes('twitter.com') || v.includes('x.com')) platform = '✓ X (Twitter) の投稿として認識しました';
+    else if (v.includes('instagram.com')) platform = '✓ Instagram の投稿として認識しました';
+    else if (v.includes('tiktok.com')) platform = '✓ TikTok の投稿として認識しました';
+    detected.textContent = platform;
+  };
+  urlInput.focus();
+}
+function closeSnsEmbedModal() {
+  document.getElementById('snsEmbedModal').style.display = 'none';
+}
+function confirmSnsEmbed() {
+  const url = document.getElementById('snsEmbedUrl').value.trim();
+  if (!url) return;
+  if (!url.includes('twitter.com') && !url.includes('x.com') && !url.includes('instagram.com') && !url.includes('tiktok.com')) {
+    alert('X (Twitter) / Instagram / TikTokのURLを入力してください');
+    return;
+  }
+  const chip = createEmbedChip('tweet', url, url);
+  insertNodeAtSavedRange(chip);
+  closeSnsEmbedModal();
+}
+
+// ============================================================
+// リンク挿入モーダル
+// ============================================================
+function showLinkModal(url) {
+  saveBodyCursorRange();
+  const modal = document.getElementById('linkInsertModal');
+  document.getElementById('linkModalUrl').value = url || '';
+  document.getElementById('linkModalText').value = '';
+  modal.style.display = 'flex';
+}
+
+function closeLinkModal() {
+  document.getElementById('linkInsertModal').style.display = 'none';
+}
+
+function confirmLinkInsert() {
+  const url = document.getElementById('linkModalUrl').value.trim();
+  const text = document.getElementById('linkModalText').value.trim();
+  if (!url) return;
+  const rawLine = `<a href="${url}" target="_blank" style="color:#C9082A;font-weight:700;">${text || url}</a>`;
+  const chip = createEmbedChip('link', rawLine, text || url);
+  insertNodeAtSavedRange(chip);
+  closeLinkModal();
+}
+function isHeadingLine(t) {
+  // タグを除去してチェック
+  const plain = t.replace(/<[^>]+>/g, '').trim();
+  if (!plain) return false;
+  const c = plain.charCodeAt(0);
+  return c === 9632 || c === 9642; // ■ or ▪
+}
+// === 目次生成 ===
+function generateTOC(body) {
+  if (!body) return '';
+  function _isH(t) { const p = t.replace(/<[^>]+>/g,'').trim(); return p && (p.charCodeAt(0) === 9632 || p.charCodeAt(0) === 9642); }
+  const excludeFromTOC = ['出典', 'ソース元', '画像クレジット', '参考'];
+  const lines = body.split('\n');
+  const headings = [];
+  lines.forEach((line, i) => {
+    const t = line.trim();
+    if (t && _isH(t)) {
+      headings.push({ text: t, idx: i });
+    }
+  });
+  const items = headings.map((h, i) => {
+    const label = h.text.replace(/<[^>]+>/g, '').replace(/^[\u25a0\u25aa]\s*/, '').trim();
+    if (excludeFromTOC.includes(label)) return '';
+    return `<li style="margin:3px 0;"><a href="#toc-${i}" onclick="event.preventDefault();const el=document.getElementById('toc-${i}');if(el)el.scrollIntoView({behavior:'smooth'});" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">${label}</a></li>`;
+  }).join('');
+  const visibleCount = headings.filter(h => {
+    const label = h.text.replace(/<[^>]+>/g, '').replace(/^[\u25a0\u25aa]\s*/, '').trim();
+    return !excludeFromTOC.includes(label);
+  }).length;
+  if (visibleCount < 2) return '';
+  const uid = 'toc-' + Math.random().toString(36).slice(2,7);
+  return `<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">
+    <summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;">
+      \u76ee\u6b21 <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>
+    </summary>
+    <div style="padding:2px 0 4px;font-size:.76rem;">
+      <ol style="margin:0;padding-left:20px;">${items}</ol>
+    </div>
+  </details>`;
+}
+
+// articles.js — 記事投稿・一覧・詳細
+
+const FB_ARTICLES = `${FB_URL}/articles`;
+const ADMIN_PASSWORD = 'kobe0824';
+function msToDatetimeLocal(ms) {
+  if (!ms) return '';
+  const dt = new Date(ms);
+  const off = dt.getTimezoneOffset() * 60000;
+  return new Date(dt.getTime() - off).toISOString().slice(0, 16);
+}
+function articlePublicUrl(id) {
+  return `https://courtside-jp.github.io/mentality/articles/${id}.html`;
+}
+function showAdminArticleUrl(id) {
+  const wrap = document.getElementById('adminArticleUrlWrap');
+  const input = document.getElementById('adminArticleUrl');
+  if (!wrap || !input) return;
+  if (!id) { wrap.style.display = 'none'; input.value = ''; return; }
+  wrap.style.display = 'block';
+  input.value = articlePublicUrl(id);
+}
+function copyAdminArticleUrl() {
+  const el = document.getElementById('adminArticleUrl');
+  if (!el || !el.value) return;
+  const done = () => { el.select(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(el.value).then(() => { alert('URLをコピーしました'); }).catch(() => {
+      el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+    });
+  } else {
+    el.select(); document.execCommand('copy'); alert('URLをコピーしました');
+  }
+}
+
+// ============================================================
+// 関連記事（記事下に表示、回遊率アップ用）
+// ============================================================
+async function renderRelatedArticles(currentId, category) {
+  const wrap = document.getElementById('relatedArticlesWrap');
+  if (!wrap) return;
+  try {
+    const res = await fetch(FB_ARTICLES + '.json');
+    const data = await res.json();
+    if (!data) { wrap.innerHTML = ''; return; }
+    const now = Date.now();
+    let list = Object.entries(data)
+      .map(([id, a]) => ({ id, ...a }))
+      .filter(a => a.id !== currentId)
+      .filter(a => a.status !== 'archived')
+      .filter(a => !a.publishAt || a.publishAt <= now);
+
+    // 同じカテゴリを優先し、足りない分は新着で補う
+    const sameCategory = list.filter(a => a.category === category).sort((a,b) => (b.ts||0) - (a.ts||0));
+    const others = list.filter(a => a.category !== category).sort((a,b) => (b.ts||0) - (a.ts||0));
+    const picked = [...sameCategory, ...others].slice(0, 4);
+
+    if (!picked.length) { wrap.innerHTML = ''; return; }
+
+    wrap.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.85rem;font-weight:700;color:var(--tx);letter-spacing:1px;margin-bottom:.6rem;">関連記事</div>' +
+      '<div style="display:flex;flex-direction:column;gap:.6rem;">' +
+      picked.map(a => `
+        <div onclick="openArticle('${a.id}')" style="display:flex;gap:.7rem;align-items:center;cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:.5rem;">
+          ${a.img ? `<img loading="lazy" decoding="async" src="${a.img}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;" onerror="this.style.display='none'">` : ''}
+          <div style="min-width:0;">
+            <div style="font-size:.55rem;color:var(--or);font-weight:700;margin-bottom:.2rem;">${a.category||'NBA'}</div>
+            <div style="font-size:.78rem;color:var(--tx);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${a.title||''}</div>
+          </div>
+        </div>
+      `).join('') +
+      '</div>';
+  } catch(e) {
+    wrap.innerHTML = '';
+  }
+}
+
+// ============================================================
+// 本文レンダリング（URL自動判別）
+// ============================================================
+function showProductImage(url) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
+  overlay.onclick = function() { overlay.remove(); };
+  overlay.innerHTML = '<img loading="lazy" decoding="async" src="' + url + '" style="max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);">' +
+    '<div style="position:absolute;top:18px;right:20px;color:#fff;font-size:1.8rem;cursor:pointer;">&times;</div>';
+  document.body.appendChild(overlay);
+}
+
+function applyInlineBold(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:800;">$1</strong>');
+}
+
+function renderBody(body) {
+  if (!body) return '';
+  const lines = body.split('\n');
+  const html = lines.map(line => {
+    const t = line.trim();
+    const yt = t.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (yt) return '<div style="margin:.8rem 0;"><iframe width="100%" height="200" src="https://www.youtube.com/embed/' + yt[1] + '" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe></div>';
+    if (t.includes('tiktok.com')) return '<div style="margin:.8rem 0;text-align:center;"><blockquote class="tiktok-embed" cite="' + t + '" data-video-id="' + (t.match(/video\/(\d+)/)||[])[1] + '"><a href="' + t + '">TikTok動画</a></blockquote><script async src="https://www.tiktok.com/embed.js"><\/script></div>';
+    if (t.includes('instagram.com')) return '<div style="margin:.8rem 0;"><blockquote class="instagram-media" data-instgrm-permalink="' + t + '"><a href="' + t + '">Instagram投稿</a></blockquote><script async src="//www.instagram.com/embed.js"><\/script></div>';
+    if ((t.includes('twitter.com') || t.includes('x.com')) && !t.startsWith('[quote')) return '<div class="tweet-embed-safe" style="margin:.8rem 0;max-height:700px;overflow-y:auto;-webkit-overflow-scrolling:touch;"><blockquote class="twitter-tweet"><a href="' + t + '"></a></blockquote></div>';
     if (t.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)) return '<div style="margin:.8rem 0;"><img loading="lazy" decoding="async" src="' + t + '" style="width:100%;border-radius:10px;" onerror="this.style.display=\'none\'"></div>';
     const productMatch = t.match(/\[product name="([^"]*)" price="([^"]*)" url="([^"]*)"(?: img="([^"]*)")?\]/);
     if (productMatch) {
