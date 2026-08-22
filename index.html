@@ -536,7 +536,6 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                 var line=url?(name+': '+url):name;
                 ta.value=ta.value?(ta.value.replace(/\n+$/,'')+'\n'+line):line;
                 urlInput.value='';
-                sel.value='';
               }
               function applyAdminImageCreditPreset(){
                 var sel=document.getElementById('adminImageCreditPreset');
@@ -544,9 +543,8 @@ html,body{height:100%;overflow:hidden;}body{background:var(--light);font-family:
                 if(!sel||!input) return;
                 var val=sel.value;
                 if(!val) return;
-                if(val==='__custom__'){ sel.value=''; input.focus(); return; }
+                if(val==='__custom__'){ input.focus(); return; }
                 input.value=val+' ';
-                sel.value='';
                 input.focus();
               }
               </script>
