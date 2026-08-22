@@ -100,6 +100,7 @@ def render_body_html(body):
         return ''
     out = []
     heading_idx = 0
+    in_collapsible = False
     for line in body.split('\n'):
         t = line.strip()
         if not t:
@@ -219,13 +220,27 @@ def render_body_html(body):
             continue
 
         # ■ / ▪ → 大見出し（目次と連動する id 付き）
+        # ソース元・画像クレジットは▼で開閉できる<details>にまとめる
         plain = re.sub(r'<[^>]+>', '', t).strip()
         if is_heading_char(plain):
+            heading_text = plain.lstrip('■▪').strip()
+            if in_collapsible:
+                out.append('</div></details>')
+                in_collapsible = False
             label = apply_inline_bold(html.escape(plain))
-            out.append(
-                f'<h2 id="toc-{heading_idx}" style="font-size:1.05rem;font-weight:800;margin:1.7em 0 .5em;'
-                f'color:#111;border-left:4px solid #e63946;padding-left:.5em;">{label}</h2>'
-            )
+            if heading_text in ('ソース元', '画像クレジット'):
+                out.append(
+                    f'<details style="margin:1.7em 0 .5em;border:1px solid #eee;border-radius:10px;overflow:hidden;">'
+                    f'<summary style="cursor:pointer;font-size:1.05rem;font-weight:800;color:#111;'
+                    f'background:#fafafa;padding:.6em 1em;border-left:4px solid #e63946;">{label}</summary>'
+                    f'<div style="padding:.2em 1.2em .9em;">'
+                )
+                in_collapsible = True
+            else:
+                out.append(
+                    f'<h2 id="toc-{heading_idx}" style="font-size:1.05rem;font-weight:800;margin:1.7em 0 .5em;'
+                    f'color:#111;border-left:4px solid #e63946;padding-left:.5em;">{label}</h2>'
+                )
             heading_idx += 1
             continue
 
@@ -239,6 +254,8 @@ def render_body_html(body):
             continue
 
         out.append(f'<p style="margin:.6em 0;font-size:.92rem;">{apply_inline_bold(t)}</p>')
+    if in_collapsible:
+        out.append('</div></details>')
     return ''.join(out)
 
 
