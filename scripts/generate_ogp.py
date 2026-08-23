@@ -256,9 +256,7 @@ def render_body_html(body):
         # 【...】→ 小見出し
         if plain.startswith('【') and '】' in plain:
             out.append(
-                f'<h3 style="font-size:.95rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;'
-                f'background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid #e63946;'
-                f'border-radius:0 6px 6px 0;">{apply_inline_bold(html.escape(plain))}</h3>'
+                f'<h3 style="font-size:.95rem;font-weight:700;margin:1.4em 0 .5em;color:#111;">{apply_inline_bold(html.escape(plain))}</h3>'
             )
             continue
 
