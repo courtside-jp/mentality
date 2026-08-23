@@ -230,7 +230,7 @@ def render_body_html(body):
             label = apply_inline_bold(html.escape(plain))
             if heading_text in ('ソース元', '画像クレジット'):
                 out.append(
-                    f'<details style="background:none;border:none;border-radius:0;margin:.6em 0;overflow:hidden;">'
+                    f'<details style="background:none;border:none;border-top:1px solid #eee;border-radius:0;margin:.9em 0 .6em;padding-top:.7em;overflow:hidden;">'
                     f'<summary style="padding:2px 0;cursor:pointer;font-size:.7rem;font-weight:600;color:#777;'
                     f'list-style:none;display:flex;align-items:center;gap:4px;user-select:none;line-height:1.3;">'
                     f'{label} <span style="font-size:10px;color:#999;margin-left:4px;">▼</span></summary>'
