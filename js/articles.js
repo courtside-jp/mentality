@@ -207,7 +207,7 @@ function renderBody(body) {
         result += html.slice(cursor, sectionStart);
         let bodyHtml = html.slice(sectionContentStart, sectionEnd);
         bodyHtml = bodyHtml.replace(/<h3 style="[^"]*">/g, '<h3 style="font-size:.8rem;font-weight:400;color:#888;margin:.5em 0;padding:0;background:none;border-left:none;border-radius:0;">');
-        result += '<details style="background:none;border:none;border-radius:0;margin:.6em 0;overflow:hidden;">' +
+        result += '<details style="background:none;border:none;border-top:1px solid #eee;border-radius:0;margin:.9em 0 .6em;padding-top:.7em;overflow:hidden;">' +
           '<summary style="padding:2px 0;cursor:pointer;font-size:.7rem;font-weight:600;color:#777;list-style:none;display:flex;align-items:center;gap:4px;user-select:none;line-height:1.3;">' +
           labelText + ' <span style="font-size:10px;color:#999;margin-left:4px;">▼</span>' +
           '</summary>' +
