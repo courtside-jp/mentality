@@ -77,10 +77,18 @@ def generate_toc(body):
             headings.append(plain)
     if len(headings) < 2:
         return ''
+    EXCLUDE_FROM_TOC = ('出典', 'ソース元', '画像クレジット', '参考')
     items = ''
+    visible_count = 0
     for i, h in enumerate(headings):
-        label = html.escape(re.sub(r'^[■▪]\s*', '', h))
+        label_plain = re.sub(r'^[■▪]\s*', '', h)
+        if label_plain in EXCLUDE_FROM_TOC:
+            continue
+        visible_count += 1
+        label = html.escape(label_plain)
         items += f'<li style="margin:3px 0;"><a href="#toc-{i}" style="color:#111;text-decoration:underline;font-size:12px;line-height:1.7;">{label}</a></li>'
+    if visible_count < 2:
+        return ''
     return (
         '<details style="background:#f8f8f8;border:1px solid #eee;border-radius:10px;margin:0 0 20px;overflow:hidden;">'
         '<summary style="padding:12px 16px;cursor:pointer;font-size:12px;font-weight:800;color:#555;letter-spacing:.08em;list-style:none;">'
