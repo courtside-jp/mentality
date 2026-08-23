@@ -184,7 +184,7 @@ function renderBody(body) {
     }
     // 【】→ 小見出し（控えめスタイル、目次なし）
     if (t && t.charCodeAt(0) === 12304 && t.includes(String.fromCharCode(12305))) {
-      return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;padding:7px 12px;background:linear-gradient(90deg,rgba(230,57,70,.07),transparent);border-left:3px solid var(--accent,#e63946);border-radius:0 6px 6px 0;">${applyInlineBold(t)}</h3>`;
+      return `<h3 style="font-size:.88rem;font-weight:700;margin:1.4em 0 .5em;color:#111;">${applyInlineBold(t)}</h3>`;
     }
     return t ? '<p style="margin:.4rem 0;">' + applyInlineBold(t) + '</p>' : '';
   }).join('');
