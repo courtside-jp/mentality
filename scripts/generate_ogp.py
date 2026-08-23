@@ -248,7 +248,7 @@ def render_body_html(body):
             else:
                 out.append(
                     f'<h2 id="toc-{heading_idx}" style="font-size:1.05rem;font-weight:800;margin:1.7em 0 .5em;'
-                    f'color:#111;border-left:4px solid #e63946;padding-left:.5em;">{label}</h2>'
+                    f'color:#111;padding-top:1.2em;border-top:1px solid #eee;">{label}</h2>'
                 )
             heading_idx += 1
             continue
