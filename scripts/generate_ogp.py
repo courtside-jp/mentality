@@ -230,10 +230,11 @@ def render_body_html(body):
             label = apply_inline_bold(html.escape(plain))
             if heading_text in ('ソース元', '画像クレジット'):
                 out.append(
-                    f'<details style="margin:1.7em 0 .5em;border:1px solid #eee;border-radius:10px;overflow:hidden;">'
-                    f'<summary style="cursor:pointer;font-size:1.05rem;font-weight:800;color:#111;'
-                    f'background:#fafafa;padding:.6em 1em;border-left:4px solid #e63946;">{label}</summary>'
-                    f'<div style="padding:.2em 1.2em .9em;">'
+                    f'<details style="background:none;border:none;border-radius:0;margin:.6em 0;overflow:hidden;">'
+                    f'<summary style="padding:2px 0;cursor:pointer;font-size:.7rem;font-weight:600;color:#777;'
+                    f'list-style:none;display:flex;align-items:center;gap:4px;user-select:none;line-height:1.3;">'
+                    f'{label} <span style="font-size:10px;color:#999;margin-left:4px;">▼</span></summary>'
+                    f'<div style="padding:4px 16px 14px;">'
                 )
                 in_collapsible = True
             else:
