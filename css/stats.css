@@ -169,7 +169,7 @@
 }
 .srch-overlay.show { display:flex; animation:fadeUp .18s ease; }
 .srch-box {
-  width:100%; max-width:430px; background:#FFFFFF;
+  width:100%; max-width:430px; background:var(--card);
   border-radius:0 0 12px 12px; box-shadow:0 16px 48px rgba(0,0,0,.6);
   overflow:hidden; max-height:88vh; display:flex; flex-direction:column;
   border:1px solid var(--bd); border-top:none;
